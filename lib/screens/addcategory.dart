@@ -50,90 +50,91 @@ class _AddCategoryState extends State<AddCategory> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.white,
           iconTheme: IconThemeData(color: Colors.black),
           title: Text(
             'Category',
             style: TextStyle(
-                fontFamily: 'Helvetica', fontSize: 16, color: Colors.black),
+                fontFamily: 'Helvetica',
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.black),
           ),
           elevation: 0,
         ),
         body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Container(
               color: Colors.white,
               margin:
-                  EdgeInsets.only(top: 5.0, left: 10, right: 10, bottom: 10),
+                  EdgeInsets.only(top: 10.0, right: 10, left: 10, bottom: 10),
               child: Container(
-                  height: 45,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(5),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.shade300,
-                        offset: Offset(0.0, 1.0), //(x,y)
-                        blurRadius: 6.0,
+                height: 50,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25.0),
+                  color: const Color(0x80e5e9f2),
+                ),
+                child: Center(
+                    child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(left: 15, right: 10),
+                      child: Icon(
+                        Feather.search,
+                        size: 24,
+                        color: Color.fromRGBO(115, 115, 125, 1),
                       ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.all(5),
-                        child: Icon(
-                          Feather.search,
-                          size: 24,
-                          color: Colors.deepOrange,
-                        ),
-                      ),
-                      Expanded(
-                        child: TextField(
-                          onChanged: (text) {
-                            text = text.trim();
-                            text = text.toLowerCase();
+                    ),
+                    Expanded(
+                      child: TextField(
+                        onChanged: (text) {
+                          text = text.trim();
+                          text = text.toLowerCase();
 
-                            if (text.isEmpty) {
+                          if (text.isEmpty) {
+                            setState(() {
+                              actualcategories = categories;
+                            });
+                          }
+                          List<String> filtered = List<String>();
+                          filtered.clear();
+                          actualcategories.forEach((element) {
+                            element = element.trim();
+                            element = element.toLowerCase();
+                            if (element.contains(text)) {
+                              element = element[0].toUpperCase() +
+                                  element.substring(1, element.length);
+                              filtered.add(element);
+                            } else {
                               setState(() {
                                 actualcategories = categories;
                               });
                             }
-                            List<String> filtered = List<String>();
-                            filtered.clear();
-                            actualcategories.forEach((element) {
-                              element = element.trim();
-                              element = element.toLowerCase();
-                              if (element.contains(text)) {
-                                element = element[0].toUpperCase() +
-                                    element.substring(1, element.length);
-                                filtered.add(element);
-                              } else {
-                                setState(() {
-                                  actualcategories = categories;
-                                });
-                              }
-                            });
+                          });
 
-                            setState(() {
-                              actualcategories = filtered;
-                            });
-                          },
-                          controller: searchcontroller,
-                          decoration: InputDecoration(
-                              hintText: 'Search Categories',
-                              hintStyle: TextStyle(
-                                fontFamily: 'Helvetica',
-                                fontSize: 16,
-                              ),
-                              border: InputBorder.none),
-                        ),
+                          setState(() {
+                            actualcategories = filtered;
+                          });
+                        },
+                        controller: searchcontroller,
+                        decoration: InputDecoration(
+                            hintText: 'Search Categories',
+                            hintStyle: TextStyle(
+                              fontFamily: 'Helvetica',
+                              fontSize: 16,
+                            ),
+                            border: InputBorder.none),
                       ),
-                    ],
-                  )),
+                    ),
+                  ],
+                )),
+              ),
             ),
             Expanded(
                 child: AlphabetListScrollView(
@@ -171,22 +172,25 @@ class _AddCategoryState extends State<AddCategory> {
                           ? Text(
                               actualcategories[index],
                               style: TextStyle(
-                                fontFamily: 'Helvetica',
-                                fontSize: 16,
-                              ),
+                                  fontFamily: 'Helvetica',
+                                  fontSize: 16,
+                                  color: Colors.black),
                             )
                           : Text(''),
                       trailing: Padding(
                         child: Icon(
                           Icons.arrow_forward_ios,
-                          size: 20,
+                          size: 16,
                           color: Colors.grey.shade500,
                         ),
                         padding: EdgeInsets.only(right: 50),
                       ),
                     ));
               },
-            ))
+            )),
+            SizedBox(
+              height: 20,
+            ),
           ],
         ));
   }

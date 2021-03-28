@@ -86,13 +86,13 @@ class _AddItemState extends State<AddItem> {
     Colors.deepPurple,
     Colors.tealAccent,
     Colors.teal,
-    Colors.redAccent,
     Colors.lime,
     Colors.limeAccent,
     Colors.cyan,
     Colors.cyanAccent,
     Colors.brown,
     Colors.indigo,
+    Colors.grey,
   ];
 
   List<Color> selectedColors = List<Color>();
@@ -265,21 +265,13 @@ class _AddItemState extends State<AddItem> {
   ];
   String _selectedCategory;
 
-  List<String> conditions = [
-    'New with tags',
-    'Excellent used condition',
-    'Good, a bit worn',
-    'Very used condition'
-  ];
-
   Map<String, String> mapconditions = {
-    'New with tags':
+    'New':
         'Items that are brand new, never used, with the tags still attached.',
-    'Excellent used condition':
+    'Excellent':
         'Used it just once or a few times, has little to no signs of wear',
-    'Good, a bit worn': 'Gently used, with signs of wear',
-    'Very used condition':
-        'Items that might have discoloration, minor damages from use.'
+    'Good': 'Gently used, with signs of wear',
+    'Poor': 'Items that might have discoloration, minor damages from use.'
   };
 
   List<String> conditionssubtitles = [
@@ -1807,9 +1799,43 @@ class _AddItemState extends State<AddItem> {
                                   SizedBox(
                                     height: 10.0,
                                   ),
-                                  _selectedCategory == 'Women' ||
-                                          _selectedCategory == 'Men' ||
-                                          _selectedCategory == 'Kids'
+                                  _selectedsubCategory == 'Activewear & Sportswear' ||
+                                          _selectedsubCategory == 'Dresses' ||
+                                          _selectedsubCategory ==
+                                              'Tops & Blouses' ||
+                                          _selectedsubCategory ==
+                                              'Coats & Jackets' ||
+                                          _selectedsubCategory == 'Sweaters' ||
+                                          _selectedsubCategory == 'Shoes' ||
+                                          _selectedsubCategory ==
+                                              'Modest wear' ||
+                                          _selectedsubCategory == 'Jeans' ||
+                                          _selectedsubCategory ==
+                                              'Suits & Blazers' ||
+                                          _selectedsubCategory ==
+                                              'Swimwear & Beachwear' ||
+                                          _selectedsubCategory == 'Bottoms' ||
+                                          _selectedsubCategory == 'Tops' ||
+                                          _selectedsubCategory ==
+                                              'Girls Dresses' ||
+                                          _selectedsubCategory ==
+                                              'Girls One-pieces' ||
+                                          _selectedsubCategory ==
+                                              'Girls Tops & T-shirts' ||
+                                          _selectedsubCategory ==
+                                              'Girls Bottoms' ||
+                                          _selectedsubCategory ==
+                                              'Girls Shoes' ||
+                                          _selectedsubCategory ==
+                                              'Boys Tops & T-shirts' ||
+                                          _selectedsubCategory ==
+                                              'Boys Bottoms' ||
+                                          _selectedsubCategory ==
+                                              'Boys One-pieces' ||
+                                          _selectedsubCategory ==
+                                              'Boys Shoes' ||
+                                          _selectedsubCategory == 'Clothing' ||
+                                          _selectedsubCategory == 'Shoes'
                                       ? Padding(
                                           padding: EdgeInsets.only(
                                               left: 15, bottom: 5, top: 10),
@@ -1825,9 +1851,43 @@ class _AddItemState extends State<AddItem> {
                                           ),
                                         )
                                       : Container(),
-                                  _selectedCategory == 'Women' ||
-                                          _selectedCategory == 'Men' ||
-                                          _selectedCategory == 'Kids'
+                                  _selectedsubCategory == 'Activewear & Sportswear' ||
+                                          _selectedsubCategory == 'Dresses' ||
+                                          _selectedsubCategory ==
+                                              'Tops & Blouses' ||
+                                          _selectedsubCategory ==
+                                              'Coats & Jackets' ||
+                                          _selectedsubCategory == 'Sweaters' ||
+                                          _selectedsubCategory == 'Shoes' ||
+                                          _selectedsubCategory ==
+                                              'Modest wear' ||
+                                          _selectedsubCategory == 'Jeans' ||
+                                          _selectedsubCategory ==
+                                              'Suits & Blazers' ||
+                                          _selectedsubCategory ==
+                                              'Swimwear & Beachwear' ||
+                                          _selectedsubCategory == 'Bottoms' ||
+                                          _selectedsubCategory == 'Tops' ||
+                                          _selectedsubCategory ==
+                                              'Girls Dresses' ||
+                                          _selectedsubCategory ==
+                                              'Girls One-pieces' ||
+                                          _selectedsubCategory ==
+                                              'Girls Tops & T-shirts' ||
+                                          _selectedsubCategory ==
+                                              'Girls Bottoms' ||
+                                          _selectedsubCategory ==
+                                              'Girls Shoes' ||
+                                          _selectedsubCategory ==
+                                              'Boys Tops & T-shirts' ||
+                                          _selectedsubCategory ==
+                                              'Boys Bottoms' ||
+                                          _selectedsubCategory ==
+                                              'Boys One-pieces' ||
+                                          _selectedsubCategory ==
+                                              'Boys Shoes' ||
+                                          _selectedsubCategory == 'Clothing' ||
+                                          _selectedsubCategory == 'Shoes'
                                       ? Padding(
                                           padding: EdgeInsets.only(
                                               left: 15,
@@ -1981,7 +2041,7 @@ class _AddItemState extends State<AddItem> {
                                                                                       ),
                                                                                     ),
                                                                                   ),
-                                                                                  _selectedsubCategory.contains('Hoodies & Sweatshirts') || _selectedsubCategory.contains('Nightwear & Loungewear') || _selectedsubCategory.contains('Swimwear & Beachwear') || _selectedsubCategory.contains('Tops') || _selectedsubCategory.contains('Activewear & Sportswear') || _selectedsubCategory.contains('Coats & Jackets') || _selectedsubCategory.contains('Dresses') || _selectedsubCategory.contains('Modest wear') || _selectedsubCategory.contains('Tops & Blouses') || _selectedsubCategory.contains('Girls Tops & T-shirts') || _selectedsubCategory.contains('Girls One-pieces') || _selectedsubCategory.contains('Girls Dresses') || _selectedsubCategory.contains('Boys Tops & T-shirts')
+                                                                                  _selectedsubCategory.contains('Hoodies & Sweatshirts') || _selectedsubCategory.contains('Nightwear & Loungewear') || _selectedsubCategory.contains('Swimwear & Beachwear') || _selectedsubCategory.contains('Tops') || _selectedsubCategory.contains('Activewear & Sportswear') || _selectedsubCategory.contains('Coats & Jackets') || _selectedsubCategory.contains('Dresses') || _selectedsubCategory.contains('Modest wear') || _selectedsubCategory.contains('Tops & Blouses') || _selectedsubCategory.contains('Girls Tops & T-shirts') || _selectedsubCategory.contains('Girls One-pieces') || _selectedsubCategory.contains('Girls Dresses') || _selectedsubCategory.contains('Clothing') || _selectedsubCategory.contains('Boys Tops & T-shirts') || _selectedsubCategory.contains('Girls Tops & T-shirts') || _selectedsubCategory.contains('Girls Dresses') || _selectedsubCategory.contains('Boys One-pieces') || _selectedsubCategory.contains('Girls One-pieces') || _selectedsubCategory.contains('Suits & Blazers') || _selectedsubCategory.contains('Sweaters')
                                                                                       ? Expanded(
                                                                                           child: GridView.builder(
                                                                                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(mainAxisSpacing: 5.0, crossAxisSpacing: 5.0, crossAxisCount: 4, childAspectRatio: 1),
@@ -2014,7 +2074,7 @@ class _AddItemState extends State<AddItem> {
                                                                                             itemCount: topsizes.length,
                                                                                           ),
                                                                                         )
-                                                                                      : _selectedsubCategory.contains('Jewelry') || _selectedsubCategory.contains('Women\'s accessories') || _selectedsubCategory.contains('Men\'s accessories') || _selectedsubCategory.contains('Boys Accessories') || _selectedsubCategory.contains('Girls Accessories')
+                                                                                      : _selectedsubCategory.contains('Shoes') || _selectedsubCategory.contains('Boys Shoes') || _selectedsubCategory.contains('Girls Shoes')
                                                                                           ? Expanded(
                                                                                               child: GridView.builder(
                                                                                                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(mainAxisSpacing: 5.0, crossAxisSpacing: 5.0, crossAxisCount: 4, childAspectRatio: 1),
@@ -2025,93 +2085,60 @@ class _AddItemState extends State<AddItem> {
                                                                                                           onTap: () {
                                                                                                             selectedsize.clear();
                                                                                                             updateState(() {
-                                                                                                              selectedsize.add(accessoriessizes[i]);
+                                                                                                              selectedsize.add(shoesizes[i]);
                                                                                                             });
-                                                                                                            print(accessoriessizes[i]);
+                                                                                                            print(shoesizes[i]);
                                                                                                           },
                                                                                                           child: Container(
                                                                                                               height: 100,
                                                                                                               width: MediaQuery.of(context).size.width,
                                                                                                               decoration: BoxDecoration(
-                                                                                                                  color: selectedsize.contains(accessoriessizes[i]) ? Colors.black : Colors.white,
+                                                                                                                  color: selectedsize.contains(shoesizes[i]) ? Colors.black : Colors.white,
                                                                                                                   border: Border.all(
                                                                                                                     color: Colors.grey,
                                                                                                                   ),
                                                                                                                   borderRadius: BorderRadius.circular(10)),
                                                                                                               child: Center(
                                                                                                                   child: Text(
-                                                                                                                accessoriessizes[i],
-                                                                                                                style: selectedsize.contains(accessoriessizes[i]) ? TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.white) : TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.black),
+                                                                                                                shoesizes[i],
+                                                                                                                style: selectedsize.contains(shoesizes[i]) ? TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.white) : TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.black),
                                                                                                               )))));
                                                                                                 },
-                                                                                                itemCount: accessoriessizes.length,
+                                                                                                itemCount: shoesizes.length,
                                                                                               ),
                                                                                             )
-                                                                                          : _selectedsubCategory.contains('Shoes') || _selectedsubCategory.contains('Boys Shoes') || _selectedsubCategory.contains('Girls Shoes')
-                                                                                              ? Expanded(
-                                                                                                  child: GridView.builder(
-                                                                                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(mainAxisSpacing: 5.0, crossAxisSpacing: 5.0, crossAxisCount: 4, childAspectRatio: 1),
-                                                                                                    itemBuilder: (_, i) {
-                                                                                                      return Padding(
-                                                                                                          padding: EdgeInsets.all(5),
-                                                                                                          child: InkWell(
-                                                                                                              onTap: () {
-                                                                                                                selectedsize.clear();
-                                                                                                                updateState(() {
-                                                                                                                  selectedsize.add(shoesizes[i]);
-                                                                                                                });
-                                                                                                                print(shoesizes[i]);
-                                                                                                              },
-                                                                                                              child: Container(
-                                                                                                                  height: 100,
-                                                                                                                  width: MediaQuery.of(context).size.width,
-                                                                                                                  decoration: BoxDecoration(
-                                                                                                                      color: selectedsize.contains(shoesizes[i]) ? Colors.black : Colors.white,
-                                                                                                                      border: Border.all(
-                                                                                                                        color: Colors.grey,
-                                                                                                                      ),
-                                                                                                                      borderRadius: BorderRadius.circular(10)),
-                                                                                                                  child: Center(
-                                                                                                                      child: Text(
-                                                                                                                    shoesizes[i],
-                                                                                                                    style: selectedsize.contains(shoesizes[i]) ? TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.white) : TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.black),
-                                                                                                                  )))));
-                                                                                                    },
-                                                                                                    itemCount: shoesizes.length,
-                                                                                                  ),
-                                                                                                )
-                                                                                              : Expanded(
-                                                                                                  child: GridView.builder(
-                                                                                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(mainAxisSpacing: 5.0, crossAxisSpacing: 5.0, crossAxisCount: 4, childAspectRatio: 1),
-                                                                                                    itemBuilder: (_, i) {
-                                                                                                      return Padding(
-                                                                                                          padding: EdgeInsets.all(5),
-                                                                                                          child: InkWell(
-                                                                                                              onTap: () {
-                                                                                                                selectedsize.clear();
-                                                                                                                updateState(() {
-                                                                                                                  selectedsize.add(bottomsizes[i]);
-                                                                                                                });
-                                                                                                                print(bottomsizes[i]);
-                                                                                                              },
-                                                                                                              child: Container(
-                                                                                                                  height: 100,
-                                                                                                                  width: MediaQuery.of(context).size.width,
-                                                                                                                  decoration: BoxDecoration(
-                                                                                                                      color: selectedsize.contains(bottomsizes[i]) ? Colors.black : Colors.white,
-                                                                                                                      border: Border.all(
-                                                                                                                        color: Colors.grey,
-                                                                                                                      ),
-                                                                                                                      borderRadius: BorderRadius.circular(10)),
-                                                                                                                  child: Center(
-                                                                                                                      child: Text(
-                                                                                                                    bottomsizes[i],
-                                                                                                                    style: selectedsize.contains(bottomsizes[i]) ? TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.white) : TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.black),
-                                                                                                                  )))));
-                                                                                                    },
-                                                                                                    itemCount: bottomsizes.length,
-                                                                                                  ),
-                                                                                                ),
+                                                                                          : Expanded(
+                                                                                              child: GridView.builder(
+                                                                                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(mainAxisSpacing: 5.0, crossAxisSpacing: 5.0, crossAxisCount: 4, childAspectRatio: 1),
+                                                                                                itemBuilder: (_, i) {
+                                                                                                  return Padding(
+                                                                                                      padding: EdgeInsets.all(5),
+                                                                                                      child: InkWell(
+                                                                                                          onTap: () {
+                                                                                                            selectedsize.clear();
+                                                                                                            updateState(() {
+                                                                                                              selectedsize.add(bottomsizes[i]);
+                                                                                                            });
+                                                                                                            print(bottomsizes[i]);
+                                                                                                          },
+                                                                                                          child: Container(
+                                                                                                              height: 100,
+                                                                                                              width: MediaQuery.of(context).size.width,
+                                                                                                              decoration: BoxDecoration(
+                                                                                                                  color: selectedsize.contains(bottomsizes[i]) ? Colors.black : Colors.white,
+                                                                                                                  border: Border.all(
+                                                                                                                    color: Colors.grey,
+                                                                                                                  ),
+                                                                                                                  borderRadius: BorderRadius.circular(10)),
+                                                                                                              child: Center(
+                                                                                                                  child: Text(
+                                                                                                                bottomsizes[i],
+                                                                                                                style: selectedsize.contains(bottomsizes[i]) ? TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.white) : TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.black),
+                                                                                                              )))));
+                                                                                                },
+                                                                                                itemCount: bottomsizes.length,
+                                                                                              ),
+                                                                                            ),
                                                                                 ])));
                                                                       });
                                                                     });
@@ -2169,7 +2196,8 @@ class _AddItemState extends State<AddItem> {
                                   ),
                                   _selectedCategory == 'Women' ||
                                           _selectedCategory == 'Men' ||
-                                          _selectedCategory == 'Kids'
+                                          _selectedCategory == 'Kids' ||
+                                          _selectedCategory == 'Luxury'
                                       ? Padding(
                                           padding: EdgeInsets.only(
                                               left: 15, bottom: 5, top: 10),
@@ -2187,7 +2215,8 @@ class _AddItemState extends State<AddItem> {
                                       : Container(),
                                   _selectedCategory == 'Women' ||
                                           _selectedCategory == 'Men' ||
-                                          _selectedCategory == 'Kids'
+                                          _selectedCategory == 'Kids' ||
+                                          _selectedCategory == 'Luxury'
                                       ? Padding(
                                           padding: EdgeInsets.only(
                                               left: 15,
@@ -2291,10 +2320,13 @@ class _AddItemState extends State<AddItem> {
                                                                                                     color: colorslist[i],
                                                                                                   ),
                                                                                                   child: selectedColors.contains(colorslist[i])
-                                                                                                      ? Icon(
-                                                                                                          Icons.check,
-                                                                                                          color: Colors.white,
-                                                                                                        )
+                                                                                                      ? CircleAvatar(
+                                                                                                          radius: 18,
+                                                                                                          backgroundColor: Colors.black12,
+                                                                                                          child: Icon(
+                                                                                                            Icons.check,
+                                                                                                            color: Colors.white,
+                                                                                                          ))
                                                                                                       : Container()),
                                                                                             ));
                                                                                       },
@@ -3023,7 +3055,52 @@ class _AddItemState extends State<AddItem> {
                                             showInSnackBar(
                                                 'Oops looks like your missing a price for your item!');
                                           } else if (_selectedsize == null &&
-                                              _selectedCategory == 'Women') {
+                                              (_selectedsubCategory ==
+                                                      'Activewear & Sportswear' ||
+                                                  _selectedsubCategory ==
+                                                      'Dresses' ||
+                                                  _selectedsubCategory ==
+                                                      'Tops & Blouses' ||
+                                                  _selectedsubCategory ==
+                                                      'Coats & Jackets' ||
+                                                  _selectedsubCategory ==
+                                                      'Sweaters' ||
+                                                  _selectedsubCategory ==
+                                                      'Shoes' ||
+                                                  _selectedsubCategory ==
+                                                      'Modest wear' ||
+                                                  _selectedsubCategory ==
+                                                      'Jeans' ||
+                                                  _selectedsubCategory ==
+                                                      'Suits & Blazers' ||
+                                                  _selectedsubCategory ==
+                                                      'Swimwear & Beachwear' ||
+                                                  _selectedsubCategory ==
+                                                      'Bottoms' ||
+                                                  _selectedsubCategory ==
+                                                      'Tops' ||
+                                                  _selectedsubCategory ==
+                                                      'Girls Dresses' ||
+                                                  _selectedsubCategory ==
+                                                      'Girls One-pieces' ||
+                                                  _selectedsubCategory ==
+                                                      'Girls Tops & T-shirts' ||
+                                                  _selectedsubCategory ==
+                                                      'Girls Bottoms' ||
+                                                  _selectedsubCategory ==
+                                                      'Girls Shoes' ||
+                                                  _selectedsubCategory ==
+                                                      'Boys Tops & T-shirts' ||
+                                                  _selectedsubCategory ==
+                                                      'Boys Bottoms' ||
+                                                  _selectedsubCategory ==
+                                                      'Boys One-pieces' ||
+                                                  _selectedsubCategory ==
+                                                      'Boys Shoes' ||
+                                                  _selectedsubCategory ==
+                                                      'Clothing' ||
+                                                  _selectedsubCategory ==
+                                                      'Shoes')) {
                                             showInSnackBar(
                                                 'Please choose the size for your item!');
                                           } else if (_selectedweight == -1) {

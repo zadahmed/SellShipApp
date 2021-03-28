@@ -569,11 +569,8 @@ class _CheckoutState extends State<Checkout> {
                             var trref = ('SS' + uuid);
 
                             var messageid;
-                            if (widget.messageid == null) {
-                              messageid = uuidGenerator.v4();
-                            } else {
-                              messageid = widget.messageid;
-                            }
+
+                            messageid = uuidGenerator.v4();
 
                             var userid = await storage.read(key: 'userid');
                             print(listitems[0].userid);

@@ -12,11 +12,13 @@ class Paymentsubs extends StatefulWidget {
   String returnurl;
   String businesstier;
   String storeid;
+  String orderid;
 
   Paymentsubs({
     Key key,
     this.url,
     this.storeid,
+    this.orderid,
     this.businesstier,
     this.returnurl,
   }) : super(key: key);
@@ -78,8 +80,8 @@ class PaymentsubsState extends State<Paymentsubs> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        StoreCompletion(storeid: widget.storeid)),
+                    builder: (context) => StoreCompletion(
+                        storeid: widget.storeid, orderid: widget.orderid)),
               );
             } else if (url.substring(0, 20) ==
                 'https://api.sellship.co/api/payment/failed/') {

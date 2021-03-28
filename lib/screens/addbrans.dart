@@ -45,78 +45,78 @@ class _BrandsState extends State<Brands> {
           pinned: true,
           title: Text(
             'Brands',
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(
+                fontFamily: 'Helvetica',
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.black),
           ),
         ),
         SliverToBoxAdapter(
           child: Container(
-            margin: EdgeInsets.only(top: 5.0, left: 10, right: 10, bottom: 10),
+            color: Colors.white,
+            margin: EdgeInsets.only(top: 10.0, right: 10, left: 10, bottom: 10),
             child: Container(
-                height: 45,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(5),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.shade300,
-                      offset: Offset(0.0, 1.0), //(x,y)
-                      blurRadius: 6.0,
+              height: 50,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25.0),
+                color: const Color(0x80e5e9f2),
+              ),
+              child: Center(
+                  child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(left: 15, right: 10),
+                    child: Icon(
+                      Feather.search,
+                      size: 24,
+                      color: Color.fromRGBO(115, 115, 125, 1),
                     ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(5),
-                      child: Icon(
-                        Feather.search,
-                        size: 24,
-                        color: Colors.deepOrange,
-                      ),
+                  ),
+                  Expanded(
+                    child: TextField(
+                      onChanged: (text) {
+                        text = text.trim();
+                        text = text.toLowerCase();
+
+                        if (text.isEmpty) {
+                          setState(() {
+                            brands = actbrands;
+                          });
+                        } else if (text.length >= 1) {
+                          List<String> filtered = List<String>();
+                          filtered.clear();
+
+                          brands.forEach((element) {
+                            element = element.trim();
+                            element = element.toLowerCase();
+                            if (element.contains(text)) {
+                              element = element[0].toUpperCase() +
+                                  element.substring(1, element.length);
+                              filtered.add(element);
+                            }
+                          });
+
+                          setState(() {
+                            brands = filtered;
+                          });
+                        }
+                      },
+                      controller: searchcontroller,
+                      decoration: InputDecoration(
+                          hintText: 'Search Brands',
+                          hintStyle: TextStyle(
+                            fontFamily: 'Helvetica',
+                            fontSize: 16,
+                          ),
+                          border: InputBorder.none),
                     ),
-                    Expanded(
-                      child: TextField(
-                        onChanged: (text) {
-                          text = text.trim();
-                          text = text.toLowerCase();
-
-                          if (text.isEmpty) {
-                            setState(() {
-                              brands = actbrands;
-                            });
-                          } else if (text.length >= 1) {
-                            List<String> filtered = List<String>();
-                            filtered.clear();
-
-                            brands.forEach((element) {
-                              element = element.trim();
-                              element = element.toLowerCase();
-                              if (element.contains(text)) {
-                                element = element[0].toUpperCase() +
-                                    element.substring(1, element.length);
-                                filtered.add(element);
-                              }
-                            });
-
-                            setState(() {
-                              brands = filtered;
-                            });
-                          }
-                        },
-                        controller: searchcontroller,
-                        decoration: InputDecoration(
-                            hintText: 'Search Brands',
-                            hintStyle: TextStyle(
-                              fontFamily: 'Helvetica',
-                              fontSize: 16,
-                            ),
-                            border: InputBorder.none),
-                      ),
-                    ),
-                  ],
-                )),
+                  ),
+                ],
+              )),
+            ),
           ),
         ),
         SliverFillRemaining(
@@ -124,7 +124,7 @@ class _BrandsState extends State<Brands> {
           showPreview: true,
           strList: brands,
           indexedHeight: (i) {
-            return 40;
+            return 50;
           },
           itemBuilder: (context, index) {
             return InkWell(
@@ -132,7 +132,15 @@ class _BrandsState extends State<Brands> {
                 Navigator.pop(context, brands[index]);
               },
               child: ListTile(
-                title: brands[index] != null ? Text(brands[index]) : Text(''),
+                title: brands[index] != null
+                    ? Text(
+                        brands[index],
+                        style: TextStyle(
+                            fontFamily: 'Helvetica',
+                            fontSize: 16,
+                            color: Colors.black),
+                      )
+                    : Text(''),
               ),
             );
           },

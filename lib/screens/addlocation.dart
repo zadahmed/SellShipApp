@@ -130,6 +130,7 @@ class _AddLocationState extends State<AddLocation> {
               localeIdentifier: 'en');
 
       Geocoding.Placemark place = placemarks[0];
+      print(place);
       var cit = place.administrativeArea;
       var countr = place.country;
       setState(() {
@@ -161,6 +162,7 @@ class _AddLocationState extends State<AddLocation> {
               localeIdentifier: 'en');
 
       Geocoding.Placemark place = placemarks[0];
+      print(place);
       var cit = place.administrativeArea;
       var countr = place.country;
       setState(() {

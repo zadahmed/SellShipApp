@@ -197,13 +197,19 @@ class _OrderBuyerState extends State<OrderBuyer> {
                 content: Builder(
                   builder: (context) {
                     return Container(
-                        height: 150,
+                        height: 160,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
+                            SpinKitDoubleBounce(
+                              color: Colors.deepOrange,
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
                             Text(
-                              'Oops. Looks like the payment did not go through. Please try again.',
+                              'Completing payment.. Please wait, this may take up to 30 seconds.',
                               style: TextStyle(
                                 fontFamily: 'Helvetica',
                                 fontSize: 18,
@@ -214,41 +220,12 @@ class _OrderBuyerState extends State<OrderBuyer> {
                             SizedBox(
                               height: 20,
                             ),
-                            InkWell(
-                              child: Container(
-                                height: 60,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 5),
-                                width: MediaQuery.of(context).size.width - 80,
-                                decoration: BoxDecoration(
-                                  color: Color.fromRGBO(255, 115, 0, 1),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Center(
-                                    child: Text(
-                                  'Close',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 18,
-                                    color: Colors.white,
-                                  ),
-                                )),
-                              ),
-                              onTap: () {
-                                Navigator.pop(
-                                  context,
-                                );
-                                Navigator.pop(
-                                  context,
-                                );
-                              },
-                            ),
                           ],
                         ));
                   },
                 ),
               ));
+      checktransactioncompletedloop();
     }
 
     var jsonbody = json.decode(response.body);
@@ -322,6 +299,92 @@ class _OrderBuyerState extends State<OrderBuyer> {
       city = jsonbody['deliveryaddress']['city'];
       country = jsonbody['deliveryaddress']['country'];
     });
+  }
+
+  var time = 0;
+  checktransactioncompletedloop() async {
+    var url = 'https://api.sellship.co/api/transactionhistory/' + messageid;
+
+    final response = await http.get(url);
+
+    if (response.statusCode != 200) {
+      time = time + 2;
+      print('I am here');
+      if (time < 30) {
+        Future.delayed(
+            const Duration(seconds: 1), () => checktransactioncompletedloop());
+      } else {
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            useRootNavigator: false,
+            builder: (_) => new AlertDialog(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                  content: Builder(
+                    builder: (context) {
+                      return Container(
+                          height: 150,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Oops. Looks like the payment did not go through. Please try again.',
+                                style: TextStyle(
+                                  fontFamily: 'Helvetica',
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              InkWell(
+                                child: Container(
+                                  height: 60,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 5),
+                                  width: MediaQuery.of(context).size.width - 80,
+                                  decoration: BoxDecoration(
+                                    color: Color.fromRGBO(255, 115, 0, 1),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Center(
+                                      child: Text(
+                                    'Close',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 18,
+                                      color: Colors.white,
+                                    ),
+                                  )),
+                                ),
+                                onTap: () {
+                                  Navigator.pop(
+                                    context,
+                                  );
+                                  Navigator.pop(
+                                    context,
+                                  );
+                                  Navigator.pop(
+                                    context,
+                                  );
+                                },
+                              ),
+                            ],
+                          ));
+                    },
+                  ),
+                ));
+      }
+    } else {
+      Navigator.pop(
+        context,
+      );
+    }
   }
 
   Item newitem;

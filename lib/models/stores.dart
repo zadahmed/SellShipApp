@@ -10,10 +10,12 @@ class Stores {
   final String storetype;
   final bool approved;
   final String address;
+  final String views;
 
   Stores({
     this.storeid,
     this.followers,
+    this.views,
     this.approved,
     this.address,
     this.sold,

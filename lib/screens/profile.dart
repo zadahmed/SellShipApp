@@ -2844,13 +2844,47 @@ class _ProfilePageState extends State<ProfilePage>
                                                               fontSize: 14.0,
                                                               color:
                                                                   Colors.black),
-                                                        )
+                                                        ),
+                                                        // SizedBox(
+                                                        //   height: 5,
+                                                        // ),
+                                                        // Row(
+                                                        //   crossAxisAlignment:
+                                                        //       CrossAxisAlignment
+                                                        //           .center,
+                                                        //   mainAxisAlignment:
+                                                        //       MainAxisAlignment
+                                                        //           .start,
+                                                        //   children: [
+                                                        //     Text(
+                                                        //       storeslist[index]
+                                                        //           .views,
+                                                        //       style: TextStyle(
+                                                        //           fontFamily:
+                                                        //               'Helvetica',
+                                                        //           fontSize:
+                                                        //               14.0,
+                                                        //           color: Colors
+                                                        //               .grey),
+                                                        //     ),
+                                                        //     SizedBox(
+                                                        //       width: 2,
+                                                        //     ),
+                                                        //     Icon(
+                                                        //       Icons
+                                                        //           .remove_red_eye_outlined,
+                                                        //       color:
+                                                        //           Colors.grey,
+                                                        //       size: 16,
+                                                        //     ),
+                                                        //   ],
+                                                        // ),
                                                       ],
                                                     ),
                                                   ]),
                                               Row(
                                                   crossAxisAlignment:
-                                                      CrossAxisAlignment.end,
+                                                      CrossAxisAlignment.center,
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.end,
                                                   children: [
@@ -3019,6 +3053,31 @@ class _ProfilePageState extends State<ProfilePage>
                                                           ],
                                                         ),
                                                       ]),
+                                                  Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .end,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        Column(
+                                                          children: [
+                                                            Icon(
+                                                              Icons
+                                                                  .remove_red_eye_outlined,
+                                                              color:
+                                                                  Colors.grey,
+                                                            ),
+                                                            Text(storeslist[
+                                                                    index]
+                                                                .views)
+                                                          ],
+                                                        ),
+                                                        Icon(
+                                                          Feather.chevron_right,
+                                                          color: Colors.grey,
+                                                        )
+                                                      ])
                                                 ],
                                               )),
                                         ])));
@@ -3259,8 +3318,17 @@ class _ProfilePageState extends State<ProfilePage>
         } else {
           approved = jsonbody[i]['approved'];
         }
+
+        var view;
+        if (jsonbody[i]['views'] == null) {
+          view = false;
+        } else {
+          view = jsonbody[i]['views'];
+        }
+
         Stores store = Stores(
             approved: approved,
+            views: view.toString(),
             storeid: jsonbody[i]['_id']['\$oid'],
             storecategory: jsonbody[i]['storecategory'],
             storelogo: jsonbody[i]['storelogo'],
