@@ -20,12 +20,12 @@ import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
-class OnboardingScreen extends StatefulWidget {
+class OnboardingBottomScreen extends StatefulWidget {
   @override
-  _OnboardingScreenState createState() => _OnboardingScreenState();
+  _OnboardingBottomScreenState createState() => _OnboardingBottomScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> {
+class _OnboardingBottomScreenState extends State<OnboardingBottomScreen> {
   final int _numPages = 2;
   final PageController _pageController = PageController(initialPage: 0);
   int _currentPage = 0;
@@ -369,6 +369,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         padding: EdgeInsets.only(right: 15, top: 10),
                         child: InkWell(
                             onTap: () {
+                              Navigator.pop(context);
                               Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
@@ -376,7 +377,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                           RootScreen()));
                             },
                             child: Text(
-                              'Skip',
+                              'Close',
                               style: TextStyle(
                                 fontFamily: 'Helvetica',
                                 fontSize: 18,

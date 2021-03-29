@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/controllers/FadeAnimations.dart';
+import 'package:SellShip/screens/onboardingbottom.dart';
 
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:SellShip/screens/store/createstorebusinessdetail.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
@@ -50,9 +52,40 @@ class _CreateStoreNameState extends State<CreateStoreName> {
     ));
   }
 
+  final storage = new FlutterSecureStorage();
+  checkuser() async {
+    var userid = await storage.read(key: 'userid');
+
+    if (userid == null) {
+      showModalBottomSheet(
+          context: context,
+          useRootNavigator: false,
+          isScrollControlled: true,
+          isDismissible: false,
+          enableDrag: false,
+          backgroundColor: Colors.transparent,
+          builder: (_) {
+            return DraggableScrollableSheet(
+                expand: false,
+                initialChildSize: 0.9,
+                builder: (_, controller) {
+                  return Container(
+                      decoration: new BoxDecoration(
+                        borderRadius: new BorderRadius.only(
+                            topLeft: const Radius.circular(20.0),
+                            topRight: const Radius.circular(20.0)),
+                      ),
+                      child: OnboardingBottomScreen());
+                });
+          });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+
+    checkuser();
     setState(() {
       userid = widget.userid;
     });

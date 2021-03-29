@@ -16,6 +16,7 @@ import 'package:SellShip/screens/home/nearme.dart';
 import 'package:SellShip/screens/home/toppicks.dart';
 import 'package:SellShip/screens/messages.dart';
 import 'package:SellShip/screens/notifications.dart';
+import 'package:SellShip/screens/onboardingbottom.dart';
 import 'package:SellShip/screens/search.dart';
 import 'package:SellShip/screens/storepage.dart';
 import 'package:SellShip/screens/storepagepublic.dart';
@@ -791,11 +792,37 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
 
   final storage = new FlutterSecureStorage();
 
-  TabController _tabController;
+  checkuser() async {
+    var userid = await storage.read(key: 'userid');
+    if (userid == null) {
+      showModalBottomSheet(
+          context: context,
+          useRootNavigator: false,
+          isScrollControlled: true,
+          isDismissible: false,
+          enableDrag: false,
+          builder: (_) {
+            return DraggableScrollableSheet(
+                expand: false,
+                initialChildSize: 0.9,
+                builder: (_, controller) {
+                  return Container(
+                      decoration: new BoxDecoration(
+                        borderRadius: new BorderRadius.only(
+                            topLeft: const Radius.circular(20.0),
+                            topRight: const Radius.circular(20.0)),
+                      ),
+                      child: OnboardingBottomScreen());
+                });
+          });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
 
+    checkuser();
     if (mounted) {
       setState(() {
         skip = 0;

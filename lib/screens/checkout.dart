@@ -7,6 +7,7 @@ import 'package:SellShip/payments/stripeservice.dart';
 import 'package:SellShip/screens/addpayment.dart';
 import 'package:SellShip/screens/address.dart';
 import 'package:SellShip/screens/details.dart';
+import 'package:SellShip/screens/onboardingbottom.dart';
 import 'package:SellShip/screens/paymentdone.dart';
 import 'package:SellShip/screens/paymentweb.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -37,9 +38,40 @@ class _CheckoutState extends State<Checkout> {
   var cardresult;
   double total;
   double subtotal = 0.0;
+  checkuser() async {
+    var userid = await storage.read(key: 'userid');
+
+    if (userid == null) {
+      Navigator.pop(context);
+      showModalBottomSheet(
+          context: context,
+          useRootNavigator: false,
+          isScrollControlled: true,
+          isDismissible: false,
+          enableDrag: false,
+          backgroundColor: Colors.transparent,
+          builder: (_) {
+            return DraggableScrollableSheet(
+                expand: false,
+                initialChildSize: 0.9,
+                builder: (_, controller) {
+                  return Container(
+                      decoration: new BoxDecoration(
+                        borderRadius: new BorderRadius.only(
+                            topLeft: const Radius.circular(20.0),
+                            topRight: const Radius.circular(20.0)),
+                      ),
+                      child: OnboardingBottomScreen());
+                });
+          });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+
+    checkuser();
     getcurrency();
 
     setState(() {});

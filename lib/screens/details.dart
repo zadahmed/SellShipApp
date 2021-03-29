@@ -9,6 +9,7 @@ import 'package:SellShip/screens/chatpageview.dart';
 import 'package:SellShip/screens/checkout.dart';
 import 'package:SellShip/screens/comments.dart';
 import 'package:SellShip/screens/condition.dart';
+import 'package:SellShip/screens/onboardingbottom.dart';
 import 'package:SellShip/screens/profile.dart';
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:SellShip/screens/size.dart';
@@ -127,6 +128,35 @@ class _DetailsState extends State<Details> {
   List<String> favourites;
 
   bool upDirection = true, flag = true;
+
+  checkuser() async {
+    var userid = await storage.read(key: 'userid');
+
+    if (userid == null) {
+      Navigator.pop(context);
+      showModalBottomSheet(
+          context: context,
+          useRootNavigator: false,
+          isScrollControlled: true,
+          isDismissible: false,
+          enableDrag: false,
+          backgroundColor: Colors.transparent,
+          builder: (_) {
+            return DraggableScrollableSheet(
+                expand: false,
+                initialChildSize: 0.9,
+                builder: (_, controller) {
+                  return Container(
+                      decoration: new BoxDecoration(
+                        borderRadius: new BorderRadius.only(
+                            topLeft: const Radius.circular(20.0),
+                            topRight: const Radius.circular(20.0)),
+                      ),
+                      child: OnboardingBottomScreen());
+                });
+          });
+    }
+  }
 
   @override
   void initState() {
@@ -777,6 +807,7 @@ class _DetailsState extends State<Details> {
         print(response.statusCode);
       }
     } else {
+      checkuser();
       showInSnackBar('Please Login to use Favourites');
     }
   }
@@ -1028,6 +1059,7 @@ class _DetailsState extends State<Details> {
                                                     print(response.statusCode);
                                                   }
                                                 } else {
+                                                  checkuser();
                                                   showInSnackBar(
                                                       'Please Login to use Favourites');
                                                 }
@@ -1075,6 +1107,7 @@ class _DetailsState extends State<Details> {
                                                     print(response.statusCode);
                                                   }
                                                 } else {
+                                                  checkuser();
                                                   showInSnackBar(
                                                       'Please Login to use Favourites');
                                                 }
@@ -2456,6 +2489,7 @@ class _DetailsState extends State<Details> {
                                                                     .statusCode);
                                                               }
                                                             } else {
+                                                              checkuser();
                                                               showInSnackBar(
                                                                   'Please Login to use Favourites');
                                                             }
@@ -2734,12 +2768,7 @@ class _DetailsState extends State<Details> {
                                                 Navigator.of(context,
                                                         rootNavigator: true)
                                                     .pop('dialog');
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          RootScreen(index: 4)),
-                                                );
+                                                checkuser();
                                               },
                                             ));
                                   }
@@ -2884,12 +2913,8 @@ class _DetailsState extends State<Details> {
                                                 Navigator.of(context,
                                                         rootNavigator: true)
                                                     .pop('dialog');
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          RootScreen(index: 4)),
-                                                );
+
+                                                checkuser();
                                               },
                                             ));
                                   }
@@ -3031,12 +3056,7 @@ class _DetailsState extends State<Details> {
                                         Navigator.of(context,
                                                 rootNavigator: true)
                                             .pop('dialog');
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  RootScreen(index: 4)),
-                                        );
+                                        checkuser();
                                       },
                                     ));
                           }

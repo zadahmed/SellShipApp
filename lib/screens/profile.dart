@@ -4,6 +4,7 @@ import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/controllers/FadeAnimations.dart';
 import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/models/stores.dart';
+import 'package:SellShip/screens/onboardingbottom.dart';
 import 'package:SellShip/screens/store/mystorepage.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -151,9 +152,39 @@ class _ProfilePageState extends State<ProfilePage>
     }
   }
 
+  checkuser() async {
+    var userid = await storage.read(key: 'userid');
+
+    if (userid == null) {
+      showModalBottomSheet(
+          context: context,
+          useRootNavigator: false,
+          isScrollControlled: true,
+          isDismissible: false,
+          enableDrag: false,
+          backgroundColor: Colors.transparent,
+          builder: (_) {
+            return DraggableScrollableSheet(
+                expand: false,
+                initialChildSize: 0.9,
+                builder: (_, controller) {
+                  return Container(
+                      decoration: new BoxDecoration(
+                        borderRadius: new BorderRadius.only(
+                            topLeft: const Radius.circular(20.0),
+                            topRight: const Radius.circular(20.0)),
+                      ),
+                      child: OnboardingBottomScreen());
+                });
+          });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+
+    checkuser();
     getStoreData();
     getnotification();
     if (mounted)

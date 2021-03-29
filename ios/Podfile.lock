@@ -172,6 +172,8 @@ PODS:
   - sqflite (0.0.1):
     - Flutter
     - FMDB (~> 2.7.2)
+  - the_apple_sign_in (1.0.0):
+    - Flutter
   - url_launcher (0.0.1):
     - Flutter
   - vibration (1.2.4):
@@ -207,6 +209,7 @@ DEPENDENCIES:
   - share (from `.symlinks/plugins/share/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
+  - the_apple_sign_in (from `.symlinks/plugins/the_apple_sign_in/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
   - vibration (from `.symlinks/plugins/vibration/ios`)
 
@@ -294,6 +297,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences/ios"
   sqflite:
     :path: ".symlinks/plugins/sqflite/ios"
+  the_apple_sign_in:
+    :path: ".symlinks/plugins/the_apple_sign_in/ios"
   url_launcher:
     :path: ".symlinks/plugins/url_launcher/ios"
   vibration:
@@ -352,6 +357,7 @@ SPEC CHECKSUMS:
   share: 0b2c3e82132f5888bccca3351c504d0003b3b410
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   sqflite: ff1d9da63c06588cc8d1faf7256d741f16989d5a
+  the_apple_sign_in: 2e78c83cdb09eba07bb16dcc1f3bc12fcdc8263d
   url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
   vibration: f0c5bb486671fb81e973bfb451d89f8efd07c9c9
 

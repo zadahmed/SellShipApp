@@ -5,6 +5,7 @@ import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/screens/activitybuy.dart';
 import 'package:SellShip/screens/activitysell.dart';
 import 'package:SellShip/screens/chatpageviewseller.dart';
+import 'package:SellShip/screens/onboardingbottom.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -53,9 +54,39 @@ class _ActivityState extends State<Activity>
   @override
   bool get wantKeepAlive => keepalive;
 
+  checkuser() async {
+    var userid = await storage.read(key: 'userid');
+
+    if (userid == null) {
+      showModalBottomSheet(
+          context: context,
+          useRootNavigator: false,
+          isScrollControlled: true,
+          isDismissible: false,
+          enableDrag: false,
+          backgroundColor: Colors.transparent,
+          builder: (_) {
+            return DraggableScrollableSheet(
+                expand: false,
+                initialChildSize: 0.9,
+                builder: (_, controller) {
+                  return Container(
+                      decoration: new BoxDecoration(
+                        borderRadius: new BorderRadius.only(
+                            topLeft: const Radius.circular(20.0),
+                            topRight: const Radius.circular(20.0)),
+                      ),
+                      child: OnboardingBottomScreen());
+                });
+          });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+
+    checkuser();
 
     _tabController = new TabController(length: 2, vsync: this);
   }

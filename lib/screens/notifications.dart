@@ -6,6 +6,7 @@ import 'package:SellShip/screens/chatpagebuyernav.dart';
 import 'package:SellShip/screens/chatpagesellernavroute.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/messages.dart';
+import 'package:SellShip/screens/onboardingbottom.dart';
 import 'package:SellShip/screens/storepagepublic.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -63,9 +64,39 @@ class _NotifcationPageState extends State<NotifcationPage>
   final storage = new FlutterSecureStorage();
   var userid;
 
+  checkuser() async {
+    var userid = await storage.read(key: 'userid');
+    if (userid == null) {
+      Navigator.pop(context);
+      showModalBottomSheet(
+          context: context,
+          useRootNavigator: false,
+          isScrollControlled: true,
+          isDismissible: false,
+          enableDrag: false,
+          builder: (_) {
+            return DraggableScrollableSheet(
+                expand: false,
+                initialChildSize: 0.9,
+                builder: (_, controller) {
+                  return Container(
+                      decoration: new BoxDecoration(
+                        borderRadius: new BorderRadius.only(
+                            topLeft: const Radius.circular(20.0),
+                            topRight: const Radius.circular(20.0)),
+                      ),
+                      child: OnboardingBottomScreen());
+                });
+          });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+
+    checkuser();
+
     refreshnotification();
   }
 
