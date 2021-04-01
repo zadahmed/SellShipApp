@@ -567,7 +567,9 @@ class _AddItemState extends State<AddItem> {
                                                             CreateStoreName()),
                                                   );
                                                 }
-                                                if (newValue.approved == true) {
+                                                if (newValue.approved == true &&
+                                                    newValue.storeid !=
+                                                        'createastore') {
                                                   setState(() {
                                                     _selectedStore = newValue;
                                                   });
@@ -1082,9 +1084,9 @@ class _AddItemState extends State<AddItem> {
                                           textCapitalization:
                                               TextCapitalization.sentences,
                                           style: TextStyle(
-                                              fontFamily: 'Helvetica',
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold),
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 16,
+                                          ),
                                           decoration: InputDecoration(
                                             hintText: "Product Name",
                                             hintStyle: TextStyle(
@@ -1386,14 +1388,15 @@ class _AddItemState extends State<AddItem> {
                                                   textCapitalization:
                                                       TextCapitalization.words,
                                                   onSubmitted: (value) {
-                                                    setState(() {
-                                                      tags.add(value);
-                                                    });
-                                                    tagscontroller.clear();
+                                                    if (value.isNotEmpty) {
+                                                      setState(() {
+                                                        tags.add(value);
+                                                      });
+                                                      tagscontroller.clear();
+                                                    }
                                                   },
                                                   decoration: InputDecoration(
-                                                    hintText:
-                                                        "dubaifashion,abudhabilifestyle,topdeals",
+                                                    hintText: "Add a Tag ↵",
                                                     hintStyle: TextStyle(
                                                         fontFamily: 'Helvetica',
                                                         fontSize: 16,
@@ -2331,7 +2334,8 @@ class _AddItemState extends State<AddItem> {
                                                                                                 if (selectedColors.length > 3) {
                                                                                                   selectedColors.removeAt(0);
                                                                                                   selectedColors.add(colorslist[i]);
-                                                                                                } else if (selectedColors.contains(colorslist[i])) {
+                                                                                                }
+                                                                                                if (selectedColors.contains(colorslist[i])) {
                                                                                                   selectedColors.remove(colorslist[i]);
                                                                                                 } else {
                                                                                                   selectedColors.add(colorslist[i]);
@@ -2728,7 +2732,7 @@ class _AddItemState extends State<AddItem> {
                                                 builder: (_) {
                                                   return DraggableScrollableSheet(
                                                       expand: false,
-                                                      initialChildSize: 0.3,
+                                                      initialChildSize: 0.6,
                                                       builder: (_, controller) {
                                                         return Container(
                                                             height: 100.0,
@@ -2762,7 +2766,7 @@ class _AddItemState extends State<AddItem> {
                                                                                 padding: EdgeInsets.only(right: 15, bottom: 10),
                                                                                 child: Text(
                                                                                   "Done",
-                                                                                  style: TextStyle(fontFamily: 'Helvetica', fontSize: 18, color: Colors.black, fontWeight: FontWeight.w300),
+                                                                                  style: TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.black, fontWeight: FontWeight.w300),
                                                                                 ),
                                                                               ))
                                                                         ],
@@ -2787,7 +2791,7 @@ class _AddItemState extends State<AddItem> {
                                                                             10,
                                                                       ),
                                                                       Text(
-                                                                        'The SellShip listing protection and pricing helps us offer you 24/7 support, cover the transaction fees, free delivery and protect you as a seller. Also covering Buyers to be provided free delivery and protection throughout all their purchases on SellShip',
+                                                                        """All fees are simple and straightforward:\n\n • It’s always free to list an item for sale on SellShip.\n\ • You earn exactly the same amount as the listing price you enter. We add an additional 15% on top of your listing price including delivery to cover for buyer protection and transaction charges.\n\nWhat you get:\n • Free pre-paid shipping label.\n • Free credit card processing.\n • Customer support and SellShip buyer protection.\nDelivery cost added to the listing price are as follows:\n<5kg = AED 20, <10kg = AED 30, <20kg = AED 50, <50kg =AED 110\n\nPlease note, your earnings are based on the listing price and actual earnings will vary based on the final offer price, seller discounts, and any other applicable taxes and discounts.""",
                                                                         style: TextStyle(
                                                                             fontFamily:
                                                                                 'Helvetica',
@@ -2795,7 +2799,7 @@ class _AddItemState extends State<AddItem> {
                                                                                 16,
                                                                             color:
                                                                                 Colors.black),
-                                                                      )
+                                                                      ),
                                                                     ])));
                                                       });
                                                 });

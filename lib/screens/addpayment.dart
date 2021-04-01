@@ -6,7 +6,7 @@ import 'package:SellShip/payments/existingcard.dart';
 import 'package:SellShip/payments/stripeservice.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/orderseller.dart';
-import 'package:SellShip/screens/paymentdone.dart';
+
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';

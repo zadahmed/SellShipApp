@@ -1291,8 +1291,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                                   Container(
                                                     height: 15,
                                                     child: Text(
-                                                      userList[index]
-                                                          .storecategory,
+                                                      userList[index].storetype,
                                                       textAlign:
                                                           TextAlign.center,
                                                       overflow:
@@ -1945,6 +1944,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
         Stores store = new Stores(
             storeid: jsondata['_id']['\$oid'],
             storename: jsondata['storename'],
+            storetype: jsondata['storetype'],
             storecategory: jsondata['storecategory'],
             storelogo: jsondata['storelogo']);
 

@@ -57,7 +57,7 @@ class _AddSubCategoryState extends State<AddSubCategory> {
           'Tops & Blouses',
           'Coats & Jackets',
           'Sweaters',
-          'Handbags',
+          'Bags',
           'Shoes',
           'Women\'s accessories',
           'Modest wear',

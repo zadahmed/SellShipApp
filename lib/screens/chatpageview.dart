@@ -6,7 +6,6 @@ import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/screens/checkout.dart';
 import 'package:SellShip/screens/checkoutoffer.dart';
 import 'package:SellShip/screens/details.dart';
-import 'package:SellShip/screens/orderbuyer.dart';
 import 'package:SellShip/screens/orderbuyeruae.dart';
 import 'package:SellShip/screens/orderseller.dart';
 import 'package:SellShip/screens/orderselleruae.dart';
@@ -434,7 +433,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => OrderBuyer(
+                              builder: (context) => OrderBuyerPage(
                                     itemid: widget.itemid,
                                     messageid: widget.messageid,
                                   )),
@@ -532,7 +531,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => OrderBuyer(
+                              builder: (context) => OrderBuyerPage(
                                     itemid: widget.itemid,
                                     messageid: widget.messageid,
                                   )),
@@ -630,7 +629,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => OrderBuyer(
+                              builder: (context) => OrderBuyerPage(
                                     itemid: widget.itemid,
                                     messageid: widget.messageid,
                                   )),

@@ -17,7 +17,7 @@ import 'package:SellShip/screens/favourites.dart';
 import 'package:SellShip/screens/featureitem.dart';
 import 'package:SellShip/screens/messages.dart';
 import 'package:SellShip/screens/myitems.dart';
-import 'package:SellShip/screens/orders.dart';
+
 import 'package:SellShip/screens/privacypolicy.dart';
 import 'package:SellShip/screens/reviews.dart';
 import 'package:SellShip/screens/rootscreen.dart';
@@ -1177,51 +1177,11 @@ class _ProfilePageState extends State<ProfilePage>
                                                                     .itemid,
                                                           };
 
-                                                          Item favitem = Item(
-                                                              itemid:
-                                                                  favouritelist[index]
-                                                                      .itemid,
-                                                              name: favouritelist[index]
-                                                                  .name,
-                                                              image:
-                                                                  favouritelist[index]
-                                                                      .image,
-                                                              likes: favouritelist[index].likes == null
-                                                                  ? 0
-                                                                  : favouritelist[index]
-                                                                      .likes,
-                                                              comments: favouritelist[index].comments == null
-                                                                  ? 0
-                                                                  : favouritelist[index]
-                                                                      .comments,
-                                                              price:
-                                                                  favouritelist[index]
-                                                                      .price,
-                                                              sold: favouritelist[index]
-                                                                          .sold ==
-                                                                      null
-                                                                  ? false
-                                                                  : favouritelist[index]
-                                                                      .sold,
-                                                              category:
-                                                                  favouritelist[index]
-                                                                      .category);
-
-                                                          favouritelist
-                                                              .remove(favitem);
-                                                          if (mounted)
-                                                            setState(() {
-                                                              favouritelist =
-                                                                  favouritelist;
-                                                              favouritelist[
-                                                                          index]
-                                                                      .likes =
-                                                                  favouritelist[
-                                                                              index]
-                                                                          .likes -
-                                                                      1;
-                                                            });
-
+                                                          setState(() {
+                                                            favouritelist.remove(
+                                                                favouritelist[
+                                                                    index]);
+                                                          });
                                                           final response =
                                                               await http.post(
                                                                   url,
@@ -1232,6 +1192,50 @@ class _ProfilePageState extends State<ProfilePage>
                                                           if (response
                                                                   .statusCode ==
                                                               200) {
+                                                            print('Done');
+                                                            var jsondata = json
+                                                                .decode(response
+                                                                    .body);
+
+                                                            favouritelist
+                                                                .clear();
+                                                            for (int i = 0;
+                                                                i <
+                                                                    jsondata
+                                                                        .length;
+                                                                i++) {
+                                                              Item ite = Item(
+                                                                  itemid: jsondata[i]
+                                                                          ['_id']
+                                                                      ['\$oid'],
+                                                                  name: jsondata[i]
+                                                                      ['name'],
+                                                                  image: jsondata[i]
+                                                                      ['image'],
+                                                                  likes: jsondata[i]['likes'] == null
+                                                                      ? 0
+                                                                      : jsondata[i]
+                                                                          [
+                                                                          'likes'],
+                                                                  comments: jsondata[i]['comments'] == null
+                                                                      ? 0
+                                                                      : jsondata[i]['comments']
+                                                                          .length,
+                                                                  price: jsondata[i]['price']
+                                                                      .toString(),
+                                                                  sold: jsondata[i]['sold'] ==
+                                                                          null
+                                                                      ? false
+                                                                      : jsondata[i]
+                                                                          ['sold'],
+                                                                  category: jsondata[i]['category']);
+                                                              favouritelist
+                                                                  .add(ite);
+                                                            }
+                                                            setState(() {
+                                                              favouritelist =
+                                                                  favouritelist;
+                                                            });
                                                           } else {
                                                             print(response
                                                                 .statusCode);
@@ -1282,30 +1286,54 @@ class _ProfilePageState extends State<ProfilePage>
                                 }),
                                 itemCount: favouritelist.length,
                               ))))
-                  : Expanded(
-                      child: Column(
-                      children: <Widget>[
-                        Container(
-                            height: 250,
-                            child: Image.asset(
-                              'assets/favourites.png',
-                              fit: BoxFit.fitHeight,
-                            )),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Center(
-                          child: Text(
-                            'View your favourites here!',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontFamily: 'Helvetica',
-                              fontSize: 18.0,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ))
+                  : Flexible(
+                      child: EasyRefresh(
+                          header: CustomHeader(
+                              extent: 40.0,
+                              enableHapticFeedback: true,
+                              triggerDistance: 50.0,
+                              headerBuilder: (context,
+                                  loadState,
+                                  pulledExtent,
+                                  loadTriggerPullDistance,
+                                  loadIndicatorExtent,
+                                  axisDirection,
+                                  float,
+                                  completeDuration,
+                                  enableInfiniteLoad,
+                                  success,
+                                  noMore) {
+                                return SpinKitFadingCircle(
+                                  color: Colors.deepOrange,
+                                  size: 30.0,
+                                );
+                              }),
+                          onRefresh: () {
+                            return getfavouritesuser();
+                          },
+                          child: Column(
+                            children: <Widget>[
+                              Container(
+                                  height: 250,
+                                  child: Image.asset(
+                                    'assets/favourites.png',
+                                    fit: BoxFit.fitHeight,
+                                  )),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Center(
+                                child: Text(
+                                  'View your favourites here!',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 18.0,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )))
               : Expanded(
                   child: Container(
                   width: double.infinity,
@@ -1596,15 +1624,15 @@ class _ProfilePageState extends State<ProfilePage>
 
                                           if (countr.trim().toLowerCase() ==
                                               'united arab emirates') {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      OrderBuyerUAE(
-                                                          messageid: item[index]
-                                                              .description,
-                                                          item: item[index])),
-                                            );
+                                            // Navigator.push(
+                                            //   context,
+                                            //   MaterialPageRoute(
+                                            //       builder: (context) =>
+                                            //           OrderBuyerUAE(
+                                            //               messageid: item[index]
+                                            //                   .description,
+                                            //               item: item[index])),
+                                            // );
                                           } else if (countr
                                                   .trim()
                                                   .toLowerCase() ==

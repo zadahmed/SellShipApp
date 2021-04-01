@@ -818,6 +818,18 @@ class _DetailsState extends State<Details> {
     FocusScope.of(context).requestFocus(new FocusNode());
     _scaffoldKey.currentState?.removeCurrentSnackBar();
     _scaffoldKey.currentState.showSnackBar(new SnackBar(
+      action: SnackBarAction(
+        label: value.contains('added to Cart!') ? 'View Cart' : '',
+        textColor: Colors.white,
+        onPressed: () {
+          if (value.contains('added to Cart!')) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Checkout()),
+            );
+          }
+        },
+      ),
       content: new Text(
         value,
         textAlign: TextAlign.center,

@@ -113,12 +113,9 @@ class _MyAppState extends State<MyApp> {
             Routes.notifications: (context) => NotifcationPage(),
             Routes.onBoarding: (context) => OnboardingScreen(),
             Routes.orderBuyer: (context) => OrderBuyer(),
-            Routes.orderBuyerUAE: (context) => OrderBuyerUAE(),
-            Routes.orders: (context) => OrdersScreen(), //
             Routes.orderSeller: (context) => OrderSeller(),
             Routes.orderSellerUAE: (context) => OrderSellerUAE(),
             Routes.otpScreen: (context) => OTPScreen(),
-            Routes.paymentDone: (context) => PaymentDone(),
             Routes.privacyPolicy: (context) => PrivacyPolicy(),
             Routes.profile: (context) => ProfilePage(),
             Routes.reviewBuyer: (context) => ReviewBuyer(),

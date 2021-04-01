@@ -7,12 +7,15 @@ import 'package:SellShip/screens/signUpPage.dart';
 import 'package:SellShip/username.dart';
 import 'package:SellShip/verification/verifyphone.dart';
 import 'package:SellShip/verification/verifyphonesignup.dart';
+import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:auth_buttons/auth_buttons.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_oauth/firebase_auth_oauth.dart';
 import 'package:flutter/material.dart';
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -212,7 +215,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           'first_name': name[0],
           'last_name': name[1],
           'email': profile['email'],
-          'phonenumber': '00',
+          'phonenumber': uuidGenerator.v4().toString(),
           'profilepicture': profile['picture']['data']['url'],
           'password': 'password',
         };
@@ -548,247 +551,199 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               Platform.isIOS
                                   ? AppleAuthButton(
                                       onPressed: () async {
-                                        await FirebaseAuthOAuth()
-                                            .openSignInFlow("apple.com", [
-                                          "email",
-                                          "fullName"
-                                        ], {
-                                          "locale": "en"
-                                        }).then((user) async {
-                                          if (user != null) {
-                                            showDialog(
-                                                context: context,
-                                                barrierDismissible: false,
-                                                useRootNavigator: false,
-                                                builder: (_) => new AlertDialog(
-                                                      shape: RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius.circular(
-                                                                      10.0))),
-                                                      content: Builder(
-                                                        builder: (context) {
-                                                          return Container(
-                                                              height: 100,
-                                                              child: Column(
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .center,
-                                                                children: [
-                                                                  Text(
-                                                                    'Loading..',
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontFamily:
-                                                                          'Helvetica',
-                                                                      fontSize:
-                                                                          18,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      color: Colors
-                                                                          .black,
-                                                                    ),
-                                                                  ),
-                                                                  SizedBox(
-                                                                    height: 15,
-                                                                  ),
-                                                                  Container(
-                                                                      height:
-                                                                          50,
-                                                                      width: 50,
-                                                                      child:
-                                                                          SpinKitDoubleBounce(
-                                                                        color: Colors
-                                                                            .deepOrange,
-                                                                      )),
-                                                                ],
-                                                              ));
-                                                        },
-                                                      ),
-                                                    ));
-                                            var url =
-                                                'https://api.sellship.co/api/signup';
+                                        final result = await FirebaseAuthOAuth()
+                                            .openSignInFlow(
+                                                "apple.com",
+                                                ["email", "fullName"],
+                                                {"locale": "en"});
 
-                                            Map<String, String> body = {
-                                              'first_name':
-                                                  user.displayName != null
-                                                      ? user.displayName
-                                                      : 'First',
-                                              'last_name': 'Name',
-                                              'email': user.email,
-                                              'phonenumber': '000',
-                                              'password': user.uid,
-                                            };
+                                        var user = result;
 
-                                            final response = await http
-                                                .post(url, body: body);
+                                        showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            useRootNavigator: false,
+                                            builder: (_) => new AlertDialog(
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  10.0))),
+                                                  content: Builder(
+                                                    builder: (context) {
+                                                      return Container(
+                                                          height: 100,
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Text(
+                                                                'Loading..',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'Helvetica',
+                                                                  fontSize: 18,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                      .black,
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 15,
+                                                              ),
+                                                              Container(
+                                                                  height: 50,
+                                                                  width: 50,
+                                                                  child:
+                                                                      SpinKitDoubleBounce(
+                                                                    color: Colors
+                                                                        .deepOrange,
+                                                                  )),
+                                                            ],
+                                                          ));
+                                                    },
+                                                  ),
+                                                ));
+                                        var url =
+                                            'https://api.sellship.co/api/signup';
 
-                                            if (response.statusCode == 200) {
-                                              var jsondata =
-                                                  json.decode(response.body);
+                                        Map<String, String> body = {
+                                          'first_name': user.displayName != null
+                                              ? user.displayName
+                                              : 'First',
+                                          'last_name': 'Name',
+                                          'email': user.email,
+                                          'phonenumber': user.uid,
+                                          'password': user.uid,
+                                        };
 
-                                              print(jsondata);
+                                        final response =
+                                            await http.post(url, body: body);
 
-                                              if (jsondata
-                                                  .containsKey('status')) {
-                                                if (jsondata['status']
-                                                        ['message'] ==
-                                                    'User already exists') {
-                                                  SharedPreferences prefs =
-                                                      await SharedPreferences
-                                                          .getInstance();
-                                                  prefs.setBool('seen', true);
-                                                  await storage.write(
-                                                      key: 'userid',
-                                                      value: jsondata['status']
-                                                          ['id']);
+                                        if (response.statusCode == 200) {
+                                          var jsondata =
+                                              json.decode(response.body);
 
-                                                  var userid = await storage
-                                                      .read(key: 'userid');
-                                                  var storeurl =
-                                                      'https://api.sellship.co/api/userstores/' +
-                                                          userid;
+                                          print(jsondata);
 
-                                                  final storeresponse =
-                                                      await http.get(storeurl);
-                                                  print(storeresponse);
-                                                  var storejsonbody =
-                                                      json.decode(
-                                                          storeresponse.body);
+                                          if (jsondata.containsKey('status')) {
+                                            if (jsondata['status']['message'] ==
+                                                'User already exists') {
+                                              SharedPreferences prefs =
+                                                  await SharedPreferences
+                                                      .getInstance();
+                                              prefs.setBool('seen', true);
+                                              await storage.write(
+                                                  key: 'userid',
+                                                  value: jsondata['status']
+                                                      ['id']);
 
-                                                  if (storejsonbody
-                                                      .isNotEmpty) {
-                                                    var storeid =
-                                                        storejsonbody[0]['_id']
-                                                            ['\$oid'];
-                                                    print(storeid);
-                                                    await storage.write(
-                                                        key: 'storeid',
-                                                        value: storeid);
-                                                  }
+                                              var userid = await storage.read(
+                                                  key: 'userid');
+                                              var storeurl =
+                                                  'https://api.sellship.co/api/userstores/' +
+                                                      userid;
+                                              final storeresponse =
+                                                  await http.get(storeurl);
+                                              print(storeresponse);
+                                              var storejsonbody = json
+                                                  .decode(storeresponse.body);
 
-                                                  Navigator.of(context).pop();
-
-                                                  Navigator.pushReplacement(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (BuildContext
-                                                                  context) =>
-                                                              RootScreen()));
-                                                }
-                                              } else {
-                                                SharedPreferences prefs =
-                                                    await SharedPreferences
-                                                        .getInstance();
-                                                prefs.setBool('seen', true);
+                                              if (storejsonbody.isNotEmpty) {
+                                                var storeid = storejsonbody[0]
+                                                    ['_id']['\$oid'];
+                                                print(storeid);
                                                 await storage.write(
-                                                    key: 'userid',
-                                                    value: jsondata['id']);
-
-                                                var userid = await storage.read(
-                                                    key: 'userid');
-                                                var storeurl =
-                                                    'https://api.sellship.co/api/userstores/' +
-                                                        userid;
-                                                final storeresponse =
-                                                    await http.get(storeurl);
-                                                var storejsonbody = json
-                                                    .decode(storeresponse.body);
-
-                                                if (storejsonbody.isNotEmpty) {
-                                                  var storeid =
-                                                      storejsonbody[0]['_id'];
-
-                                                  await storage.write(
-                                                      key: 'storeid',
-                                                      value: storeid);
-                                                }
-
-                                                print(userid);
-                                                Navigator.of(context).pop();
-
-                                                print('I am here');
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          Username(
-                                                        userid: userid,
-                                                      ),
-                                                    ));
+                                                    key: 'storeid',
+                                                    value: storeid);
                                               }
-                                            } else {
-                                              showDialog(
-                                                  context: context,
-                                                  useRootNavigator: false,
-                                                  barrierDismissible: false,
-                                                  builder: (_) =>
-                                                      AssetGiffyDialog(
-                                                        image: Image.asset(
-                                                          'assets/oops.gif',
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                        title: Text(
-                                                          'Oops!',
-                                                          style: TextStyle(
-                                                              fontSize: 22.0,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600),
-                                                        ),
-                                                        description: Text(
-                                                          'Looks like something went wrong!',
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(),
-                                                        ),
-                                                        onlyOkButton: true,
-                                                        entryAnimation:
-                                                            EntryAnimation
-                                                                .DEFAULT,
-                                                        onOkButtonPressed: () {
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                        },
-                                                      ));
+
+                                              Navigator.of(context).pop();
+
+                                              Navigator.pushReplacement(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (BuildContext
+                                                              context) =>
+                                                          RootScreen()));
                                             }
-                                            return user;
                                           } else {
-                                            showDialog(
-                                                context: context,
-                                                useRootNavigator: false,
-                                                builder: (_) =>
-                                                    AssetGiffyDialog(
-                                                      image: Image.asset(
-                                                        'assets/oops.gif',
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                      title: Text(
-                                                        'Oops!',
-                                                        style: TextStyle(
-                                                            fontSize: 22.0,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w600),
-                                                      ),
-                                                      description: Text(
-                                                        'Looks like something went wrong!',
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: TextStyle(),
-                                                      ),
-                                                      onlyOkButton: true,
-                                                      entryAnimation:
-                                                          EntryAnimation
-                                                              .DEFAULT,
-                                                      onOkButtonPressed: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
-                                                    ));
+                                            SharedPreferences prefs =
+                                                await SharedPreferences
+                                                    .getInstance();
+                                            prefs.setBool('seen', true);
+                                            await storage.write(
+                                                key: 'userid',
+                                                value: jsondata['id']);
+
+                                            var userid = await storage.read(
+                                                key: 'userid');
+                                            var storeurl =
+                                                'https://api.sellship.co/api/userstores/' +
+                                                    userid;
+                                            final storeresponse =
+                                                await http.get(storeurl);
+                                            var storejsonbody =
+                                                json.decode(storeresponse.body);
+
+                                            if (storejsonbody.isNotEmpty) {
+                                              var storeid =
+                                                  storejsonbody[0]['_id'];
+
+                                              await storage.write(
+                                                  key: 'storeid',
+                                                  value: storeid);
+                                            }
+
+                                            print(userid);
+                                            Navigator.of(context).pop();
+
+                                            print('I am here');
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      Username(
+                                                    userid: userid,
+                                                  ),
+                                                ));
                                           }
-                                        });
+                                        } else {
+                                          showDialog(
+                                              context: context,
+                                              useRootNavigator: false,
+                                              barrierDismissible: false,
+                                              builder: (_) => AssetGiffyDialog(
+                                                    image: Image.asset(
+                                                      'assets/oops.gif',
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                    title: Text(
+                                                      'Oops!',
+                                                      style: TextStyle(
+                                                          fontSize: 22.0,
+                                                          fontWeight:
+                                                              FontWeight.w600),
+                                                    ),
+                                                    description: Text(
+                                                      'Looks like something went wrong! Please try signing in again.',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(),
+                                                    ),
+                                                    onlyOkButton: true,
+                                                    entryAnimation:
+                                                        EntryAnimation.DEFAULT,
+                                                    onOkButtonPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                  ));
+                                        }
                                       },
                                       style: AuthButtonStyle.icon,
                                     )

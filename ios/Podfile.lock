@@ -3,13 +3,14 @@ PODS:
     - Flutter
   - "app_settings (3.0.0+1)":
     - Flutter
+  - apple_sign_in (0.0.1):
+    - Flutter
   - Branch (0.36.0)
   - BSGridCollectionViewLayout (1.2.5)
   - BSImagePicker (2.10.3):
     - BSGridCollectionViewLayout (= 1.2.5)
     - BSImageView (= 1.0.3)
   - BSImageView (1.0.3)
-  - CryptoKit (0.4.0)
   - FBSDKCoreKit (5.15.1):
     - FBSDKCoreKit/Basics (= 5.15.1)
     - FBSDKCoreKit/Core (= 5.15.1)
@@ -41,7 +42,6 @@ PODS:
     - firebase_core
     - Flutter
   - firebase_auth_oauth (0.0.1):
-    - CryptoKit (~> 0.4)
     - firebase_auth
     - Flutter
   - firebase_core (0.5.3):
@@ -172,8 +172,6 @@ PODS:
   - sqflite (0.0.1):
     - Flutter
     - FMDB (~> 2.7.2)
-  - the_apple_sign_in (1.0.0):
-    - Flutter
   - url_launcher (0.0.1):
     - Flutter
   - vibration (1.2.4):
@@ -182,6 +180,7 @@ PODS:
 DEPENDENCIES:
   - app_review (from `.symlinks/plugins/app_review/ios`)
   - app_settings (from `.symlinks/plugins/app_settings/ios`)
+  - apple_sign_in (from `.symlinks/plugins/apple_sign_in/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_auth_oauth (from `.symlinks/plugins/firebase_auth_oauth/ios`)
@@ -209,7 +208,6 @@ DEPENDENCIES:
   - share (from `.symlinks/plugins/share/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
-  - the_apple_sign_in (from `.symlinks/plugins/the_apple_sign_in/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
   - vibration (from `.symlinks/plugins/vibration/ios`)
 
@@ -219,7 +217,6 @@ SPEC REPOS:
     - BSGridCollectionViewLayout
     - BSImagePicker
     - BSImageView
-    - CryptoKit
     - FBSDKCoreKit
     - FBSDKLoginKit
     - Firebase
@@ -245,6 +242,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/app_review/ios"
   app_settings:
     :path: ".symlinks/plugins/app_settings/ios"
+  apple_sign_in:
+    :path: ".symlinks/plugins/apple_sign_in/ios"
   firebase_analytics:
     :path: ".symlinks/plugins/firebase_analytics/ios"
   firebase_auth:
@@ -297,8 +296,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences/ios"
   sqflite:
     :path: ".symlinks/plugins/sqflite/ios"
-  the_apple_sign_in:
-    :path: ".symlinks/plugins/the_apple_sign_in/ios"
   url_launcher:
     :path: ".symlinks/plugins/url_launcher/ios"
   vibration:
@@ -307,17 +304,17 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   app_review: 6f51001269c59a2f4a5b5ae68b7d106401152764
   app_settings: d103828c9f5d515c4df9ee754dabd443f7cedcf3
+  apple_sign_in: 7716c7ddfa195aeab7dec0dc374ef4ff45d1adb4
   Branch: 8aebcb7a6465f19f9f4d315acced369ae078d3f2
   BSGridCollectionViewLayout: 333dcb457a5a3bdd9212607ab5756553dcfe06cb
   BSImagePicker: 07404254f2fcdaf5a2eb403c0f8c337267ce8738
   BSImageView: a149459433a2687157d034c78e059d30ac7f2544
-  CryptoKit: 778b0eb14434535f70fd1037b297841dd83e3c37
   FBSDKCoreKit: 1d5acf7c9d7a2f92bb1a242dc60cae5b7adb91df
   FBSDKLoginKit: f1ea8026a58b52d30c9f2e6a58ca7d813619fb83
   Firebase: 8db6f2d1b2c5e2984efba4949a145875a8f65fe5
   firebase_analytics: 52ba26fcfb9cc90f76b36c4e5200cc0a7e9024eb
   firebase_auth: d5159db3873478d1ac839af7b10d2f831516136a
-  firebase_auth_oauth: e8041e29e7004b8656784c64b367e94ea97c1010
+  firebase_auth_oauth: db7ad66aa729b98ed87ce68cfaa6bbf96cd65c74
   firebase_core: 5d6a02f3d85acd5f8321c2d6d62877626a670659
   FirebaseAnalytics: 5dd088bd2e67bb9d13dbf792d1164ceaf3052193
   FirebaseAuth: c92d49ada7948d1a23466e3db17bc4c2039dddc3
@@ -357,7 +354,6 @@ SPEC CHECKSUMS:
   share: 0b2c3e82132f5888bccca3351c504d0003b3b410
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   sqflite: ff1d9da63c06588cc8d1faf7256d741f16989d5a
-  the_apple_sign_in: 2e78c83cdb09eba07bb16dcc1f3bc12fcdc8263d
   url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
   vibration: f0c5bb486671fb81e973bfb451d89f8efd07c9c9
 

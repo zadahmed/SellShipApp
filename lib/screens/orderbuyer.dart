@@ -209,7 +209,7 @@ class _OrderBuyerState extends State<OrderBuyer> {
                               height: 10,
                             ),
                             Text(
-                              'Completing payment.. Please wait, this may take up to 30 seconds.',
+                              'Completing payment.. Please do not close this page or refresh, this may take up to 30 seconds.',
                               style: TextStyle(
                                 fontFamily: 'Helvetica',
                                 fontSize: 18,
@@ -227,6 +227,63 @@ class _OrderBuyerState extends State<OrderBuyer> {
               ));
       checktransactioncompletedloop();
     }
+
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        useRootNavigator: false,
+        builder: (_) => new AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              content: Builder(
+                builder: (context) {
+                  return Container(
+                      height: 170,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          CircleAvatar(
+                            backgroundColor: Colors.deepOrangeAccent,
+                            child: Icon(
+                              Icons.check,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            'Your payment has been successfully completed.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontFamily: 'Helvetica',
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          TextButton(
+                            child: Text(
+                              'Go to Order Page',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 16.0,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w800),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      ));
+                },
+              ),
+            ));
 
     var jsonbody = json.decode(response.body);
 
@@ -310,7 +367,7 @@ class _OrderBuyerState extends State<OrderBuyer> {
     if (response.statusCode != 200) {
       time = time + 2;
       print('I am here');
-      if (time < 30) {
+      if (time < 20) {
         Future.delayed(
             const Duration(seconds: 1), () => checktransactioncompletedloop());
       } else {

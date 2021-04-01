@@ -1054,6 +1054,7 @@ class _DiscoverState extends State<Discover>
                 footer: CustomFooter(
                     extent: 40.0,
                     enableHapticFeedback: true,
+                    enableInfiniteLoad: true,
                     footerBuilder: (context,
                         loadState,
                         pulledExtent,
@@ -1888,10 +1889,12 @@ class _DiscoverState extends State<Discover>
                     enableInfiniteLoad,
                     success,
                     noMore) {
-                  return SpinKitFadingCircle(
-                    color: Colors.deepOrange,
-                    size: 30.0,
-                  );
+                  return noMore == false
+                      ? Container()
+                      : SpinKitFadingCircle(
+                          color: Colors.deepOrange,
+                          size: 30.0,
+                        );
                 }),
             header: CustomHeader(
                 extent: 160.0,
