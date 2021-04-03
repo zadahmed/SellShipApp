@@ -502,7 +502,9 @@ class NearMeState extends State<NearMe> {
                                                           1;
                                                 });
                                                 final response = await http
-                                                    .post(url, body: body);
+                                                    .post(url,
+                                                        body:
+                                                            json.encode(body));
 
                                                 if (response.statusCode ==
                                                     200) {
@@ -549,7 +551,9 @@ class NearMeState extends State<NearMe> {
                                                           1;
                                                 });
                                                 final response = await http
-                                                    .post(url, body: body);
+                                                    .post(url,
+                                                        body:
+                                                            json.encode(body));
 
                                                 if (response.statusCode ==
                                                     200) {
@@ -790,7 +794,9 @@ class NearMeState extends State<NearMe> {
                                                             1;
                                                   });
                                                   final response = await http
-                                                      .post(url, body: body);
+                                                      .post(url,
+                                                          body: json
+                                                              .encode(body));
 
                                                   if (response.statusCode ==
                                                       200) {
@@ -952,7 +958,9 @@ class NearMeState extends State<NearMe> {
                                                           1;
                                                 });
                                                 final response = await http
-                                                    .post(url, body: body);
+                                                    .post(url,
+                                                        body:
+                                                            json.encode(body));
 
                                                 if (response.statusCode ==
                                                     200) {
@@ -1003,7 +1011,9 @@ class NearMeState extends State<NearMe> {
                                                           1;
                                                 });
                                                 final response = await http
-                                                    .post(url, body: body);
+                                                    .post(url,
+                                                        body:
+                                                            json.encode(body));
 
                                                 if (response.statusCode ==
                                                     200) {
@@ -1112,7 +1122,8 @@ class NearMeState extends State<NearMe> {
                           'itemid': itemsgrid[index].itemid,
                         };
 
-                        final response = await http.post(url, body: body);
+                        final response =
+                            await http.post(url, body: json.encode(body));
 
                         if (response.statusCode == 200) {
                           var jsondata = json.decode(response.body);
@@ -1142,7 +1153,8 @@ class NearMeState extends State<NearMe> {
                           'itemid': itemsgrid[index].itemid,
                         };
 
-                        final response = await http.post(url, body: body);
+                        final response =
+                            await http.post(url, body: json.encode(body));
 
                         if (response.statusCode == 200) {
                           var jsondata = json.decode(response.body);

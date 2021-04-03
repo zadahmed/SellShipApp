@@ -364,66 +364,48 @@ class _SignUpPageState extends State<SignUpPage> {
                               ]),
                         ),
                         SizedBox(
-                          height: 20,
-                        )
+                          height: 30,
+                        ),
+                        FadeAnimation(
+                            1.5,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ForgotPassword()));
+                                  },
+                                  child: Text(
+                                    "Already have an account?  ",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: 16,
+                                      fontFamily: 'Helvetica',
+                                    ),
+                                  ),
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text(
+                                    "Login",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                      fontFamily: 'Helvetica',
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )),
                       ],
                     ),
                   )),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: EdgeInsets.only(left: 40, bottom: 50, right: 40),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      FadeAnimation(
-                          1.5,
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ForgotPassword()));
-                                },
-                                child: Text(
-                                  "Already have an account?",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 16,
-                                    fontFamily: 'Helvetica',
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )),
-                      FadeAnimation(
-                          1.5,
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              InkWell(
-                                onTap: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Text(
-                                  "Login",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                    fontFamily: 'Helvetica',
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )),
-                    ],
-                  ),
-                ),
-              ),
               Align(
                 alignment: Alignment.topLeft,
                 child: FadeAnimation(

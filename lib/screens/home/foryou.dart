@@ -1021,9 +1021,6 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
         country = countr;
       });
 
-    fetchRecentlyAdded(skip, limit);
-    fetchbelowhundred(skip, limit);
-
     _getLocation();
   }
 
@@ -1038,6 +1035,29 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
     super.build(context);
     return Scaffold(
         key: scaffoldState,
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.white,
+          leading: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(
+              Icons.arrow_back_ios,
+              color: Color.fromRGBO(28, 45, 65, 1),
+            ),
+          ),
+          title: Text(
+            'For You',
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+                fontFamily: 'Helvetica',
+                fontSize: 16,
+                color: Colors.black,
+                fontWeight: FontWeight.bold),
+          ),
+        ),
         backgroundColor: Colors.white,
         body: foryouPage(context));
   }
@@ -1076,6 +1096,9 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
         print('Followed');
       }
     }
+    setState(() {
+      followingusers = followingusers;
+    });
   }
 
   Widget foryouPage(BuildContext context) {
@@ -1175,7 +1198,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Sellers you may like',
+                                    'Stores you may like',
                                     style: TextStyle(
                                         fontFamily: 'Helvetica',
                                         fontSize: 20.0,
@@ -1522,7 +1545,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Sellers you may like',
+                                'Stores you may like',
                                 style: TextStyle(
                                     fontFamily: 'Helvetica',
                                     fontSize: 20.0,
@@ -1707,78 +1730,83 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                           )),
                     ),
                   ),
-                  SliverStaggeredGrid.countBuilder(
-                    crossAxisCount: 2,
-                    itemCount: itemsgrid.length,
-                    staggeredTileBuilder: (int index) =>
-                        new StaggeredTile.fit(1),
-                    mainAxisSpacing: 4.0,
-                    crossAxisSpacing: 4.0,
-                    itemBuilder: (BuildContext context, index) {
-                      return InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                                builder: (context) => Details(
-                                    itemid: foryouscroll[index].itemid,
-                                    image: foryouscroll[index].image,
-                                    name: foryouscroll[index].name,
-                                    sold: foryouscroll[index].sold,
-                                    source: 'foryouscroll')),
-                          );
-                        },
-                        child: Stack(children: <Widget>[
-                          Container(
-                            height: 150,
-                            width: MediaQuery.of(context).size.width,
-                            child: ClipRRect(
-                              child: Hero(
-                                tag:
-                                    'foryouscroll${foryouscroll[index].itemid}',
-                                child: CachedNetworkImage(
-                                  height: 200,
-                                  width: 300,
-                                  fadeInDuration: Duration(microseconds: 5),
-                                  imageUrl: foryouscroll[index].image.isEmpty
-                                      ? SpinKitDoubleBounce(
-                                          color: Colors.deepOrange)
-                                      : foryouscroll[index].image,
-                                  fit: BoxFit.cover,
-                                  placeholder: (context, url) =>
-                                      SpinKitDoubleBounce(
-                                          color: Colors.deepOrange),
-                                  errorWidget: (context, url, error) =>
-                                      Icon(Icons.error),
-                                ),
-                              ),
-                            ),
-                          ),
-                          foryouscroll[index].sold == true
-                              ? Align(
-                                  alignment: Alignment.center,
-                                  child: Container(
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      color: Colors.black.withOpacity(0.4),
-                                    ),
-                                    width: 210,
-                                    child: Center(
-                                      child: Text(
-                                        'Sold',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontFamily: 'Helvetica',
-                                          color: Colors.white,
-                                        ),
+                  foryouscroll.isNotEmpty
+                      ? SliverStaggeredGrid.countBuilder(
+                          crossAxisCount: 2,
+                          itemCount: itemsgrid.length,
+                          staggeredTileBuilder: (int index) =>
+                              new StaggeredTile.fit(1),
+                          mainAxisSpacing: 4.0,
+                          crossAxisSpacing: 4.0,
+                          itemBuilder: (BuildContext context, index) {
+                            return InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                      builder: (context) => Details(
+                                          itemid: foryouscroll[index].itemid,
+                                          image: foryouscroll[index].image,
+                                          name: foryouscroll[index].name,
+                                          sold: foryouscroll[index].sold,
+                                          source: 'foryouscroll')),
+                                );
+                              },
+                              child: Stack(children: <Widget>[
+                                Container(
+                                  height: 150,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: ClipRRect(
+                                    child: Hero(
+                                      tag:
+                                          'foryouscroll${foryouscroll[index].itemid}',
+                                      child: CachedNetworkImage(
+                                        height: 200,
+                                        width: 300,
+                                        fadeInDuration:
+                                            Duration(microseconds: 5),
+                                        imageUrl:
+                                            foryouscroll[index].image.isEmpty
+                                                ? SpinKitDoubleBounce(
+                                                    color: Colors.deepOrange)
+                                                : foryouscroll[index].image,
+                                        fit: BoxFit.cover,
+                                        placeholder: (context, url) =>
+                                            SpinKitDoubleBounce(
+                                                color: Colors.deepOrange),
+                                        errorWidget: (context, url, error) =>
+                                            Icon(Icons.error),
                                       ),
                                     ),
-                                  ))
-                              : Container(),
-                        ]),
-                      );
-                    },
-                  )
+                                  ),
+                                ),
+                                foryouscroll[index].sold == true
+                                    ? Align(
+                                        alignment: Alignment.center,
+                                        child: Container(
+                                          height: 50,
+                                          decoration: BoxDecoration(
+                                            color:
+                                                Colors.black.withOpacity(0.4),
+                                          ),
+                                          width: 210,
+                                          child: Center(
+                                            child: Text(
+                                              'Sold',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ))
+                                    : Container(),
+                              ]),
+                            );
+                          },
+                        )
+                      : SliverToBoxAdapter(child: Container())
                 ],
                 onLoad: () {
                   setState(() {

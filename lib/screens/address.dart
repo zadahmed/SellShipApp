@@ -1559,6 +1559,16 @@ class _AddressState extends State<Address> {
                                                           .address;
                                                   radiovalue = intvalue;
                                                 });
+
+                                                var returnedaddress = {
+                                                  'address':
+                                                      addresseslist[index],
+                                                  'phonenumber':
+                                                      addresseslist[index]
+                                                          .phonenumber,
+                                                };
+                                                Navigator.pop(
+                                                    context, returnedaddress);
                                               }),
                                           Text(
                                             addresseslist[index].addresstype,

@@ -165,7 +165,7 @@ class _SettingsState extends State<Settings> {
                         'Account Settings',
                         style: TextStyle(
                             fontFamily: 'Helvetica',
-                            fontSize: 16,
+                            fontSize: 18,
                             color: Colors.grey,
                             fontWeight: FontWeight.bold),
                       ),
@@ -375,7 +375,7 @@ class _SettingsState extends State<Settings> {
                         'Verification',
                         style: TextStyle(
                             fontFamily: 'Helvetica',
-                            fontSize: 16,
+                            fontSize: 18,
                             color: Colors.grey,
                             fontWeight: FontWeight.bold),
                       ),
@@ -533,7 +533,7 @@ class _SettingsState extends State<Settings> {
                   'Other Settings',
                   style: TextStyle(
                       fontFamily: 'Helvetica',
-                      fontSize: 16,
+                      fontSize: 18,
                       color: Colors.grey,
                       fontWeight: FontWeight.bold),
                 ),

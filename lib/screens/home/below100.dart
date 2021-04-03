@@ -491,7 +491,9 @@ class Below100State extends State<Below100> {
                                                           1;
                                                 });
                                                 final response = await http
-                                                    .post(url, body: body);
+                                                    .post(url,
+                                                        body:
+                                                            json.encode(body));
 
                                                 if (response.statusCode ==
                                                     200) {
@@ -538,7 +540,9 @@ class Below100State extends State<Below100> {
                                                           1;
                                                 });
                                                 final response = await http
-                                                    .post(url, body: body);
+                                                    .post(url,
+                                                        body:
+                                                            json.encode(body));
 
                                                 if (response.statusCode ==
                                                     200) {

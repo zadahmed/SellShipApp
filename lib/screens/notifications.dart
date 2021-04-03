@@ -326,7 +326,7 @@ class _NotifcationPageState extends State<NotifcationPage>
                                                 )),
                                       );
                                     } else if (notifs[index].navroute ==
-                                        'order') {
+                                        'orderbuyer') {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -377,40 +377,52 @@ class _NotifcationPageState extends State<NotifcationPage>
                                               children: [
                                                 Container(
                                                   height: 70,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.grey.shade300,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                  ),
                                                   width: 70,
                                                   child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5),
-                                                      child: notifs[index]
-                                                              .image
-                                                              .isNotEmpty
-                                                          ? CachedNetworkImage(
-                                                              fadeInDuration:
-                                                                  Duration(
-                                                                      microseconds:
-                                                                          5),
-                                                              imageUrl:
-                                                                  notifs[index]
-                                                                      .image,
-                                                              fit: BoxFit.cover,
-                                                              width: 300,
-                                                              height: 200,
-                                                              placeholder: (context,
-                                                                      url) =>
-                                                                  SpinKitDoubleBounce(
-                                                                      color: Colors
-                                                                          .deepOrange),
-                                                              errorWidget: (context,
-                                                                      url,
-                                                                      error) =>
-                                                                  Icon(Icons
-                                                                      .error),
-                                                            )
-                                                          : SpinKitDoubleBounce(
-                                                              color: Colors
-                                                                  .deepOrange,
-                                                            )),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                    child: notifs[index]
+                                                                    .image !=
+                                                                null &&
+                                                            notifs[index]
+                                                                .image
+                                                                .isNotEmpty
+                                                        ? CachedNetworkImage(
+                                                            fadeInDuration:
+                                                                Duration(
+                                                                    microseconds:
+                                                                        5),
+                                                            imageUrl:
+                                                                notifs[index]
+                                                                    .image,
+                                                            fit: BoxFit.cover,
+                                                            width: 300,
+                                                            height: 200,
+                                                            placeholder: (context,
+                                                                    url) =>
+                                                                SpinKitDoubleBounce(
+                                                                    color: Colors
+                                                                        .deepOrange),
+                                                            errorWidget:
+                                                                (context, url,
+                                                                        error) =>
+                                                                    Icon(Icons
+                                                                        .error),
+                                                          )
+                                                        : Icon(
+                                                            FontAwesome
+                                                                .user_circle,
+                                                            color: Colors.white,
+                                                            size: 40,
+                                                          ),
+                                                  ),
                                                 ),
                                                 SizedBox(
                                                   width: 10,

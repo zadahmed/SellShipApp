@@ -797,6 +797,7 @@ class _HomeScreenState extends State<HomeScreen>
   void initState() {
     super.initState();
 
+    getnotification();
     if (mounted) {
       setState(() {
         notifbadge = false;
@@ -912,27 +913,14 @@ class _HomeScreenState extends State<HomeScreen>
 
       final response = await http.get(url);
       if (response.statusCode == 200) {
+        print(response.body);
         var notificationinfo = json.decode(response.body);
-        var notif = notificationinfo['notification'];
-        var notcoun = notificationinfo['notcount'];
-        if (notif <= 0) {
-          setState(() {
-            notifcount = notif;
-            notifbadge = false;
-          });
-          FlutterAppBadger.removeBadge();
-        } else if (notif > 0) {
-          setState(() {
-            notifcount = notif;
-            notifbadge = true;
-          });
-        }
 
-        print(notifcount);
+        var notcoun = notificationinfo['notcount'];
 
         if (notcoun <= 0) {
           setState(() {
-            notcount = notcoun;
+            notcount = 0;
             notbadge = false;
           });
           FlutterAppBadger.removeBadge();
@@ -943,9 +931,7 @@ class _HomeScreenState extends State<HomeScreen>
           });
         }
 
-        print(notcount);
-
-        FlutterAppBadger.updateBadgeCount(notifcount + notcount);
+        FlutterAppBadger.updateBadgeCount(notcount);
       } else {
         print(response.statusCode);
       }
@@ -1020,8 +1006,9 @@ class _HomeScreenState extends State<HomeScreen>
               padding: EdgeInsets.only(left: 5),
               child: Badge(
                 showBadge: notbadge,
-                position: BadgePosition.topRight(top: 2, right: -4),
+                position: BadgePosition.topRight(top: 5, right: 5),
                 animationType: BadgeAnimationType.slide,
+                badgeColor: Colors.deepOrange,
                 badgeContent: Text(
                   notcount.toString(),
                   style: TextStyle(color: Colors.white),
@@ -1043,315 +1030,6 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ),
             actions: <Widget>[
-//              Padding(
-//                child: InkWell(
-//                  onTap: () {
-//                    _bottomsheetcontroller =
-//                        scaffoldState.currentState.showBottomSheet((context) {
-//                      return Container(
-//                          decoration: BoxDecoration(
-//                              border:
-//                                  Border.all(width: 0.2, color: Colors.grey),
-//                              borderRadius: BorderRadius.circular(20),
-//                              color: Colors.white),
-//                          height: 525,
-//                          width: MediaQuery.of(context).size.width,
-//                          child: Padding(
-//                              padding: const EdgeInsets.all(1.0),
-//                              child: Column(
-//                                  mainAxisAlignment: MainAxisAlignment.start,
-//                                  crossAxisAlignment: CrossAxisAlignment.center,
-//                                  children: [
-//                                    SizedBox(
-//                                      height: 5,
-//                                    ),
-//                                    AppBar(
-//                                      title: Text('Filter',
-//                                          style: TextStyle(
-//                                            fontFamily: 'Helvetica',
-//                                            fontSize: 18,
-//                                            fontWeight: FontWeight.bold,
-//                                            color:
-//                                                Color.fromRGBO(28, 45, 65, 1),
-//                                          )),
-//                                      elevation: 0.5,
-//                                      backgroundColor: Colors.white,
-//                                      excludeHeaderSemantics: true,
-//                                      automaticallyImplyLeading: false,
-//                                      actions: [
-//                                        Padding(
-//                                            padding: EdgeInsets.all(15),
-//                                            child: InkWell(
-//                                                onTap: () {
-//                                                  Navigator.pop(context);
-//                                                },
-//                                                child: Text('Done',
-//                                                    style: TextStyle(
-//                                                      fontFamily: 'Helvetica',
-//                                                      fontSize: 18,
-//                                                      color: Color.fromRGBO(
-//                                                          28, 45, 65, 1),
-//                                                    ))))
-//                                      ],
-//                                    ),
-//                                    Padding(
-//                                        padding:
-//                                            const EdgeInsets.only(top: 10.0),
-//                                        child: Row(
-//                                            crossAxisAlignment:
-//                                                CrossAxisAlignment.start,
-//                                            children: <Widget>[
-//                                              Container(
-//                                                width: MediaQuery.of(context)
-//                                                        .size
-//                                                        .width *
-//                                                    0.2,
-//                                                height: 450,
-//                                                child: ListView(
-//                                                  scrollDirection:
-//                                                      Axis.vertical,
-//                                                  children: [
-//                                                    Container(
-//                                                        width: MediaQuery.of(
-//                                                                context)
-//                                                            .size
-//                                                            .width,
-//                                                        child: InkWell(
-//                                                          child: Column(
-//                                                            mainAxisAlignment:
-//                                                                MainAxisAlignment
-//                                                                    .center,
-//                                                            crossAxisAlignment:
-//                                                                CrossAxisAlignment
-//                                                                    .center,
-//                                                            children: <Widget>[
-//                                                              Align(
-//                                                                alignment: Alignment
-//                                                                    .bottomCenter,
-//                                                                child: Text(
-//                                                                  'Sort',
-//                                                                  style: TextStyle(
-//                                                                      fontFamily:
-//                                                                          'Helvetica',
-//                                                                      fontSize:
-//                                                                          14,
-//                                                                      color: Color
-//                                                                          .fromRGBO(
-//                                                                              28,
-//                                                                              45,
-//                                                                              65,
-//                                                                              1),
-//                                                                      fontWeight:
-//                                                                          FontWeight
-//                                                                              .w600),
-//                                                                  textAlign:
-//                                                                      TextAlign
-//                                                                          .center,
-//                                                                ),
-//                                                              ),
-//                                                              Divider()
-//                                                            ],
-//                                                          ),
-//                                                          onTap: () {
-//                                                            _bottomsheetcontroller
-//                                                                .setState(() {
-//                                                              _filter = 'Sort';
-//                                                            });
-//                                                          },
-//                                                        )),
-//                                                    Container(
-//                                                        width: MediaQuery.of(
-//                                                                context)
-//                                                            .size
-//                                                            .width,
-//                                                        child: InkWell(
-//                                                          child: Column(
-//                                                            mainAxisAlignment:
-//                                                                MainAxisAlignment
-//                                                                    .center,
-//                                                            crossAxisAlignment:
-//                                                                CrossAxisAlignment
-//                                                                    .center,
-//                                                            children: <Widget>[
-//                                                              Align(
-//                                                                alignment: Alignment
-//                                                                    .bottomCenter,
-//                                                                child: Text(
-//                                                                  'Brand',
-//                                                                  style: TextStyle(
-//                                                                      fontFamily:
-//                                                                          'Helvetica',
-//                                                                      fontSize:
-//                                                                          14,
-//                                                                      color: Color
-//                                                                          .fromRGBO(
-//                                                                              28,
-//                                                                              45,
-//                                                                              65,
-//                                                                              1),
-//                                                                      fontWeight:
-//                                                                          FontWeight
-//                                                                              .w600),
-//                                                                  textAlign:
-//                                                                      TextAlign
-//                                                                          .center,
-//                                                                ),
-//                                                              ),
-//                                                              Divider()
-//                                                            ],
-//                                                          ),
-//                                                          onTap: () async {
-//                                                            brands.clear();
-//                                                            var categoryurl =
-//                                                                'https://api.sellship.co/api/getallbrands';
-//                                                            final categoryresponse =
-//                                                                await http.get(
-//                                                                    categoryurl);
-//                                                            if (categoryresponse
-//                                                                    .statusCode ==
-//                                                                200) {
-//                                                              var categoryrespons =
-//                                                                  json.decode(
-//                                                                      categoryresponse
-//                                                                          .body);
-//
-//                                                              for (int i = 0;
-//                                                                  i <
-//                                                                      categoryrespons
-//                                                                          .length;
-//                                                                  i++) {
-//                                                                brands.add(
-//                                                                    categoryrespons[
-//                                                                        i]);
-//                                                              }
-//                                                              _bottomsheetcontroller
-//                                                                  .setState(() {
-//                                                                brands = brands;
-//                                                              });
-//                                                            } else {
-//                                                              print(categoryresponse
-//                                                                  .statusCode);
-//                                                            }
-//                                                            _bottomsheetcontroller
-//                                                                .setState(() {
-//                                                              _filter = 'Brand';
-//                                                            });
-//                                                          },
-//                                                        )),
-//                                                    Container(
-//                                                        width: MediaQuery.of(
-//                                                                context)
-//                                                            .size
-//                                                            .width,
-//                                                        child: InkWell(
-//                                                          child: Column(
-//                                                            mainAxisAlignment:
-//                                                                MainAxisAlignment
-//                                                                    .center,
-//                                                            crossAxisAlignment:
-//                                                                CrossAxisAlignment
-//                                                                    .center,
-//                                                            children: <Widget>[
-//                                                              Align(
-//                                                                alignment: Alignment
-//                                                                    .bottomCenter,
-//                                                                child: Text(
-//                                                                  'Condition',
-//                                                                  style: TextStyle(
-//                                                                      fontFamily:
-//                                                                          'Helvetica',
-//                                                                      fontSize:
-//                                                                          14,
-//                                                                      color: Color
-//                                                                          .fromRGBO(
-//                                                                              28,
-//                                                                              45,
-//                                                                              65,
-//                                                                              1),
-//                                                                      fontWeight:
-//                                                                          FontWeight
-//                                                                              .w600),
-//                                                                  textAlign:
-//                                                                      TextAlign
-//                                                                          .center,
-//                                                                ),
-//                                                              ),
-//                                                              Divider()
-//                                                            ],
-//                                                          ),
-//                                                          onTap: () {
-//                                                            _bottomsheetcontroller
-//                                                                .setState(() {
-//                                                              _filter =
-//                                                                  'Condition';
-//                                                            });
-//                                                          },
-//                                                        )),
-//                                                    Container(
-//                                                        width: MediaQuery.of(
-//                                                                context)
-//                                                            .size
-//                                                            .width,
-//                                                        child: InkWell(
-//                                                          child: Column(
-//                                                            mainAxisAlignment:
-//                                                                MainAxisAlignment
-//                                                                    .center,
-//                                                            crossAxisAlignment:
-//                                                                CrossAxisAlignment
-//                                                                    .center,
-//                                                            children: <Widget>[
-//                                                              Align(
-//                                                                alignment: Alignment
-//                                                                    .bottomCenter,
-//                                                                child: Text(
-//                                                                  'Price',
-//                                                                  style: TextStyle(
-//                                                                      fontFamily:
-//                                                                          'Helvetica',
-//                                                                      fontSize:
-//                                                                          14,
-//                                                                      color: Color
-//                                                                          .fromRGBO(
-//                                                                              28,
-//                                                                              45,
-//                                                                              65,
-//                                                                              1),
-//                                                                      fontWeight:
-//                                                                          FontWeight
-//                                                                              .w600),
-//                                                                  textAlign:
-//                                                                      TextAlign
-//                                                                          .center,
-//                                                                ),
-//                                                              ),
-//                                                              Divider()
-//                                                            ],
-//                                                          ),
-//                                                          onTap: () {
-//                                                            _bottomsheetcontroller
-//                                                                .setState(() {
-//                                                              _filter = 'Price';
-//                                                            });
-//                                                          },
-//                                                        )),
-//                                                  ],
-//                                                ),
-//                                              ),
-//                                              filters(context)
-//                                            ]))
-//                                  ])));
-//                    });
-//                  },
-//                  child: CircleAvatar(
-//                    backgroundColor: Color.fromRGBO(255, 115, 0, 0.2),
-//                    child: SvgPicture.asset(
-//                        'assets/bottomnavbar/sound-module-fill.svg'),
-//                  ),
-//                ),
-
-//                padding: EdgeInsets.only(right: 10),
-//              )
               InkWell(
                 onTap: () {
                   Navigator.push(
@@ -1374,49 +1052,49 @@ class _HomeScreenState extends State<HomeScreen>
             child: NestedScrollView(
                 headerSliverBuilder: (context, _) {
                   return [
-                    SliverAppBar(
-                        backgroundColor: Colors.white,
-                        elevation: 0,
-                        pinned: true,
-                        title: Container(
-                          height: 60,
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(20),
-                                  topLeft: Radius.circular(20))),
-                          child: Center(
-                            child: TabBar(
-                              controller: _tabController,
-                              labelStyle: tabTextStyle,
-                              unselectedLabelStyle: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black,
-                                fontFamily: 'Helvetica',
-                              ),
-                              indicatorSize: TabBarIndicatorSize.tab,
-                              indicator: UnderlineTabIndicator(
-                                  borderSide: BorderSide(
-                                      width: 2.0, color: Colors.deepOrange)),
-                              labelColor: Colors.black,
-                              tabs: [
-                                new Container(
-                                  width: MediaQuery.of(context).size.width / 2,
-                                  child: new Tab(
-                                    text: 'Discover',
-                                  ),
-                                ),
-                                new Container(
-                                  width: MediaQuery.of(context).size.width / 2,
-                                  child: new Tab(
-                                    text: 'For You',
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )),
+                    // SliverAppBar(
+                    //     backgroundColor: Colors.white,
+                    //     elevation: 0,
+                    //     pinned: true,
+                    //     title: Container(
+                    //       height: 60,
+                    //       width: MediaQuery.of(context).size.width,
+                    //       decoration: BoxDecoration(
+                    //           color: Colors.white,
+                    //           borderRadius: BorderRadius.only(
+                    //               topRight: Radius.circular(20),
+                    //               topLeft: Radius.circular(20))),
+                    //       child: Center(
+                    //         child: TabBar(
+                    //           controller: _tabController,
+                    //           labelStyle: tabTextStyle,
+                    //           unselectedLabelStyle: TextStyle(
+                    //             fontSize: 16,
+                    //             color: Colors.black,
+                    //             fontFamily: 'Helvetica',
+                    //           ),
+                    //           indicatorSize: TabBarIndicatorSize.tab,
+                    //           indicator: UnderlineTabIndicator(
+                    //               borderSide: BorderSide(
+                    //                   width: 2.0, color: Colors.deepOrange)),
+                    //           labelColor: Colors.black,
+                    //           tabs: [
+                    //             new Container(
+                    //               width: MediaQuery.of(context).size.width / 2,
+                    //               child: new Tab(
+                    //                 text: 'Discover',
+                    //               ),
+                    //             ),
+                    //             new Container(
+                    //               width: MediaQuery.of(context).size.width / 2,
+                    //               child: new Tab(
+                    //                 text: 'For You',
+                    //               ),
+                    //             ),
+                    //           ],
+                    //         ),
+                    //       ),
+                    //     )),
                   ];
                 },
                 body: Container(
@@ -1432,9 +1110,26 @@ class _HomeScreenState extends State<HomeScreen>
                             topRight: Radius.circular(20),
                           ),
                         ),
-                        child: TabBarView(
-                            controller: _tabController,
-                            children: [Discover(), ForYou()]))))));
+                        child: Discover()))
+
+                // Container(
+                //     decoration: BoxDecoration(
+                //       color: Color.fromRGBO(229, 233, 242, 1).withOpacity(0.5),
+                //     ),
+                //     child: Container(
+                //         padding: EdgeInsets.only(top: 15),
+                //         decoration: BoxDecoration(
+                //           color: Colors.white,
+                //           borderRadius: BorderRadius.only(
+                //             topLeft: Radius.circular(20),
+                //             topRight: Radius.circular(20),
+                //           ),
+                //         ),
+                //         child: TabBarView(
+                //             controller: _tabController,
+                //             children: [Discover(), ForYou()])))
+
+                )));
   }
 
   String view = 'home';

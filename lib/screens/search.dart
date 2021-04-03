@@ -174,6 +174,7 @@ class _SearchState extends State<Search>
   }
 
   discoverproducts() async {
+    discoverproductslist.clear();
     var url = 'https://api.sellship.co/api/products/discover/${skip}/${limit}';
 
     final response = await http.get(url);
@@ -195,17 +196,19 @@ class _SearchState extends State<Search>
         category: jsondata['category'],
         sold: jsondata['sold'] == null ? false : jsondata['sold'],
       );
-      itemsgrid.add(item);
+      discoverproductslist.add(item);
     }
 
-    print(itemsgrid);
     setState(() {
-      itemsgrid = itemsgrid.toSet().toList();
+      discoverproductslist = discoverproductslist.toSet().toList();
       loading = false;
     });
   }
 
+  List<Item> discoverproductslist = List<Item>();
+
   discoverstores() async {
+    storeList.clear();
     var url = 'https://api.sellship.co/api/stores/discover/${skip}/${limit}';
 
     final response = await http.get(url);
@@ -253,6 +256,7 @@ class _SearchState extends State<Search>
     final response = await http.get(url);
 
     var jsonbody = json.decode(response.body);
+    print(jsonbody);
 
     for (var jsondata in jsonbody) {
       var q = Map<String, dynamic>.from(jsondata['dateuploaded']);
@@ -306,6 +310,8 @@ class _SearchState extends State<Search>
 
   onSearchUsers(textsearch) async {
     storeList.clear();
+
+    List<Stores> newstores = List<Stores>();
     var url = 'https://api.sellship.co/api/searchstores/' +
         capitalize(textsearch).trim() +
         '/' +
@@ -329,14 +335,16 @@ class _SearchState extends State<Search>
             approved: approved,
             storename: jsondata['storename'],
             storeid: jsondata['_id']['\$oid'],
+            storetype: jsondata['storetype'],
             storelogo: jsondata['storelogo'],
             storecategory: jsondata['storecategory']);
-        storeList.add(store);
+        newstores.add(store);
       }
     }
 
+    print(newstores.length);
     setState(() {
-      storeList = storeList.toSet().toList();
+      storeList = newstores.toSet().toList();
       loading = false;
     });
   }
@@ -419,35 +427,31 @@ class _SearchState extends State<Search>
         limit.toString();
 
     final response = await http.get(url);
-    print(response.body);
 
     var jsonbody = json.decode(response.body);
-
     for (var jsondata in jsonbody) {
       var q = Map<String, dynamic>.from(jsondata['dateuploaded']);
 
       DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
       var dateuploaded = timeago.format(dateuploade);
-
-      if (jsondata['name'].contains(textsearch.trim())) {
-        Item item = Item(
-          itemid: jsondata['_id']['\$oid'],
-          name: jsondata['name'],
-          date: dateuploaded,
-          likes: jsondata['likes'] == null ? 0 : jsondata['likes'],
-          comments:
-              jsondata['comments'] == null ? 0 : jsondata['comments'].length,
-          image: jsondata['image'],
-          price: jsondata['price'].toString(),
-          category: jsondata['category'],
-          sold: jsondata['sold'] == null ? false : jsondata['sold'],
-        );
-        itemsgrid.add(item);
-      }
+      print(jsondata['name']);
+      Item item = Item(
+        itemid: jsondata['_id']['\$oid'],
+        name: jsondata['name'],
+        date: dateuploaded,
+        likes: jsondata['likes'] == null ? 0 : jsondata['likes'],
+        comments:
+            jsondata['comments'] == null ? 0 : jsondata['comments'].length,
+        image: jsondata['image'],
+        price: jsondata['price'].toString(),
+        category: jsondata['category'],
+        sold: jsondata['sold'] == null ? false : jsondata['sold'],
+      );
+      itemsgrid.add(item);
     }
 
     setState(() {
-      itemsgrid = itemsgrid;
+      itemsgrid = itemsgrid.toSet().toList();
       loading = false;
     });
   }
@@ -1005,11 +1009,12 @@ class _SearchState extends State<Search>
                   ),
                   Expanded(
                     child: TextField(
+                      onEditingComplete: () {
+                        FocusScope.of(context).requestFocus(new FocusNode());
+                      },
                       onChanged: (text) {
-                        print(_tabController.index);
                         if (_tabController.index == 0 ||
                             _tabController.index == 1) {
-                          print(text);
                           setState(() {
                             searched = false;
                             skip = 0;
@@ -1827,10 +1832,12 @@ class _SearchState extends State<Search>
                                           enableInfiniteLoad,
                                           success,
                                           noMore) {
-                                        return SpinKitFadingCircle(
-                                          color: Colors.deepOrange,
-                                          size: 30.0,
-                                        );
+                                        return noMore == false
+                                            ? Container()
+                                            : SpinKitFadingCircle(
+                                                color: Colors.deepOrange,
+                                                size: 30.0,
+                                              );
                                       }),
                                   header: CustomHeader(
                                       extent: 160.0,
@@ -1847,10 +1854,12 @@ class _SearchState extends State<Search>
                                           enableInfiniteLoad,
                                           success,
                                           noMore) {
-                                        return SpinKitFadingCircle(
-                                          color: Colors.deepOrange,
-                                          size: 30.0,
-                                        );
+                                        return noMore == false
+                                            ? Container()
+                                            : SpinKitFadingCircle(
+                                                color: Colors.deepOrange,
+                                                size: 30.0,
+                                              );
                                       }),
                                   onRefresh: () {
                                     if (mounted) {
@@ -2016,7 +2025,7 @@ class _SearchState extends State<Search>
                                     ),
                                     SliverStaggeredGrid.countBuilder(
                                       crossAxisCount: 4,
-                                      itemCount: itemsgrid.length,
+                                      itemCount: discoverproductslist.length,
                                       itemBuilder: (context, index) =>
                                           Container(
                                         child: InkWell(
@@ -2025,23 +2034,32 @@ class _SearchState extends State<Search>
                                               context,
                                               CupertinoPageRoute(
                                                   builder: (context) => Details(
-                                                      itemid: itemsgrid[index]
-                                                          .itemid,
-                                                      image: itemsgrid[index]
-                                                          .image,
-                                                      name:
-                                                          itemsgrid[index].name,
+                                                      itemid:
+                                                          discoverproductslist[
+                                                                  index]
+                                                              .itemid,
+                                                      image:
+                                                          discoverproductslist[
+                                                                  index]
+                                                              .image,
+                                                      name: discoverproductslist[
+                                                              index]
+                                                          .name,
                                                       sold:
-                                                          itemsgrid[index].sold,
+                                                          discoverproductslist[
+                                                                  index]
+                                                              .sold,
                                                       source:
                                                           'trendingproducts')),
                                             );
                                           },
                                           child: Hero(
                                             tag:
-                                                'trendingproducts${itemsgrid[index].itemid}',
+                                                'trendingproducts${discoverproductslist[index].itemid}',
                                             child: CachedNetworkImage(
-                                              imageUrl: itemsgrid[index].image,
+                                              imageUrl:
+                                                  discoverproductslist[index]
+                                                      .image,
                                               fit: BoxFit.cover,
                                             ),
                                           ),
@@ -2331,27 +2349,29 @@ class _SearchState extends State<Search>
                                       ),
                                     )
                               : EasyRefresh.custom(
-                                  footer: CustomFooter(
-                                      extent: 80.0,
-                                      triggerDistance: 80.0,
-                                      enableHapticFeedback: true,
-                                      enableInfiniteLoad: true,
-                                      footerBuilder: (context,
-                                          loadState,
-                                          pulledExtent,
-                                          loadTriggerPullDistance,
-                                          loadIndicatorExtent,
-                                          axisDirection,
-                                          float,
-                                          completeDuration,
-                                          enableInfiniteLoad,
-                                          success,
-                                          noMore) {
-                                        return SpinKitFadingCircle(
-                                          color: Colors.deepOrange,
-                                          size: 30.0,
-                                        );
-                                      }),
+                                  // footer: CustomFooter(
+                                  //     extent: 80.0,
+                                  //     triggerDistance: 120.0,
+                                  //     enableHapticFeedback: true,
+                                  //     enableInfiniteLoad: true,
+                                  //     footerBuilder: (context,
+                                  //         loadState,
+                                  //         pulledExtent,
+                                  //         loadTriggerPullDistance,
+                                  //         loadIndicatorExtent,
+                                  //         axisDirection,
+                                  //         float,
+                                  //         completeDuration,
+                                  //         enableInfiniteLoad,
+                                  //         success,
+                                  //         noMore) {
+                                  //       return noMore == false
+                                  //           ? Container()
+                                  //           : SpinKitFadingCircle(
+                                  //               color: Colors.deepOrange,
+                                  //               size: 30.0,
+                                  //             );
+                                  //     }),
                                   header: CustomHeader(
                                       extent: 160.0,
                                       enableHapticFeedback: true,
@@ -2367,10 +2387,12 @@ class _SearchState extends State<Search>
                                           enableInfiniteLoad,
                                           success,
                                           noMore) {
-                                        return SpinKitFadingCircle(
-                                          color: Colors.deepOrange,
-                                          size: 30.0,
-                                        );
+                                        return noMore == false
+                                            ? Container()
+                                            : SpinKitFadingCircle(
+                                                color: Colors.deepOrange,
+                                                size: 30.0,
+                                              );
                                       }),
                                   onRefresh: () {
                                     if (mounted) {
@@ -2381,20 +2403,11 @@ class _SearchState extends State<Search>
                                       });
                                     }
 
-                                    itemsgrid.clear();
+                                    storeList.clear();
 
                                     return discoverstores();
                                   },
-                                  onLoad: () {
-                                    if (mounted) {
-                                      setState(() {
-                                        skip = skip + 20;
-                                        limit = limit + 20;
-                                        loading = true;
-                                      });
-                                    }
-                                    return discoverstores();
-                                  },
+
                                   slivers: <Widget>[
                                     recentsearches.isNotEmpty
                                         ? SliverToBoxAdapter(
@@ -2618,6 +2631,7 @@ class _SearchState extends State<Search>
                                                       ),
                                                       Container(
                                                         width: 120,
+                                                        height: 45,
                                                         padding:
                                                             EdgeInsets.only(
                                                                 bottom: 10,

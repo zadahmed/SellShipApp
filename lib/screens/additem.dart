@@ -2827,9 +2827,12 @@ class _AddItemState extends State<AddItem> {
                                                     children: <Widget>[
                                                       Container(
                                                         width: 155,
-                                                        child: Row(
+                                                        child: Column(
                                                           mainAxisAlignment:
                                                               MainAxisAlignment
+                                                                  .start,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
                                                                   .start,
                                                           children: <Widget>[
                                                             Text(
@@ -2842,14 +2845,16 @@ class _AddItemState extends State<AddItem> {
                                                                       .black),
                                                             ),
                                                             SizedBox(
-                                                              width: 5,
+                                                              height: 5,
                                                             ),
-                                                            Icon(
-                                                              FontAwesome5
-                                                                  .question_circle,
-                                                              size: 15,
-                                                              color:
-                                                                  Colors.grey,
+                                                            Text(
+                                                              'Read more about our fees and pricing',
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'Helvetica',
+                                                                  fontSize: 12,
+                                                                  color: Colors
+                                                                      .deepOrange),
                                                             ),
                                                           ],
                                                         ),

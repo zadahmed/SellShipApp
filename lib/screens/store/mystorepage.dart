@@ -82,8 +82,9 @@ class _StorePageState extends State<StorePage> {
               name: itemrespons[i]['name'],
               image: itemrespons[i]['image'],
               price: itemrespons[i]['price'].toString(),
-              views:
-                  itemrespons[i]['views'] == null ? 0 : itemrespons[i]['views'],
+              views: itemrespons[i]['views'] == null
+                  ? 0
+                  : int.parse(itemrespons[i]['views'].toString()),
               likes:
                   itemrespons[i]['likes'] == null ? 0 : itemrespons[i]['likes'],
               comments: itemrespons[i]['comments'] == null
@@ -252,10 +253,6 @@ class _StorePageState extends State<StorePage> {
                                             decoration: BoxDecoration(
                                               color: Colors.deepOrangeAccent
                                                   .withOpacity(0.8),
-                                              borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(10),
-                                                  topRight:
-                                                      Radius.circular(10)),
                                             ),
                                             width: MediaQuery.of(context)
                                                 .size
@@ -273,6 +270,34 @@ class _StorePageState extends State<StorePage> {
                                             ),
                                           ))
                                       : Container(),
+                                  Positioned(
+                                    right: 0,
+                                    bottom: 2,
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Text(item[index].views.toString(),
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 12,
+                                                color: Colors.white)),
+                                        SizedBox(
+                                          width: 2,
+                                        ),
+                                        Icon(
+                                          Icons.remove_red_eye_outlined,
+                                          color: Colors.white,
+                                          size: 12,
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                   item[index].approved == false
                                       ? Align(
                                           alignment: Alignment.bottomCenter,
@@ -303,6 +328,34 @@ class _StorePageState extends State<StorePage> {
                                             ),
                                           ))
                                       : Container(),
+                                  Positioned(
+                                    right: 0,
+                                    bottom: 2,
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Text(item[index].views.toString(),
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 12,
+                                                color: Colors.white)),
+                                        SizedBox(
+                                          width: 2,
+                                        ),
+                                        Icon(
+                                          Icons.remove_red_eye_outlined,
+                                          color: Colors.white,
+                                          size: 12,
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                      ],
+                                    ),
+                                  )
                                 ],
                               ),
                             ),

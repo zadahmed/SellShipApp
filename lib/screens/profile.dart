@@ -2904,40 +2904,6 @@ class _ProfilePageState extends State<ProfilePage>
                                                               color:
                                                                   Colors.black),
                                                         ),
-                                                        // SizedBox(
-                                                        //   height: 5,
-                                                        // ),
-                                                        // Row(
-                                                        //   crossAxisAlignment:
-                                                        //       CrossAxisAlignment
-                                                        //           .center,
-                                                        //   mainAxisAlignment:
-                                                        //       MainAxisAlignment
-                                                        //           .start,
-                                                        //   children: [
-                                                        //     Text(
-                                                        //       storeslist[index]
-                                                        //           .views,
-                                                        //       style: TextStyle(
-                                                        //           fontFamily:
-                                                        //               'Helvetica',
-                                                        //           fontSize:
-                                                        //               14.0,
-                                                        //           color: Colors
-                                                        //               .grey),
-                                                        //     ),
-                                                        //     SizedBox(
-                                                        //       width: 2,
-                                                        //     ),
-                                                        //     Icon(
-                                                        //       Icons
-                                                        //           .remove_red_eye_outlined,
-                                                        //       color:
-                                                        //           Colors.grey,
-                                                        //       size: 16,
-                                                        //     ),
-                                                        //   ],
-                                                        // ),
                                                       ],
                                                     ),
                                                   ]),
@@ -2947,6 +2913,37 @@ class _ProfilePageState extends State<ProfilePage>
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.end,
                                                   children: [
+                                                    Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                            storeslist[index]
+                                                                .views,
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Helvetica',
+                                                                fontSize: 12,
+                                                                color: Colors
+                                                                    .grey)),
+                                                        SizedBox(
+                                                          width: 2,
+                                                        ),
+                                                        Icon(
+                                                          Icons
+                                                              .remove_red_eye_outlined,
+                                                          color: Colors.grey,
+                                                          size: 12,
+                                                        ),
+                                                        SizedBox(
+                                                          width: 5,
+                                                        ),
+                                                      ],
+                                                    ),
                                                     Icon(
                                                       Feather.chevron_right,
                                                       color: Colors.grey,
@@ -3115,21 +3112,42 @@ class _ProfilePageState extends State<ProfilePage>
                                                   Row(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
-                                                              .end,
+                                                              .center,
                                                       mainAxisAlignment:
                                                           MainAxisAlignment.end,
                                                       children: [
-                                                        Column(
+                                                        Row(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .center,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
                                                           children: [
+                                                            Text(
+                                                                storeslist[
+                                                                        index]
+                                                                    .views,
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        'Helvetica',
+                                                                    fontSize:
+                                                                        12,
+                                                                    color: Colors
+                                                                        .grey)),
+                                                            SizedBox(
+                                                              width: 2,
+                                                            ),
                                                             Icon(
                                                               Icons
                                                                   .remove_red_eye_outlined,
                                                               color:
                                                                   Colors.grey,
+                                                              size: 12,
                                                             ),
-                                                            Text(storeslist[
-                                                                    index]
-                                                                .views)
+                                                            SizedBox(
+                                                              width: 5,
+                                                            ),
                                                           ],
                                                         ),
                                                         Icon(

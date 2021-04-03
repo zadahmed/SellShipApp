@@ -6,16 +6,20 @@ import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/global.dart';
 import 'package:SellShip/models/Items.dart';
+import 'package:SellShip/models/stores.dart';
 import 'package:SellShip/models/user.dart';
 import 'package:SellShip/screens/comments.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/filter.dart';
 import 'package:SellShip/screens/home/below100.dart';
+import 'package:SellShip/screens/home/foryou.dart';
 import 'package:SellShip/screens/home/nearme.dart';
 import 'package:SellShip/screens/home/toppicks.dart';
 import 'package:SellShip/screens/messages.dart';
 import 'package:SellShip/screens/notifications.dart';
 import 'package:SellShip/screens/search.dart';
+import 'package:SellShip/screens/storepage.dart';
+import 'package:SellShip/screens/storepagepublic.dart';
 import 'package:SellShip/screens/subcategory.dart';
 import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
 import 'package:badges/badges.dart';
@@ -810,12 +814,11 @@ class _DiscoverState extends State<Discover>
       statusBarColor: Colors.deepOrange, //or set color with: Color(0xFF0000FF)
     ));
 
+    foryou();
     gettopdata();
     getsubcategoriesinterested();
     readstorage();
   }
-
-  bool foryouloading = true;
 
   List<String> conditions = [
     'New with tags',
@@ -966,6 +969,7 @@ class _DiscoverState extends State<Discover>
 
   void readstorage() async {
     getnotification();
+
     getfavourites();
     var countr = await storage.read(key: 'country');
     if (countr.toLowerCase() == 'united arab emirates') {
@@ -996,6 +1000,7 @@ class _DiscoverState extends State<Discover>
 
     fetchRecentlyAdded(skip, limit);
     fetchbelowhundred(skip, limit);
+    getsellerrecommendation();
 
     _getLocation();
   }
@@ -1017,17 +1022,19 @@ class _DiscoverState extends State<Discover>
 
   String view = 'home';
 
-  List<User> followingusers = List<User>();
+  List<Stores> followingusers = List<Stores>();
 
   followuser(user) async {
-    User foluser = user;
+    Stores foluser = user;
     var userid = await storage.read(key: 'userid');
     if (followingusers.contains(user)) {
       setState(() {
         followingusers.remove(foluser);
       });
-      var followurl =
-          'https://api.sellship.co/api/follow/' + userid + '/' + foluser.userid;
+      var followurl = 'https://api.sellship.co/api/follow/' +
+          userid +
+          '/' +
+          foluser.storeid;
 
       final followresponse = await http.get(followurl);
       if (followresponse.statusCode == 200) {
@@ -1037,692 +1044,23 @@ class _DiscoverState extends State<Discover>
       setState(() {
         followingusers.add(foluser);
       });
-      var followurl =
-          'https://api.sellship.co/api/follow/' + userid + '/' + foluser.userid;
+      var followurl = 'https://api.sellship.co/api/follow/' +
+          userid +
+          '/' +
+          foluser.storeid;
 
       final followresponse = await http.get(followurl);
       if (followresponse.statusCode == 200) {
         print('Followed');
       }
     }
+    setState(() {
+      followingusers = followingusers;
+    });
   }
 
-  Widget foryouPage(BuildContext context) {
-    return foryouloading == false
-        ? foryoulist.isEmpty
-            ? EasyRefresh.custom(
-                footer: CustomFooter(
-                    extent: 40.0,
-                    enableHapticFeedback: true,
-                    enableInfiniteLoad: true,
-                    footerBuilder: (context,
-                        loadState,
-                        pulledExtent,
-                        loadTriggerPullDistance,
-                        loadIndicatorExtent,
-                        axisDirection,
-                        float,
-                        completeDuration,
-                        enableInfiniteLoad,
-                        success,
-                        noMore) {
-                      return SpinKitFadingCircle(
-                        color: Colors.deepOrange,
-                        size: 30.0,
-                      );
-                    }),
-                header: CustomHeader(
-                    extent: 40.0,
-                    enableHapticFeedback: true,
-                    triggerDistance: 50.0,
-                    headerBuilder: (context,
-                        loadState,
-                        pulledExtent,
-                        loadTriggerPullDistance,
-                        loadIndicatorExtent,
-                        axisDirection,
-                        float,
-                        completeDuration,
-                        enableInfiniteLoad,
-                        success,
-                        noMore) {
-                      return SpinKitFadingCircle(
-                        color: Colors.deepOrange,
-                        size: 30.0,
-                      );
-                    }),
-                onRefresh: () {
-                  if (mounted) {
-                    setState(() {
-                      alive = false;
-                      foryouloading = true;
-                      foryou();
-
-                      foryoupagescroll();
-                    });
-                  }
-
-                  return getsellerrecommendation();
-                },
-                slivers: <Widget>[
-                    SliverToBoxAdapter(
-                        child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: MediaQuery.of(context).size.height / 4,
-                          width: MediaQuery.of(context).size.width,
-                          child: Image.asset('assets/024.png',
-                              fit: BoxFit.fitHeight),
-                        ),
-                        Padding(
-                            padding: EdgeInsets.all(15),
-                            child: Text(
-                              'Oops! Looks like you are not following any SellShipers. Here are a few recommendations.',
-                              style: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 18.0,
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.w400),
-                              textAlign: TextAlign.center,
-                            )),
-                        Padding(
-                          padding: EdgeInsets.only(left: 5, right: 5),
-                          child: Container(
-                              height: 270,
-                              width: MediaQuery.of(context).size.width,
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.white,
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Sellers you may like',
-                                    style: TextStyle(
-                                        fontFamily: 'Helvetica',
-                                        fontSize: 20.0,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w800),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  SizedBox(height: 10),
-                                  Container(
-                                    height: 215,
-                                    width: MediaQuery.of(context).size.width,
-                                    child: ListView.builder(
-                                      itemCount: userList.length,
-                                      scrollDirection: Axis.horizontal,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        return new Padding(
-                                          padding: EdgeInsets.only(
-                                              right: 5, top: 10, bottom: 10),
-                                          child: Container(
-                                            height: 205,
-                                            width: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    2 -
-                                                100,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            child: Column(
-                                              children: [
-                                                userList[index].profilepicture !=
-                                                            null &&
-                                                        userList[index]
-                                                            .profilepicture
-                                                            .isNotEmpty
-                                                    ? Container(
-                                                        height: 80,
-                                                        width: 80,
-                                                        child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        50),
-                                                            child:
-                                                                CachedNetworkImage(
-                                                              height: 200,
-                                                              width: 300,
-                                                              imageUrl: userList[
-                                                                      index]
-                                                                  .profilepicture,
-                                                              fit: BoxFit.cover,
-                                                            )),
-                                                      )
-                                                    : CircleAvatar(
-                                                        radius: 40,
-                                                        backgroundColor: Colors
-                                                            .deepOrangeAccent
-                                                            .withOpacity(0.3),
-                                                        child: ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(50),
-                                                          child: Image.asset(
-                                                            'assets/personplaceholder.png',
-                                                            fit:
-                                                                BoxFit.fitWidth,
-                                                          ),
-                                                        )),
-                                                SizedBox(
-                                                  height: 5,
-                                                ),
-                                                Text(
-                                                  '@' +
-                                                      userList[index].username,
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      fontFamily: 'Helvetica',
-                                                      fontSize: 16,
-                                                      color: Colors.black),
-                                                ),
-                                                SizedBox(
-                                                  height: 5,
-                                                ),
-                                                Text(
-                                                  userList[index]
-                                                              .productsnumber !=
-                                                          null
-                                                      ? userList[index]
-                                                              .productsnumber +
-                                                          ' Listings'
-                                                      : '0 Listings',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      fontFamily: 'Helvetica',
-                                                      fontSize: 14,
-                                                      color: Colors.black),
-                                                ),
-                                                SizedBox(
-                                                  height: 5,
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsets.all(5),
-                                                  child: Container(
-                                                    height: 30,
-                                                    width: 100,
-                                                    decoration: BoxDecoration(
-                                                      color: followingusers
-                                                              .contains(
-                                                                  userList[
-                                                                      index])
-                                                          ? Colors.black
-                                                          : Colors.deepOrange,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                    ),
-                                                    child: InkWell(
-                                                      onTap: () async {
-                                                        followuser(
-                                                            userList[index]);
-                                                      },
-                                                      child: Center(
-                                                        child: Text(
-                                                          followingusers
-                                                                  .contains(
-                                                                      userList[
-                                                                          index])
-                                                              ? 'Following'
-                                                              : 'Follow',
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'Helvetica',
-                                                              fontSize: 16,
-                                                              color:
-                                                                  Colors.white,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  )
-                                ],
-                              )),
-                        ),
-                      ],
-                    ))
-                  ])
-            : EasyRefresh.custom(
-                footer: CustomFooter(
-                    extent: 40.0,
-                    enableHapticFeedback: true,
-                    triggerDistance: 50.0,
-                    footerBuilder: (context,
-                        loadState,
-                        pulledExtent,
-                        loadTriggerPullDistance,
-                        loadIndicatorExtent,
-                        axisDirection,
-                        float,
-                        completeDuration,
-                        enableInfiniteLoad,
-                        success,
-                        noMore) {
-                      return SpinKitFadingCircle(
-                        color: Colors.deepOrange,
-                        size: 30.0,
-                      );
-                    }),
-                header: CustomHeader(
-                    extent: 40.0,
-                    enableHapticFeedback: true,
-                    triggerDistance: 50.0,
-                    headerBuilder: (context,
-                        loadState,
-                        pulledExtent,
-                        loadTriggerPullDistance,
-                        loadIndicatorExtent,
-                        axisDirection,
-                        float,
-                        completeDuration,
-                        enableInfiniteLoad,
-                        success,
-                        noMore) {
-                      return SpinKitFadingCircle(
-                        color: Colors.deepOrange,
-                        size: 30.0,
-                      );
-                    }),
-                onRefresh: () {
-                  if (mounted) {
-                    setState(() {
-                      foryouloading = true;
-                      foryou();
-
-                      foryoupagescroll();
-                    });
-                  }
-
-                  return getsellerrecommendation();
-                },
-                slivers: <Widget>[
-                  SliverStaggeredGrid.countBuilder(
-                    crossAxisCount: 2,
-                    itemCount: itemsgrid.length,
-                    staggeredTileBuilder: (int index) =>
-                        new StaggeredTile.fit(1),
-                    mainAxisSpacing: 4.0,
-                    crossAxisSpacing: 4.0,
-                    itemBuilder: (BuildContext context, index) {
-                      return InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                                builder: (context) => Details(
-                                    item: foryoulist[index],
-                                    itemid: foryoulist[index].itemid,
-                                    image: foryoulist[index].image,
-                                    name: foryoulist[index].name,
-                                    sold: foryoulist[index].sold,
-                                    source: 'foryou')),
-                          );
-                        },
-                        child: Stack(children: <Widget>[
-                          Container(
-                            height: 150,
-                            width: MediaQuery.of(context).size.width,
-                            child: ClipRRect(
-                              child: Hero(
-                                tag: 'foryou${foryoulist[index].itemid}',
-                                child: CachedNetworkImage(
-                                  height: 200,
-                                  width: 300,
-                                  fadeInDuration: Duration(microseconds: 5),
-                                  imageUrl: foryoulist[index].image.isEmpty
-                                      ? SpinKitDoubleBounce(
-                                          color: Colors.deepOrange)
-                                      : foryoulist[index].image,
-                                  fit: BoxFit.cover,
-                                  placeholder: (context, url) =>
-                                      SpinKitDoubleBounce(
-                                          color: Colors.deepOrange),
-                                  errorWidget: (context, url, error) =>
-                                      Icon(Icons.error),
-                                ),
-                              ),
-                            ),
-                          ),
-                          foryoulist[index].sold == true
-                              ? Align(
-                                  alignment: Alignment.center,
-                                  child: Container(
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      color: Colors.deepOrangeAccent
-                                          .withOpacity(0.8),
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(10),
-                                          topRight: Radius.circular(10)),
-                                    ),
-                                    width: MediaQuery.of(context).size.width,
-                                    child: Center(
-                                      child: Text(
-                                        'Sold',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            fontFamily: 'Helvetica',
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  ))
-                              : Container(),
-                        ]),
-                      );
-                    },
-                  ),
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 10),
-                      child: Container(
-                          height: 245,
-                          width: MediaQuery.of(context).size.width,
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Sellers you may like',
-                                style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 20.0,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w800),
-                                textAlign: TextAlign.center,
-                              ),
-                              SizedBox(height: 5),
-                              Container(
-                                height: 195,
-                                width: MediaQuery.of(context).size.width,
-                                child: ListView.builder(
-                                  itemCount: userList.length,
-                                  scrollDirection: Axis.horizontal,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return new Padding(
-                                      padding: EdgeInsets.only(
-                                          right: 5, top: 10, bottom: 5),
-                                      child: Container(
-                                        height: 205,
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                    2 -
-                                                100,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        child: Column(
-                                          children: [
-                                            userList[index].profilepicture !=
-                                                        null &&
-                                                    userList[index]
-                                                        .profilepicture
-                                                        .isNotEmpty
-                                                ? Container(
-                                                    height: 80,
-                                                    width: 80,
-                                                    child: ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(50),
-                                                        child:
-                                                            CachedNetworkImage(
-                                                          height: 200,
-                                                          width: 300,
-                                                          imageUrl: userList[
-                                                                  index]
-                                                              .profilepicture,
-                                                          fit: BoxFit.cover,
-                                                        )),
-                                                  )
-                                                : CircleAvatar(
-                                                    radius: 40,
-                                                    backgroundColor: Colors
-                                                        .deepOrangeAccent
-                                                        .withOpacity(0.3),
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              50),
-                                                      child: Image.asset(
-                                                        'assets/personplaceholder.png',
-                                                        fit: BoxFit.fitWidth,
-                                                      ),
-                                                    )),
-                                            SizedBox(
-                                              height: 5,
-                                            ),
-                                            Text(
-                                              '@' + userList[index].username,
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  fontFamily: 'Helvetica',
-                                                  fontSize: 16,
-                                                  color: Colors.black),
-                                            ),
-                                            SizedBox(
-                                              height: 5,
-                                            ),
-                                            Text(
-                                              userList[index].productsnumber !=
-                                                      null
-                                                  ? userList[index]
-                                                          .productsnumber +
-                                                      ' Listings'
-                                                  : '0 Listings',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  fontFamily: 'Helvetica',
-                                                  fontSize: 14,
-                                                  color: Colors.black),
-                                            ),
-                                            SizedBox(
-                                              height: 5,
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.all(5),
-                                              child: Container(
-                                                height: 30,
-                                                width: 100,
-                                                decoration: BoxDecoration(
-                                                  color:
-                                                      followingusers.contains(
-                                                              userList[index])
-                                                          ? Colors.black
-                                                          : Colors.deepOrange,
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                                child: InkWell(
-                                                  onTap: () async {
-                                                    followuser(userList[index]);
-                                                  },
-                                                  child: Center(
-                                                    child: Text(
-                                                      followingusers.contains(
-                                                              userList[index])
-                                                          ? 'Following'
-                                                          : 'Follow',
-                                                      style: TextStyle(
-                                                          fontFamily:
-                                                              'Helvetica',
-                                                          fontSize: 16,
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              )
-                            ],
-                          )),
-                    ),
-                  ),
-                  SliverStaggeredGrid.countBuilder(
-                    crossAxisCount: 2,
-                    itemCount: itemsgrid.length,
-                    staggeredTileBuilder: (int index) =>
-                        new StaggeredTile.fit(1),
-                    mainAxisSpacing: 4.0,
-                    crossAxisSpacing: 4.0,
-                    itemBuilder: (BuildContext context, index) {
-                      return InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                                builder: (context) => Details(
-                                    itemid: foryouscroll[index].itemid,
-                                    image: foryouscroll[index].image,
-                                    name: foryouscroll[index].name,
-                                    sold: foryouscroll[index].sold,
-                                    source: 'foryouscroll')),
-                          );
-                        },
-                        child: Stack(children: <Widget>[
-                          Container(
-                            height: 150,
-                            width: MediaQuery.of(context).size.width,
-                            child: ClipRRect(
-                              child: Hero(
-                                tag:
-                                    'foryouscroll${foryouscroll[index].itemid}',
-                                child: CachedNetworkImage(
-                                  height: 200,
-                                  width: 300,
-                                  fadeInDuration: Duration(microseconds: 5),
-                                  imageUrl: foryouscroll[index].image.isEmpty
-                                      ? SpinKitDoubleBounce(
-                                          color: Colors.deepOrange)
-                                      : foryouscroll[index].image,
-                                  fit: BoxFit.cover,
-                                  placeholder: (context, url) =>
-                                      SpinKitDoubleBounce(
-                                          color: Colors.deepOrange),
-                                  errorWidget: (context, url, error) =>
-                                      Icon(Icons.error),
-                                ),
-                              ),
-                            ),
-                          ),
-                          foryouscroll[index].sold == true
-                              ? Align(
-                                  alignment: Alignment.center,
-                                  child: Container(
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      color: Colors.deepOrangeAccent
-                                          .withOpacity(0.8),
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(10),
-                                          topRight: Radius.circular(10)),
-                                    ),
-                                    width: MediaQuery.of(context).size.width,
-                                    child: Center(
-                                      child: Text(
-                                        'Sold',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            fontFamily: 'Helvetica',
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  ))
-                              : Container(),
-                        ]),
-                      );
-                    },
-                  )
-                ],
-                enableControlFinishLoad: true,
-                onLoad: () {
-                  setState(() {
-                    foryouskip = foryouskip + 30;
-                    foryoulimit = foryoulimit + 30;
-                  });
-                  return foryoupagescroll();
-                },
-              )
-        : Container(
-            height: MediaQuery.of(context).size.height,
-            child: Container(
-              width: double.infinity,
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-              child: Shimmer.fromColors(
-                baseColor: Colors.grey[300],
-                highlightColor: Colors.grey[100],
-                child: ListView(
-                  children: [0, 1, 2, 3, 4, 5, 6]
-                      .map((_) => Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  width: MediaQuery.of(context).size.width / 2 -
-                                      30,
-                                  height: 150.0,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                ),
-                                Container(
-                                  width: MediaQuery.of(context).size.width / 2 -
-                                      30,
-                                  height: 150.0,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ))
-                      .toList(),
-                ),
-              ),
-            ));
-  }
+  List<Item> foryoulist = List<Item>();
+  List<Item> foryouscroll = List<Item>();
 
   foryou() async {
     var userid = await storage.read(key: 'userid');
@@ -1731,6 +1069,7 @@ class _DiscoverState extends State<Discover>
 
     final response = await http.get(url);
     if (response.statusCode == 200) {
+      print(response.body);
       var jsonbody = json.decode(response.body);
       if (jsonbody.isEmpty) {
         if (mounted)
@@ -1751,62 +1090,13 @@ class _DiscoverState extends State<Discover>
         }
         if (mounted)
           setState(() {
-            alive = true;
             foryoulist = testforoyou.toSet().toList();
-            foryouloading = false;
           });
       }
     } else {
       print(response.statusCode);
     }
   }
-
-  int foryouskip = 10;
-  int foryoulimit = 40;
-
-  foryoupagescroll() async {
-    var userid = await storage.read(key: 'userid');
-    var url = 'https://api.sellship.co/api/foryou/feed/' +
-        userid +
-        '/' +
-        foryouskip.toString() +
-        '/' +
-        foryoulimit.toString();
-
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      var jsonbody = json.decode(response.body);
-      if (jsonbody.isEmpty) {
-        if (mounted)
-          setState(() {
-            foryouscroll = [];
-          });
-      } else {
-        var jsonbody = json.decode(response.body);
-
-        for (var i = 0; i < jsonbody.length; i++) {
-          Item item = Item(
-            itemid: jsonbody[i]['_id']['\$oid'],
-            image: jsonbody[i]['image'],
-            name: jsonbody[i]['name'],
-            sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
-          );
-          foryouscroll.add(item);
-        }
-
-        if (mounted)
-          setState(() {
-            foryouscroll = foryouscroll;
-            foryouloading = false;
-          });
-      }
-    } else {
-      print(response.statusCode);
-    }
-  }
-
-  List<Item> foryoulist = List<Item>();
-  List<Item> foryouscroll = List<Item>();
 
   getsellerrecommendation() async {
     userList.clear();
@@ -1816,60 +1106,35 @@ class _DiscoverState extends State<Discover>
         '/' +
         country;
 
-    List<User> testList = new List<User>();
+    List<Stores> testList = new List<Stores>();
     final response = await http.get(url);
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
 
       for (var jsondata in jsonbody) {
-        var lastname;
-        var username;
-        if (jsondata.containsKey('last_name')) {
-          lastname = jsondata['last_name'];
-        } else {
-          lastname = '';
-        }
+        print(jsondata);
+        Stores store = new Stores(
+            storeid: jsondata['_id']['\$oid'],
+            storename: jsondata['storename'],
+            storetype: jsondata['storetype'],
+            storecategory: jsondata['storecategory'],
+            storelogo: jsondata['storelogo']);
 
-        if (jsondata.containsKey('username')) {
-          username = jsondata['username'];
-        } else {
-          username = jsondata['first_name'];
-        }
-
-        int products;
-        if (jsondata.containsKey('products')) {
-          products = jsondata['products'].length;
-        } else {
-          products = 0;
-        }
-
-        User user = new User(
-            firstName: capitalize(jsondata['first_name']) + ' ' + lastname,
-            username: username,
-            userid: jsondata['_id']['\$oid'],
-            productsnumber: products.toString(),
-            profilepicture: jsondata['profilepicture']);
-
-        if (!testList.contains(user)) {
-          testList.add(user);
+        if (!testList.contains(store)) {
+          testList.add(store);
         }
       }
-
-      testList.sort((a, b) {
-        return a.compareTo(b);
-      });
 
       if (mounted)
         setState(() {
           userList = testList;
-          foryouloading = false;
         });
     }
   }
 
   String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 
-  List<User> userList = new List<User>();
+  List<Stores> userList = new List<Stores>();
 
   Widget homePage(BuildContext context) {
     return loading == false
@@ -2100,16 +1365,16 @@ class _DiscoverState extends State<Discover>
               topitems.isNotEmpty
                   ? SliverToBoxAdapter(
                       child: Container(
-                      height: 285,
+                      height: 280,
                       width: MediaQuery.of(context).size.width,
                       child: ListView.builder(
                         itemCount: topitems.length > 20 ? 20 : topitems.length,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (BuildContext context, int index) {
                           return new Padding(
-                            padding: EdgeInsets.all(5),
+                            padding: EdgeInsets.all(10),
                             child: Container(
-                              height: 285,
+                              height: 270,
                               width: MediaQuery.of(context).size.width / 2 - 20,
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -2132,7 +1397,7 @@ class _DiscoverState extends State<Discover>
                                     },
                                     child: Stack(children: <Widget>[
                                       Container(
-                                        height: 230,
+                                        height: 215,
                                         width:
                                             MediaQuery.of(context).size.width,
                                         decoration: BoxDecoration(
@@ -2366,6 +1631,242 @@ class _DiscoverState extends State<Discover>
                       ),
                     ))
                   : SliverToBoxAdapter(),
+              userList.isNotEmpty
+                  ? SliverToBoxAdapter(
+                      child: Padding(
+                          padding: EdgeInsets.only(left: 5, right: 5),
+                          child: Container(
+                              height: 250,
+                              width: MediaQuery.of(context).size.width,
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white,
+                              ),
+                              child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Stores you may like',
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 22.0,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w800),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    SizedBox(height: 10),
+                                    Container(
+                                        height: 190,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: ListView.builder(
+                                            itemCount: userList.length,
+                                            scrollDirection: Axis.horizontal,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return new Padding(
+                                                padding: EdgeInsets.only(
+                                                  right: 5,
+                                                  top: 10,
+                                                ),
+                                                child: Container(
+                                                  height: 190,
+                                                  width: MediaQuery.of(context)
+                                                              .size
+                                                              .width /
+                                                          2 -
+                                                      100,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder:
+                                                                (context) =>
+                                                                    StorePublic(
+                                                                      storeid: userList[
+                                                                              index]
+                                                                          .storeid,
+                                                                      storename:
+                                                                          userList[index]
+                                                                              .storename,
+                                                                    )),
+                                                      );
+                                                    },
+                                                    child: Column(
+                                                      children: [
+                                                        userList[index].storelogo !=
+                                                                    null &&
+                                                                userList[index]
+                                                                    .storelogo
+                                                                    .isNotEmpty
+                                                            ? Container(
+                                                                height: 80,
+                                                                width: 80,
+                                                                child:
+                                                                    ClipRRect(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                                50),
+                                                                        child:
+                                                                            CachedNetworkImage(
+                                                                          height:
+                                                                              200,
+                                                                          width:
+                                                                              300,
+                                                                          imageUrl:
+                                                                              userList[index].storelogo,
+                                                                          fit: BoxFit
+                                                                              .cover,
+                                                                        )),
+                                                              )
+                                                            : CircleAvatar(
+                                                                radius: 40,
+                                                                backgroundColor: Colors
+                                                                    .deepOrangeAccent
+                                                                    .withOpacity(
+                                                                        0.3),
+                                                                child:
+                                                                    ClipRRect(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              50),
+                                                                  child: Image
+                                                                      .asset(
+                                                                    'assets/personplaceholder.png',
+                                                                    fit: BoxFit
+                                                                        .fitWidth,
+                                                                  ),
+                                                                )),
+                                                        SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Container(
+                                                          child: Text(
+                                                            '@' +
+                                                                userList[index]
+                                                                    .storename,
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Helvetica',
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize: 16,
+                                                                color: Colors
+                                                                    .black),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Container(
+                                                          height: 15,
+                                                          child: Text(
+                                                            userList[index]
+                                                                .storetype,
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Helvetica',
+                                                                fontSize: 14,
+                                                                color: Colors
+                                                                    .black),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsets.all(5),
+                                                          child: Container(
+                                                            height: 30,
+                                                            width: 100,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              border: followingusers
+                                                                      .contains(
+                                                                          userList[
+                                                                              index])
+                                                                  ? Border.all(
+                                                                      color: Colors
+                                                                          .white)
+                                                                  : Border.all(
+                                                                      color: Colors
+                                                                          .black
+                                                                          .withOpacity(
+                                                                              0.2)),
+                                                              color: followingusers
+                                                                      .contains(
+                                                                          userList[
+                                                                              index])
+                                                                  ? Colors
+                                                                      .deepOrange
+                                                                  : Colors
+                                                                      .white,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          5),
+                                                            ),
+                                                            child: InkWell(
+                                                              onTap: () async {
+                                                                followuser(
+                                                                    userList[
+                                                                        index]);
+                                                              },
+                                                              child: Center(
+                                                                child: Text(
+                                                                  followingusers
+                                                                          .contains(
+                                                                              userList[index])
+                                                                      ? 'Following'
+                                                                      : 'Follow',
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      fontSize:
+                                                                          16,
+                                                                      color: followingusers.contains(userList[
+                                                                              index])
+                                                                          ? Colors
+                                                                              .white
+                                                                          : Colors
+                                                                              .black,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            }))
+                                  ]))))
+                  : SliverToBoxAdapter(),
               below100list.isNotEmpty
                   ? SliverToBoxAdapter(
                       child: Padding(
@@ -2416,7 +1917,7 @@ class _DiscoverState extends State<Discover>
               below100list.isNotEmpty
                   ? SliverToBoxAdapter(
                       child: Container(
-                      height: 230,
+                      height: 280,
                       width: MediaQuery.of(context).size.width,
                       child: ListView.builder(
                         itemCount: below100list.length,
@@ -2425,7 +1926,7 @@ class _DiscoverState extends State<Discover>
                           return new Padding(
                             padding: EdgeInsets.all(10),
                             child: Container(
-                              height: 210,
+                              height: 280,
                               width: MediaQuery.of(context).size.width / 2 - 20,
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -2450,7 +1951,7 @@ class _DiscoverState extends State<Discover>
                                     },
                                     child: Stack(children: <Widget>[
                                       Container(
-                                        height: 170,
+                                        height: 220,
                                         width:
                                             MediaQuery.of(context).size.width,
                                         decoration: BoxDecoration(
@@ -2695,11 +2196,142 @@ class _DiscoverState extends State<Discover>
                       ),
                     ))
                   : SliverToBoxAdapter(),
+              foryoulist.isNotEmpty
+                  ? SliverToBoxAdapter(
+                      child: Padding(
+                          padding: EdgeInsets.only(
+                              left: 16, top: 10, bottom: 15, right: 36),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              InkWell(
+                                enableFeedback: true,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                        builder: (context) => NearMe()),
+                                  );
+                                },
+                                child: Text(
+                                  'For You',
+                                  style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 22.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                        builder: (context) => ForYou()),
+                                  );
+                                },
+                                enableFeedback: true,
+                                child: Text(
+                                  'See All',
+                                  style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 16.0,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )),
+                    )
+                  : SliverToBoxAdapter(),
+              foryoulist.isNotEmpty
+                  ? SliverToBoxAdapter(
+                      child: Container(
+                          height: 200,
+                          width: MediaQuery.of(context).size.width,
+                          child: ListView.builder(
+                              itemCount: foryoulist.length,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (BuildContext context, int index) {
+                                return InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      CupertinoPageRoute(
+                                          builder: (context) => Details(
+                                              item: foryoulist[index],
+                                              itemid: foryoulist[index].itemid,
+                                              image: foryoulist[index].image,
+                                              name: foryoulist[index].name,
+                                              sold: foryoulist[index].sold,
+                                              source: 'foryou')),
+                                    );
+                                  },
+                                  child: Stack(children: <Widget>[
+                                    Container(
+                                      height: 200,
+                                      width:
+                                          MediaQuery.of(context).size.width / 2,
+                                      child: ClipRRect(
+                                        child: Hero(
+                                          tag:
+                                              'foryou${foryoulist[index].itemid}',
+                                          child: CachedNetworkImage(
+                                            height: 200,
+                                            width: 300,
+                                            fadeInDuration:
+                                                Duration(microseconds: 5),
+                                            imageUrl: foryoulist[index]
+                                                    .image
+                                                    .isEmpty
+                                                ? SpinKitDoubleBounce(
+                                                    color: Colors.deepOrange)
+                                                : foryoulist[index].image,
+                                            fit: BoxFit.cover,
+                                            placeholder: (context, url) =>
+                                                SpinKitDoubleBounce(
+                                                    color: Colors.deepOrange),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    Icon(Icons.error),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    foryoulist[index].sold == true
+                                        ? Align(
+                                            alignment: Alignment.center,
+                                            child: Container(
+                                              height: 50,
+                                              decoration: BoxDecoration(
+                                                color: Colors.deepOrangeAccent
+                                                    .withOpacity(0.8),
+                                              ),
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  2,
+                                              child: Center(
+                                                child: Text(
+                                                  'Sold',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ),
+                                            ))
+                                        : Container(),
+                                  ]),
+                                );
+                              })))
+                  : SliverToBoxAdapter(),
               nearmeItems.isNotEmpty
                   ? SliverToBoxAdapter(
                       child: Padding(
                           padding: EdgeInsets.only(
-                              left: 16, top: 10, bottom: 10, right: 36),
+                              left: 16, top: 20, bottom: 10, right: 36),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,

@@ -228,63 +228,6 @@ class _OrderBuyerState extends State<OrderBuyer> {
       checktransactioncompletedloop();
     }
 
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        useRootNavigator: false,
-        builder: (_) => new AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
-              content: Builder(
-                builder: (context) {
-                  return Container(
-                      height: 170,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          CircleAvatar(
-                            backgroundColor: Colors.deepOrangeAccent,
-                            child: Icon(
-                              Icons.check,
-                              color: Colors.white,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            'Your payment has been successfully completed.',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontFamily: 'Helvetica',
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          TextButton(
-                            child: Text(
-                              'Go to Order Page',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontSize: 16.0,
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.w800),
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      ));
-                },
-              ),
-            ));
-
     var jsonbody = json.decode(response.body);
 
     final f = new DateFormat('dd-MM-yyyy hh:mm');
@@ -438,9 +381,62 @@ class _OrderBuyerState extends State<OrderBuyer> {
                 ));
       }
     } else {
-      Navigator.pop(
-        context,
-      );
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          useRootNavigator: false,
+          builder: (_) => new AlertDialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                content: Builder(
+                  builder: (context) {
+                    return Container(
+                        height: 170,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            CircleAvatar(
+                              backgroundColor: Colors.deepOrangeAccent,
+                              child: Icon(
+                                Icons.check,
+                                color: Colors.white,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              'Your payment has been successfully completed.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            TextButton(
+                              child: Text(
+                                'Go to Order Page',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 16.0,
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.w800),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        ));
+                  },
+                ),
+              ));
     }
   }
 
