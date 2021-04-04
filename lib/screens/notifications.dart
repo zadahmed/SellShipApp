@@ -337,6 +337,17 @@ class _NotifcationPageState extends State<NotifcationPage>
                                                 )),
                                       );
                                     } else if (notifs[index].navroute ==
+                                        'orderseller') {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => OrderSeller(
+                                                  itemid: notifs[index].itemid,
+                                                  messageid: notifs[index]
+                                                      .navigationid,
+                                                )),
+                                      );
+                                    } else if (notifs[index].navroute ==
                                         'comment') {
                                       Navigator.push(
                                           context,

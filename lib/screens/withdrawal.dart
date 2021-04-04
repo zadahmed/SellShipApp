@@ -5,6 +5,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
+import 'dart:math' as Math;
 
 class Withdraw extends StatefulWidget {
   final String userid;
@@ -65,7 +66,7 @@ class _WithdrawState extends State<Withdraw> {
         ));
       }
 
-      if (bankaccountslist != null) {
+      if (bankaccountslist.isNotEmpty) {
         setState(() {
           loading = false;
           selectedBank = bankaccountslist[0];
@@ -172,6 +173,8 @@ class _WithdrawState extends State<Withdraw> {
                         min: 0,
                         max: balance,
                         activeColor: Colors.deepOrange,
+                        divisions:
+                            int.parse((balance / 100).round().toString()),
                         label: currentvalue.round().toString(),
                         onChanged: (double value) {
                           setState(() {
@@ -1309,7 +1312,8 @@ class _WithdrawState extends State<Withdraw> {
                 content: Text("Confirm withdrawal to " +
                     selectedBank.bankname +
                     ' with IBAN ' +
-                    selectedBank.iban),
+                    selectedBank.iban +
+                    '. Please note transfers might take upto 7 working days.'),
                 actions: [
                   cancelButton,
                   continueButton,

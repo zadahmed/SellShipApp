@@ -123,7 +123,7 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
   Widget selleroptions(BuildContext context) {
     if (offerstage == 0) {
       return Container(
-        height: 170,
+        height: 180,
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
             color: Colors.grey.shade100,
@@ -143,7 +143,7 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                           color: Colors.deepOrange,
                           borderRadius: BorderRadius.all(Radius.circular(5)),
                         ),
-                        height: 40,
+                        height: 50,
                         width: MediaQuery.of(context).size.width,
                         child: Center(
                             child: Row(
@@ -1334,7 +1334,8 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                     Padding(
                       padding: EdgeInsets.all(10),
                       child: InkWell(
-                          child: profilepicture != null
+                          child: profilepicture != null &&
+                                  profilepicture.isNotEmpty
                               ? CircleAvatar(
                                   backgroundColor: Colors.grey.shade300,
                                   radius: 17,

@@ -49,7 +49,6 @@ class _ChatPageOfferNavState extends State<ChatPageOfferNav> {
 
   var recipentname;
   var messageid;
-  var senderid;
   var recipentid;
   var itemname;
   var itemimage;
@@ -97,7 +96,7 @@ class _ChatPageOfferNavState extends State<ChatPageOfferNav> {
   Widget selleroptions(BuildContext context) {
     if (offerstage == 0) {
       return Container(
-        height: 170,
+        height: 180,
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
             color: Colors.grey.shade100,
@@ -117,7 +116,7 @@ class _ChatPageOfferNavState extends State<ChatPageOfferNav> {
                           color: Colors.deepOrange,
                           borderRadius: BorderRadius.all(Radius.circular(5)),
                         ),
-                        height: 40,
+                        height: 50,
                         width: MediaQuery.of(context).size.width,
                         child: Center(
                             child: Row(
@@ -136,7 +135,7 @@ class _ChatPageOfferNavState extends State<ChatPageOfferNav> {
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 15,
+                                  fontSize: 16,
                                   fontWeight: FontWeight.bold),
                             )
                           ],
@@ -207,7 +206,7 @@ class _ChatPageOfferNavState extends State<ChatPageOfferNav> {
                                 Icon(Icons.cancel),
                                 SizedBox(width: 5),
                                 Text(
-                                  'Cancel Offer',
+                                  'Decline Offer',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       color: Colors.black,
@@ -796,7 +795,7 @@ class _ChatPageOfferNavState extends State<ChatPageOfferNav> {
     childList = [];
 
     for (int i = 0; i < jsonResponse.length; i++) {
-      if (jsonResponse[i]['sender'] == senderid) {
+      if (jsonResponse[i]['sender'] == widget.userid) {
         final f = new DateFormat('hh:mm');
         DateTime date = new DateTime.fromMillisecondsSinceEpoch(
             jsonResponse[i]['date']['\$date']);
@@ -929,6 +928,8 @@ class _ChatPageOfferNavState extends State<ChatPageOfferNav> {
         DateTime date = new DateTime.fromMillisecondsSinceEpoch(
             jsonResponse[i]['date']['\$date']);
         var s = f.format(date);
+
+        print(jsonResponse[i]);
 
         childList.add(Padding(
             padding: const EdgeInsets.only(
@@ -1373,7 +1374,8 @@ class _ChatPageOfferNavState extends State<ChatPageOfferNav> {
                         Padding(
                           padding: EdgeInsets.all(10),
                           child: InkWell(
-                              child: profilepicture != null
+                              child: profilepicture != null &&
+                                      profilepicture.isNotEmpty
                                   ? CircleAvatar(
                                       backgroundColor: Colors.grey.shade300,
                                       radius: 17,

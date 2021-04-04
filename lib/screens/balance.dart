@@ -58,7 +58,6 @@ class _BalanceState extends State<Balance> {
       final f = new DateFormat('yyyy-MM-dd hh:mm');
       var s = f.format(dates);
 
-      print(s);
       Withdrawals withd = Withdrawals(
         withdrawalid: jsonbody[i]['withdrawalsid']['\$oid'],
         date: s.toString(),
@@ -256,6 +255,7 @@ class _BalanceState extends State<Balance> {
                                     Withdraw(userid: userid, balance: balance)),
                           );
                           if (result == null) {
+                            withdrawllist.clear();
                             getBalance();
                             getDetails();
                           }

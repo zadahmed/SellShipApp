@@ -174,7 +174,6 @@ class _SearchState extends State<Search>
   }
 
   discoverproducts() async {
-    discoverproductslist.clear();
     var url = 'https://api.sellship.co/api/products/discover/${skip}/${limit}';
 
     final response = await http.get(url);
@@ -208,7 +207,6 @@ class _SearchState extends State<Search>
   List<Item> discoverproductslist = List<Item>();
 
   discoverstores() async {
-    storeList.clear();
     var url = 'https://api.sellship.co/api/stores/discover/${skip}/${limit}';
 
     final response = await http.get(url);
@@ -1817,8 +1815,8 @@ class _SearchState extends State<Search>
                                     )
                               : EasyRefresh.custom(
                                   footer: CustomFooter(
-                                      extent: 80.0,
-                                      triggerDistance: 80.0,
+                                      extent: 100.0,
+                                      triggerDistance: 100.0,
                                       enableHapticFeedback: true,
                                       enableInfiniteLoad: true,
                                       footerBuilder: (context,

@@ -1460,7 +1460,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                 slivers: <Widget>[
                   SliverStaggeredGrid.countBuilder(
                     crossAxisCount: 2,
-                    itemCount: itemsgrid.length,
+                    itemCount: foryoulist.length,
                     staggeredTileBuilder: (int index) =>
                         new StaggeredTile.fit(1),
                     mainAxisSpacing: 4.0,
@@ -1733,7 +1733,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                   foryouscroll.isNotEmpty
                       ? SliverStaggeredGrid.countBuilder(
                           crossAxisCount: 2,
-                          itemCount: itemsgrid.length,
+                          itemCount: foryouscroll.length,
                           staggeredTileBuilder: (int index) =>
                               new StaggeredTile.fit(1),
                           mainAxisSpacing: 4.0,

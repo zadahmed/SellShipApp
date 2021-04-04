@@ -53,7 +53,7 @@ class _ChatPageViewBuyerState extends State<ChatPageViewBuyer> {
 
   var recipentname;
   var messageid;
-  var senderid;
+
   var recipentid;
   var itemname;
   var itemimage;
@@ -210,7 +210,7 @@ class _ChatPageViewBuyerState extends State<ChatPageViewBuyer> {
                                     Icon(Icons.cancel),
                                     SizedBox(width: 5),
                                     Text(
-                                      'Cancel Offer',
+                                      'Decline Offer',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                           color: Colors.black,
@@ -1051,7 +1051,7 @@ class _ChatPageViewBuyerState extends State<ChatPageViewBuyer> {
     childList = [];
 
     for (int i = 0; i < jsonResponse.length; i++) {
-      if (jsonResponse[i]['sender'] == senderid) {
+      if (jsonResponse[i]['sender'] == widget.userid) {
         final f = new DateFormat('hh:mm');
         DateTime date = new DateTime.fromMillisecondsSinceEpoch(
             jsonResponse[i]['date']['\$date']);
@@ -1185,6 +1185,7 @@ class _ChatPageViewBuyerState extends State<ChatPageViewBuyer> {
             jsonResponse[i]['date']['\$date']);
         var s = f.format(date);
 
+        print(jsonResponse[i]);
         childList.add(Padding(
             padding: const EdgeInsets.only(
                 right: 8.0, left: 8.0, top: 4.0, bottom: 4.0),
@@ -1338,7 +1339,8 @@ class _ChatPageViewBuyerState extends State<ChatPageViewBuyer> {
                         Padding(
                           padding: EdgeInsets.all(10),
                           child: InkWell(
-                              child: profilepicture != null
+                              child: profilepicture != null &&
+                                      profilepicture.isNotEmpty
                                   ? CircleAvatar(
                                       backgroundColor: Colors.grey.shade300,
                                       radius: 17,

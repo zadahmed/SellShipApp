@@ -162,7 +162,6 @@ class _RootScreenState extends State<RootScreen> {
     OneSignal.shared
         .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
       var jsonrep = result.notification.payload.additionalData;
-      print(jsonrep);
 
       if (jsonrep['navroute'] == 'activitysell') {
         Navigator.push(
@@ -203,11 +202,20 @@ class _RootScreenState extends State<RootScreen> {
                     storename: 'My Store',
                   )),
         );
-      } else if (jsonrep['navroute'] == 'order') {
+      } else if (jsonrep['navroute'] == 'orderbuyer') {
         Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => OrderBuyer(
+                    itemid: jsonrep['itemid'],
+                    messageid: jsonrep['messageid'],
+                  )),
+        );
+      } else if (jsonrep['navroute'] == 'orderseller') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => OrderSeller(
                     itemid: jsonrep['itemid'],
                     messageid: jsonrep['messageid'],
                   )),

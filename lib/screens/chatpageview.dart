@@ -1296,7 +1296,8 @@ class _ChatPageViewState extends State<ChatPageView> {
                     Padding(
                       padding: EdgeInsets.all(10),
                       child: InkWell(
-                          child: profilepicture != null
+                          child: profilepicture != null &&
+                                  profilepicture.isNotEmpty
                               ? CircleAvatar(
                                   backgroundColor: Colors.grey.shade300,
                                   radius: 17,

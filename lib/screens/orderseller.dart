@@ -51,20 +51,21 @@ class _OrderSellerState extends State<OrderSeller> {
   bool addressreturned = false;
 
   getuserDetails() async {
-    var userurl = 'https://api.sellship.co/api/store/' + user;
-    final userresponse = await http.get(userurl);
-
-    print(userresponse.body);
-
-    var userjsonbody = json.decode(userresponse.body);
-
-    setState(() {
-      profilepicture = userjsonbody['storelogo'];
-    });
-    var url = 'https://api.sellship.co/api/user/' + user;
+    var url = 'https://api.sellship.co/api/user/' + buyerid;
     final response = await http.get(url);
 
     var jsonbody = json.decode(response.body);
+
+    var users;
+    if (jsonbody['username'] == null) {
+      users = jsonbody['first_name'];
+    } else {
+      users = jsonbody['username'];
+    }
+    setState(() {
+      profilepicture = jsonbody['profilepicture'];
+      username = users;
+    });
   }
 
   var country;
@@ -161,8 +162,6 @@ class _OrderSellerState extends State<OrderSeller> {
 
     setState(() {
       storeid = jsonbody[0]['userid'];
-      user = jsonbody[0]['selleruserid'];
-      username = jsonbody[0]['sellerusername'];
       item = item;
       fees = fees;
     });
@@ -172,7 +171,7 @@ class _OrderSellerState extends State<OrderSeller> {
 
   var fees;
   var storeid;
-  var user;
+
   var username;
 
   @override
@@ -281,6 +280,7 @@ class _OrderSellerState extends State<OrderSeller> {
       date = s;
       cancelled = cancell;
       completed = comple;
+
       delivered = deliver;
       orderid = jsonbody['orderid'];
       trackingnumber = track;
@@ -1546,7 +1546,7 @@ class _OrderSellerState extends State<OrderSeller> {
                                                     builder: (context) =>
                                                         ReviewBuyer(
                                                           messageid: messageid,
-                                                          reviewuserid: user,
+                                                          reviewuserid: buyerid,
                                                         )),
                                               );
                                             },
@@ -1960,7 +1960,7 @@ class _OrderSellerState extends State<OrderSeller> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => UserItems(
-                                                  userid: user,
+                                                  userid: buyerid,
                                                   username: username,
                                                 )),
                                       );
@@ -1993,7 +1993,7 @@ class _OrderSellerState extends State<OrderSeller> {
                                               ),
                                             )),
                                     title: Text(
-                                      '@' + username,
+                                      username != null ? '@' + username : '',
                                       style: TextStyle(
                                           fontFamily: 'Helvetica',
                                           fontSize: 18,

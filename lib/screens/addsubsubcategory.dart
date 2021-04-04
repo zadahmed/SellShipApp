@@ -172,7 +172,6 @@ class _AddSubSubCategoryState extends State<AddSubSubCategory> {
             'Mini, Above Knee',
             'High Low',
             'Maxi',
-            'Knee-length',
             'Midi',
             'Jumpsuits & Rompers'
           ];
@@ -219,19 +218,16 @@ class _AddSubSubCategoryState extends State<AddSubSubCategory> {
             'Vest, Sleeveless'
           ];
         });
-      } else if (subcategory == 'Handbags') {
+      } else if (subcategory == 'Bags') {
         setState(() {
           subcategories = [
             'Backpacks',
             'Cosmetic Bags',
-            'Hobo Bags',
             'Crossbody Bags',
             'Satchels',
             'Shoulder Bags',
             'Tote Bags',
             'Waist Bags & Fanny Packs',
-            'Messenger Bags',
-            'Bucket Bags'
           ];
         });
       } else if (subcategory == 'Shoes') {

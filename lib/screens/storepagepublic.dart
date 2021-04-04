@@ -175,10 +175,6 @@ class _StorePublicState extends State<StorePublic> {
           storebio: jsonbody['storebio'],
           storename: jsonbody['storename']);
 
-      print(mystore.storelogo);
-      print(mystore.storecategory);
-      print(mystore.storename);
-
       setState(() {
         mystore = mystore;
         loading = false;
@@ -748,19 +744,19 @@ class _StorePublicState extends State<StorePublic> {
                                 color: Colors.deepOrangeAccent),
                           ),
                     SizedBox(
-                      height: 10,
+                      height: 5,
                     ),
-                    Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 18.0, vertical: 5.0),
-                        child: ExpandableText(
-                          mystore.storebio,
-                          trimLines: 2,
-                        )),
+                    mystore.storebio.isNotEmpty
+                        ? Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 18.0, vertical: 5.0),
+                            child: ExpandableText(
+                              mystore.storebio,
+                              trimLines: 2,
+                            ))
+                        : Container(),
                     InkWell(
                       onTap: () async {
-                        print(followers);
-                        print(follow);
                         var user1 = await storage.read(key: 'userid');
                         if (follow == true) {
                           setState(() {
