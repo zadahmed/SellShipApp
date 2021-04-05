@@ -728,14 +728,14 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                             var returnurl =
                                 'https://api.sellship.co/api/payment/subscription/${storeid}/${businesstier}/${amount.toString()}';
                             var noonurl =
-                                "https://api-stg.noonpayments.com/payment/v1/order";
+                                "https://api.noonpayments.com/payment/v1/order";
 
                             var key =
-                                "SellShip.SellShipApp:7d016fdd70a64b68bc99d2cece27b48d";
+                                "SellShip.SellShipApp:a42e7bc936354e9c807c0ff02670ab37";
                             List encodedText = utf8.encode(key);
                             String base64Str = base64Encode(encodedText);
 
-                            var heade = 'Key_Test $base64Str';
+                            var heade = 'Key_Live $base64Str';
 
                             Map<String, String> headers = {
                               'Authorization': heade,
