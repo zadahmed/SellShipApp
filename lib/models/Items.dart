@@ -27,10 +27,10 @@ class Item {
   final String subsubcategory;
   final double distance;
   final String brand;
-  final int quantity;
+  int quantity;
   final String weight;
   final bool sold;
-  final String size;
+  var size;
   final int views;
   final String orderstatus;
   final int offerstage;
@@ -42,12 +42,17 @@ class Item {
   final String originalprice;
   final bool approved;
   final bool makeoffers;
+  final bool buyerprotection;
+  String selectedsize;
+  final String storetype;
 
   Item(
       {this.itemid,
       this.name,
       this.makeoffers,
       this.approved,
+      this.buyerprotection,
+      this.storetype,
       this.views,
       this.image,
       this.tags,
@@ -58,6 +63,7 @@ class Item {
       this.date,
       this.weight,
       this.image2,
+      this.selectedsize,
       this.image3,
       this.offerstage,
       this.buyerid,
@@ -96,6 +102,8 @@ class Item {
       userid: json['userid'],
       price: json['price'],
       category: json['category'],
+      quantity: json['quantity'],
+      selectedsize: json['selectedsize'],
     );
   }
 
@@ -108,6 +116,8 @@ class Item {
         'username': username,
         'sellerid': sellerid,
         'sellername': sellername,
+        'quantity': quantity,
+        'selectedsize': selectedsize,
       };
 
   int compareTo(Item other) {

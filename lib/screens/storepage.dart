@@ -121,6 +121,9 @@ class _StoreState extends State<Store> {
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
       Stores store = Stores(
+          storeusername: jsonbody['storeusername'] == null
+              ? jsonbody['storename']
+              : jsonbody['storeusername'],
           storetype: jsonbody['storetype'],
           storeid: jsonbody['_id']['\$oid'],
           storecategory: jsonbody['storecategory'],
@@ -638,7 +641,9 @@ class _StoreState extends State<Store> {
         elevation: 0,
         backgroundColor: Colors.white,
         title: Text(
-          '@' + widget.storename,
+          mystore == null
+              ? '@' + widget.storename
+              : '@' + mystore.storeusername,
           style: TextStyle(
               fontFamily: 'Helvetica',
               fontSize: 20.0,

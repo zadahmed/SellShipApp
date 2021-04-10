@@ -578,11 +578,11 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
 
                             messageid = 'SS-ORDER' +
                                 (userid.substring(0, 10) +
-                                    listitems[0]
-                                        .itemid
-                                        .toString()
-                                        .substring(0, 15) +
-                                    listitems[0].userid.substring(0, 10))
+                                        listitems[0]
+                                            .itemid
+                                            .toString()
+                                            .substring(0, 15) +
+                                        listitems[0].userid.substring(0, 10))
                                     .toString();
                             print(messageid);
 
@@ -614,15 +614,24 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
                             };
 
                             var url =
-                                "https://api.noonpayments.com/payment/v1/order";
+                                "https://api-stg.noonpayments.com/payment/v1/order";
 
                             var key =
-                                "SellShip.SellShipApp:a42e7bc936354e9c807c0ff02670ab37";
+                                "SellShip.SellShipApp:7d016fdd70a64b68bc99d2cece27b48d";
                             List encodedText = utf8.encode(key);
                             String base64Str = base64Encode(encodedText);
                             print('Key_Test $base64Str');
 
-                            var heade = 'Key_Live $base64Str';
+                            // var url =
+                            //     "https://api.noonpayments.com/payment/v1/order";
+                            //
+                            // var key =
+                            //     "SellShip.SellShipApp:a42e7bc936354e9c807c0ff02670ab37";
+                            // List encodedText = utf8.encode(key);
+                            // String base64Str = base64Encode(encodedText);
+                            //
+                            //var heade = 'Key_Live $base64Str';
+                            var heade = 'Key_Test $base64Str';
 
                             Map<String, String> headers = {
                               'Authorization': heade,
@@ -656,8 +665,6 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
                               //
                               // if (orderresponse.statusCode == 200) {
                               Navigator.of(context, rootNavigator: true).pop();
-
-
 
                               Navigator.push(
                                 context,

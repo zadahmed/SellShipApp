@@ -147,7 +147,7 @@ class _CreateStoreNameState extends State<CreateStoreName> {
                       left: 56.0, bottom: 10, top: 20, right: 36),
                   child: Center(
                     child: Text(
-                      "What\'s your new store name?",
+                      "What\'s your new store called?",
                       textAlign: TextAlign.left,
                       style: TextStyle(
                           fontSize: 30.0,
@@ -179,17 +179,13 @@ class _CreateStoreNameState extends State<CreateStoreName> {
                           ),
                           child: TextField(
                             onChanged: (text) {},
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(
-                                  RegExp(r'[^-\s]'))
-                            ],
                             controller: storenamecontroller,
                             cursorColor: Colors.black,
                             decoration: InputDecoration(
                               hintText: "Store Name",
                               hintStyle: TextStyle(fontFamily: 'Helvetica'),
                               icon: Icon(
-                                Icons.alternate_email,
+                                FontAwesomeIcons.storeAlt,
                                 color: Colors.blueGrey,
                               ),
                               border: InputBorder.none,
@@ -212,98 +208,15 @@ class _CreateStoreNameState extends State<CreateStoreName> {
                             if (storenamecontroller.text.isEmpty) {
                               showInSnackBar('Please Enter A Store Name');
                             } else {
-                              showDialog(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  useRootNavigator: false,
-                                  builder: (BuildContext context) {
-                                    return Dialog(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                                20.0)), //this right here
-                                        child: Container(
-                                            height: 170,
-                                            padding: EdgeInsets.all(15),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                                Text(
-                                                  'Checking Store Username Availability..',
-                                                  style: TextStyle(
-                                                    fontFamily: 'Helvetica',
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                                Container(
-                                                    height: 50,
-                                                    width: 50,
-                                                    child: SpinKitDoubleBounce(
-                                                      color: Colors.deepOrange,
-                                                    )),
-                                              ],
-                                            )));
-                                  });
-                              var url =
-                                  'https://api.sellship.co/check/store/name/' +
-                                      storenamecontroller.text;
-
-                              final response = await http.get(url);
-                              print(response.statusCode);
-                              if (response.statusCode == 200) {
-                                var jsondeco = json.decode(response.body);
-                                if (jsondeco['Status'] == 'Success') {
-                                  Navigator.pop(context);
-
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            CreateStoreBusinessDetail(
-                                          userid: widget.userid,
-                                          storename: storenamecontroller.text,
-                                        ),
-                                      ));
-                                } else {
-                                  Navigator.pop(context);
-                                  showDialog(
-                                      context: context,
-                                      barrierDismissible: false,
-                                      useRootNavigator: false,
-                                      builder: (_) => AssetGiffyDialog(
-                                            image: Image.asset(
-                                              'assets/oops.gif',
-                                              fit: BoxFit.cover,
-                                            ),
-                                            title: Text(
-                                              'Oops!',
-                                              style: TextStyle(
-                                                  fontSize: 22.0,
-                                                  fontWeight: FontWeight.w600),
-                                            ),
-                                            description: Text(
-                                              'Looks like that Store Username Exists',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  fontFamily: 'Helvetica'),
-                                            ),
-                                            onlyOkButton: true,
-                                            entryAnimation:
-                                                EntryAnimation.DEFAULT,
-                                            onOkButtonPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                          ));
-                                }
-                              }
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        CreateStoreBusinessDetail(
+                                      userid: widget.userid,
+                                      storename: storenamecontroller.text,
+                                    ),
+                                  ));
                             }
                           },
                           child: Container(

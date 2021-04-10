@@ -605,6 +605,8 @@ class _DetailsState extends State<Details> {
     });
   }
 
+  var selectedSize;
+
   var currency;
   bool favourited;
 
@@ -657,8 +659,31 @@ class _DetailsState extends State<Details> {
       offers = true;
     }
 
+    bool protection;
+    if (jsonbody[0]['buyerprotection'] == 'false' ||
+        jsonbody[0]['buyerprotection'] == null) {
+      protection = false;
+    } else {
+      protection = true;
+    }
+
+    var sfs = jsonbody[0]['size'];
+
+    if (sfs == null || sfs.isEmpty) {
+      sfs = [];
+    } else {
+      sfs = jsonbody[0]['size'].substring(2, jsonbody[0]['size'].length - 2);
+      sfs = sfs.split(',');
+    }
+    print(sfs);
+    print('qqqq');
+    // print(json.decode(jsonbody[0]['size']
+    //     .substring(1, jsonbody[0]['size'].length - 1)
+    //     .toString()));
+
     newItem = Item(
         name: jsonbody[0]['name'],
+        buyerprotection: protection,
         itemid: jsonbody[0]['_id']['\$oid'].toString(),
         price: jsonbody[0]['price'].toString(),
         description: jsonbody[0]['description'],
@@ -672,6 +697,8 @@ class _DetailsState extends State<Details> {
         makeoffers: offers,
         image3: jsonbody[0]['image3'],
         image4: jsonbody[0]['image4'],
+        storetype:
+            jsonbody[0]['storetype'] == null ? '' : jsonbody[0]['storetype'],
         image5: jsonbody[0]['image5'],
         sellerid: jsonbody[0]['selleruserid'],
         sellername: jsonbody[0]['sellerusername'],
@@ -680,7 +707,7 @@ class _DetailsState extends State<Details> {
         city: jsonbody[0]['city'],
         username: jsonbody[0]['username'],
         brand: jsonbody[0]['brand'] == null ? 'Other' : jsonbody[0]['brand'],
-        size: jsonbody[0]['size'] == null ? '' : jsonbody[0]['size'],
+        size: sfs,
         useremail: jsonbody[0]['useremail'],
         usernumber: jsonbody[0]['usernumber'],
         userid: jsonbody[0]['userid'],
@@ -691,6 +718,8 @@ class _DetailsState extends State<Details> {
         longitude: jsonbody[0]['longitude'],
         subsubcategory: jsonbody[0]['subsubcategory'],
         subcategory: jsonbody[0]['subcategory']);
+
+    print(newItem.size);
 
     var q = Map<String, dynamic>.from(jsonbody[0]['dateuploaded']);
 
@@ -1296,19 +1325,101 @@ class _DetailsState extends State<Details> {
                                       ),
                                     ],
                                   )),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    left: 15, bottom: 5, top: 2),
-                                child: Text(
-                                  '$dateuploaded',
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 14,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ),
+                              // Padding(
+                              //   padding: EdgeInsets.only(
+                              //       left: 15, bottom: 5, top: 2),
+                              //   child: Text(
+                              //     '$dateuploaded',
+                              //     textAlign: TextAlign.left,
+                              //     style: TextStyle(
+                              //       fontFamily: 'Helvetica',
+                              //       fontSize: 14,
+                              //       color: Colors.grey,
+                              //     ),
+                              //   ),
+                              // ),
+                              newItem.size.isNotEmpty
+                                  ? Padding(
+                                      padding:
+                                          EdgeInsets.only(left: 15, top: 5),
+                                      child: Text(
+                                        'Size',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    )
+                                  : Container(),
+                              newItem.size.isNotEmpty
+                                  ? Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 15,
+                                          bottom: 10,
+                                          top: 5,
+                                          right: 15),
+                                      child: Container(
+                                          height: 40,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          child: ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                            itemCount: newItem.size.length,
+                                            itemBuilder: (context, index) {
+                                              return Padding(
+                                                  padding: EdgeInsets.all(2),
+                                                  child: InkWell(
+                                                      onTap: () {
+                                                        if (selectedSize ==
+                                                            newItem
+                                                                .size[index]) {
+                                                          setState(() {
+                                                            selectedSize = null;
+                                                          });
+                                                        } else {
+                                                          setState(() {
+                                                            selectedSize =
+                                                                newItem.size[
+                                                                    index];
+                                                          });
+                                                        }
+                                                      },
+                                                      child: Container(
+                                                          height: 50,
+                                                          width: 50,
+                                                          decoration: BoxDecoration(
+                                                              color:
+                                                                  Colors.white,
+                                                              border: Border.all(
+                                                                  width: 1,
+                                                                  color: selectedSize ==
+                                                                          newItem.size[
+                                                                              index]
+                                                                      ? Colors
+                                                                          .deepOrange
+                                                                      : Colors
+                                                                          .blueGrey
+                                                                          .shade100),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          5)),
+                                                          child: Center(
+                                                              child: Text(
+                                                            newItem.size[index]
+                                                                .toString(),
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Helvetica',
+                                                                fontSize: 16,
+                                                                color: Colors
+                                                                    .deepOrange),
+                                                          )))));
+                                            },
+                                          )),
+                                    )
+                                  : Container(),
                               Padding(
                                 padding: EdgeInsets.only(
                                     left: 15, bottom: 5, top: 10, right: 15),
@@ -1398,74 +1509,88 @@ class _DetailsState extends State<Details> {
                                           ),
                                         ),
                                       ),
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                            left: 15,
-                                            bottom: 5,
-                                            top: 5,
-                                            right: 15),
-                                        child: Container(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: <Widget>[
-                                              Row(
-                                                children: [
-                                                  Icon(
-                                                    FontAwesome5.smile_beam,
-                                                    color: Color.fromRGBO(
-                                                        60, 72, 88, 1),
-                                                    size: 18,
-                                                  ),
-                                                  SizedBox(
-                                                    width: 10,
-                                                  ),
-                                                  Text(
-                                                    'Condition',
-                                                    textAlign: TextAlign.left,
-                                                    style: TextStyle(
-                                                      fontFamily: 'Helvetica',
-                                                      fontSize: 16,
-                                                      color: Color.fromRGBO(
-                                                          60, 72, 88, 1),
-                                                      fontWeight:
-                                                          FontWeight.w500,
+                                      newItem.storetype == 'Secondhand Seller'
+                                          ? Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: 15,
+                                                  bottom: 5,
+                                                  top: 5,
+                                                  right: 15),
+                                              child: Container(
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: <Widget>[
+                                                    Row(
+                                                      children: [
+                                                        Icon(
+                                                          FontAwesome5
+                                                              .smile_beam,
+                                                          color: Color.fromRGBO(
+                                                              60, 72, 88, 1),
+                                                          size: 18,
+                                                        ),
+                                                        SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        Text(
+                                                          'Condition',
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            fontSize: 16,
+                                                            color:
+                                                                Color.fromRGBO(
+                                                                    60,
+                                                                    72,
+                                                                    88,
+                                                                    1),
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                  ),
-                                                ],
-                                              ),
-                                              InkWell(
-                                                onTap: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    CupertinoPageRoute(
-                                                        builder: (context) =>
-                                                            Condition(
-                                                              condition: newItem
-                                                                  .condition,
-                                                            )),
-                                                  );
-                                                },
-                                                child: Container(
-                                                  width: 200,
-                                                  child: Text(
-                                                    newItem.condition
-                                                        .toString(),
-                                                    textAlign: TextAlign.right,
-                                                    style: TextStyle(
-                                                      fontFamily: 'Helvetica',
-                                                      fontSize: 16,
-                                                      color: Colors.deepOrange,
-                                                      fontWeight:
-                                                          FontWeight.w500,
+                                                    InkWell(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          CupertinoPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                      Condition(
+                                                                        condition:
+                                                                            newItem.condition,
+                                                                      )),
+                                                        );
+                                                      },
+                                                      child: Container(
+                                                        width: 200,
+                                                        child: Text(
+                                                          newItem.condition
+                                                              .toString(),
+                                                          textAlign:
+                                                              TextAlign.right,
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            fontSize: 16,
+                                                            color: Colors
+                                                                .deepOrange,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                          ),
+                                                        ),
+                                                      ),
                                                     ),
-                                                  ),
+                                                  ],
                                                 ),
                                               ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
+                                            )
+                                          : Container(),
                                       Padding(
                                         padding: EdgeInsets.only(
                                             left: 15,
@@ -1533,404 +1658,286 @@ class _DetailsState extends State<Details> {
                                           ),
                                         ),
                                       ),
-                                      newItem.size.isNotEmpty
-                                          ? Padding(
-                                              padding: EdgeInsets.only(
-                                                  left: 15,
-                                                  bottom: 5,
-                                                  top: 5,
-                                                  right: 15),
-                                              child: Container(
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: <Widget>[
-                                                    Row(
-                                                      children: [
-                                                        Icon(
-                                                          FontAwesomeIcons
-                                                              .tshirt,
-                                                          color: Color.fromRGBO(
-                                                              60, 72, 88, 1),
-                                                          size: 18,
-                                                        ),
-                                                        SizedBox(
-                                                          width: 10,
-                                                        ),
-                                                        Text(
-                                                          'Size',
-                                                          textAlign:
-                                                              TextAlign.left,
-                                                          style: TextStyle(
-                                                            fontFamily:
-                                                                'Helvetica',
-                                                            fontSize: 16,
-                                                            color:
-                                                                Color.fromRGBO(
-                                                                    60,
-                                                                    72,
-                                                                    88,
-                                                                    1),
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    InkWell(
-                                                      onTap: () {
-                                                        Navigator.push(
-                                                          context,
-                                                          CupertinoPageRoute(
-                                                              builder:
-                                                                  (context) =>
-                                                                      Size(
-                                                                        size: newItem
-                                                                            .size,
-                                                                      )),
-                                                        );
-                                                      },
-                                                      child: Container(
-                                                        width: 200,
-                                                        child: Text(
-                                                          newItem.size
-                                                              .toString(),
-                                                          textAlign:
-                                                              TextAlign.right,
-                                                          style: TextStyle(
-                                                            fontFamily:
-                                                                'Helvetica',
-                                                            fontSize: 16,
-                                                            color: Colors
-                                                                .deepOrange,
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            )
-                                          : Container(),
                                     ],
                                   ),
                                 ),
                               ),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 15, bottom: 5, top: 10, right: 15),
-                                  child: Container(
-                                    padding: EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(20)),
-                                    ),
-                                    child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: ListTile(
-                                            onTap: () {
-                                              showModalBottomSheet(
-                                                  backgroundColor: Color(
-                                                      0xFF737373),
-                                                  context: context,
-                                                  isScrollControlled: true,
-                                                  builder: (context) =>
-                                                      Container(
-                                                          height: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .height /
-                                                              2,
-                                                          padding: EdgeInsets
-                                                              .only(
-                                                                  left: 10,
-                                                                  right: 10,
-                                                                  top: 20),
-                                                          decoration: new BoxDecoration(
-                                                              color: Colors
-                                                                  .white,
-                                                              borderRadius: new BorderRadius
-                                                                      .only(
-                                                                  topLeft:
-                                                                      const Radius.circular(
-                                                                          20.0),
-                                                                  topRight:
-                                                                      const Radius.circular(
-                                                                          20.0))),
-                                                          child: Scaffold(
-                                                            backgroundColor:
-                                                                Colors.white,
-                                                            body: ListView(
-                                                              children: <
-                                                                  Widget>[
-                                                                ListTile(
-                                                                  title: Text(
-                                                                    'Buyer Protection',
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .left,
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontFamily:
-                                                                          'Helvetica',
-                                                                      fontSize:
-                                                                          20,
-                                                                      color: Colors
-                                                                          .black,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w700,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                  height: 10,
-                                                                ),
-                                                                ListTile(
-                                                                  title: Text(
-                                                                    'Secure Payments',
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontFamily:
-                                                                          'Helvetica',
-                                                                      fontSize:
-                                                                          16,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      color: Colors
-                                                                          .black,
-                                                                    ),
-                                                                  ),
-                                                                  subtitle:
-                                                                      Text(
-                                                                    'All transcations within SellShip are secure and encrypted.',
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontFamily:
-                                                                          'Helvetica',
-                                                                      fontSize:
-                                                                          14,
-                                                                      color: Colors
-                                                                          .blueGrey,
-                                                                    ),
-                                                                  ),
-                                                                  leading: Icon(
-                                                                    Icons.lock,
-                                                                    color: Color
-                                                                        .fromRGBO(
-                                                                            255,
-                                                                            115,
-                                                                            0,
-                                                                            1),
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                  height: 10,
-                                                                ),
-                                                                ListTile(
-                                                                  title: Text(
-                                                                    'Money Back Guarantee',
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontFamily:
-                                                                          'Helvetica',
-                                                                      fontSize:
-                                                                          16,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      color: Colors
-                                                                          .black,
-                                                                    ),
-                                                                  ),
-                                                                  subtitle:
-                                                                      Text(
-                                                                    'Product\'s that are not described as listed by the seller in the listing, that has undisclosed damage or if the seller has not shipped the item. The buyer can receive a refund for the item, as long as the refund request is made within 2 days of confirmed delivery or order',
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontFamily:
-                                                                          'Helvetica',
-                                                                      fontSize:
-                                                                          14,
-                                                                      color: Colors
-                                                                          .blueGrey,
-                                                                    ),
-                                                                  ),
-                                                                  leading: Icon(
-                                                                    FontAwesome
-                                                                        .money,
-                                                                    color: Color
-                                                                        .fromRGBO(
-                                                                            255,
-                                                                            115,
-                                                                            0,
-                                                                            1),
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                  height: 10,
-                                                                ),
-                                                                ListTile(
-                                                                  title: Text(
-                                                                    '24/7 Support',
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontFamily:
-                                                                          'Helvetica',
-                                                                      fontSize:
-                                                                          16,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      color: Colors
-                                                                          .black,
-                                                                    ),
-                                                                  ),
-                                                                  subtitle:
-                                                                      Text(
-                                                                    'The SellShip support team works 24/7 around the clock to deal with all support requests, queries and concerns.',
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontFamily:
-                                                                          'Helvetica',
-                                                                      fontSize:
-                                                                          14,
-                                                                      color: Colors
-                                                                          .blueGrey,
-                                                                    ),
-                                                                  ),
-                                                                  leading: Icon(
-                                                                    Icons
-                                                                        .live_help,
-                                                                    color: Color
-                                                                        .fromRGBO(
-                                                                            255,
-                                                                            115,
-                                                                            0,
-                                                                            1),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            bottomNavigationBar:
-                                                                Padding(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .all(20),
-                                                              child: InkWell(
-                                                                onTap: () {
-                                                                  Navigator.of(
-                                                                          context)
-                                                                      .pop();
-                                                                },
-                                                                child:
-                                                                    Container(
-                                                                  height: 48,
-                                                                  width: MediaQuery.of(
-                                                                              context)
+                              newItem.buyerprotection == true
+                                  ? Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 15,
+                                          bottom: 5,
+                                          top: 10,
+                                          right: 15),
+                                      child: Container(
+                                        padding: EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(20)),
+                                        ),
+                                        child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: ListTile(
+                                                onTap: () {
+                                                  showModalBottomSheet(
+                                                      backgroundColor:
+                                                          Color(0xFF737373),
+                                                      context: context,
+                                                      isScrollControlled: true,
+                                                      builder:
+                                                          (context) =>
+                                                              Container(
+                                                                  height: MediaQuery.of(context)
                                                                           .size
-                                                                          .width -
-                                                                      10,
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    color: Color
-                                                                        .fromRGBO(
-                                                                            255,
-                                                                            115,
-                                                                            0,
-                                                                            1),
-                                                                    borderRadius:
-                                                                        const BorderRadius
-                                                                            .all(
-                                                                      Radius.circular(
-                                                                          5.0),
-                                                                    ),
-                                                                    boxShadow: <
-                                                                        BoxShadow>[
-                                                                      BoxShadow(
-                                                                          color: Color.fromRGBO(
-                                                                              255,
-                                                                              115,
-                                                                              0,
-                                                                              0.4),
-                                                                          offset: const Offset(
-                                                                              1.1,
-                                                                              1.1),
-                                                                          blurRadius:
-                                                                              10.0),
-                                                                    ],
-                                                                  ),
-                                                                  child: Center(
-                                                                    child: Text(
-                                                                      'Done',
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .left,
-                                                                      style:
-                                                                          TextStyle(
-                                                                        fontWeight:
-                                                                            FontWeight.w600,
-                                                                        fontSize:
-                                                                            16,
-                                                                        letterSpacing:
-                                                                            0.0,
-                                                                        color: Colors
+                                                                          .height /
+                                                                      2,
+                                                                  padding: EdgeInsets
+                                                                      .only(
+                                                                          left:
+                                                                              10,
+                                                                          right:
+                                                                              10,
+                                                                          top:
+                                                                              20),
+                                                                  decoration: new BoxDecoration(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      borderRadius: new BorderRadius
+                                                                              .only(
+                                                                          topLeft: const Radius.circular(
+                                                                              20.0),
+                                                                          topRight: const Radius.circular(
+                                                                              20.0))),
+                                                                  child:
+                                                                      Scaffold(
+                                                                    backgroundColor:
+                                                                        Colors
                                                                             .white,
+                                                                    body:
+                                                                        ListView(
+                                                                      children: <
+                                                                          Widget>[
+                                                                        ListTile(
+                                                                          title:
+                                                                              Text(
+                                                                            'Buyer Protection',
+                                                                            textAlign:
+                                                                                TextAlign.left,
+                                                                            style:
+                                                                                TextStyle(
+                                                                              fontFamily: 'Helvetica',
+                                                                              fontSize: 20,
+                                                                              color: Colors.black,
+                                                                              fontWeight: FontWeight.w700,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        SizedBox(
+                                                                          height:
+                                                                              10,
+                                                                        ),
+                                                                        ListTile(
+                                                                          title:
+                                                                              Text(
+                                                                            'Secure Payments',
+                                                                            style:
+                                                                                TextStyle(
+                                                                              fontFamily: 'Helvetica',
+                                                                              fontSize: 16,
+                                                                              fontWeight: FontWeight.bold,
+                                                                              color: Colors.black,
+                                                                            ),
+                                                                          ),
+                                                                          subtitle:
+                                                                              Text(
+                                                                            'All transcations within SellShip are secure and encrypted.',
+                                                                            style:
+                                                                                TextStyle(
+                                                                              fontFamily: 'Helvetica',
+                                                                              fontSize: 14,
+                                                                              color: Colors.blueGrey,
+                                                                            ),
+                                                                          ),
+                                                                          leading:
+                                                                              Icon(
+                                                                            Icons.lock,
+                                                                            color: Color.fromRGBO(
+                                                                                255,
+                                                                                115,
+                                                                                0,
+                                                                                1),
+                                                                          ),
+                                                                        ),
+                                                                        SizedBox(
+                                                                          height:
+                                                                              10,
+                                                                        ),
+                                                                        ListTile(
+                                                                          title:
+                                                                              Text(
+                                                                            'Money Back Guarantee',
+                                                                            style:
+                                                                                TextStyle(
+                                                                              fontFamily: 'Helvetica',
+                                                                              fontSize: 16,
+                                                                              fontWeight: FontWeight.bold,
+                                                                              color: Colors.black,
+                                                                            ),
+                                                                          ),
+                                                                          subtitle:
+                                                                              Text(
+                                                                            'Product\'s that are not described as listed by the seller in the listing, that has undisclosed damage or if the seller has not shipped the item. The buyer can receive a refund for the item, as long as the refund request is made within 2 days of confirmed delivery or order',
+                                                                            style:
+                                                                                TextStyle(
+                                                                              fontFamily: 'Helvetica',
+                                                                              fontSize: 14,
+                                                                              color: Colors.blueGrey,
+                                                                            ),
+                                                                          ),
+                                                                          leading:
+                                                                              Icon(
+                                                                            FontAwesome.money,
+                                                                            color: Color.fromRGBO(
+                                                                                255,
+                                                                                115,
+                                                                                0,
+                                                                                1),
+                                                                          ),
+                                                                        ),
+                                                                        SizedBox(
+                                                                          height:
+                                                                              10,
+                                                                        ),
+                                                                        ListTile(
+                                                                          title:
+                                                                              Text(
+                                                                            '24/7 Support',
+                                                                            style:
+                                                                                TextStyle(
+                                                                              fontFamily: 'Helvetica',
+                                                                              fontSize: 16,
+                                                                              fontWeight: FontWeight.bold,
+                                                                              color: Colors.black,
+                                                                            ),
+                                                                          ),
+                                                                          subtitle:
+                                                                              Text(
+                                                                            'The SellShip support team works 24/7 around the clock to deal with all support requests, queries and concerns.',
+                                                                            style:
+                                                                                TextStyle(
+                                                                              fontFamily: 'Helvetica',
+                                                                              fontSize: 14,
+                                                                              color: Colors.blueGrey,
+                                                                            ),
+                                                                          ),
+                                                                          leading:
+                                                                              Icon(
+                                                                            Icons.live_help,
+                                                                            color: Color.fromRGBO(
+                                                                                255,
+                                                                                115,
+                                                                                0,
+                                                                                1),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                    bottomNavigationBar:
+                                                                        Padding(
+                                                                      padding:
+                                                                          EdgeInsets.all(
+                                                                              20),
+                                                                      child:
+                                                                          InkWell(
+                                                                        onTap:
+                                                                            () {
+                                                                          Navigator.of(context)
+                                                                              .pop();
+                                                                        },
+                                                                        child:
+                                                                            Container(
+                                                                          height:
+                                                                              48,
+                                                                          width:
+                                                                              MediaQuery.of(context).size.width - 10,
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            color: Color.fromRGBO(
+                                                                                255,
+                                                                                115,
+                                                                                0,
+                                                                                1),
+                                                                            borderRadius:
+                                                                                const BorderRadius.all(
+                                                                              Radius.circular(5.0),
+                                                                            ),
+                                                                            boxShadow: <BoxShadow>[
+                                                                              BoxShadow(color: Color.fromRGBO(255, 115, 0, 0.4), offset: const Offset(1.1, 1.1), blurRadius: 10.0),
+                                                                            ],
+                                                                          ),
+                                                                          child:
+                                                                              Center(
+                                                                            child:
+                                                                                Text(
+                                                                              'Done',
+                                                                              textAlign: TextAlign.left,
+                                                                              style: TextStyle(
+                                                                                fontWeight: FontWeight.w600,
+                                                                                fontSize: 16,
+                                                                                letterSpacing: 0.0,
+                                                                                color: Colors.white,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
                                                                       ),
                                                                     ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          )));
-                                            },
-                                            leading: Container(
-                                              height: 120,
-                                              width: 60,
-                                              decoration: BoxDecoration(
-                                                  color: Color.fromRGBO(
-                                                      255, 115, 0, 0.1),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          15)),
-                                              child: Icon(
-                                                FontAwesome.lock,
-                                                size: 30,
-                                                color: Color.fromRGBO(
-                                                    255, 115, 0, 1),
-                                              ),
-                                            ),
-                                            title: Padding(
-                                              padding:
-                                                  EdgeInsets.only(bottom: 5),
-                                              child: Text(
-                                                'Buyer Protection',
-                                                style: TextStyle(
+                                                                  )));
+                                                },
+                                                leading: Container(
+                                                  height: 120,
+                                                  width: 60,
+                                                  decoration: BoxDecoration(
+                                                      color: Color.fromRGBO(
+                                                          255, 115, 0, 0.1),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15)),
+                                                  child: Icon(
+                                                    FontAwesome.lock,
+                                                    size: 30,
+                                                    color: Color.fromRGBO(
+                                                        255, 115, 0, 1),
+                                                  ),
+                                                ),
+                                                title: Padding(
+                                                  padding: EdgeInsets.only(
+                                                      bottom: 5),
+                                                  child: Text(
+                                                    'Buyer Protection',
+                                                    style: TextStyle(
+                                                        fontFamily: 'Helvetica',
+                                                        fontSize: 16,
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                                subtitle: Text(
+                                                  'Items bought through SellShip are eligible for Buyer Protection and Money Back Guarantee.',
+                                                  style: TextStyle(
                                                     fontFamily: 'Helvetica',
-                                                    fontSize: 16,
-                                                    color: Colors.black,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            ),
-                                            subtitle: Text(
-                                              'Items bought through SellShip are eligible for Buyer Protection and Money Back Guarantee.',
-                                              style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 14,
-                                                color: Colors.blueGrey,
-                                              ),
-                                            ),
-                                            trailing: Icon(
-                                              Feather.info,
-                                              size: 16,
-                                            ))),
-                                  )),
+                                                    fontSize: 14,
+                                                    color: Colors.blueGrey,
+                                                  ),
+                                                ),
+                                                trailing: Icon(
+                                                  Feather.info,
+                                                  size: 16,
+                                                ))),
+                                      ))
+                                  : Container(),
                               Padding(
                                   padding: EdgeInsets.only(
                                       left: 15, bottom: 5, top: 10, right: 15),
@@ -2081,109 +2088,7 @@ class _DetailsState extends State<Details> {
                                           ),
                                         ],
                                       ))),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 15, bottom: 5, top: 10, right: 15),
-                                  child: Container(
-                                    padding: EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(20)),
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              left: 10, bottom: 10, top: 5),
-                                          child: Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Row(
-                                                children: <Widget>[
-                                                  Icon(
-                                                    Icons.location_on,
-                                                    size: 15,
-                                                  ),
-                                                  SizedBox(
-                                                    width: 5,
-                                                  ),
-                                                  Text(
-                                                    newItem.city.toString(),
-                                                    textAlign: TextAlign.left,
-                                                    style: TextStyle(
-                                                      fontFamily: 'Helvetica',
-                                                      fontSize: 16,
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                    ),
-                                                  ),
-                                                ],
-                                              )),
-                                        ),
-                                        Container(
-                                          height: 220,
-                                          decoration: BoxDecoration(
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.grey.shade300,
-                                                  offset:
-                                                      Offset(0.0, 1.0), //(x,y)
-                                                  blurRadius: 6.0,
-                                                ),
-                                              ],
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(6)),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Container(
-                                                height: 220,
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(6),
-                                                ),
-                                                child: GoogleMap(
-                                                  myLocationEnabled: false,
-                                                  scrollGesturesEnabled: false,
-                                                  myLocationButtonEnabled:
-                                                      false,
-                                                  initialCameraPosition:
-                                                      CameraPosition(
-                                                    target: position,
-                                                    zoom: 15.0,
-                                                  ),
-                                                  onMapCreated: mapCreated,
-                                                  circles: _circles,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              bottom: 5, top: 10),
-                                          child: Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: Text(
-                                              'Location is approximated to protect the user',
-                                              style: TextStyle(
-                                                  fontFamily: 'Helvetica',
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w300),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )),
+
                               Container(
                                 height: 320,
                                 child: DefaultTabController(
@@ -2824,92 +2729,119 @@ class _DetailsState extends State<Details> {
                                   InkWell(
                                     onTap: () async {
                                       if (userid != null) {
-                                        SharedPreferences prefs =
-                                            await SharedPreferences
-                                                .getInstance();
-
-                                        List cartitems =
-                                            prefs.getStringList('cartitems');
-                                        print(cartitems);
-
-                                        if (cartitems == null) {
-                                          String item = jsonEncode(newItem);
-                                          prefs.setStringList(
-                                              'cartitems', [item]);
+                                        if (selectedSize == null &&
+                                            newItem.size.isNotEmpty) {
                                           showInSnackBar(
-                                              newItem.name + ' added to Cart!');
+                                              'Please Choose a Size');
                                         } else {
-                                          showDialog<void>(
-                                            context: context,
-                                            barrierDismissible:
-                                                false, // user must tap button!
-                                            builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                title: Text(
-                                                  'Oops',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      fontSize: 18.0,
-                                                      fontWeight:
-                                                          FontWeight.w800),
-                                                ),
-                                                content: Text(
-                                                  'You have an item in your cart already.',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      fontSize: 16.0,
-                                                      fontWeight:
-                                                          FontWeight.w200),
-                                                ),
-                                                actions: <Widget>[
-                                                  TextButton(
-                                                    child: Text(
-                                                      'Add to Cart',
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 16.0,
-                                                          fontWeight:
-                                                              FontWeight.w800),
-                                                    ),
-                                                    onPressed: () async {
-                                                      SharedPreferences prefs =
-                                                          await SharedPreferences
-                                                              .getInstance();
-                                                      prefs.remove('cartitems');
+                                          SharedPreferences prefs =
+                                              await SharedPreferences
+                                                  .getInstance();
 
-                                                      String item =
-                                                          jsonEncode(newItem);
-                                                      prefs.setStringList(
-                                                          'cartitems', [item]);
-                                                      showInSnackBar(newItem
-                                                              .name +
-                                                          ' added to Cart!');
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
+                                          List cartitems =
+                                              prefs.getStringList('cartitems');
+                                          print(cartitems);
+
+                                          if (cartitems == null) {
+                                            newItem.quantity = 1;
+
+                                            if (selectedSize != null) {
+                                              newItem.selectedsize =
+                                                  selectedSize.toString();
+                                            } else {
+                                              newItem.selectedsize = 'nosize';
+                                            }
+
+                                            String item = jsonEncode(newItem);
+
+                                            prefs.setStringList(
+                                                'cartitems', [item]);
+                                            showInSnackBar(newItem.name +
+                                                ' added to Cart!');
+                                          } else {
+                                            showDialog<void>(
+                                              context: context,
+                                              barrierDismissible:
+                                                  false, // user must tap button!
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: Text(
+                                                    'Oops',
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        fontSize: 18.0,
+                                                        fontWeight:
+                                                            FontWeight.w800),
                                                   ),
-                                                  TextButton(
-                                                    child: Text(
-                                                      'Close',
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                          fontSize: 16.0,
-                                                          color: Colors.red,
-                                                          fontWeight:
-                                                              FontWeight.w800),
+                                                  content: Text(
+                                                    'You have an item in your cart already.',
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        fontSize: 16.0,
+                                                        fontWeight:
+                                                            FontWeight.w200),
+                                                  ),
+                                                  actions: <Widget>[
+                                                    TextButton(
+                                                      child: Text(
+                                                        'Add to Cart',
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 16.0,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w800),
+                                                      ),
+                                                      onPressed: () async {
+                                                        newItem.quantity = 1;
+
+                                                        if (selectedSize !=
+                                                            null) {
+                                                          newItem.selectedsize =
+                                                              selectedSize
+                                                                  .toString();
+                                                        } else {
+                                                          newItem.selectedsize =
+                                                              'nosize';
+                                                        }
+
+                                                        String item =
+                                                            jsonEncode(newItem);
+
+                                                        prefs.setStringList(
+                                                            'cartitems',
+                                                            [item]);
+                                                        showInSnackBar(newItem
+                                                                .name +
+                                                            ' added to Cart!');
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
                                                     ),
-                                                    onPressed: () {
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          );
+                                                    TextButton(
+                                                      child: Text(
+                                                        'Close',
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                            fontSize: 16.0,
+                                                            color: Colors.red,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w800),
+                                                      ),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          }
                                         }
                                       } else {
                                         showDialog(
@@ -2939,7 +2871,6 @@ class _DetailsState extends State<Details> {
                                                     Navigator.of(context,
                                                             rootNavigator: true)
                                                         .pop('dialog');
-
                                                     checkuser();
                                                   },
                                                 ));
@@ -2985,80 +2916,104 @@ class _DetailsState extends State<Details> {
                         : InkWell(
                             onTap: () async {
                               if (userid != null) {
-                                SharedPreferences prefs =
-                                    await SharedPreferences.getInstance();
-
-                                List cartitems =
-                                    prefs.getStringList('cartitems');
-                                print(cartitems);
-
-                                if (cartitems == null) {
-                                  String item = jsonEncode(newItem);
-                                  prefs.setStringList('cartitems', [item]);
-                                  showInSnackBar(
-                                      newItem.name + ' added to Cart!');
+                                if (selectedSize == null &&
+                                    newItem.size.isNotEmpty) {
+                                  showInSnackBar('Please Choose a Size');
                                 } else {
-                                  showDialog<void>(
-                                    context: context,
-                                    barrierDismissible:
-                                        false, // user must tap button!
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: Text(
-                                          'Oops',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontSize: 18.0,
-                                              fontWeight: FontWeight.w800),
-                                        ),
-                                        content: Text(
-                                          'You have an item in your cart already.',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontSize: 16.0,
-                                              fontWeight: FontWeight.w200),
-                                        ),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            child: Text(
-                                              'Add to Cart',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 16.0,
-                                                  fontWeight: FontWeight.w800),
-                                            ),
-                                            onPressed: () async {
-                                              SharedPreferences prefs =
-                                                  await SharedPreferences
-                                                      .getInstance();
-                                              prefs.remove('cartitems');
+                                  SharedPreferences prefs =
+                                      await SharedPreferences.getInstance();
 
-                                              String item = jsonEncode(newItem);
-                                              prefs.setStringList(
-                                                  'cartitems', [item]);
-                                              showInSnackBar(newItem.name +
-                                                  ' added to Cart!');
-                                              Navigator.of(context).pop();
-                                            },
+                                  List cartitems =
+                                      prefs.getStringList('cartitems');
+                                  print(cartitems);
+
+                                  if (cartitems == null) {
+                                    newItem.quantity = 1;
+
+                                    if (selectedSize != null) {
+                                      newItem.selectedsize =
+                                          selectedSize.toString();
+                                    } else {
+                                      newItem.selectedsize = 'nosize';
+                                    }
+
+                                    String item = jsonEncode(newItem);
+
+                                    prefs.setStringList('cartitems', [item]);
+                                    showInSnackBar(
+                                        newItem.name + ' added to Cart!');
+                                  } else {
+                                    showDialog<void>(
+                                      context: context,
+                                      barrierDismissible:
+                                          false, // user must tap button!
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text(
+                                            'Oops',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontSize: 18.0,
+                                                fontWeight: FontWeight.w800),
                                           ),
-                                          TextButton(
-                                            child: Text(
-                                              'Close',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  fontSize: 16.0,
-                                                  color: Colors.red,
-                                                  fontWeight: FontWeight.w800),
+                                          content: Text(
+                                            'You have an item in your cart already.',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontSize: 16.0,
+                                                fontWeight: FontWeight.w200),
+                                          ),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: Text(
+                                                'Add to Cart',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 16.0,
+                                                    fontWeight:
+                                                        FontWeight.w800),
+                                              ),
+                                              onPressed: () async {
+                                                newItem.quantity = 1;
+
+                                                if (selectedSize != null) {
+                                                  newItem.selectedsize =
+                                                      selectedSize.toString();
+                                                } else {
+                                                  newItem.selectedsize =
+                                                      'nosize';
+                                                }
+
+                                                String item =
+                                                    jsonEncode(newItem);
+
+                                                prefs.setStringList(
+                                                    'cartitems', [item]);
+                                                showInSnackBar(newItem.name +
+                                                    ' added to Cart!');
+                                                Navigator.of(context).pop();
+                                              },
                                             ),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
+                                            TextButton(
+                                              child: Text(
+                                                'Close',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    fontSize: 16.0,
+                                                    color: Colors.red,
+                                                    fontWeight:
+                                                        FontWeight.w800),
+                                              ),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  }
                                 }
                               } else {
                                 showDialog(

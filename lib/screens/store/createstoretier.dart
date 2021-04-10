@@ -32,6 +32,7 @@ class CreateStoreTier extends StatefulWidget {
   final String storeaddress;
   final String storecity;
   final String storedescription;
+  final String storeusername;
 
   CreateStoreTier(
       {Key key,
@@ -44,6 +45,7 @@ class CreateStoreTier extends StatefulWidget {
       this.storeaddress,
       this.storecity,
       this.storecategory,
+      this.storeusername,
       this.storeabout})
       : super(key: key);
 
@@ -710,6 +712,7 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                             'userid': userid,
                             'layout': 'default',
                             'storeaddress': widget.storeaddress,
+                            'storeusername': widget.storeusername,
                             'storecity': widget.storecity,
                             'storedescription': widget.storedescription,
                             'storebio': widget.storeabout,

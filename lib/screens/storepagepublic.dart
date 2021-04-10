@@ -164,6 +164,9 @@ class _StorePublicState extends State<StorePublic> {
       var s = jsonbody['storename'];
 
       mystore = Stores(
+          storeusername: jsonbody['storeusername'] == null
+              ? jsonbody['storename']
+              : jsonbody['storeusername'],
           storeid: jsonbody['_id']['\$oid'],
           reviews: jsonbody['reviewnumber'] == null
               ? '0'
@@ -402,7 +405,9 @@ class _StorePublicState extends State<StorePublic> {
         elevation: 0,
         backgroundColor: Colors.white,
         title: Text(
-          '@' + widget.storename,
+          mystore == null
+              ? '@' + widget.storename
+              : '@' + mystore.storeusername,
           style: TextStyle(
               fontFamily: 'Helvetica',
               fontSize: 20.0,

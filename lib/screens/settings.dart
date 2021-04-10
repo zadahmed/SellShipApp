@@ -295,36 +295,36 @@ class _SettingsState extends State<Settings> {
                     ),
                   )
                 : Container(),
-            // Container(
-            //   color: Colors.white,
-            //   child: ListTile(
-            //     leading: Icon(
-            //       Icons.business,
-            //       color: Colors.deepOrange,
-            //     ),
-            //     trailing: Icon(
-            //       Icons.chevron_right,
-            //       size: 16,
-            //       color: Colors.deepOrange,
-            //     ),
-            //     title: Text(
-            //       'Create a Store',
-            //       style: TextStyle(
-            //         fontFamily: 'Helvetica',
-            //         fontSize: 16.0,
-            //       ),
-            //     ),
-            //     onTap: () {
-            //       //TODO Send them to subscription based on Tier
-            //
-            //       //
-            //       Navigator.push(
-            //         context,
-            //         MaterialPageRoute(builder: (context) => CreateStoreName()),
-            //       );
-            //     },
-            //   ),
-            // ),
+            Container(
+              color: Colors.white,
+              child: ListTile(
+                leading: Icon(
+                  Icons.business,
+                  color: Colors.deepOrange,
+                ),
+                trailing: Icon(
+                  Icons.chevron_right,
+                  size: 16,
+                  color: Colors.deepOrange,
+                ),
+                title: Text(
+                  'Create a Store',
+                  style: TextStyle(
+                    fontFamily: 'Helvetica',
+                    fontSize: 16.0,
+                  ),
+                ),
+                onTap: () {
+                  //TODO Send them to subscription based on Tier
+
+                  //
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CreateStoreName()),
+                  );
+                },
+              ),
+            ),
             userid != null
                 ? Container(
                     color: Colors.white,

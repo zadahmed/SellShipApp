@@ -126,6 +126,8 @@ class _CheckoutState extends State<Checkout> {
         print(decodeditem);
         Item newItem = Item(
             name: decodeditem['name'],
+            selectedsize: decodeditem['selectedsize'],
+            quantity: decodeditem['quantity'],
             itemid: decodeditem['itemid'],
             price: decodeditem['price'].toString(),
             image: decodeditem['image'],
@@ -137,13 +139,11 @@ class _CheckoutState extends State<Checkout> {
                 : decodeditem['sellername']);
 
         subtotal = subtotal + double.parse(newItem.price);
-        print(newItem.itemid);
 
         listitems.add(newItem);
       }
     }
 
-    print(listitems.length);
     setState(() {
       subtotal = subtotal;
       listitems = listitems;
@@ -216,349 +216,462 @@ class _CheckoutState extends State<Checkout> {
                                 itemBuilder: (context, index) {
                                   return Padding(
                                       padding: EdgeInsets.all(0),
-                                      child: InkWell(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) => Details(
-                                                        itemid: listitems[index]
-                                                            .itemid,
-                                                        name: listitems[index]
-                                                            .name,
-                                                        sold: listitems[index]
-                                                            .sold,
-                                                        source: 'activity',
-                                                        image: listitems[index]
-                                                            .image,
-                                                      )),
-                                            );
-                                          },
-                                          child: Row(
-                                            children: [
-                                              Container(
-                                                height: 80,
-                                                width: 80,
-                                                child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5),
-                                                    child: listitems[index]
-                                                            .image
-                                                            .isNotEmpty
-                                                        ? Hero(
-                                                            tag:
-                                                                'activity${listitems[index].itemid}',
-                                                            child:
-                                                                CachedNetworkImage(
-                                                              imageUrl:
-                                                                  listitems[
-                                                                          index]
-                                                                      .image,
-                                                              height: 200,
-                                                              width: 300,
-                                                              fadeInDuration:
-                                                                  Duration(
-                                                                      microseconds:
-                                                                          5),
-                                                              fit: BoxFit.cover,
-                                                              placeholder: (context,
-                                                                      url) =>
-                                                                  SpinKitDoubleBounce(
-                                                                      color: Colors
-                                                                          .deepOrange),
-                                                              errorWidget: (context,
-                                                                      url,
-                                                                      error) =>
-                                                                  Icon(Icons
-                                                                      .error),
-                                                            ),
-                                                          )
-                                                        : SpinKitFadingCircle(
-                                                            color: Colors
-                                                                .deepOrange,
+                                      child: Column(
+                                        children: [
+                                          InkWell(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Details(
+                                                            itemid:
+                                                                listitems[index]
+                                                                    .itemid,
+                                                            name:
+                                                                listitems[index]
+                                                                    .name,
+                                                            sold:
+                                                                listitems[index]
+                                                                    .sold,
+                                                            source: 'activity',
+                                                            image:
+                                                                listitems[index]
+                                                                    .image,
                                                           )),
-                                              ),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                );
+                                              },
+                                              child: Row(
                                                 children: [
                                                   Container(
-                                                    height: 25,
-                                                    width:
-                                                        MediaQuery.of(context)
+                                                    height: 80,
+                                                    width: 80,
+                                                    child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5),
+                                                        child: listitems[index]
+                                                                .image
+                                                                .isNotEmpty
+                                                            ? Hero(
+                                                                tag:
+                                                                    'activity${listitems[index].itemid}',
+                                                                child:
+                                                                    CachedNetworkImage(
+                                                                  imageUrl:
+                                                                      listitems[
+                                                                              index]
+                                                                          .image,
+                                                                  height: 200,
+                                                                  width: 300,
+                                                                  fadeInDuration:
+                                                                      Duration(
+                                                                          microseconds:
+                                                                              5),
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                  placeholder: (context,
+                                                                          url) =>
+                                                                      SpinKitDoubleBounce(
+                                                                          color:
+                                                                              Colors.deepOrange),
+                                                                  errorWidget: (context,
+                                                                          url,
+                                                                          error) =>
+                                                                      Icon(Icons
+                                                                          .error),
+                                                                ),
+                                                              )
+                                                            : SpinKitFadingCircle(
+                                                                color: Colors
+                                                                    .deepOrange,
+                                                              )),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Container(
+                                                        height: 25,
+                                                        width: MediaQuery.of(
+                                                                        context)
                                                                     .size
                                                                     .width /
                                                                 2 -
                                                             10,
-                                                    child: Text(
-                                                      listitems[index].name,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      textAlign:
-                                                          TextAlign.start,
-                                                      style: TextStyle(
-                                                          fontFamily:
-                                                              'Helvetica',
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Colors.black),
-                                                    ),
+                                                        child: Text(
+                                                          listitems[index].name,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          textAlign:
+                                                              TextAlign.start,
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'Helvetica',
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color:
+                                                                  Colors.black),
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        '@' +
+                                                            listitems[index]
+                                                                .username,
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            fontSize: 14,
+                                                            color: Colors.grey),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 5,
+                                                      ),
+                                                      Text(
+                                                        currency +
+                                                            ' ' +
+                                                            listitems[index]
+                                                                .price,
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            fontSize: 14.0,
+                                                            color:
+                                                                Colors.black),
+                                                      ),
+                                                    ],
                                                   ),
-                                                  Text(
-                                                    '@' +
-                                                        listitems[index]
-                                                            .username,
-                                                    style: TextStyle(
-                                                        fontFamily: 'Helvetica',
-                                                        fontSize: 14,
-                                                        color: Colors.grey),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 5,
-                                                  ),
-                                                  Text(
-                                                    currency +
-                                                        ' ' +
-                                                        listitems[index].price,
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        fontFamily: 'Helvetica',
-                                                        fontSize: 14.0,
-                                                        color: Colors.black),
-                                                  )
-                                                ],
-                                              ),
-                                              Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Column(
+                                                  Row(
                                                       mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
+                                                          MainAxisAlignment.end,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
                                                       children: [
-                                                        InkWell(
-                                                          onTap: () async {
-                                                            showDialog<void>(
-                                                              context: context,
-                                                              barrierDismissible:
-                                                                  false, // user must tap button!
-                                                              builder:
-                                                                  (BuildContext
-                                                                      context) {
-                                                                return AlertDialog(
-                                                                  title: Text(
-                                                                    'Are you sure you want to move this item to favourites?',
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .center,
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            18.0,
-                                                                        fontWeight:
-                                                                            FontWeight.w800),
-                                                                  ),
-                                                                  actions: <
-                                                                      Widget>[
-                                                                    TextButton(
-                                                                      child:
+                                                        Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            InkWell(
+                                                              onTap: () async {
+                                                                showDialog<
+                                                                    void>(
+                                                                  context:
+                                                                      context,
+                                                                  barrierDismissible:
+                                                                      false, // user must tap button!
+                                                                  builder:
+                                                                      (BuildContext
+                                                                          context) {
+                                                                    return AlertDialog(
+                                                                      title:
                                                                           Text(
-                                                                        'Favourite Item',
+                                                                        'Are you sure you want to move this item to favourites?',
                                                                         textAlign:
                                                                             TextAlign.center,
                                                                         style: TextStyle(
-                                                                            color: Colors
-                                                                                .black,
                                                                             fontSize:
-                                                                                16.0,
+                                                                                18.0,
                                                                             fontWeight:
                                                                                 FontWeight.w800),
                                                                       ),
-                                                                      onPressed:
-                                                                          () async {
-                                                                        var userid =
-                                                                            await storage.read(key: 'userid');
+                                                                      actions: <
+                                                                          Widget>[
+                                                                        TextButton(
+                                                                          child:
+                                                                              Text(
+                                                                            'Favourite Item',
+                                                                            textAlign:
+                                                                                TextAlign.center,
+                                                                            style: TextStyle(
+                                                                                color: Colors.black,
+                                                                                fontSize: 16.0,
+                                                                                fontWeight: FontWeight.w800),
+                                                                          ),
+                                                                          onPressed:
+                                                                              () async {
+                                                                            var userid =
+                                                                                await storage.read(key: 'userid');
 
-                                                                        var url =
-                                                                            'https://api.sellship.co/api/favourite/' +
-                                                                                userid;
+                                                                            var url =
+                                                                                'https://api.sellship.co/api/favourite/' + userid;
 
-                                                                        Map<String,
-                                                                                String>
-                                                                            body =
-                                                                            {
-                                                                          'itemid':
-                                                                              listitems[0].itemid,
-                                                                        };
+                                                                            Map<String, String>
+                                                                                body =
+                                                                                {
+                                                                              'itemid': listitems[0].itemid,
+                                                                            };
 
-                                                                        final response = await http.post(
-                                                                            url,
-                                                                            body:
-                                                                                json.encode(body));
+                                                                            final response =
+                                                                                await http.post(url, body: json.encode(body));
 
-                                                                        if (response.statusCode ==
-                                                                            200) {
-                                                                          SharedPreferences
-                                                                              prefs =
-                                                                              await SharedPreferences.getInstance();
-                                                                          prefs.remove(
-                                                                              'cartitems');
-                                                                          setState(
+                                                                            if (response.statusCode ==
+                                                                                200) {
+                                                                              SharedPreferences prefs = await SharedPreferences.getInstance();
+                                                                              prefs.remove('cartitems');
+                                                                              setState(() {
+                                                                                listitems = [];
+                                                                              });
+                                                                              Navigator.of(context).pop();
+                                                                              showInSnackBar(listitems[0].name + ' has been moved to favourites');
+                                                                            } else {
+                                                                              print(response.statusCode);
+                                                                            }
+                                                                          },
+                                                                        ),
+                                                                        TextButton(
+                                                                          child:
+                                                                              Text(
+                                                                            'Cancel',
+                                                                            textAlign:
+                                                                                TextAlign.center,
+                                                                            style: TextStyle(
+                                                                                fontSize: 16.0,
+                                                                                color: Colors.red,
+                                                                                fontWeight: FontWeight.w800),
+                                                                          ),
+                                                                          onPressed:
                                                                               () {
-                                                                            listitems =
-                                                                                [];
-                                                                          });
-                                                                          Navigator.of(context)
-                                                                              .pop();
-                                                                          showInSnackBar(listitems[0].name +
-                                                                              ' has been moved to favourites');
-                                                                        } else {
-                                                                          print(
-                                                                              response.statusCode);
-                                                                        }
-                                                                      },
-                                                                    ),
-                                                                    TextButton(
-                                                                      child:
-                                                                          Text(
-                                                                        'Cancel',
-                                                                        textAlign:
-                                                                            TextAlign.center,
-                                                                        style: TextStyle(
-                                                                            fontSize:
-                                                                                16.0,
-                                                                            color:
-                                                                                Colors.red,
-                                                                            fontWeight: FontWeight.w800),
-                                                                      ),
-                                                                      onPressed:
-                                                                          () {
-                                                                        Navigator.of(context)
-                                                                            .pop();
-                                                                      },
-                                                                    ),
-                                                                  ],
+                                                                            Navigator.of(context).pop();
+                                                                          },
+                                                                        ),
+                                                                      ],
+                                                                    );
+                                                                  },
                                                                 );
                                                               },
-                                                            );
-                                                          },
-                                                          child: CircleAvatar(
-                                                              radius: 14,
-                                                              backgroundColor:
-                                                                  Colors.white,
-                                                              child: Icon(
-                                                                Feather.heart,
-                                                                size: 16,
-                                                                color:
-                                                                    Colors.grey,
-                                                              )),
-                                                        ),
-                                                        InkWell(
-                                                            onTap: () async {
-                                                              showDialog<void>(
-                                                                context:
-                                                                    context,
-                                                                barrierDismissible:
-                                                                    false, // user must tap button!
-                                                                builder:
-                                                                    (BuildContext
-                                                                        context) {
-                                                                  return AlertDialog(
-                                                                    title: Text(
-                                                                      'Are you sure you want to remove this item?',
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .center,
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              18.0,
-                                                                          fontWeight:
-                                                                              FontWeight.w800),
-                                                                    ),
-                                                                    actions: <
-                                                                        Widget>[
-                                                                      TextButton(
-                                                                        child:
+                                                              child:
+                                                                  CircleAvatar(
+                                                                      radius:
+                                                                          14,
+                                                                      backgroundColor:
+                                                                          Colors
+                                                                              .white,
+                                                                      child:
+                                                                          Icon(
+                                                                        Feather
+                                                                            .heart,
+                                                                        size:
+                                                                            16,
+                                                                        color: Colors
+                                                                            .grey,
+                                                                      )),
+                                                            ),
+                                                            InkWell(
+                                                                onTap:
+                                                                    () async {
+                                                                  showDialog<
+                                                                      void>(
+                                                                    context:
+                                                                        context,
+                                                                    barrierDismissible:
+                                                                        false, // user must tap button!
+                                                                    builder:
+                                                                        (BuildContext
+                                                                            context) {
+                                                                      return AlertDialog(
+                                                                        title:
                                                                             Text(
-                                                                          'Remove Item',
+                                                                          'Are you sure you want to remove this item?',
                                                                           textAlign:
                                                                               TextAlign.center,
                                                                           style: TextStyle(
-                                                                              color: Colors.black,
-                                                                              fontSize: 16.0,
+                                                                              fontSize: 18.0,
                                                                               fontWeight: FontWeight.w800),
                                                                         ),
-                                                                        onPressed:
-                                                                            () async {
-                                                                          SharedPreferences
-                                                                              prefs =
-                                                                              await SharedPreferences.getInstance();
-                                                                          prefs.remove(
-                                                                              'cartitems');
-                                                                          setState(
-                                                                              () {
-                                                                            listitems =
-                                                                                [];
-                                                                          });
-                                                                          Navigator.of(context)
-                                                                              .pop();
-                                                                        },
-                                                                      ),
-                                                                      TextButton(
-                                                                        child:
-                                                                            Text(
-                                                                          'Cancel',
-                                                                          textAlign:
-                                                                              TextAlign.center,
-                                                                          style: TextStyle(
-                                                                              fontSize: 16.0,
-                                                                              color: Colors.red,
-                                                                              fontWeight: FontWeight.w800),
-                                                                        ),
-                                                                        onPressed:
-                                                                            () {
-                                                                          Navigator.of(context)
-                                                                              .pop();
-                                                                        },
-                                                                      ),
-                                                                    ],
+                                                                        actions: <
+                                                                            Widget>[
+                                                                          TextButton(
+                                                                            child:
+                                                                                Text(
+                                                                              'Remove Item',
+                                                                              textAlign: TextAlign.center,
+                                                                              style: TextStyle(color: Colors.black, fontSize: 16.0, fontWeight: FontWeight.w800),
+                                                                            ),
+                                                                            onPressed:
+                                                                                () async {
+                                                                              SharedPreferences prefs = await SharedPreferences.getInstance();
+                                                                              prefs.remove('cartitems');
+                                                                              setState(() {
+                                                                                listitems = [];
+                                                                              });
+                                                                              Navigator.of(context).pop();
+                                                                            },
+                                                                          ),
+                                                                          TextButton(
+                                                                            child:
+                                                                                Text(
+                                                                              'Cancel',
+                                                                              textAlign: TextAlign.center,
+                                                                              style: TextStyle(fontSize: 16.0, color: Colors.red, fontWeight: FontWeight.w800),
+                                                                            ),
+                                                                            onPressed:
+                                                                                () {
+                                                                              Navigator.of(context).pop();
+                                                                            },
+                                                                          ),
+                                                                        ],
+                                                                      );
+                                                                    },
                                                                   );
                                                                 },
-                                                              );
-                                                            },
-                                                            child: CircleAvatar(
-                                                                radius: 14,
-                                                                backgroundColor:
-                                                                    Colors
-                                                                        .white,
-                                                                child: Icon(
-                                                                  Feather
-                                                                      .trash_2,
-                                                                  size: 16,
-                                                                  color: Colors
-                                                                      .grey,
-                                                                ))),
-                                                      ],
-                                                    )
-                                                  ])
-                                            ],
+                                                                child:
+                                                                    CircleAvatar(
+                                                                        radius:
+                                                                            14,
+                                                                        backgroundColor:
+                                                                            Colors
+                                                                                .white,
+                                                                        child:
+                                                                            Icon(
+                                                                          Feather
+                                                                              .trash_2,
+                                                                          size:
+                                                                              16,
+                                                                          color:
+                                                                              Colors.grey,
+                                                                        ))),
+                                                          ],
+                                                        )
+                                                      ])
+                                                ],
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                              )),
+                                          Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                          )));
+                                            children: [
+                                              listitems[index].selectedsize !=
+                                                      'nosize'
+                                                  ? Text(
+                                                      listitems[index]
+                                                          .selectedsize,
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 14.0,
+                                                          color: Colors.black),
+                                                    )
+                                                  : Container(),
+                                              Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    border: Border.all(
+                                                        color: Colors
+                                                            .grey.shade300),
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                15)),
+                                                  ),
+                                                  child: Container(
+                                                      height: 30,
+                                                      width: 130,
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .end,
+                                                        children: [
+                                                          IconButton(
+                                                            icon: Icon(
+                                                                Icons.remove),
+                                                            iconSize: 16,
+                                                            color: Colors
+                                                                .deepOrange,
+                                                            onPressed: () {
+                                                              setState(() {
+                                                                if (listitems[
+                                                                            index]
+                                                                        .quantity >
+                                                                    0) {
+                                                                  listitems[
+                                                                          index]
+                                                                      .quantity = listitems[
+                                                                              index]
+                                                                          .quantity -
+                                                                      1;
+                                                                }
+                                                                subtotal = double.parse(
+                                                                        listitems[index]
+                                                                            .price) *
+                                                                    listitems[
+                                                                            index]
+                                                                        .quantity;
+                                                              });
+                                                            },
+                                                          ),
+                                                          Container(
+                                                            width: 25,
+                                                            child: Text(
+                                                              listitems[index]
+                                                                  .quantity
+                                                                  .toString(),
+                                                              style: TextStyle(
+                                                                  fontSize: 18),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                          ),
+                                                          IconButton(
+                                                            icon:
+                                                                Icon(Icons.add),
+                                                            iconSize: 16,
+                                                            color: Colors
+                                                                .deepOrange,
+                                                            onPressed: () {
+                                                              setState(() {
+                                                                if (listitems[
+                                                                            index]
+                                                                        .quantity >=
+                                                                    0) {
+                                                                  listitems[
+                                                                          index]
+                                                                      .quantity = listitems[
+                                                                              index]
+                                                                          .quantity +
+                                                                      1;
+                                                                }
+                                                                subtotal = double.parse(
+                                                                        listitems[index]
+                                                                            .price) *
+                                                                    listitems[
+                                                                            index]
+                                                                        .quantity;
+                                                              });
+                                                            },
+                                                          ),
+                                                        ],
+                                                      )))
+                                            ],
+                                          )
+                                        ],
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                      ));
                                 },
                               ),
-                            )
+                            ),
                           ])))
               : Padding(
                   padding: EdgeInsets.all(20),
@@ -622,7 +735,9 @@ class _CheckoutState extends State<Checkout> {
                               ),
                               Text(
                                 subtotal != 0.0
-                                    ? currency + ' ' + subtotal.toString()
+                                    ? currency +
+                                        ' ' +
+                                        subtotal.toStringAsFixed(2)
                                     : 'AED 0',
                                 style: TextStyle(
                                   fontFamily: 'Helvetica',
@@ -819,7 +934,7 @@ class _CheckoutState extends State<Checkout> {
                                   color: Colors.black45,
                                 ),
                               ),
-                              Text('AED' + ' ' + subtotal.toString(),
+                              Text('AED' + ' ' + subtotal.toStringAsFixed(2),
                                   style: TextStyle(
                                     fontWeight: FontWeight.w900,
                                     fontSize: 20,
@@ -862,13 +977,13 @@ class _CheckoutState extends State<Checkout> {
 
                                   messageid = 'SS-ORDER' +
                                       (userid.substring(0, 10) +
-                                          listitems[0]
-                                              .itemid
-                                              .toString()
-                                              .substring(0, 15) +
-                                          listitems[0]
-                                              .userid
-                                              .substring(0, 10))
+                                              listitems[0]
+                                                  .itemid
+                                                  .toString()
+                                                  .substring(0, 15) +
+                                              listitems[0]
+                                                  .userid
+                                                  .substring(0, 10))
                                           .toString();
                                   print(messageid);
 
@@ -897,15 +1012,25 @@ class _CheckoutState extends State<Checkout> {
                                   print(returnurl);
 
                                   var url =
-                                      "https://api.noonpayments.com/payment/v1/order";
+                                      "https://api-stg.noonpayments.com/payment/v1/order";
 
                                   var key =
-                                      "SellShip.SellShipApp:a42e7bc936354e9c807c0ff02670ab37";
+                                      "SellShip.SellShipApp:7d016fdd70a64b68bc99d2cece27b48d";
                                   List encodedText = utf8.encode(key);
                                   String base64Str = base64Encode(encodedText);
-                                  print('Key_Live $base64Str');
+                                  print('Key_Test $base64Str');
 
-                                  var heade = 'Key_Live $base64Str';
+                                  // var url =
+                                  //     "https://api.noonpayments.com/payment/v1/order";
+                                  //
+                                  // var key =
+                                  //     "SellShip.SellShipApp:a42e7bc936354e9c807c0ff02670ab37";
+                                  // List encodedText = utf8.encode(key);
+                                  // String base64Str = base64Encode(encodedText);
+                                  // print('Key_Live $base64Str');
+
+                                  // var heade = 'Key_Live $base64Str';
+                                  var heade = 'Key_Test $base64Str';
 
                                   Map<String, String> headers = {
                                     'Authorization': heade,
@@ -931,8 +1056,6 @@ class _CheckoutState extends State<Checkout> {
 
                                     Navigator.of(context, rootNavigator: true)
                                         .pop();
-
-
 
                                     Navigator.push(
                                       context,

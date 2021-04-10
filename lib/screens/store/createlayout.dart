@@ -31,12 +31,14 @@ class CreateLayout extends StatefulWidget {
   final String storetype;
   final String storeaddress;
   final String storecity;
+  final String storeusername;
   final String storedescription;
 
   CreateLayout(
       {Key key,
       this.userid,
       this.storename,
+      this.storeusername,
       this.username,
       this.storedescription,
       this.storelogo,
@@ -550,6 +552,7 @@ class _CreateLayoutState extends State<CreateLayout> {
                                   : widget.storecategory,
                               'storetype': widget.storetype,
                               'storename': widget.storename,
+                              'storeusername': widget.storeusername,
                               'userid': userid,
                               'layout': 'default',
                               'storeaddress': widget.storeaddress,
@@ -593,6 +596,7 @@ class _CreateLayoutState extends State<CreateLayout> {
                                     storelogo: widget.storelogo,
                                     storecategory: widget.storecategory,
                                     storeabout: widget.storeabout,
+                                    storeusername: widget.storeusername,
                                     storeaddress: widget.storeaddress,
                                     storecity: widget.storecity,
                                     storetype: widget.storetype,

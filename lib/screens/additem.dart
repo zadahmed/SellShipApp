@@ -345,6 +345,7 @@ class _AddItemState extends State<AddItem> {
 
   bool quantityswitch = false;
   bool acceptoffers = false;
+  bool buyerprotection = true;
 
   int _selectedweight = -1;
 
@@ -365,6 +366,7 @@ class _AddItemState extends State<AddItem> {
   var fees;
 
   List<String> brands = List<String>();
+  String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 
   loadbrands(category) async {
     var categoryurl = 'https://api.sellship.co/api/getbrands/' + category;
@@ -376,6 +378,11 @@ class _AddItemState extends State<AddItem> {
 
       for (int i = 0; i < categoryrespons.length; i++) {
         brands.add(categoryrespons[i]);
+      }
+
+      if (_selectedStore.storetype == 'Home Business' ||
+          _selectedStore.storetype == 'Retail') {
+        brands.add(capitalize(_selectedStore.storename));
       }
 
       brands.add('Other');
@@ -1622,6 +1629,94 @@ class _AddItemState extends State<AddItem> {
                                             )
                                           : Container()
                                       : Container(),
+                                  _selectedStore != null
+                                      ? _selectedStore.storecategory ==
+                                              'Secondhand Seller'
+                                          ? Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: 15,
+                                                  bottom: 5,
+                                                  top: 10,
+                                                  right: 15),
+                                              child: Container(
+                                                height: 90,
+                                                padding: EdgeInsets.all(15),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(15)),
+                                                ),
+                                                child:
+                                                    DropdownButtonHideUnderline(
+                                                  child: DropdownButton(
+                                                    isDense: true,
+                                                    isExpanded: true,
+                                                    hint: Text(
+                                                      'Condition of Item',
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 16,
+                                                          color:
+                                                              Colors.blueGrey),
+                                                    ),
+                                                    value: _selectedcondition,
+                                                    onChanged: (newValue) {
+                                                      setState(() {
+                                                        _selectedcondition =
+                                                            newValue;
+                                                        percentindictor = 0.7;
+                                                      });
+                                                    },
+                                                    items: mapconditions
+                                                        .map((description,
+                                                            value) {
+                                                          return MapEntry(
+                                                              description,
+                                                              DropdownMenuItem(
+                                                                child: ListTile(
+                                                                  dense: true,
+                                                                  contentPadding:
+                                                                      EdgeInsets
+                                                                          .zero,
+                                                                  title: Text(
+                                                                    description,
+                                                                    style: TextStyle(
+                                                                        fontFamily:
+                                                                            'Helvetica',
+                                                                        fontSize:
+                                                                            16,
+                                                                        color: Colors
+                                                                            .black,
+                                                                        fontWeight:
+                                                                            FontWeight.w500),
+                                                                  ),
+                                                                  subtitle:
+                                                                      Text(
+                                                                    value,
+                                                                    style: TextStyle(
+                                                                        fontFamily:
+                                                                            'Helvetica',
+                                                                        fontSize:
+                                                                            12,
+                                                                        color: Colors
+                                                                            .grey,
+                                                                        fontWeight:
+                                                                            FontWeight.w500),
+                                                                  ),
+                                                                ),
+                                                                value:
+                                                                    description,
+                                                              ));
+                                                        })
+                                                        .values
+                                                        .toList(),
+                                                  ),
+                                                ),
+                                              ))
+                                          : Container()
+                                      : Container(),
                                   SizedBox(
                                     height: 5.0,
                                   ),
@@ -2364,42 +2459,6 @@ class _AddItemState extends State<AddItem> {
                                           }),
                                     ),
                                   ),
-                                  _selectedStore != null
-                                      ? _selectedStore.storecategory ==
-                                              'Secondhand Seller'
-                                          ? Padding(
-                                              padding: EdgeInsets.only(
-                                                  left: 15,
-                                                  bottom: 5,
-                                                  top: 10,
-                                                  right: 15),
-                                              child: Container(
-                                                padding: EdgeInsets.all(5),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(15)),
-                                                ),
-                                                child: SwitchListTile(
-                                                  value: acceptoffers,
-                                                  activeColor:
-                                                      Colors.deepPurple,
-                                                  title: Text(
-                                                    'Accept offers from buyers?',
-                                                    style: TextStyle(
-                                                        fontFamily: 'Helvetica',
-                                                        fontSize: 16,
-                                                        color: Colors.blueGrey),
-                                                  ),
-                                                  onChanged: (value) =>
-                                                      setState(() {
-                                                    acceptoffers = value;
-                                                  }),
-                                                ),
-                                              ))
-                                          : Container()
-                                      : Container(),
                                   SizedBox(
                                     height: 5.0,
                                   ),
@@ -2836,94 +2895,6 @@ class _AddItemState extends State<AddItem> {
                                             ),
                                           ))
                                       : Container(),
-                                  _selectedStore != null
-                                      ? _selectedStore.storecategory ==
-                                              'Secondhand Seller'
-                                          ? Padding(
-                                              padding: EdgeInsets.only(
-                                                  left: 15,
-                                                  bottom: 5,
-                                                  top: 10,
-                                                  right: 15),
-                                              child: Container(
-                                                height: 90,
-                                                padding: EdgeInsets.all(15),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(15)),
-                                                ),
-                                                child:
-                                                    DropdownButtonHideUnderline(
-                                                  child: DropdownButton(
-                                                    isDense: true,
-                                                    isExpanded: true,
-                                                    hint: Text(
-                                                      'Condition of Item',
-                                                      style: TextStyle(
-                                                          fontFamily:
-                                                              'Helvetica',
-                                                          fontSize: 16,
-                                                          color:
-                                                              Colors.blueGrey),
-                                                    ),
-                                                    value: _selectedcondition,
-                                                    onChanged: (newValue) {
-                                                      setState(() {
-                                                        _selectedcondition =
-                                                            newValue;
-                                                        percentindictor = 0.7;
-                                                      });
-                                                    },
-                                                    items: mapconditions
-                                                        .map((description,
-                                                            value) {
-                                                          return MapEntry(
-                                                              description,
-                                                              DropdownMenuItem(
-                                                                child: ListTile(
-                                                                  dense: true,
-                                                                  contentPadding:
-                                                                      EdgeInsets
-                                                                          .zero,
-                                                                  title: Text(
-                                                                    description,
-                                                                    style: TextStyle(
-                                                                        fontFamily:
-                                                                            'Helvetica',
-                                                                        fontSize:
-                                                                            16,
-                                                                        color: Colors
-                                                                            .black,
-                                                                        fontWeight:
-                                                                            FontWeight.w500),
-                                                                  ),
-                                                                  subtitle:
-                                                                      Text(
-                                                                    value,
-                                                                    style: TextStyle(
-                                                                        fontFamily:
-                                                                            'Helvetica',
-                                                                        fontSize:
-                                                                            12,
-                                                                        color: Colors
-                                                                            .grey,
-                                                                        fontWeight:
-                                                                            FontWeight.w500),
-                                                                  ),
-                                                                ),
-                                                                value:
-                                                                    description,
-                                                              ));
-                                                        })
-                                                        .values
-                                                        .toList(),
-                                                  ),
-                                                ),
-                                              ))
-                                          : Container()
-                                      : Container(),
                                   Padding(
                                       padding: EdgeInsets.only(
                                           left: 15,
@@ -3048,6 +3019,267 @@ class _AddItemState extends State<AddItem> {
                                                           ],
                                                         ))
                                                   ])))
+                                      : Container(),
+                                  _selectedStore != null
+                                      ? _selectedStore.storecategory ==
+                                              'Secondhand Seller'
+                                          ? Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: 15,
+                                                  bottom: 5,
+                                                  top: 10,
+                                                  right: 15),
+                                              child: Container(
+                                                padding: EdgeInsets.all(5),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(15)),
+                                                ),
+                                                child: SwitchListTile(
+                                                  value: acceptoffers,
+                                                  activeColor:
+                                                      Colors.deepPurple,
+                                                  title: Text(
+                                                    'Accept offers from buyers?',
+                                                    style: TextStyle(
+                                                        fontFamily: 'Helvetica',
+                                                        fontSize: 16,
+                                                        color: Colors.blueGrey),
+                                                  ),
+                                                  onChanged: (value) =>
+                                                      setState(() {
+                                                    acceptoffers = value;
+                                                  }),
+                                                ),
+                                              ))
+                                          : Container()
+                                      : Container(),
+                                  _selectedStore != null
+                                      ? _selectedStore.storecategory !=
+                                              'Secondhand Seller'
+                                          ? Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: 15,
+                                                  bottom: 5,
+                                                  top: 10,
+                                                  right: 15),
+                                              child: Container(
+                                                padding: EdgeInsets.all(5),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(15)),
+                                                ),
+                                                child: SwitchListTile(
+                                                  value: buyerprotection,
+                                                  activeColor:
+                                                      Colors.deepPurple,
+                                                  title: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        'Activate Buyer Protection?',
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            fontSize: 16,
+                                                            color: Colors
+                                                                .blueGrey),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 5,
+                                                      ),
+                                                      InkWell(
+                                                        onTap: () {
+                                                          showModalBottomSheet(
+                                                              backgroundColor: Color(
+                                                                  0xFF737373),
+                                                              context: context,
+                                                              isScrollControlled:
+                                                                  true,
+                                                              builder: (context) =>
+                                                                  Container(
+                                                                      height:
+                                                                          MediaQuery.of(context).size.height /
+                                                                              2,
+                                                                      padding: EdgeInsets.only(
+                                                                          left:
+                                                                              10,
+                                                                          right:
+                                                                              10,
+                                                                          top:
+                                                                              20),
+                                                                      decoration: new BoxDecoration(
+                                                                          color: Colors
+                                                                              .white,
+                                                                          borderRadius: new BorderRadius.only(
+                                                                              topLeft: const Radius.circular(20.0),
+                                                                              topRight: const Radius.circular(20.0))),
+                                                                      child: Scaffold(
+                                                                        backgroundColor:
+                                                                            Colors.white,
+                                                                        body:
+                                                                            ListView(
+                                                                          children: <
+                                                                              Widget>[
+                                                                            ListTile(
+                                                                              title: Text(
+                                                                                'Buyer Protection',
+                                                                                textAlign: TextAlign.left,
+                                                                                style: TextStyle(
+                                                                                  fontFamily: 'Helvetica',
+                                                                                  fontSize: 20,
+                                                                                  color: Colors.black,
+                                                                                  fontWeight: FontWeight.w700,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                            SizedBox(
+                                                                              height: 10,
+                                                                            ),
+                                                                            ListTile(
+                                                                              title: Text(
+                                                                                'Secure Payments',
+                                                                                style: TextStyle(
+                                                                                  fontFamily: 'Helvetica',
+                                                                                  fontSize: 16,
+                                                                                  fontWeight: FontWeight.bold,
+                                                                                  color: Colors.black,
+                                                                                ),
+                                                                              ),
+                                                                              subtitle: Text(
+                                                                                'All transcations within SellShip are secure and encrypted.',
+                                                                                style: TextStyle(
+                                                                                  fontFamily: 'Helvetica',
+                                                                                  fontSize: 14,
+                                                                                  color: Colors.blueGrey,
+                                                                                ),
+                                                                              ),
+                                                                              leading: Icon(
+                                                                                Icons.lock,
+                                                                                color: Color.fromRGBO(255, 115, 0, 1),
+                                                                              ),
+                                                                            ),
+                                                                            SizedBox(
+                                                                              height: 10,
+                                                                            ),
+                                                                            ListTile(
+                                                                              title: Text(
+                                                                                'Money Back Guarantee',
+                                                                                style: TextStyle(
+                                                                                  fontFamily: 'Helvetica',
+                                                                                  fontSize: 16,
+                                                                                  fontWeight: FontWeight.bold,
+                                                                                  color: Colors.black,
+                                                                                ),
+                                                                              ),
+                                                                              subtitle: Text(
+                                                                                'Product\'s that are not described as listed by the seller in the listing, that has undisclosed damage or if the seller has not shipped the item. The buyer can receive a refund for the item, as long as the refund request is made within 2 days of confirmed delivery or order',
+                                                                                style: TextStyle(
+                                                                                  fontFamily: 'Helvetica',
+                                                                                  fontSize: 14,
+                                                                                  color: Colors.blueGrey,
+                                                                                ),
+                                                                              ),
+                                                                              leading: Icon(
+                                                                                FontAwesome.money,
+                                                                                color: Color.fromRGBO(255, 115, 0, 1),
+                                                                              ),
+                                                                            ),
+                                                                            SizedBox(
+                                                                              height: 10,
+                                                                            ),
+                                                                            ListTile(
+                                                                              title: Text(
+                                                                                '24/7 Support',
+                                                                                style: TextStyle(
+                                                                                  fontFamily: 'Helvetica',
+                                                                                  fontSize: 16,
+                                                                                  fontWeight: FontWeight.bold,
+                                                                                  color: Colors.black,
+                                                                                ),
+                                                                              ),
+                                                                              subtitle: Text(
+                                                                                'The SellShip support team works 24/7 around the clock to deal with all support requests, queries and concerns.',
+                                                                                style: TextStyle(
+                                                                                  fontFamily: 'Helvetica',
+                                                                                  fontSize: 14,
+                                                                                  color: Colors.blueGrey,
+                                                                                ),
+                                                                              ),
+                                                                              leading: Icon(
+                                                                                Icons.live_help,
+                                                                                color: Color.fromRGBO(255, 115, 0, 1),
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                        bottomNavigationBar:
+                                                                            Padding(
+                                                                          padding:
+                                                                              EdgeInsets.all(20),
+                                                                          child:
+                                                                              InkWell(
+                                                                            onTap:
+                                                                                () {
+                                                                              Navigator.of(context).pop();
+                                                                            },
+                                                                            child:
+                                                                                Container(
+                                                                              height: 48,
+                                                                              width: MediaQuery.of(context).size.width - 10,
+                                                                              decoration: BoxDecoration(
+                                                                                color: Color.fromRGBO(255, 115, 0, 1),
+                                                                                borderRadius: const BorderRadius.all(
+                                                                                  Radius.circular(5.0),
+                                                                                ),
+                                                                                boxShadow: <BoxShadow>[
+                                                                                  BoxShadow(color: Color.fromRGBO(255, 115, 0, 0.4), offset: const Offset(1.1, 1.1), blurRadius: 10.0),
+                                                                                ],
+                                                                              ),
+                                                                              child: Center(
+                                                                                child: Text(
+                                                                                  'Done',
+                                                                                  textAlign: TextAlign.left,
+                                                                                  style: TextStyle(
+                                                                                    fontWeight: FontWeight.w600,
+                                                                                    fontSize: 16,
+                                                                                    letterSpacing: 0.0,
+                                                                                    color: Colors.white,
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      )));
+                                                        },
+                                                        child: Text(
+                                                          'Buyers are more prone to purchase items that have Buyer Protection active. Read more about Buyer Protection',
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'Helvetica',
+                                                              fontSize: 12,
+                                                              color: Colors
+                                                                  .deepOrange),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  onChanged: (value) =>
+                                                      setState(() {
+                                                    buyerprotection = value;
+                                                  }),
+                                                ),
+                                              ))
+                                          : Container()
                                       : Container(),
                                   Padding(
                                     padding: EdgeInsets.only(
@@ -3553,7 +3785,7 @@ class _AddItemState extends State<AddItem> {
                                                   'tags': tags.isEmpty
                                                       ? []
                                                       : {tags},
-                                                  'size': _selectedsize.isEmpty
+                                                  'size': _selectedsize == null
                                                       ? []
                                                       : {_selectedsize},
                                                   'category': _selectedCategory,
@@ -3565,6 +3797,8 @@ class _AddItemState extends State<AddItem> {
                                                           ? ''
                                                           : _selectedsubsubCategory,
                                                   'acceptoffers': acceptoffers,
+                                                  'buyerprotection':
+                                                      buyerprotection,
                                                   'latitude':
                                                       _lastMapPosition.latitude,
                                                   'longitude': _lastMapPosition
@@ -3621,7 +3855,7 @@ class _AddItemState extends State<AddItem> {
                                                       selectedColors.isEmpty
                                                           ? []
                                                           : {selectedColors},
-                                                  'size': _selectedsize.isEmpty
+                                                  'size': _selectedsize == null
                                                       ? []
                                                       : {_selectedsize},
                                                   'selleruserid': userid,
@@ -3637,6 +3871,8 @@ class _AddItemState extends State<AddItem> {
                                                               null
                                                           ? ''
                                                           : _selectedsubsubCategory,
+                                                  'buyerprotection':
+                                                      buyerprotection,
                                                   'latitude':
                                                       _lastMapPosition.latitude,
                                                   'longitude': _lastMapPosition
@@ -3692,13 +3928,15 @@ class _AddItemState extends State<AddItem> {
                                                       businesspricecontroller
                                                           .text
                                                           .toString(),
+                                                  'buyerprotection':
+                                                      buyerprotection,
                                                   'colors':
                                                       selectedColors.isEmpty
                                                           ? []
                                                           : {selectedColors},
                                                   'selleruserid': userid,
                                                   'sellerusername': firstname,
-                                                  'size': _selectedsize.isEmpty
+                                                  'size': _selectedsize == null
                                                       ? []
                                                       : {_selectedsize},
                                                   'tags': tags.isEmpty
@@ -3770,6 +4008,8 @@ class _AddItemState extends State<AddItem> {
                                                   'selleruserid': userid,
                                                   'sellerusername': firstname,
                                                   'acceptoffers': acceptoffers,
+                                                  'buyerprotection':
+                                                      buyerprotection,
                                                   'price':
                                                       fees.toStringAsFixed(2),
                                                   'storeid':
@@ -3782,7 +4022,7 @@ class _AddItemState extends State<AddItem> {
                                                       selectedColors.isEmpty
                                                           ? []
                                                           : {selectedColors},
-                                                  'size': _selectedsize.isEmpty
+                                                  'size': _selectedsize == null
                                                       ? []
                                                       : {_selectedsize},
                                                   'tags': tags.isEmpty
@@ -3867,13 +4107,15 @@ class _AddItemState extends State<AddItem> {
                                                           .toString(),
                                                   'selleruserid': userid,
                                                   'sellerusername': firstname,
+                                                  'buyerprotection':
+                                                      buyerprotection,
                                                   'storeid':
                                                       _selectedStore.storeid,
                                                   'colors':
                                                       selectedColors.isEmpty
                                                           ? []
                                                           : {selectedColors},
-                                                  'size': _selectedsize.isEmpty
+                                                  'size': _selectedsize == null
                                                       ? []
                                                       : {_selectedsize},
                                                   'storetype':
@@ -3967,7 +4209,9 @@ class _AddItemState extends State<AddItem> {
                                                       selectedColors.isEmpty
                                                           ? []
                                                           : {selectedColors},
-                                                  'size': _selectedsize.isEmpty
+                                                  'buyerprotection':
+                                                      buyerprotection,
+                                                  'size': _selectedsize == null
                                                       ? []
                                                       : {_selectedsize},
                                                   'selleruserid': userid,

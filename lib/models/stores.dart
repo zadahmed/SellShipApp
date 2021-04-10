@@ -11,10 +11,12 @@ class Stores {
   final bool approved;
   final String address;
   final String views;
+  final String storeusername;
 
   Stores({
     this.storeid,
     this.followers,
+    this.storeusername,
     this.views,
     this.approved,
     this.address,
