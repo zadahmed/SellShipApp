@@ -357,12 +357,15 @@ class _SearchState extends State<Search>
   Future<List<String>> _getRecentSearches() async {
     final pref = await SharedPreferences.getInstance();
 
-    if (pref.getStringList('recentSearches').isNotEmpty) {
-      final allSearches = pref.getStringList("recentSearches").toSet().toList();
-      setState(() {
-        recentsearches = allSearches;
-      });
-      return allSearches;
+    if (pref.getStringList('recentSearches') != null) {
+      if (pref.getStringList('recentSearches').isNotEmpty) {
+        final allSearches =
+            pref.getStringList("recentSearches").toSet().toList();
+        setState(() {
+          recentsearches = allSearches;
+        });
+        return allSearches;
+      }
     }
   }
 

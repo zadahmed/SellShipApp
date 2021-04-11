@@ -490,7 +490,7 @@ class _DetailsState extends State<Details> {
                           child: Container(
                             decoration: BoxDecoration(
                               color: allowedoffer.isEmpty
-                                  ? Colors.deepPurple
+                                  ? Colors.deepOrange
                                   : Colors.grey,
                               borderRadius: const BorderRadius.all(
                                 Radius.circular(10.0),
@@ -675,11 +675,6 @@ class _DetailsState extends State<Details> {
       sfs = jsonbody[0]['size'].substring(2, jsonbody[0]['size'].length - 2);
       sfs = sfs.split(',');
     }
-    print(sfs);
-    print('qqqq');
-    // print(json.decode(jsonbody[0]['size']
-    //     .substring(1, jsonbody[0]['size'].length - 1)
-    //     .toString()));
 
     newItem = Item(
         name: jsonbody[0]['name'],
@@ -786,20 +781,13 @@ class _DetailsState extends State<Details> {
       revie = int.parse(userjsonbody['reviewnumber'].toString());
     }
 
-    setState(() {
-      review = revie;
-      reviewrating = rating;
-      profilepicture = userjsonbody['storelogo'];
-    });
-    var url = 'https://api.sellship.co/api/user/' + user;
-    final response = await http.get(url);
-
-    var jsonbody = json.decode(response.body);
-    setState(() {
-      verifiedfb = jsonbody['confirmedfb'];
-      verifiedphone = jsonbody['confirmedphone'];
-      verifiedemail = jsonbody['confirmedemail'];
-    });
+    if (mounted) {
+      setState(() {
+        review = revie;
+        reviewrating = rating;
+        profilepicture = userjsonbody['storelogo'];
+      });
+    }
   }
 
   int review;
@@ -2659,7 +2647,13 @@ class _DetailsState extends State<Details> {
                                   InkWell(
                                     onTap: () {
                                       if (userid != null) {
-                                        showMe(context);
+                                        if (selectedSize == null &&
+                                            newItem.size.isNotEmpty) {
+                                          showInSnackBar(
+                                              'Please Choose a Size');
+                                        } else {
+                                          showMe(context);
+                                        }
                                       } else {
                                         showDialog(
                                             context: context,

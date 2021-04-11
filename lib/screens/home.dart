@@ -46,6 +46,7 @@ import 'package:location/location.dart' as Location;
 import 'package:numeral/numeral.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:search_map_place/search_map_place.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -904,11 +905,32 @@ class _HomeScreenState extends State<HomeScreen>
 
   PersistentBottomSheetController bottomsheetcontroller;
 
+  bool checkoutbadge = false;
+  int checkoutcount;
   bool notbadge;
 
   void getnotification() async {
     var userid = await storage.read(key: 'userid');
     if (userid != null) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      List cartitems = prefs.getStringList('cartitems');
+      if (cartitems != null) {
+        if (cartitems.length > 0) {
+          if (mounted) {
+            setState(() {
+              checkoutbadge = true;
+              checkoutcount = cartitems.length;
+            });
+          }
+        } else {
+          if (mounted) {
+            setState(() {
+              checkoutbadge = false;
+              checkoutcount = 0;
+            });
+          }
+        }
+      }
       var url = 'https://api.sellship.co/api/getnotification/' + userid;
 
       final response = await http.get(url);
@@ -1030,22 +1052,31 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ),
             actions: <Widget>[
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Checkout()),
-                  );
-                },
-                child: Padding(
-                  padding: EdgeInsets.only(right: 15),
-                  child: Icon(
-                    Feather.shopping_bag,
-                    size: 24,
-                    color: Color.fromRGBO(28, 45, 65, 1),
+              Badge(
+                  showBadge: checkoutbadge,
+                  position: BadgePosition.topEnd(top: 5, end: 5),
+                  animationType: BadgeAnimationType.slide,
+                  badgeColor: Colors.deepOrange,
+                  badgeContent: Text(
+                    checkoutcount.toString(),
+                    style: TextStyle(color: Colors.white),
                   ),
-                ),
-              )
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Checkout()),
+                      );
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 15),
+                      child: Icon(
+                        Feather.shopping_bag,
+                        size: 24,
+                        color: Color.fromRGBO(28, 45, 65, 1),
+                      ),
+                    ),
+                  ))
             ]),
         body: DefaultTabController(
             length: 2,

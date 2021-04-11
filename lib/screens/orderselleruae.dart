@@ -88,6 +88,20 @@ class _OrderSellerUAEState extends State<OrderSellerUAE> {
 
     var jsonbody = json.decode(response.body);
 
+    var qt;
+    var sz;
+    if (jsonbody.containsKey('orderquantity')) {
+      qt = jsonbody['orderquantity'];
+    } else {
+      qt = '1';
+    }
+
+    if (jsonbody.containsKey('ordersize')) {
+      sz = (jsonbody['ordersize']);
+    } else {
+      sz = '';
+    }
+
     final f = new DateFormat('dd-MM-yyyy hh:mm');
     DateTime datet =
         new DateTime.fromMillisecondsSinceEpoch(jsonbody['date']['\$date']);
@@ -127,10 +141,14 @@ class _OrderSellerUAEState extends State<OrderSellerUAE> {
       itemfees = jsonbody['fees'];
       buyerid = jsonbody['senderid'];
       buyername = jsonbody['buyername'];
-
+      size = sz;
+      qty = qt;
       loading = false;
     });
   }
+
+  var qty;
+  var size;
 
   var itemprice;
   var totalpaid;

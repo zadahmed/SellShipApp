@@ -555,112 +555,113 @@ class _CheckoutState extends State<Checkout> {
                                               )),
                                           Row(
                                             mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
+                                                MainAxisAlignment.end,
                                             children: [
                                               listitems[index].selectedsize !=
                                                       'nosize'
                                                   ? Text(
-                                                      listitems[index]
-                                                          .selectedsize,
+                                                      'Size: ' +
+                                                          listitems[index]
+                                                              .selectedsize,
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: TextStyle(
                                                           fontFamily:
                                                               'Helvetica',
                                                           fontSize: 14.0,
-                                                          color: Colors.black),
+                                                          color: Colors.grey),
                                                     )
                                                   : Container(),
-                                              Container(
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    border: Border.all(
-                                                        color: Colors
-                                                            .grey.shade300),
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                15)),
-                                                  ),
-                                                  child: Container(
-                                                      height: 30,
-                                                      width: 130,
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .end,
-                                                        children: [
-                                                          IconButton(
-                                                            icon: Icon(
-                                                                Icons.remove),
-                                                            iconSize: 16,
-                                                            color: Colors
-                                                                .deepOrange,
-                                                            onPressed: () {
-                                                              setState(() {
-                                                                if (listitems[
-                                                                            index]
-                                                                        .quantity >
-                                                                    0) {
-                                                                  listitems[
-                                                                          index]
-                                                                      .quantity = listitems[
-                                                                              index]
-                                                                          .quantity -
-                                                                      1;
-                                                                }
-                                                                subtotal = double.parse(
-                                                                        listitems[index]
-                                                                            .price) *
-                                                                    listitems[
-                                                                            index]
-                                                                        .quantity;
-                                                              });
-                                                            },
-                                                          ),
-                                                          Container(
-                                                            width: 25,
-                                                            child: Text(
-                                                              listitems[index]
-                                                                  .quantity
-                                                                  .toString(),
-                                                              style: TextStyle(
-                                                                  fontSize: 18),
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                            ),
-                                                          ),
-                                                          IconButton(
-                                                            icon:
-                                                                Icon(Icons.add),
-                                                            iconSize: 16,
-                                                            color: Colors
-                                                                .deepOrange,
-                                                            onPressed: () {
-                                                              setState(() {
-                                                                if (listitems[
-                                                                            index]
-                                                                        .quantity >=
-                                                                    0) {
-                                                                  listitems[
-                                                                          index]
-                                                                      .quantity = listitems[
-                                                                              index]
-                                                                          .quantity +
-                                                                      1;
-                                                                }
-                                                                subtotal = double.parse(
-                                                                        listitems[index]
-                                                                            .price) *
-                                                                    listitems[
-                                                                            index]
-                                                                        .quantity;
-                                                              });
-                                                            },
-                                                          ),
-                                                        ],
-                                                      )))
+                                              // Container(
+                                              //     decoration: BoxDecoration(
+                                              //       color: Colors.white,
+                                              //       border: Border.all(
+                                              //           color: Colors
+                                              //               .grey.shade300),
+                                              //       borderRadius:
+                                              //           BorderRadius.all(
+                                              //               Radius.circular(
+                                              //                   15)),
+                                              //     ),
+                                              //     child: Container(
+                                              //         height: 30,
+                                              //         width: 130,
+                                              //         child: Row(
+                                              //           mainAxisAlignment:
+                                              //               MainAxisAlignment
+                                              //                   .end,
+                                              //           children: [
+                                              //             IconButton(
+                                              //               icon: Icon(
+                                              //                   Icons.remove),
+                                              //               iconSize: 16,
+                                              //               color: Colors
+                                              //                   .deepOrange,
+                                              //               onPressed: () {
+                                              //                 setState(() {
+                                              //                   if (listitems[
+                                              //                               index]
+                                              //                           .quantity >
+                                              //                       0) {
+                                              //                     listitems[
+                                              //                             index]
+                                              //                         .quantity = listitems[
+                                              //                                 index]
+                                              //                             .quantity -
+                                              //                         1;
+                                              //                   }
+                                              //                   subtotal = double.parse(
+                                              //                           listitems[index]
+                                              //                               .price) *
+                                              //                       listitems[
+                                              //                               index]
+                                              //                           .quantity;
+                                              //                 });
+                                              //               },
+                                              //             ),
+                                              //             Container(
+                                              //               width: 25,
+                                              //               child: Text(
+                                              //                 listitems[index]
+                                              //                     .quantity
+                                              //                     .toString(),
+                                              //                 style: TextStyle(
+                                              //                     fontSize: 18),
+                                              //                 textAlign:
+                                              //                     TextAlign
+                                              //                         .center,
+                                              //               ),
+                                              //             ),
+                                              //             IconButton(
+                                              //               icon:
+                                              //                   Icon(Icons.add),
+                                              //               iconSize: 16,
+                                              //               color: Colors
+                                              //                   .deepOrange,
+                                              //               onPressed: () {
+                                              //                 setState(() {
+                                              //                   if (listitems[
+                                              //                               index]
+                                              //                           .quantity >=
+                                              //                       0 ) {
+                                              //                     listitems[
+                                              //                             index]
+                                              //                         .quantity = listitems[
+                                              //                                 index]
+                                              //                             .quantity +
+                                              //                         1;
+                                              //                   }
+                                              //                   subtotal = double.parse(
+                                              //                           listitems[index]
+                                              //                               .price) *
+                                              //                       listitems[
+                                              //                               index]
+                                              //                           .quantity;
+                                              //                 });
+                                              //               },
+                                              //             ),
+                                              //           ],
+                                              //         )))
                                             ],
                                           )
                                         ],
@@ -985,7 +986,6 @@ class _CheckoutState extends State<Checkout> {
                                                   .userid
                                                   .substring(0, 10))
                                           .toString();
-                                  print(messageid);
 
                                   Map<String, Object> body = {
                                     "apiOperation": "INITIATE",
@@ -1002,35 +1002,32 @@ class _CheckoutState extends State<Checkout> {
                                       "locale": "en",
                                       "paymentAction": "Sale",
                                       "returnUrl":
-                                          'https://api.sellship.co/api/payment/NEW/${messageid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${subtotal}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}'
+                                          'https://api.sellship.co/api/payment/NEW/${messageid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${subtotal}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}/${listitems[0].quantity}/${listitems[0].selectedsize}'
                                     },
                                   };
-
                                   var returnurl =
-                                      'https://api.sellship.co/api/payment/NEW/${messageid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${subtotal}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}';
-
-                                  print(returnurl);
-
-                                  var url =
-                                      "https://api-stg.noonpayments.com/payment/v1/order";
-
-                                  var key =
-                                      "SellShip.SellShipApp:7d016fdd70a64b68bc99d2cece27b48d";
-                                  List encodedText = utf8.encode(key);
-                                  String base64Str = base64Encode(encodedText);
-                                  print('Key_Test $base64Str');
+                                      'https://api.sellship.co/api/payment/NEW/${messageid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${subtotal}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}/${listitems[0].quantity}/${listitems[0].selectedsize}';
 
                                   // var url =
-                                  //     "https://api.noonpayments.com/payment/v1/order";
+                                  //     "https://api-stg.noonpayments.com/payment/v1/order";
                                   //
                                   // var key =
-                                  //     "SellShip.SellShipApp:a42e7bc936354e9c807c0ff02670ab37";
+                                  //     "SellShip.SellShipApp:7d016fdd70a64b68bc99d2cece27b48d";
                                   // List encodedText = utf8.encode(key);
                                   // String base64Str = base64Encode(encodedText);
-                                  // print('Key_Live $base64Str');
+                                  // print('Key_Test $base64Str');
+                                  // var heade = 'Key_Test $base64Str';
 
-                                  // var heade = 'Key_Live $base64Str';
-                                  var heade = 'Key_Test $base64Str';
+                                  var url =
+                                      "https://api.noonpayments.com/payment/v1/order";
+
+                                  var key =
+                                      "SellShip.SellShipApp:a42e7bc936354e9c807c0ff02670ab37";
+                                  List encodedText = utf8.encode(key);
+                                  String base64Str = base64Encode(encodedText);
+                                  print('Key_Live $base64Str');
+
+                                  var heade = 'Key_Live $base64Str';
 
                                   Map<String, String> headers = {
                                     'Authorization': heade,

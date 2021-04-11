@@ -24,7 +24,7 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 class CreateLayout extends StatefulWidget {
   final String userid;
   final String storename;
-  final String username;
+
   final File storelogo;
   final String storecategory;
   final String storeabout;
@@ -39,7 +39,6 @@ class CreateLayout extends StatefulWidget {
       this.userid,
       this.storename,
       this.storeusername,
-      this.username,
       this.storedescription,
       this.storelogo,
       this.storetype,
@@ -591,7 +590,6 @@ class _CreateLayoutState extends State<CreateLayout> {
                                   builder: (context) => CreateStoreTier(
                                     userid: widget.userid,
                                     storedescription: widget.storedescription,
-                                    username: widget.username,
                                     storename: widget.storename,
                                     storelogo: widget.storelogo,
                                     storecategory: widget.storecategory,

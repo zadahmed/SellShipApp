@@ -24,7 +24,6 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 class CreateStoreTier extends StatefulWidget {
   final String userid;
   final String storename;
-  final String username;
   final File storelogo;
   final String storecategory;
   final String storeabout;
@@ -38,7 +37,6 @@ class CreateStoreTier extends StatefulWidget {
       {Key key,
       this.userid,
       this.storename,
-      this.username,
       this.storelogo,
       this.storetype,
       this.storedescription,
@@ -799,34 +797,35 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                             print(noonresponse.body);
                             var jsonmessage = json.decode(noonresponse.body);
 
-                            print(jsonmessage);
-                            print(jsonmessage['result']);
+                            if (jsonmessage != null) {
+                              var posturl = jsonmessage['result']
+                                  ['checkoutData']['postUrl'];
 
-                            var posturl = jsonmessage['result']['checkoutData']
-                                ['postUrl'];
+                              var orderid =
+                                  jsonmessage['result']['order']['id'];
 
-                            var orderid = jsonmessage['result']['order']['id'];
+                              final orderresponse = await http.get(
+                                'https://api.sellship.co/api/noon/save/orderid/subscription/${orderid}/${storeid}',
+                              );
 
-                            final orderresponse = await http.get(
-                              'https://api.sellship.co/api/noon/save/orderid/subscription/${orderid}/${storeid}',
-                            );
+                              print(orderresponse.statusCode);
 
-                            print(orderresponse.statusCode);
+                              await storage.write(
+                                  key: 'storeid', value: storeid);
 
-                            await storage.write(key: 'storeid', value: storeid);
-
-                            Navigator.of(context, rootNavigator: false).pop();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      Paymentsubs(
-                                          orderid: orderid.toString(),
-                                          storeid: storeid,
-                                          businesstier: businesstier,
-                                          url: posturl,
-                                          returnurl: returnurl)),
-                            );
+                              Navigator.of(context, rootNavigator: false).pop();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        Paymentsubs(
+                                            orderid: orderid.toString(),
+                                            storeid: storeid,
+                                            businesstier: businesstier,
+                                            url: posturl,
+                                            returnurl: returnurl)),
+                              );
+                            }
                           } else {
                             Navigator.of(context, rootNavigator: false).pop();
                             showInSnackBar('Looks like something went wrong');

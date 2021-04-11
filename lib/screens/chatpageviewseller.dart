@@ -114,10 +114,17 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
 
     finalfees = fees - weightfees;
 
+    var ourfee = (finalfees + weightfees) * 0.15;
+
     setState(() {
+      ourfees = ourfee;
+      deliveryfees = weightfees;
       finalfees = finalfees;
     });
   }
+
+  var ourfees;
+  var deliveryfees;
 
   var finalfees;
   Widget selleroptions(BuildContext context) {
@@ -135,38 +142,238 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
             currency != null
                 ? Padding(
                     padding: EdgeInsets.all(5),
-                    child: Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.deepOrange),
-                          color: Colors.deepOrange,
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                        ),
-                        height: 50,
-                        width: MediaQuery.of(context).size.width,
-                        child: Center(
-                            child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Icon(Icons.monetization_on,
-                                color: Colors.white, size: 16),
-                            SizedBox(width: 5),
-                            Text(
-                              finalfees != null
-                                  ? 'You Earn ' +
-                                      currency +
-                                      finalfees.toStringAsFixed(2)
-                                  : '',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold),
-                            )
-                          ],
-                        ))))
+                    child: InkWell(
+                        enableFeedback: true,
+                        onTap: () {
+                          showModalBottomSheet(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(25.0))),
+                              backgroundColor: Colors.white,
+                              context: context,
+                              isScrollControlled: true,
+                              builder: (context) => StatefulBuilder(builder:
+                                      (BuildContext context,
+                                          StateSetter updateState) {
+                                    return Padding(
+                                        padding:
+                                            MediaQuery.of(context).viewInsets,
+                                        child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 15,
+                                                      bottom: 5,
+                                                      top: 20,
+                                                      right: 15),
+                                                  child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Align(
+                                                          alignment: Alignment
+                                                              .centerLeft,
+                                                          child: Text(
+                                                            'Offer Breakdown',
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Helvetica',
+                                                                fontSize: 22,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        ),
+                                                      ])),
+                                              Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 15,
+                                                      bottom: 5,
+                                                      top: 10,
+                                                      right: 15),
+                                                  child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          'Offer Price',
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            fontSize: 16,
+                                                          ),
+                                                        ),
+                                                        Align(
+                                                          alignment: Alignment
+                                                              .centerLeft,
+                                                          child: Text(
+                                                            finalfees != null
+                                                                ? currency +
+                                                                    ' ' +
+                                                                    itemprice
+                                                                : '',
+                                                            style: TextStyle(
+                                                              fontFamily:
+                                                                  'Helvetica',
+                                                              fontSize: 16,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ])),
+                                              Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 15,
+                                                      bottom: 5,
+                                                      right: 15),
+                                                  child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          'Delivery Fees',
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            fontSize: 16,
+                                                          ),
+                                                        ),
+                                                        Align(
+                                                          alignment: Alignment
+                                                              .centerLeft,
+                                                          child: Text(
+                                                            finalfees != null
+                                                                ? currency +
+                                                                    ' ' +
+                                                                    deliveryfees
+                                                                        .toString()
+                                                                : '',
+                                                            style: TextStyle(
+                                                              fontFamily:
+                                                                  'Helvetica',
+                                                              fontSize: 16,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ])),
+                                              Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 15,
+                                                      bottom: 35,
+                                                      right: 15),
+                                                  child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          'Service Fees',
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            fontSize: 16,
+                                                          ),
+                                                        ),
+                                                        Align(
+                                                          alignment: Alignment
+                                                              .centerLeft,
+                                                          child: Text(
+                                                            finalfees != null
+                                                                ? currency +
+                                                                    ' ' +
+                                                                    ourfees
+                                                                        .toStringAsFixed(
+                                                                            2)
+                                                                : '',
+                                                            style: TextStyle(
+                                                              fontFamily:
+                                                                  'Helvetica',
+                                                              fontSize: 16,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ])),
+                                              Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 15,
+                                                      bottom: 40,
+                                                      top: 5,
+                                                      right: 15),
+                                                  child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          'You Earn',
+                                                          style: TextStyle(
+                                                              fontSize: 22,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        Align(
+                                                          alignment: Alignment
+                                                              .centerLeft,
+                                                          child: Text(
+                                                            finalfees != null
+                                                                ? currency +
+                                                                    ' ' +
+                                                                    finalfees
+                                                                        .toStringAsFixed(
+                                                                            2)
+                                                                : '',
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Helvetica',
+                                                                fontSize: 22,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        ),
+                                                      ])),
+                                            ]));
+                                  }));
+                        },
+                        child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 10),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.deepOrange),
+                              color: Colors.deepOrange,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5)),
+                            ),
+                            height: 50,
+                            width: MediaQuery.of(context).size.width,
+                            child: Center(
+                                child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(Icons.monetization_on,
+                                    color: Colors.white, size: 16),
+                                SizedBox(width: 5),
+                                Text(
+                                  finalfees != null
+                                      ? 'You Earn ' +
+                                          currency +
+                                          finalfees.toStringAsFixed(2)
+                                      : '',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold),
+                                )
+                              ],
+                            )))))
                 : Container(),
             Row(
               children: [
@@ -178,7 +385,7 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                         },
                         child: Container(
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
+                                borderRadius: BorderRadius.circular(5),
                                 border: Border.all(
                                     color: Colors.black.withOpacity(0.2)),
                                 color: Colors.white),
@@ -219,7 +426,7 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                         },
                         child: Container(
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
+                                borderRadius: BorderRadius.circular(5),
                                 border: Border.all(
                                     color: Colors.black.withOpacity(0.2)),
                                 color: Colors.white),
@@ -233,7 +440,7 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                                 Icon(Icons.cancel),
                                 SizedBox(width: 5),
                                 Text(
-                                  'Cancel Offer',
+                                  'Decline Offer',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       color: Colors.black,
@@ -252,7 +459,7 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                     },
                     child: Container(
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
+                            borderRadius: BorderRadius.circular(5),
                             border: Border.all(
                                 color: Colors.black.withOpacity(0.2)),
                             color: Colors.white),
@@ -294,7 +501,7 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                 padding: EdgeInsets.all(10),
                 child: Container(
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(5),
                         color: Colors.white),
                     height: 40,
                     width: MediaQuery.of(context).size.width,
@@ -432,7 +639,7 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                 padding: EdgeInsets.all(10),
                 child: Container(
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(5),
                         color: Colors.white),
                     height: 40,
                     width: MediaQuery.of(context).size.width,
@@ -956,9 +1163,16 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
 
   var itemprice;
 
+  TextEditingController youearncontroller = TextEditingController();
+  TextEditingController servicefeescontroller = TextEditingController();
+  TextEditingController deliveryfeescontroller = TextEditingController();
   TextEditingController offercontroller = TextEditingController();
 
   void showMe(BuildContext context) {
+    var deliveryfees;
+    var counterofferprice;
+    var servicefees;
+
     showModalBottomSheet(
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))),
@@ -1021,31 +1235,28 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                             ),
                           ],
                         )),
-                    allowedoffer.isNotEmpty
-                        ? Padding(
-                            padding:
-                                EdgeInsets.only(left: 15, bottom: 5, top: 5),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                allowedoffer,
-                                style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 14,
-                                    color: Colors.red,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                          )
-                        : Container(),
                     SizedBox(
                       height: 8.0,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 15, bottom: 5, top: 5),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'You Earn',
+                          style: TextStyle(
+                              fontFamily: 'Helvetica',
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w700),
+                        ),
+                      ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(
                           left: 15, bottom: 5, top: 10, right: 15),
                       child: Container(
-                        height: 84,
+                        height: 85,
                         padding: EdgeInsets.all(20),
                         decoration: BoxDecoration(
                           border:
@@ -1064,38 +1275,38 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                                     cursorColor: Color(0xFF979797),
                                     controller: offercontroller,
                                     onChanged: (text) {
-                                      if (text.isNotEmpty) {
-                                        var offer = double.parse(text);
-                                        var minoffer =
-                                            double.parse(itemprice) * 0.50;
-                                        minoffer =
-                                            double.parse(itemprice) - minoffer;
-
-                                        if (offer < minoffer) {
-                                          updateState(() {
-                                            allowedoffer =
-                                                'The offer is too low compared to the selling price';
-                                            disabled = true;
-                                          });
-                                        } else {
-                                          updateState(() {
-                                            allowedoffer = '';
-                                            disabled = false;
-                                          });
-                                        }
-                                      } else {
-                                        updateState(() {
-                                          allowedoffer = '';
-                                          disabled = true;
-                                        });
+                                      var weight = int.parse(widget.weight);
+                                      var weightfees;
+                                      if (weight <= 5) {
+                                        weightfees = 20;
+                                      } else if (weight <= 10) {
+                                        weightfees = 30;
+                                      } else if (weight <= 20) {
+                                        weightfees = 50;
+                                      } else if (weight <= 50) {
+                                        weightfees = 110;
                                       }
+
+                                      var fees = double.parse(
+                                          offercontroller.text.toString());
+
+                                      finalfees = fees + weightfees;
+
+                                      var ourfee =
+                                          (finalfees + weightfees) * 0.15;
+
+                                      updateState(() {
+                                        servicefees = ourfee;
+                                        deliveryfees = weightfees;
+                                        counterofferprice = finalfees + ourfee;
+                                      });
                                     },
-                                    keyboardType:
-                                        TextInputType.numberWithOptions(),
                                     style: TextStyle(
                                         fontFamily: 'Helvetica',
                                         fontSize: 22,
                                         fontWeight: FontWeight.bold),
+                                    keyboardType:
+                                        TextInputType.numberWithOptions(),
                                     decoration: InputDecoration(
                                       hintText: '0',
 //                                                alignLabelWithHint: true,
@@ -1121,84 +1332,160 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                         ),
                       ),
                     ),
+                    Padding(
+                        padding: EdgeInsets.only(left: 5, right: 15),
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(15),
+                                topRight: Radius.circular(15)),
+                          ),
+                          child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(
+                                    'Delivery Fees',
+                                    style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 16,
+                                        color: Colors.black),
+                                  ),
+                                  Text(
+                                    deliveryfees != null
+                                        ? currency +
+                                            ' ' +
+                                            deliveryfees.toString()
+                                        : '0',
+                                    style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 18,
+                                        color: Colors.black),
+                                  )
+                                ],
+                              )),
+                        )),
+                    Padding(
+                        padding: EdgeInsets.only(left: 5, right: 15),
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                                bottomRight: Radius.circular(15),
+                                bottomLeft: Radius.circular(15)),
+                          ),
+                          child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(
+                                    'Service Fees',
+                                    style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 16,
+                                        color: Colors.black),
+                                  ),
+                                  Text(
+                                    servicefees != null
+                                        ? currency +
+                                            ' ' +
+                                            servicefees.toString()
+                                        : '0',
+                                    style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 18,
+                                        color: Colors.black),
+                                  )
+                                ],
+                              )),
+                        )),
+                    Padding(
+                        padding: EdgeInsets.only(left: 5, bottom: 5, right: 15),
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                                bottomRight: Radius.circular(15),
+                                bottomLeft: Radius.circular(15)),
+                          ),
+                          child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(
+                                    'Counteroffer Price',
+                                    style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 16,
+                                        color: Colors.black),
+                                  ),
+                                  Text(
+                                    counterofferprice != null
+                                        ? currency +
+                                            ' ' +
+                                            counterofferprice.toString()
+                                        : '0',
+                                    style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 18,
+                                        color: Colors.black),
+                                  )
+                                ],
+                              )),
+                        )),
                     SizedBox(height: 10),
                     Padding(
                       padding: EdgeInsets.only(
                           left: 15, bottom: 5, top: 10, right: 15),
                       child: InkWell(
                         onTap: () async {
-                          if (disabled == false) {
-                            showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                useRootNavigator: false,
-                                builder: (_) => Container(
-                                    height: 50,
-                                    width: 50,
-                                    child: SpinKitDoubleBounce(
-                                      color: Colors.deepOrange,
-                                    )));
-                            var recieverid = widget.senderid;
-                            if (recieverid == userid) {
-                              var itemurl =
-                                  'https://api.sellship.co/api/counteroffer/' +
-                                      widget.messageid +
-                                      '/' +
-                                      widget.senderid +
-                                      '/' +
-                                      widget.recipentid +
-                                      '/' +
-                                      widget.itemid +
-                                      '/' +
-                                      offercontroller.text.trim();
+                          showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              useRootNavigator: false,
+                              builder: (_) => Container(
+                                  height: 50,
+                                  width: 50,
+                                  child: SpinKitDoubleBounce(
+                                    color: Colors.deepOrange,
+                                  )));
 
-                              final response = await http.get(itemurl);
+                          var itemurl =
+                              'https://api.sellship.co/api/counteroffer/' +
+                                  widget.messageid +
+                                  '/' +
+                                  widget.senderid +
+                                  '/' +
+                                  widget.recipentid +
+                                  '/' +
+                                  widget.itemid +
+                                  '/' +
+                                  counterofferprice.toString();
 
-                              if (response.statusCode == 200) {
-                                setState(() {
-                                  offerstage = 0;
-                                  itemprice = offercontroller.text.trim();
-                                });
-                                Navigator.pop(context);
-                                Navigator.of(context, rootNavigator: true)
-                                    .pop();
-                                getRemoteMessages();
-                              } else {
-                                print(response.statusCode);
-                                Navigator.pop(context);
-                                Navigator.of(context, rootNavigator: true)
-                                    .pop();
-                              }
-                            } else {
-                              showDialog(
-                                  context: context,
-                                  useRootNavigator: false,
-                                  builder: (_) => AssetGiffyDialog(
-                                        image: Image.asset(
-                                          'assets/oops.gif',
-                                          fit: BoxFit.cover,
-                                        ),
-                                        title: Text(
-                                          'Oops!',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontSize: 22.0,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                        description: Text(
-                                          'You can\'t send an offer to yourself!',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(),
-                                        ),
-                                        onlyOkButton: true,
-                                        entryAnimation: EntryAnimation.DEFAULT,
-                                        onOkButtonPressed: () {
-                                          Navigator.pop(context);
-                                          Navigator.pop(context);
-                                          Navigator.pop(context);
-                                        },
-                                      ));
-                            }
+                          final response = await http.get(itemurl);
+
+                          if (response.statusCode == 200) {
+                            setState(() {
+                              offerstage = 0;
+                              itemprice = counterofferprice.toString();
+                            });
+                            Navigator.pop(context);
+                            Navigator.of(context, rootNavigator: true).pop();
+                            getRemoteMessages();
+                          } else {
+                            print(response.statusCode);
+                            Navigator.pop(context);
+                            Navigator.of(context, rootNavigator: true).pop();
                           }
                         },
                         child: Container(
@@ -1206,9 +1493,7 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                           height: 48,
                           child: Container(
                             decoration: BoxDecoration(
-                              color: allowedoffer.isEmpty
-                                  ? Colors.deepPurple
-                                  : Colors.grey,
+                              color: Colors.deepOrange,
                               borderRadius: const BorderRadius.all(
                                 Radius.circular(10.0),
                               ),
@@ -1217,7 +1502,7 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                             ),
                             child: Center(
                               child: Text(
-                                'Make Offer',
+                                'Make Counteroffer',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.white,

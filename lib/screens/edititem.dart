@@ -208,6 +208,7 @@ class EditItemState extends State<EditItem>
   var itemdescription;
   var itemprice;
   var itemimage;
+  List<String> selectedSizes = List<String>();
 
   var userid;
   File image;
@@ -243,6 +244,25 @@ class EditItemState extends State<EditItem>
       imagesList.clear();
       var jsonbody = json.decode(response.body);
 
+      var sfs = jsonbody[0]['size'];
+
+      if (sfs == null || sfs.isEmpty) {
+        sfs = [];
+      } else {
+        sfs = jsonbody[0]['size'].substring(2, jsonbody[0]['size'].length - 2);
+        sfs = sfs.split(',');
+      }
+
+      // var col = jsonbody[0]['colors'];
+      //
+      // if (col == null || col.isEmpty) {
+      //   col = [];
+      // } else {
+      //   col = jsonbody[0]['colors']
+      //       .substring(2, jsonbody[0]['colors'].length - 2);
+      //   col = sfs.split(',');
+      // }
+
       newItem = Item(
           name: jsonbody[0]['name'],
           itemid: jsonbody[0]['_id']['\$oid'].toString(),
@@ -264,7 +284,7 @@ class EditItemState extends State<EditItem>
           city: jsonbody[0]['city'],
           username: jsonbody[0]['username'],
           brand: jsonbody[0]['brand'] == null ? 'Other' : jsonbody[0]['brand'],
-          size: jsonbody[0]['size'] == null ? '' : jsonbody[0]['size'],
+          size: sfs,
           useremail: jsonbody[0]['useremail'],
           tags: jsonbody[0]['tags'],
           quantity: int.parse(jsonbody[0]['quantity']),
@@ -316,7 +336,14 @@ class EditItemState extends State<EditItem>
           email = newItem.useremail;
           phonenumber = newItem.usernumber;
 
-//          tags = newItem.tags.toList();
+          print(newItem.size);
+          // selectedSizes = newItem.size;
+          //
+          newItem.quantity > 1 ? quantityswitch = true : quantityswitch = false;
+          //
+          buyerprotection =
+              jsonbody[0]['buyerprotection'] == 'true' ? true : false;
+          acceptoffers = jsonbody[0]['acceptoffers'] == 'true' ? true : false;
           quantity = newItem.quantity;
 
           _lastMapPosition = LatLng(
@@ -340,9 +367,9 @@ class EditItemState extends State<EditItem>
 
           totalpayable = ffees - weightfees;
           businesspricecontroller.text = totalpayable.toStringAsFixed(0);
-
+          ourfees = (totalpayable + weightfees) * 0.15;
           fees = double.parse(newItem.price);
-
+          weightfee = weightfees;
           city = newItem.city;
 
           country = newItem.country;
@@ -401,6 +428,9 @@ class EditItemState extends State<EditItem>
   Item newItem;
   var currency;
   var metric;
+
+  var buyerprotection;
+  var acceptoffers;
   LatLng _lastMapPosition;
 
   List<String> photoguidelinesimages = [
@@ -425,6 +455,48 @@ class EditItemState extends State<EditItem>
   var phonenumber;
 
   final businesspricecontroller = TextEditingController();
+
+  calculateearning() async {
+    await storage.write(key: 'additem', value: 'true');
+    var weightfees;
+    if (_selectedweight == 0) {
+      weightfees = 20;
+    } else if (_selectedweight == 1) {
+      weightfees = 30;
+    } else if (_selectedweight == 2) {
+      weightfees = 50;
+    } else if (_selectedweight == 3) {
+      weightfees = 110;
+    }
+
+    var s;
+
+    if (int.parse(businesspricecontroller.text) < 20) {
+      if (int.parse(businesspricecontroller.text) <= 0) {
+        fees = 0;
+      } else {
+        s = (int.parse(businesspricecontroller.text) + weightfees);
+        s = s * 0.15;
+        fees = int.parse(businesspricecontroller.text) + weightfees + s;
+      }
+    } else {
+      s = (int.parse(businesspricecontroller.text) + weightfees);
+      s = s * 0.15;
+      fees = int.parse(businesspricecontroller.text) + weightfees + s;
+    }
+
+    setState(() {
+      totalpayable = totalpayable;
+      fees = fees;
+      ourfees = s;
+      weightfee = weightfees;
+      percentindictor = 0.8;
+    });
+  }
+
+  var weightfee;
+
+  var ourfees;
 
   @override
   void dispose() {
@@ -1171,20 +1243,16 @@ class EditItemState extends State<EditItem>
                                       keyboardType: TextInputType.text,
                                       textCapitalization:
                                           TextCapitalization.words,
-                                      onChanged: (tag) {
-                                        if (tag.endsWith(',')) {
-                                          var sentence = tag.split(',');
-
+                                      onSubmitted: (value) {
+                                        if (value.isNotEmpty) {
                                           setState(() {
-                                            tags.add(sentence[0]);
+                                            tags.add(value);
                                           });
                                           tagscontroller.clear();
                                         }
                                       },
                                       decoration: InputDecoration(
-                                        hintText:
-                                            "Enter Tags - dubaifashion,abudhabilifestyle,topdeals",
-                                        alignLabelWithHint: true,
+                                        hintText: "Add a Tag ↵",
                                         hintStyle: TextStyle(
                                             fontFamily: 'Helvetica',
                                             fontSize: 16,
@@ -1200,109 +1268,6 @@ class EditItemState extends State<EditItem>
                                   )
                                 ],
                               ))),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      Padding(
-                          padding: EdgeInsets.only(
-                              left: 15, bottom: 5, top: 10, right: 15),
-                          child: Container(
-                            padding: EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15)),
-                            ),
-                            child: SwitchListTile(
-                              value: quantityswitch,
-                              activeColor: Colors.deepPurple,
-                              title: Text(
-                                'Selling more than one of the same item?',
-                                style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 16,
-                                    color: Colors.blueGrey),
-                              ),
-                              onChanged: (value) => setState(() {
-                                quantityswitch = value;
-                              }),
-                            ),
-                          )),
-                      quantityswitch == true
-                          ? Padding(
-                              padding: EdgeInsets.only(
-                                  left: 15, bottom: 5, top: 10, right: 15),
-                              child: Container(
-                                  padding: EdgeInsets.all(5),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(15)),
-                                  ),
-                                  child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                            left: 15,
-                                            bottom: 5,
-                                          ),
-                                          child: Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: Text(
-                                              'Quantity of Item',
-                                              style: TextStyle(
-                                                  fontFamily: 'Helvetica',
-                                                  fontSize: 16,
-                                                  color: Colors.blueGrey),
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                            height: 70,
-                                            width: 130,
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                IconButton(
-                                                  icon: Icon(Icons.remove),
-                                                  iconSize: 16,
-                                                  color: Colors.deepOrange,
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      if (quantity > 0) {
-                                                        quantity = quantity - 1;
-                                                      }
-                                                    });
-                                                  },
-                                                ),
-                                                Container(
-                                                  width: 25,
-                                                  child: Text(
-                                                    quantity.toString(),
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ),
-                                                IconButton(
-                                                  icon: Icon(Icons.add),
-                                                  iconSize: 16,
-                                                  color: Colors.deepOrange,
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      if (quantity >= 0) {
-                                                        quantity = quantity + 1;
-                                                      }
-                                                    });
-                                                  },
-                                                ),
-                                              ],
-                                            ))
-                                      ])))
-                          : Container(),
                       _selectedCategory != null && _selectedCategory != 'Books'
                           ? Padding(
                               padding: EdgeInsets.only(
@@ -1521,12 +1486,34 @@ class EditItemState extends State<EditItem>
                       SizedBox(
                         height: 10.0,
                       ),
-                      _selectedCategory == 'Women' ||
-                              _selectedCategory == 'Men' ||
-                              _selectedCategory == 'Kids'
+                      _selectedsubCategory == 'Activewear & Sportswear' ||
+                              _selectedsubCategory == 'Dresses' ||
+                              _selectedsubCategory == 'Tops & Blouses' ||
+                              _selectedsubCategory == 'Coats & Jackets' ||
+                              _selectedsubCategory == 'Sweaters' ||
+                              _selectedsubCategory == 'Shoes' ||
+                              _selectedsubCategory == 'Modest wear' ||
+                              _selectedsubCategory == 'Jeans' ||
+                              _selectedsubCategory == 'Suits & Blazers' ||
+                              _selectedsubCategory == 'Swimwear & Beachwear' ||
+                              _selectedsubCategory == 'Bottoms' ||
+                              _selectedsubCategory == 'Tops' ||
+                              _selectedsubCategory == 'Girls Dresses' ||
+                              _selectedsubCategory == 'Girls One-pieces' ||
+                              _selectedsubCategory == 'Girls Tops & T-shirts' ||
+                              _selectedsubCategory == 'Girls Bottoms' ||
+                              _selectedsubCategory == 'Girls Shoes' ||
+                              _selectedsubCategory == 'Boys Tops & T-shirts' ||
+                              _selectedsubCategory == 'Boys Bottoms' ||
+                              _selectedsubCategory == 'Boys One-pieces' ||
+                              _selectedsubCategory == 'Boys Shoes' ||
+                              _selectedsubCategory == 'Clothing' ||
+                              _selectedsubCategory == 'Shoes'
                           ? Padding(
-                              padding:
-                                  EdgeInsets.only(left: 15, bottom: 5, top: 10),
+                              padding: EdgeInsets.only(
+                                left: 15,
+                                bottom: 5,
+                              ),
                               child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
@@ -1539,9 +1526,29 @@ class EditItemState extends State<EditItem>
                               ),
                             )
                           : Container(),
-                      _selectedCategory == 'Women' ||
-                              _selectedCategory == 'Men' ||
-                              _selectedCategory == 'Kids'
+                      _selectedsubCategory == 'Activewear & Sportswear' ||
+                              _selectedsubCategory == 'Dresses' ||
+                              _selectedsubCategory == 'Tops & Blouses' ||
+                              _selectedsubCategory == 'Coats & Jackets' ||
+                              _selectedsubCategory == 'Sweaters' ||
+                              _selectedsubCategory == 'Shoes' ||
+                              _selectedsubCategory == 'Modest wear' ||
+                              _selectedsubCategory == 'Jeans' ||
+                              _selectedsubCategory == 'Suits & Blazers' ||
+                              _selectedsubCategory == 'Swimwear & Beachwear' ||
+                              _selectedsubCategory == 'Bottoms' ||
+                              _selectedsubCategory == 'Tops' ||
+                              _selectedsubCategory == 'Girls Dresses' ||
+                              _selectedsubCategory == 'Girls One-pieces' ||
+                              _selectedsubCategory == 'Girls Tops & T-shirts' ||
+                              _selectedsubCategory == 'Girls Bottoms' ||
+                              _selectedsubCategory == 'Girls Shoes' ||
+                              _selectedsubCategory == 'Boys Tops & T-shirts' ||
+                              _selectedsubCategory == 'Boys Bottoms' ||
+                              _selectedsubCategory == 'Boys One-pieces' ||
+                              _selectedsubCategory == 'Boys Shoes' ||
+                              _selectedsubCategory == 'Clothing' ||
+                              _selectedsubCategory == 'Shoes'
                           ? Padding(
                               padding: EdgeInsets.only(
                                   left: 15, bottom: 5, top: 10, right: 15),
@@ -1564,7 +1571,8 @@ class EditItemState extends State<EditItem>
                                                 'M',
                                                 'L',
                                                 'XL',
-                                                'XXL'
+                                                'XXL',
+                                                'XXXL'
                                               ];
 
                                               List<String> bottomsizes = [
@@ -1586,10 +1594,14 @@ class EditItemState extends State<EditItem>
                                                 '41',
                                                 '42',
                                                 '43',
-                                                '44'
+                                                '44',
+                                                '46',
+                                                '48',
                                               ];
 
                                               List<String> shoesizes = [
+                                                '4',
+                                                '4.5',
                                                 '5',
                                                 '5.5',
                                                 '6',
@@ -1667,7 +1679,7 @@ class EditItemState extends State<EditItem>
                                                                                   onTap: () {
                                                                                     Navigator.pop(context);
                                                                                     updateState(() {
-                                                                                      _selectedsize = selectedsize[0];
+                                                                                      selectedSizes = selectedSizes;
                                                                                     });
                                                                                   },
                                                                                   child: Padding(
@@ -1695,7 +1707,7 @@ class EditItemState extends State<EditItem>
                                                                               ),
                                                                             ),
                                                                           ),
-                                                                          _selectedsubCategory.contains('Hoodies & Sweatshirts') || _selectedsubCategory.contains('Nightwear & Loungewear') || _selectedsubCategory.contains('Swimwear & Beachwear') || _selectedsubCategory.contains('Tops') || _selectedsubCategory.contains('Activewear & Sportswear') || _selectedsubCategory.contains('Coats & Jackets') || _selectedsubCategory.contains('Dresses') || _selectedsubCategory.contains('Modest wear') || _selectedsubCategory.contains('Tops & Blouses') || _selectedsubCategory.contains('Girls Tops & T-shirts') || _selectedsubCategory.contains('Girls One-pieces') || _selectedsubCategory.contains('Girls Dresses') || _selectedsubCategory.contains('Boys Tops & T-shirts')
+                                                                          _selectedsubCategory.contains('Hoodies & Sweatshirts') || _selectedsubCategory.contains('Nightwear & Loungewear') || _selectedsubCategory.contains('Swimwear & Beachwear') || _selectedsubCategory.contains('Tops') || _selectedsubCategory.contains('Activewear & Sportswear') || _selectedsubCategory.contains('Coats & Jackets') || _selectedsubCategory.contains('Dresses') || _selectedsubCategory.contains('Modest wear') || _selectedsubCategory.contains('Tops & Blouses') || _selectedsubCategory.contains('Girls Tops & T-shirts') || _selectedsubCategory.contains('Girls One-pieces') || _selectedsubCategory.contains('Girls Dresses') || _selectedsubCategory.contains('Clothing') || _selectedsubCategory.contains('Boys Tops & T-shirts') || _selectedsubCategory.contains('Girls Tops & T-shirts') || _selectedsubCategory.contains('Girls Dresses') || _selectedsubCategory.contains('Boys One-pieces') || _selectedsubCategory.contains('Girls One-pieces') || _selectedsubCategory.contains('Suits & Blazers') || _selectedsubCategory.contains('Sweaters')
                                                                               ? Expanded(
                                                                                   child: GridView.builder(
                                                                                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(mainAxisSpacing: 5.0, crossAxisSpacing: 5.0, crossAxisCount: 4, childAspectRatio: 1),
@@ -1704,17 +1716,20 @@ class EditItemState extends State<EditItem>
                                                                                           padding: EdgeInsets.all(5),
                                                                                           child: InkWell(
                                                                                               onTap: () {
-                                                                                                selectedsize.clear();
+                                                                                                if (selectedSizes.contains(topsizes[i])) {
+                                                                                                  selectedSizes.remove(topsizes[i]);
+                                                                                                } else {
+                                                                                                  selectedSizes.add(topsizes[i]);
+                                                                                                }
                                                                                                 updateState(() {
-                                                                                                  selectedsize.add(topsizes[i]);
+                                                                                                  selectedSizes = selectedsize;
                                                                                                 });
-                                                                                                print(topsizes[i]);
                                                                                               },
                                                                                               child: Container(
                                                                                                   height: 100,
                                                                                                   width: MediaQuery.of(context).size.width,
                                                                                                   decoration: BoxDecoration(
-                                                                                                      color: selectedsize.contains(topsizes[i]) ? Colors.black : Colors.white,
+                                                                                                      color: selectedSizes.contains(topsizes[i]) ? Colors.black : Colors.white,
                                                                                                       border: Border.all(
                                                                                                         color: Colors.grey,
                                                                                                       ),
@@ -1722,13 +1737,13 @@ class EditItemState extends State<EditItem>
                                                                                                   child: Center(
                                                                                                       child: Text(
                                                                                                     topsizes[i],
-                                                                                                    style: selectedsize.contains(topsizes[i]) ? TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.white) : TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.black),
+                                                                                                    style: selectedSizes.contains(topsizes[i]) ? TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.white) : TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.black),
                                                                                                   )))));
                                                                                     },
                                                                                     itemCount: topsizes.length,
                                                                                   ),
                                                                                 )
-                                                                              : _selectedsubCategory.contains('Jewelry') || _selectedsubCategory.contains('Women\'s accessories') || _selectedsubCategory.contains('Men\'s accessories') || _selectedsubCategory.contains('Boys Accessories') || _selectedsubCategory.contains('Girls Accessories')
+                                                                              : _selectedsubCategory.contains('Shoes') || _selectedsubCategory.contains('Boys Shoes') || _selectedsubCategory.contains('Girls Shoes')
                                                                                   ? Expanded(
                                                                                       child: GridView.builder(
                                                                                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(mainAxisSpacing: 5.0, crossAxisSpacing: 5.0, crossAxisCount: 4, childAspectRatio: 1),
@@ -1737,95 +1752,68 @@ class EditItemState extends State<EditItem>
                                                                                               padding: EdgeInsets.all(5),
                                                                                               child: InkWell(
                                                                                                   onTap: () {
-                                                                                                    selectedsize.clear();
+                                                                                                    if (selectedSizes.contains(shoesizes[i])) {
+                                                                                                      selectedSizes.remove(shoesizes[i]);
+                                                                                                    } else {
+                                                                                                      selectedSizes.add(shoesizes[i]);
+                                                                                                    }
                                                                                                     updateState(() {
-                                                                                                      selectedsize.add(accessoriessizes[i]);
+                                                                                                      selectedSizes = selectedSizes;
                                                                                                     });
-                                                                                                    print(accessoriessizes[i]);
                                                                                                   },
                                                                                                   child: Container(
                                                                                                       height: 100,
                                                                                                       width: MediaQuery.of(context).size.width,
                                                                                                       decoration: BoxDecoration(
-                                                                                                          color: selectedsize.contains(accessoriessizes[i]) ? Colors.black : Colors.white,
+                                                                                                          color: selectedSizes.contains(shoesizes[i]) ? Colors.black : Colors.white,
                                                                                                           border: Border.all(
                                                                                                             color: Colors.grey,
                                                                                                           ),
                                                                                                           borderRadius: BorderRadius.circular(10)),
                                                                                                       child: Center(
                                                                                                           child: Text(
-                                                                                                        accessoriessizes[i],
-                                                                                                        style: selectedsize.contains(accessoriessizes[i]) ? TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.white) : TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.black),
+                                                                                                        shoesizes[i],
+                                                                                                        style: selectedSizes.contains(shoesizes[i]) ? TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.white) : TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.black),
                                                                                                       )))));
                                                                                         },
-                                                                                        itemCount: accessoriessizes.length,
+                                                                                        itemCount: shoesizes.length,
                                                                                       ),
                                                                                     )
-                                                                                  : _selectedsubCategory.contains('Shoes') || _selectedsubCategory.contains('Boys Shoes') || _selectedsubCategory.contains('Girls Shoes')
-                                                                                      ? Expanded(
-                                                                                          child: GridView.builder(
-                                                                                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(mainAxisSpacing: 5.0, crossAxisSpacing: 5.0, crossAxisCount: 4, childAspectRatio: 1),
-                                                                                            itemBuilder: (_, i) {
-                                                                                              return Padding(
-                                                                                                  padding: EdgeInsets.all(5),
-                                                                                                  child: InkWell(
-                                                                                                      onTap: () {
-                                                                                                        selectedsize.clear();
-                                                                                                        updateState(() {
-                                                                                                          selectedsize.add(shoesizes[i]);
-                                                                                                        });
-                                                                                                        print(shoesizes[i]);
-                                                                                                      },
-                                                                                                      child: Container(
-                                                                                                          height: 100,
-                                                                                                          width: MediaQuery.of(context).size.width,
-                                                                                                          decoration: BoxDecoration(
-                                                                                                              color: selectedsize.contains(shoesizes[i]) ? Colors.black : Colors.white,
-                                                                                                              border: Border.all(
-                                                                                                                color: Colors.grey,
-                                                                                                              ),
-                                                                                                              borderRadius: BorderRadius.circular(10)),
-                                                                                                          child: Center(
-                                                                                                              child: Text(
-                                                                                                            shoesizes[i],
-                                                                                                            style: selectedsize.contains(shoesizes[i]) ? TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.white) : TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.black),
-                                                                                                          )))));
-                                                                                            },
-                                                                                            itemCount: shoesizes.length,
-                                                                                          ),
-                                                                                        )
-                                                                                      : Expanded(
-                                                                                          child: GridView.builder(
-                                                                                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(mainAxisSpacing: 5.0, crossAxisSpacing: 5.0, crossAxisCount: 4, childAspectRatio: 1),
-                                                                                            itemBuilder: (_, i) {
-                                                                                              return Padding(
-                                                                                                  padding: EdgeInsets.all(5),
-                                                                                                  child: InkWell(
-                                                                                                      onTap: () {
-                                                                                                        selectedsize.clear();
-                                                                                                        updateState(() {
-                                                                                                          selectedsize.add(bottomsizes[i]);
-                                                                                                        });
-                                                                                                        print(bottomsizes[i]);
-                                                                                                      },
-                                                                                                      child: Container(
-                                                                                                          height: 100,
-                                                                                                          width: MediaQuery.of(context).size.width,
-                                                                                                          decoration: BoxDecoration(
-                                                                                                              color: selectedsize.contains(bottomsizes[i]) ? Colors.black : Colors.white,
-                                                                                                              border: Border.all(
-                                                                                                                color: Colors.grey,
-                                                                                                              ),
-                                                                                                              borderRadius: BorderRadius.circular(10)),
-                                                                                                          child: Center(
-                                                                                                              child: Text(
-                                                                                                            bottomsizes[i],
-                                                                                                            style: selectedsize.contains(bottomsizes[i]) ? TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.white) : TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.black),
-                                                                                                          )))));
-                                                                                            },
-                                                                                            itemCount: bottomsizes.length,
-                                                                                          ),
-                                                                                        ),
+                                                                                  : Expanded(
+                                                                                      child: GridView.builder(
+                                                                                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(mainAxisSpacing: 5.0, crossAxisSpacing: 5.0, crossAxisCount: 4, childAspectRatio: 1),
+                                                                                        itemBuilder: (_, i) {
+                                                                                          return Padding(
+                                                                                              padding: EdgeInsets.all(5),
+                                                                                              child: InkWell(
+                                                                                                  onTap: () {
+                                                                                                    if (selectedSizes.contains(bottomsizes[i])) {
+                                                                                                      selectedSizes.remove(bottomsizes[i]);
+                                                                                                    } else {
+                                                                                                      selectedSizes.add(bottomsizes[i]);
+                                                                                                    }
+                                                                                                    updateState(() {
+                                                                                                      selectedSizes = selectedSizes;
+                                                                                                    });
+                                                                                                  },
+                                                                                                  child: Container(
+                                                                                                      height: 100,
+                                                                                                      width: MediaQuery.of(context).size.width,
+                                                                                                      decoration: BoxDecoration(
+                                                                                                          color: selectedSizes.contains(bottomsizes[i]) ? Colors.black : Colors.white,
+                                                                                                          border: Border.all(
+                                                                                                            color: Colors.grey,
+                                                                                                          ),
+                                                                                                          borderRadius: BorderRadius.circular(10)),
+                                                                                                      child: Center(
+                                                                                                          child: Text(
+                                                                                                        bottomsizes[i],
+                                                                                                        style: selectedSizes.contains(bottomsizes[i]) ? TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.white) : TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.black),
+                                                                                                      )))));
+                                                                                        },
+                                                                                        itemCount: bottomsizes.length,
+                                                                                      ),
+                                                                                    ),
                                                                         ])));
                                                           });
                                                         });
@@ -1840,19 +1828,43 @@ class EditItemState extends State<EditItem>
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.center,
                                                   children: <Widget>[
-                                                    _selectedsize != null
-                                                        ? Text(
-                                                            'Size - ' +
-                                                                _selectedsize,
-                                                            textAlign:
-                                                                TextAlign.right,
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    'Helvetica',
-                                                                fontSize: 16,
-                                                                color: Colors
-                                                                    .blueGrey),
-                                                          )
+                                                    selectedSizes != null
+                                                        ? Container(
+                                                            height: 35,
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width /
+                                                                1.5,
+                                                            child: ListView
+                                                                .builder(
+                                                              scrollDirection:
+                                                                  Axis.horizontal,
+                                                              itemCount:
+                                                                  selectedSizes
+                                                                      .length,
+                                                              itemBuilder:
+                                                                  (context,
+                                                                      index) {
+                                                                return Padding(
+                                                                    padding:
+                                                                        EdgeInsets
+                                                                            .all(1),
+                                                                    child: Container(
+                                                                        height: 35,
+                                                                        width: 35,
+                                                                        decoration: BoxDecoration(color: Colors.deepOrange, shape: BoxShape.circle),
+                                                                        child: Center(
+                                                                            child: Text(
+                                                                          selectedSizes[
+                                                                              index],
+                                                                          style: TextStyle(
+                                                                              fontFamily: 'Helvetica',
+                                                                              fontSize: 16,
+                                                                              color: Colors.white),
+                                                                        ))));
+                                                              },
+                                                            ))
                                                         : Text(
                                                             'Choose your Size',
                                                             textAlign:
@@ -1878,10 +1890,13 @@ class EditItemState extends State<EditItem>
                       ),
                       _selectedCategory == 'Women' ||
                               _selectedCategory == 'Men' ||
-                              _selectedCategory == 'Kids'
+                              _selectedCategory == 'Kids' ||
+                              _selectedCategory == 'Luxury'
                           ? Padding(
-                              padding:
-                                  EdgeInsets.only(left: 15, bottom: 5, top: 10),
+                              padding: EdgeInsets.only(
+                                left: 15,
+                                bottom: 5,
+                              ),
                               child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
@@ -1896,7 +1911,8 @@ class EditItemState extends State<EditItem>
                           : Container(),
                       _selectedCategory == 'Women' ||
                               _selectedCategory == 'Men' ||
-                              _selectedCategory == 'Kids'
+                              _selectedCategory == 'Kids' ||
+                              _selectedCategory == 'Luxury'
                           ? Padding(
                               padding: EdgeInsets.only(
                                   left: 15, bottom: 5, top: 10, right: 15),
@@ -1987,7 +2003,8 @@ class EditItemState extends State<EditItem>
                                                                                         if (selectedColors.length > 3) {
                                                                                           selectedColors.removeAt(0);
                                                                                           selectedColors.add(colorslist[i]);
-                                                                                        } else if (selectedColors.contains(colorslist[i])) {
+                                                                                        }
+                                                                                        if (selectedColors.contains(colorslist[i])) {
                                                                                           selectedColors.remove(colorslist[i]);
                                                                                         } else {
                                                                                           selectedColors.add(colorslist[i]);
@@ -2007,10 +2024,13 @@ class EditItemState extends State<EditItem>
                                                                                             color: colorslist[i],
                                                                                           ),
                                                                                           child: selectedColors.contains(colorslist[i])
-                                                                                              ? Icon(
-                                                                                                  Icons.check,
-                                                                                                  color: Colors.white,
-                                                                                                )
+                                                                                              ? CircleAvatar(
+                                                                                                  radius: 18,
+                                                                                                  backgroundColor: Colors.black12,
+                                                                                                  child: Icon(
+                                                                                                    Icons.check,
+                                                                                                    color: Colors.white,
+                                                                                                  ))
                                                                                               : Container()),
                                                                                     ));
                                                                               },
@@ -2136,6 +2156,7 @@ class EditItemState extends State<EditItem>
                                             itemweight =
                                                 int.parse(weights[position]);
                                           });
+                                          calculateearning();
                                         },
                                         child: Container(
                                             decoration: BoxDecoration(
@@ -2219,59 +2240,12 @@ class EditItemState extends State<EditItem>
                                     MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
-                                  Container(
+                                  Expanded(
                                     child: TextField(
                                       cursorColor: Color(0xFF979797),
                                       controller: businesspricecontroller,
                                       onChanged: (text) async {
-                                        var weightfees;
-                                        if (_selectedweight == 0) {
-                                          weightfees = 20;
-                                        } else if (_selectedweight == 1) {
-                                          weightfees = 30;
-                                        } else if (_selectedweight == 2) {
-                                          weightfees = 50;
-                                        } else if (_selectedweight == 3) {
-                                          weightfees = 110;
-                                        }
-
-                                        if (int.parse(
-                                                businesspricecontroller.text) <
-                                            20) {
-                                          if (int.parse(businesspricecontroller
-                                                  .text) <=
-                                              0) {
-                                            fees = 0;
-                                          } else {
-                                            var s = 0.15 *
-                                                int.parse(
-                                                    businesspricecontroller
-                                                        .text);
-                                            fees = int.parse(
-                                                    businesspricecontroller
-                                                        .text) +
-                                                s +
-                                                weightfees;
-                                          }
-                                        } else {
-                                          fees = int.parse(
-                                                  businesspricecontroller
-                                                      .text) +
-                                              weightfees +
-                                              0.15 *
-                                                  int.parse(
-                                                      businesspricecontroller
-                                                          .text);
-                                        }
-
-                                        print(fees);
-                                        setState(() {
-                                          totalpayable = double.parse(
-                                              businesspricecontroller.text);
-                                          fees = fees;
-
-                                          percentindictor = 0.8;
-                                        });
+                                        calculateearning();
                                       },
                                       style: TextStyle(
                                           fontFamily: 'Helvetica',
@@ -2294,7 +2268,6 @@ class EditItemState extends State<EditItem>
                                         disabledBorder: InputBorder.none,
                                       ),
                                     ),
-                                    width: 100,
                                   ),
                                   Text(currency,
                                       style: TextStyle(
@@ -2306,6 +2279,122 @@ class EditItemState extends State<EditItem>
                         ),
                       ),
                       fees != null
+                          ? Padding(
+                              padding: EdgeInsets.only(left: 15, right: 15),
+                              child: Container(
+                                padding: EdgeInsets.all(20),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(15),
+                                      topRight: Radius.circular(15)),
+                                ),
+                                child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Text(
+                                          'Delivery Fees',
+                                          style: TextStyle(
+                                              fontFamily: 'Helvetica',
+                                              fontSize: 16,
+                                              color: Colors.black),
+                                        ),
+                                        Text(
+                                          weightfee.toString().isNotEmpty
+                                              ? currency +
+                                                  ' ' +
+                                                  weightfee.toString()
+                                              : '0',
+                                          style: TextStyle(
+                                              fontFamily: 'Helvetica',
+                                              fontSize: 18,
+                                              color: Colors.black),
+                                        )
+                                      ],
+                                    )),
+                              ))
+                          : Container(),
+                      fees != null
+                          ? Padding(
+                              padding: EdgeInsets.only(left: 15, right: 15),
+                              child: Container(
+                                padding: EdgeInsets.all(20),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                ),
+                                child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Text(
+                                          'Service Fees',
+                                          style: TextStyle(
+                                              fontFamily: 'Helvetica',
+                                              fontSize: 16,
+                                              color: Colors.black),
+                                        ),
+                                        Text(
+                                          ourfees.toString().isNotEmpty
+                                              ? currency +
+                                                  ' ' +
+                                                  ourfees.toStringAsFixed(1)
+                                              : '0',
+                                          style: TextStyle(
+                                              fontFamily: 'Helvetica',
+                                              fontSize: 18,
+                                              color: Colors.black),
+                                        )
+                                      ],
+                                    )),
+                              ))
+                          : Container(),
+                      fees != null
+                          ? Padding(
+                              padding: EdgeInsets.only(
+                                  left: 15, bottom: 5, right: 15),
+                              child: Container(
+                                padding: EdgeInsets.all(20),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.only(
+                                      bottomRight: Radius.circular(15),
+                                      bottomLeft: Radius.circular(15)),
+                                ),
+                                child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Text(
+                                          'You Earn',
+                                          style: TextStyle(
+                                              fontFamily: 'Helvetica',
+                                              fontSize: 16,
+                                              color: Colors.black),
+                                        ),
+                                        Text(
+                                          businesspricecontroller
+                                                  .text.isNotEmpty
+                                              ? currency +
+                                                  ' ' +
+                                                  businesspricecontroller.text
+                                              : '0',
+                                          style: TextStyle(
+                                              fontFamily: 'Helvetica',
+                                              fontSize: 18,
+                                              color: Colors.black),
+                                        )
+                                      ],
+                                    )),
+                              ))
+                          : Container(),
+                      fees != null
                           ? GestureDetector(
                               onTap: () {
                                 showModalBottomSheet(
@@ -2315,7 +2404,7 @@ class EditItemState extends State<EditItem>
                                     builder: (_) {
                                       return DraggableScrollableSheet(
                                           expand: false,
-                                          initialChildSize: 0.3,
+                                          initialChildSize: 0.6,
                                           builder: (_, controller) {
                                             return Container(
                                                 height: 100.0,
@@ -2352,7 +2441,7 @@ class EditItemState extends State<EditItem>
                                                                       fontFamily:
                                                                           'Helvetica',
                                                                       fontSize:
-                                                                          18,
+                                                                          16,
                                                                       color: Colors
                                                                           .black,
                                                                       fontWeight:
@@ -2383,29 +2472,25 @@ class EditItemState extends State<EditItem>
                                                         height: 10,
                                                       ),
                                                       Text(
-                                                        'The SellShip listing protection and pricing helps us offer you 24/7 support, cover the transaction fees, free delivery and protect you as a seller. Also covering Buyers to be provided free delivery and protection throughout all their purchases on SellShip',
+                                                        """All fees are simple and straightforward:\n\n • It’s always free to list an item for sale on SellShip.\n\ • You earn exactly the same amount as the listing price you enter. We add an additional 15% on top of your listing price including delivery to cover for buyer protection and transaction charges.\n\nWhat you get:\n • Free pre-paid shipping label.\n • Free credit card processing.\n • Customer support and SellShip buyer protection.\nDelivery cost added to the listing price are as follows:\n<5kg = AED 20, <10kg = AED 30, <20kg = AED 50, <50kg =AED 110\n\nPlease note, your earnings are based on the listing price and actual earnings will vary based on the final offer price, seller discounts, and any other applicable taxes and discounts.""",
                                                         style: TextStyle(
                                                             fontFamily:
                                                                 'Helvetica',
                                                             fontSize: 16,
                                                             color:
                                                                 Colors.black),
-                                                      )
+                                                      ),
                                                     ])));
                                           });
                                     });
                               },
                               child: Padding(
-                                padding: EdgeInsets.only(
-                                    left: 15, top: 2, right: 15),
+                                padding: EdgeInsets.only(left: 15, right: 15),
                                 child: Container(
                                   padding: EdgeInsets.all(20),
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(15),
-                                        topLeft: Radius.circular(15)),
-                                  ),
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10)),
                                   child: Align(
                                       alignment: Alignment.centerLeft,
                                       child: Row(
@@ -2414,9 +2499,11 @@ class EditItemState extends State<EditItem>
                                         children: <Widget>[
                                           Container(
                                             width: 155,
-                                            child: Row(
+                                            child: Column(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: <Widget>[
                                                 Text(
                                                   'Listing Price',
@@ -2426,12 +2513,14 @@ class EditItemState extends State<EditItem>
                                                       color: Colors.black),
                                                 ),
                                                 SizedBox(
-                                                  width: 5,
+                                                  height: 5,
                                                 ),
-                                                Icon(
-                                                  FontAwesome5.question_circle,
-                                                  size: 15,
-                                                  color: Colors.grey,
+                                                Text(
+                                                  'Read more about our fees and pricing',
+                                                  style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 12,
+                                                      color: Colors.deepOrange),
                                                 ),
                                               ],
                                             ),
@@ -2450,44 +2539,363 @@ class EditItemState extends State<EditItem>
                                 ),
                               ))
                           : Container(),
-                      totalpayable != null
+                      Padding(
+                          padding: EdgeInsets.only(
+                              left: 15, bottom: 5, top: 10, right: 15),
+                          child: Container(
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15)),
+                            ),
+                            child: SwitchListTile(
+                              value: quantityswitch,
+                              activeColor: Colors.deepPurple,
+                              title: Text(
+                                'Selling more than one of the same item?',
+                                style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 16,
+                                    color: Colors.blueGrey),
+                              ),
+                              onChanged: (value) => setState(() {
+                                quantityswitch = value;
+                              }),
+                            ),
+                          )),
+                      quantityswitch == true
                           ? Padding(
                               padding: EdgeInsets.only(
-                                  left: 15, bottom: 5, right: 15),
+                                  left: 15, bottom: 5, top: 10, right: 15),
                               child: Container(
-                                padding: EdgeInsets.all(20),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.only(
-                                      bottomRight: Radius.circular(15),
-                                      bottomLeft: Radius.circular(15)),
-                                ),
-                                child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Row(
+                                  padding: EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15)),
+                                  ),
+                                  child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Text(
-                                          'You earn',
-                                          style: TextStyle(
-                                              fontFamily: 'Helvetica',
-                                              fontSize: 16,
-                                              color: Colors.black),
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                            left: 15,
+                                            bottom: 5,
+                                          ),
+                                          child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                              'Quantity of Item',
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 16,
+                                                  color: Colors.blueGrey),
+                                            ),
+                                          ),
                                         ),
-                                        Text(
-                                          currency +
-                                              ' ' +
-                                              totalpayable.toStringAsFixed(2),
-                                          style: TextStyle(
-                                              fontFamily: 'Helvetica',
-                                              fontSize: 18,
-                                              color: Colors.black),
-                                        )
-                                      ],
-                                    )),
-                              ))
+                                        Container(
+                                            height: 70,
+                                            width: 130,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                IconButton(
+                                                  icon: Icon(Icons.remove),
+                                                  iconSize: 16,
+                                                  color: Colors.deepOrange,
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      if (quantity > 0) {
+                                                        quantity = quantity - 1;
+                                                      }
+                                                    });
+                                                  },
+                                                ),
+                                                Container(
+                                                  width: 25,
+                                                  child: Text(
+                                                    quantity.toString(),
+                                                    style:
+                                                        TextStyle(fontSize: 18),
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                ),
+                                                IconButton(
+                                                  icon: Icon(Icons.add),
+                                                  iconSize: 16,
+                                                  color: Colors.deepOrange,
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      if (quantity >= 0) {
+                                                        quantity = quantity + 1;
+                                                      }
+                                                    });
+                                                  },
+                                                ),
+                                              ],
+                                            ))
+                                      ])))
                           : Container(),
+                      Padding(
+                          padding: EdgeInsets.only(
+                              left: 15, bottom: 5, top: 10, right: 15),
+                          child: Container(
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15)),
+                            ),
+                            child: SwitchListTile(
+                              value: acceptoffers,
+                              activeColor: Colors.deepPurple,
+                              title: Text(
+                                'Accept offers from buyers?',
+                                style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 16,
+                                    color: Colors.blueGrey),
+                              ),
+                              onChanged: (value) => setState(() {
+                                acceptoffers = value;
+                              }),
+                            ),
+                          )),
+                      Padding(
+                          padding: EdgeInsets.only(
+                              left: 15, bottom: 5, top: 10, right: 15),
+                          child: Container(
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15)),
+                            ),
+                            child: SwitchListTile(
+                              value: buyerprotection,
+                              activeColor: Colors.deepPurple,
+                              title: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Activate Buyer Protection?',
+                                    style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 16,
+                                        color: Colors.blueGrey),
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      showModalBottomSheet(
+                                          backgroundColor: Color(0xFF737373),
+                                          context: context,
+                                          isScrollControlled: true,
+                                          builder: (context) => Container(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height /
+                                                  2,
+                                              padding: EdgeInsets.only(
+                                                  left: 10, right: 10, top: 20),
+                                              decoration: new BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      new BorderRadius.only(
+                                                          topLeft: const Radius
+                                                              .circular(20.0),
+                                                          topRight: const Radius
+                                                              .circular(20.0))),
+                                              child: Scaffold(
+                                                backgroundColor: Colors.white,
+                                                body: ListView(
+                                                  children: <Widget>[
+                                                    ListTile(
+                                                      title: Text(
+                                                        'Buyer Protection',
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                        style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 20,
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    ListTile(
+                                                      title: Text(
+                                                        'Secure Payments',
+                                                        style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                      subtitle: Text(
+                                                        'All transcations within SellShip are secure and encrypted.',
+                                                        style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 14,
+                                                          color:
+                                                              Colors.blueGrey,
+                                                        ),
+                                                      ),
+                                                      leading: Icon(
+                                                        Icons.lock,
+                                                        color: Color.fromRGBO(
+                                                            255, 115, 0, 1),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    ListTile(
+                                                      title: Text(
+                                                        'Money Back Guarantee',
+                                                        style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                      subtitle: Text(
+                                                        'Product\'s that are not described as listed by the seller in the listing, that has undisclosed damage or if the seller has not shipped the item. The buyer can receive a refund for the item, as long as the refund request is made within 2 days of confirmed delivery or order',
+                                                        style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 14,
+                                                          color:
+                                                              Colors.blueGrey,
+                                                        ),
+                                                      ),
+                                                      leading: Icon(
+                                                        FontAwesome.money,
+                                                        color: Color.fromRGBO(
+                                                            255, 115, 0, 1),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    ListTile(
+                                                      title: Text(
+                                                        '24/7 Support',
+                                                        style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                      subtitle: Text(
+                                                        'The SellShip support team works 24/7 around the clock to deal with all support requests, queries and concerns.',
+                                                        style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 14,
+                                                          color:
+                                                              Colors.blueGrey,
+                                                        ),
+                                                      ),
+                                                      leading: Icon(
+                                                        Icons.live_help,
+                                                        color: Color.fromRGBO(
+                                                            255, 115, 0, 1),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                bottomNavigationBar: Padding(
+                                                  padding: EdgeInsets.all(20),
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                    child: Container(
+                                                      height: 48,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width -
+                                                              10,
+                                                      decoration: BoxDecoration(
+                                                        color: Color.fromRGBO(
+                                                            255, 115, 0, 1),
+                                                        borderRadius:
+                                                            const BorderRadius
+                                                                .all(
+                                                          Radius.circular(5.0),
+                                                        ),
+                                                        boxShadow: <BoxShadow>[
+                                                          BoxShadow(
+                                                              color:
+                                                                  Color.fromRGBO(
+                                                                      255,
+                                                                      115,
+                                                                      0,
+                                                                      0.4),
+                                                              offset:
+                                                                  const Offset(
+                                                                      1.1, 1.1),
+                                                              blurRadius: 10.0),
+                                                        ],
+                                                      ),
+                                                      child: Center(
+                                                        child: Text(
+                                                          'Done',
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            fontSize: 16,
+                                                            letterSpacing: 0.0,
+                                                            color: Colors.white,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              )));
+                                    },
+                                    child: Text(
+                                      'Buyers are more prone to purchase items that have Buyer Protection active. Read more about Buyer Protection',
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 12,
+                                          color: Colors.deepOrange),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              onChanged: (value) => setState(() {
+                                buyerprotection = value;
+                              }),
+                            ),
+                          )),
                       Padding(
                         padding: EdgeInsets.only(
                           left: 15,
@@ -2838,6 +3246,11 @@ class EditItemState extends State<EditItem>
                                           'latitude': _lastMapPosition.latitude,
                                           'longitude':
                                               _lastMapPosition.longitude,
+                                          'size': selectedSizes.isEmpty
+                                              ? []
+                                              : {selectedSizes},
+                                          'acceptoffers': acceptoffers,
+                                          'buyerprotection': buyerprotection,
                                           'description':
                                               businessdescriptionController
                                                   .text,
@@ -2888,6 +3301,11 @@ class EditItemState extends State<EditItem>
                                               businessdescriptionController
                                                   .text,
                                           'city': city.trim(),
+                                          'size': selectedSizes.isEmpty
+                                              ? []
+                                              : {selectedSizes},
+                                          'acceptoffers': acceptoffers,
+                                          'buyerprotection': buyerprotection,
                                           'country': country.trim(),
                                           'condition': _selectedCondition,
                                           'brand': bran,
@@ -2946,6 +3364,11 @@ class EditItemState extends State<EditItem>
                                           'brand': bran,
                                           'weight': itemweight,
                                           'itemid': newItem.itemid,
+                                          'size': selectedSizes.isEmpty
+                                              ? []
+                                              : {selectedSizes},
+                                          'acceptoffers': acceptoffers,
+                                          'buyerprotection': buyerprotection,
                                           'weightmetric': metric,
                                           'quantity': quantity,
                                           'date_uploaded':
@@ -3006,6 +3429,11 @@ class EditItemState extends State<EditItem>
                                           'brand': bran,
                                           'weight': itemweight,
                                           'weightmetric': metric,
+                                          'size': selectedSizes.isEmpty
+                                              ? []
+                                              : {selectedSizes},
+                                          'acceptoffers': acceptoffers,
+                                          'buyerprotection': buyerprotection,
                                           'quantity': quantity,
                                           'date_uploaded':
                                               DateTime.now().toString(),
@@ -3072,6 +3500,11 @@ class EditItemState extends State<EditItem>
                                           'weight': itemweight,
                                           'weightmetric': metric,
                                           'quantity': quantity,
+                                          'size': selectedSizes.isEmpty
+                                              ? []
+                                              : {selectedSizes},
+                                          'acceptoffers': acceptoffers,
+                                          'buyerprotection': buyerprotection,
                                           'date_uploaded':
                                               DateTime.now().toString(),
                                           'image': MultipartFile.fromBytes(
@@ -3135,6 +3568,11 @@ class EditItemState extends State<EditItem>
                                           'description':
                                               businessdescriptionController
                                                   .text,
+                                          'size': selectedSizes.isEmpty
+                                              ? []
+                                              : {selectedSizes},
+                                          'acceptoffers': acceptoffers,
+                                          'buyerprotection': buyerprotection,
                                           'city': city.trim(),
                                           'country': country.trim(),
                                           'condition': _selectedCondition,
@@ -3229,9 +3667,11 @@ class EditItemState extends State<EditItem>
                                       'colors': selectedColors.isEmpty
                                           ? []
                                           : {selectedColors},
-                                      'size': _selectedsize == null
-                                          ? ''
-                                          : _selectedsize,
+                                      'size': selectedSizes.isEmpty
+                                          ? []
+                                          : {selectedSizes},
+                                      'acceptoffers': acceptoffers,
+                                      'buyerprotection': buyerprotection,
                                       'tags': tags.isEmpty ? [] : {tags},
                                       'category': _selectedCategory,
                                       'subcategory': _selectedsubCategory,

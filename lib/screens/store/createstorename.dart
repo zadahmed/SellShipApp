@@ -93,6 +93,7 @@ class _CreateStoreNameState extends State<CreateStoreName> {
 
   bool disabled = true;
 
+  TextEditingController usernamecontroller = TextEditingController();
   TextEditingController storenamecontroller = TextEditingController();
 
   @override
@@ -198,6 +199,47 @@ class _CreateStoreNameState extends State<CreateStoreName> {
               FadeAnimation(
                 1,
                 Padding(
+                    padding: EdgeInsets.only(
+                      top: 10,
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Container(
+                          height: 60,
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                          width: MediaQuery.of(context).size.width - 100,
+                          decoration: BoxDecoration(
+                            color: Color.fromRGBO(131, 146, 165, 0.1),
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          child: TextField(
+                            onChanged: (text) {},
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(r'[^-\s]'))
+                            ],
+                            controller: usernamecontroller,
+                            cursorColor: Colors.black,
+                            decoration: InputDecoration(
+                              hintText: "Store Username",
+                              hintStyle: TextStyle(fontFamily: 'Helvetica'),
+                              icon: Icon(
+                                Icons.alternate_email,
+                                color: Colors.blueGrey,
+                              ),
+                              border: InputBorder.none,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )),
+              ),
+              FadeAnimation(
+                1,
+                Padding(
                   padding: EdgeInsets.only(left: 36, top: 20, right: 36),
                   child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -207,16 +249,102 @@ class _CreateStoreNameState extends State<CreateStoreName> {
                           onTap: () async {
                             if (storenamecontroller.text.isEmpty) {
                               showInSnackBar('Please Enter A Store Name');
+                            } else if (storenamecontroller.text.isEmpty) {
+                              showInSnackBar(
+                                  'Please enter a username for your store');
                             } else {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        CreateStoreBusinessDetail(
-                                      userid: widget.userid,
-                                      storename: storenamecontroller.text,
-                                    ),
-                                  ));
+                              showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  useRootNavigator: false,
+                                  builder: (BuildContext context) {
+                                    return Dialog(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                20.0)), //this right here
+                                        child: Container(
+                                            height: 170,
+                                            padding: EdgeInsets.all(15),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Text(
+                                                  'Checking Store Username Availability..',
+                                                  style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Container(
+                                                    height: 50,
+                                                    width: 50,
+                                                    child: SpinKitDoubleBounce(
+                                                      color: Colors.deepOrange,
+                                                    )),
+                                              ],
+                                            )));
+                                  });
+                              var url =
+                                  'https://api.sellship.co/check/store/name/' +
+                                      usernamecontroller.text;
+
+                              final response = await http.get(url);
+                              print(response.statusCode);
+                              if (response.statusCode == 200) {
+                                var jsondeco = json.decode(response.body);
+                                if (jsondeco['Status'] == 'Success') {
+                                  Navigator.pop(context);
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            CreateStoreBusinessDetail(
+                                          userid: widget.userid,
+                                          username: usernamecontroller.text,
+                                          storename: storenamecontroller.text,
+                                        ),
+                                      ));
+                                } else {
+                                  Navigator.pop(context);
+                                  showDialog(
+                                      context: context,
+                                      barrierDismissible: false,
+                                      useRootNavigator: false,
+                                      builder: (_) => AssetGiffyDialog(
+                                            image: Image.asset(
+                                              'assets/oops.gif',
+                                              fit: BoxFit.cover,
+                                            ),
+                                            title: Text(
+                                              'Oops!',
+                                              style: TextStyle(
+                                                  fontSize: 22.0,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            description: Text(
+                                              'Looks like that Store Username Exists',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica'),
+                                            ),
+                                            onlyOkButton: true,
+                                            entryAnimation:
+                                                EntryAnimation.DEFAULT,
+                                            onOkButtonPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          ));
+                                }
+                              }
                             }
                           },
                           child: Container(

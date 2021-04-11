@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/models/stores.dart';
 import 'package:SellShip/screens/addlocation.dart';
@@ -29,6 +30,7 @@ import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:permission_handler/permission_handler.dart' as Permission;
 import 'package:random_string/random_string.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 import 'package:shimmer/shimmer.dart';
 
@@ -2399,6 +2401,7 @@ class _AddItemState extends State<AddItem> {
                                                         itemweight = int.parse(
                                                             weights[position]);
                                                       });
+                                                      calculateearning();
                                                     },
                                                     child: Container(
                                                         decoration:
@@ -2507,67 +2510,7 @@ class _AddItemState extends State<AddItem> {
                                                   controller:
                                                       businesspricecontroller,
                                                   onChanged: (text) async {
-                                                    await storage.write(
-                                                        key: 'additem',
-                                                        value: 'true');
-                                                    var weightfees;
-                                                    if (_selectedweight == 0) {
-                                                      weightfees = 20;
-                                                    } else if (_selectedweight ==
-                                                        1) {
-                                                      weightfees = 30;
-                                                    } else if (_selectedweight ==
-                                                        2) {
-                                                      weightfees = 50;
-                                                    } else if (_selectedweight ==
-                                                        3) {
-                                                      weightfees = 110;
-                                                    }
-
-                                                    var s;
-
-                                                    if (int.parse(
-                                                            businesspricecontroller
-                                                                .text) <
-                                                        20) {
-                                                      if (int.parse(
-                                                              businesspricecontroller
-                                                                  .text) <=
-                                                          0) {
-                                                        fees = 0;
-                                                      } else {
-                                                        s = (int.parse(
-                                                                businesspricecontroller
-                                                                    .text) +
-                                                            weightfees);
-                                                        s = s * 0.15;
-                                                        fees = int.parse(
-                                                                businesspricecontroller
-                                                                    .text) +
-                                                            weightfees +
-                                                            s;
-                                                      }
-                                                    } else {
-                                                      s = (int.parse(
-                                                              businesspricecontroller
-                                                                  .text) +
-                                                          weightfees);
-                                                      s = s * 0.15;
-                                                      fees = int.parse(
-                                                              businesspricecontroller
-                                                                  .text) +
-                                                          weightfees +
-                                                          s;
-                                                    }
-
-                                                    setState(() {
-                                                      totalpayable =
-                                                          totalpayable;
-                                                      fees = fees;
-                                                      ourfees = s;
-                                                      weightfee = weightfees;
-                                                      percentindictor = 0.8;
-                                                    });
+                                                    calculateearning();
                                                   },
                                                   style: TextStyle(
                                                       fontFamily: 'Helvetica',
@@ -3632,130 +3575,221 @@ class _AddItemState extends State<AddItem> {
 
                                               if (images.length == 1) {
                                                 ByteData byteData =
-                                                    await images[0].getByteData(
-                                                        quality: 40);
+                                                    await images[0]
+                                                        .getByteData();
                                                 _image = byteData.buffer
                                                     .asUint8List();
+                                                _image =
+                                                    await FlutterImageCompress
+                                                        .compressWithList(
+                                                            _image,
+                                                            quality: 15);
                                               } else if (images.length == 2) {
                                                 ByteData byteData =
-                                                    await images[0].getByteData(
-                                                        quality: 40);
+                                                    await images[0]
+                                                        .getByteData();
                                                 _image = byteData.buffer
                                                     .asUint8List();
 
+                                                _image =
+                                                    await FlutterImageCompress
+                                                        .compressWithList(
+                                                            _image,
+                                                            quality: 15);
                                                 ByteData byteData2 =
-                                                    await images[1].getByteData(
-                                                        quality: 40);
+                                                    await images[1]
+                                                        .getByteData();
                                                 _image2 = byteData2.buffer
                                                     .asUint8List();
+                                                _image2 =
+                                                    await FlutterImageCompress
+                                                        .compressWithList(
+                                                            _image2,
+                                                            quality: 15);
                                               } else if (images.length == 3) {
                                                 ByteData byteData =
-                                                    await images[0].getByteData(
-                                                        quality: 40);
+                                                    await images[0]
+                                                        .getByteData();
                                                 _image = byteData.buffer
                                                     .asUint8List();
-
+                                                _image =
+                                                    await FlutterImageCompress
+                                                        .compressWithList(
+                                                            _image,
+                                                            quality: 15);
                                                 ByteData byteData2 =
-                                                    await images[1].getByteData(
-                                                        quality: 40);
+                                                    await images[1]
+                                                        .getByteData();
                                                 _image2 = byteData2.buffer
                                                     .asUint8List();
-
+                                                _image2 =
+                                                    await FlutterImageCompress
+                                                        .compressWithList(
+                                                            _image2,
+                                                            quality: 15);
                                                 ByteData byteData3 =
-                                                    await images[2].getByteData(
-                                                        quality: 40);
+                                                    await images[2]
+                                                        .getByteData();
                                                 _image3 = byteData3.buffer
                                                     .asUint8List();
+                                                _image3 =
+                                                    await FlutterImageCompress
+                                                        .compressWithList(
+                                                            _image3,
+                                                            quality: 15);
                                               } else if (images.length == 4) {
                                                 ByteData byteData =
-                                                    await images[0].getByteData(
-                                                        quality: 40);
+                                                    await images[0]
+                                                        .getByteData();
                                                 _image = byteData.buffer
                                                     .asUint8List();
-
+                                                _image =
+                                                    await FlutterImageCompress
+                                                        .compressWithList(
+                                                            _image,
+                                                            quality: 15);
                                                 ByteData byteData2 =
-                                                    await images[1].getByteData(
-                                                        quality: 40);
+                                                    await images[1]
+                                                        .getByteData();
                                                 _image2 = byteData2.buffer
                                                     .asUint8List();
-
+                                                _image2 =
+                                                    await FlutterImageCompress
+                                                        .compressWithList(
+                                                            _image2,
+                                                            quality: 15);
                                                 ByteData byteData3 =
-                                                    await images[2].getByteData(
-                                                        quality: 40);
+                                                    await images[2]
+                                                        .getByteData();
                                                 _image3 = byteData3.buffer
                                                     .asUint8List();
-
+                                                _image3 =
+                                                    await FlutterImageCompress
+                                                        .compressWithList(
+                                                            _image3,
+                                                            quality: 15);
                                                 ByteData byteData4 =
-                                                    await images[3].getByteData(
-                                                        quality: 40);
+                                                    await images[3]
+                                                        .getByteData();
                                                 _image4 = byteData4.buffer
                                                     .asUint8List();
+                                                _image4 =
+                                                    await FlutterImageCompress
+                                                        .compressWithList(
+                                                            _image4,
+                                                            quality: 15);
                                               } else if (images.length == 5) {
                                                 ByteData byteData =
-                                                    await images[0].getByteData(
-                                                        quality: 40);
+                                                    await images[0]
+                                                        .getByteData();
                                                 _image = byteData.buffer
                                                     .asUint8List();
-
+                                                _image =
+                                                    await FlutterImageCompress
+                                                        .compressWithList(
+                                                            _image,
+                                                            quality: 15);
                                                 ByteData byteData2 =
-                                                    await images[1].getByteData(
-                                                        quality: 40);
+                                                    await images[1]
+                                                        .getByteData();
                                                 _image2 = byteData2.buffer
                                                     .asUint8List();
-
+                                                _image2 =
+                                                    await FlutterImageCompress
+                                                        .compressWithList(
+                                                            _image2,
+                                                            quality: 15);
                                                 ByteData byteData3 =
-                                                    await images[2].getByteData(
-                                                        quality: 40);
+                                                    await images[2]
+                                                        .getByteData();
                                                 _image3 = byteData3.buffer
                                                     .asUint8List();
-
+                                                _image3 =
+                                                    await FlutterImageCompress
+                                                        .compressWithList(
+                                                            _image3,
+                                                            quality: 15);
                                                 ByteData byteData4 =
-                                                    await images[3].getByteData(
-                                                        quality: 40);
+                                                    await images[3]
+                                                        .getByteData();
                                                 _image4 = byteData4.buffer
                                                     .asUint8List();
-
+                                                _image4 =
+                                                    await FlutterImageCompress
+                                                        .compressWithList(
+                                                            _image4,
+                                                            quality: 15);
                                                 ByteData byteData5 =
-                                                    await images[4].getByteData(
-                                                        quality: 40);
+                                                    await images[4]
+                                                        .getByteData();
                                                 _image5 = byteData5.buffer
                                                     .asUint8List();
+                                                _image5 =
+                                                    await FlutterImageCompress
+                                                        .compressWithList(
+                                                            _image5,
+                                                            quality: 15);
                                               } else if (images.length == 6) {
                                                 ByteData byteData =
-                                                    await images[0].getByteData(
-                                                        quality: 40);
+                                                    await images[0]
+                                                        .getByteData();
                                                 _image = byteData.buffer
                                                     .asUint8List();
-
+                                                _image =
+                                                    await FlutterImageCompress
+                                                        .compressWithList(
+                                                            _image,
+                                                            quality: 15);
                                                 ByteData byteData2 =
-                                                    await images[1].getByteData(
-                                                        quality: 40);
+                                                    await images[1]
+                                                        .getByteData();
                                                 _image2 = byteData2.buffer
                                                     .asUint8List();
-
+                                                _image2 =
+                                                    await FlutterImageCompress
+                                                        .compressWithList(
+                                                            _image2,
+                                                            quality: 15);
                                                 ByteData byteData3 =
-                                                    await images[2].getByteData(
-                                                        quality: 40);
+                                                    await images[2]
+                                                        .getByteData();
                                                 _image3 = byteData3.buffer
                                                     .asUint8List();
-
+                                                _image3 =
+                                                    await FlutterImageCompress
+                                                        .compressWithList(
+                                                            _image3,
+                                                            quality: 15);
                                                 ByteData byteData4 =
-                                                    await images[3].getByteData(
-                                                        quality: 40);
+                                                    await images[3]
+                                                        .getByteData();
                                                 _image4 = byteData4.buffer
                                                     .asUint8List();
-
+                                                _image4 =
+                                                    await FlutterImageCompress
+                                                        .compressWithList(
+                                                            _image4,
+                                                            quality: 15);
                                                 ByteData byteData5 =
-                                                    await images[4].getByteData(
-                                                        quality: 40);
+                                                    await images[4]
+                                                        .getByteData();
                                                 _image5 = byteData5.buffer
                                                     .asUint8List();
-
+                                                _image5 =
+                                                    await FlutterImageCompress
+                                                        .compressWithList(
+                                                            _image5,
+                                                            quality: 15);
                                                 ByteData byteData6 =
-                                                    await images[5].getByteData(
-                                                        quality: 40);
+                                                    await images[5]
+                                                        .getByteData();
                                                 _image6 = byteData6.buffer
                                                     .asUint8List();
+                                                _image6 =
+                                                    await FlutterImageCompress
+                                                        .compressWithList(
+                                                            _image6,
+                                                            quality: 15);
                                               }
 
                                               Dio dio = new Dio();
@@ -4306,7 +4340,7 @@ class _AddItemState extends State<AddItem> {
                                                                     (context) {
                                                                   return Container(
                                                                       height:
-                                                                          280,
+                                                                          380,
                                                                       child:
                                                                           Column(
                                                                         crossAxisAlignment:
@@ -4314,7 +4348,7 @@ class _AddItemState extends State<AddItem> {
                                                                         children: [
                                                                           Container(
                                                                             height:
-                                                                                150,
+                                                                                250,
                                                                             width:
                                                                                 MediaQuery.of(context).size.width,
                                                                             child:
@@ -4336,7 +4370,7 @@ class _AddItemState extends State<AddItem> {
                                                                                 TextStyle(
                                                                               fontFamily: 'Helvetica',
                                                                               fontSize: 16,
-                                                                              color: Colors.black,
+                                                                              color: Colors.grey,
                                                                             ),
                                                                           ),
                                                                           SizedBox(
@@ -4469,6 +4503,44 @@ class _AddItemState extends State<AddItem> {
       backgroundColor: Colors.deepOrange,
       duration: Duration(seconds: 1),
     ));
+  }
+
+  calculateearning() async {
+    await storage.write(key: 'additem', value: 'true');
+    var weightfees;
+    if (_selectedweight == 0) {
+      weightfees = 20;
+    } else if (_selectedweight == 1) {
+      weightfees = 30;
+    } else if (_selectedweight == 2) {
+      weightfees = 50;
+    } else if (_selectedweight == 3) {
+      weightfees = 110;
+    }
+
+    var s;
+
+    if (int.parse(businesspricecontroller.text) < 20) {
+      if (int.parse(businesspricecontroller.text) <= 0) {
+        fees = 0;
+      } else {
+        s = (int.parse(businesspricecontroller.text) + weightfees);
+        s = s * 0.15;
+        fees = int.parse(businesspricecontroller.text) + weightfees + s;
+      }
+    } else {
+      s = (int.parse(businesspricecontroller.text) + weightfees);
+      s = s * 0.15;
+      fees = int.parse(businesspricecontroller.text) + weightfees + s;
+    }
+
+    setState(() {
+      totalpayable = totalpayable;
+      fees = fees;
+      ourfees = s;
+      weightfee = weightfees;
+      percentindictor = 0.8;
+    });
   }
 
   String userid;

@@ -85,6 +85,10 @@ PODS:
     - FBSDKCoreKit (~> 5.5)
     - FBSDKLoginKit (~> 5.5)
     - Flutter
+  - flutter_image_compress (0.0.1):
+    - Flutter
+    - Mantle
+    - SDWebImageWebPCoder
   - flutter_inappwebview (0.0.1):
     - Flutter
   - flutter_local_notifications (0.0.1):
@@ -144,8 +148,20 @@ PODS:
     - Flutter
     - libPhoneNumber-iOS
   - libPhoneNumber-iOS (0.9.15)
+  - libwebp (1.2.0):
+    - libwebp/demux (= 1.2.0)
+    - libwebp/mux (= 1.2.0)
+    - libwebp/webp (= 1.2.0)
+  - libwebp/demux (1.2.0):
+    - libwebp/webp
+  - libwebp/mux (1.2.0):
+    - libwebp/demux
+  - libwebp/webp (1.2.0)
   - location (0.0.1):
     - Flutter
+  - Mantle (2.1.6):
+    - Mantle/extobjc (= 2.1.6)
+  - Mantle/extobjc (2.1.6)
   - multi_image_picker (4.7.15):
     - BSImagePicker (~> 2.10.3)
     - Flutter
@@ -165,6 +181,16 @@ PODS:
   - "permission_handler (5.0.1+1)":
     - Flutter
   - PromisesObjC (1.2.12)
+  - SDWebImage/Core (5.11.0)
+  - SDWebImageWebPCoder (0.8.3):
+    - libwebp (~> 1.0)
+    - SDWebImage/Core (~> 5.10)
+  - Sentry (6.1.4):
+    - Sentry/Core (= 6.1.4)
+  - Sentry/Core (6.1.4)
+  - sentry_flutter (0.0.1):
+    - Flutter
+    - Sentry (~> 6.1.4)
   - share (0.0.1):
     - Flutter
   - shared_preferences (0.0.1):
@@ -189,6 +215,7 @@ DEPENDENCIES:
   - flutter_app_badger (from `.symlinks/plugins/flutter_app_badger/ios`)
   - flutter_branch_sdk (from `.symlinks/plugins/flutter_branch_sdk/ios`)
   - flutter_facebook_login (from `.symlinks/plugins/flutter_facebook_login/ios`)
+  - flutter_image_compress (from `.symlinks/plugins/flutter_image_compress/ios`)
   - flutter_inappwebview (from `.symlinks/plugins/flutter_inappwebview/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
@@ -205,6 +232,7 @@ DEPENDENCIES:
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
+  - sentry_flutter (from `.symlinks/plugins/sentry_flutter/ios`)
   - share (from `.symlinks/plugins/share/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
@@ -233,9 +261,14 @@ SPEC REPOS:
     - GTMSessionFetcher
     - Intercom
     - libPhoneNumber-iOS
+    - libwebp
+    - Mantle
     - nanopb
     - OneSignal
     - PromisesObjC
+    - SDWebImage
+    - SDWebImageWebPCoder
+    - Sentry
 
 EXTERNAL SOURCES:
   app_review:
@@ -260,6 +293,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_branch_sdk/ios"
   flutter_facebook_login:
     :path: ".symlinks/plugins/flutter_facebook_login/ios"
+  flutter_image_compress:
+    :path: ".symlinks/plugins/flutter_image_compress/ios"
   flutter_inappwebview:
     :path: ".symlinks/plugins/flutter_inappwebview/ios"
   flutter_local_notifications:
@@ -290,6 +325,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/path_provider/ios"
   permission_handler:
     :path: ".symlinks/plugins/permission_handler/ios"
+  sentry_flutter:
+    :path: ".symlinks/plugins/sentry_flutter/ios"
   share:
     :path: ".symlinks/plugins/share/ios"
   shared_preferences:
@@ -325,6 +362,7 @@ SPEC CHECKSUMS:
   flutter_app_badger: 65de4d6f0c34a891df49e6cfb8a1c0496426fa68
   flutter_branch_sdk: e65cb8871bf27c1b4de86b560764314a0b3e1192
   flutter_facebook_login: cfb5659f686b1c575ef205c6b6fd20db9679d3c4
+  flutter_image_compress: 082f8daaf6c1b0c9fe798251c750ef0ecd98d7ae
   flutter_inappwebview: 69dfbac46157b336ffbec19ca6dfd4638c7bf189
   flutter_local_notifications: 9e4738ce2471c5af910d961a6b7eadcf57c50186
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
@@ -342,7 +380,9 @@ SPEC CHECKSUMS:
   intercom_flutter: 8b168f7cad88366708aa1972a395e6195205fc3a
   libphonenumber: bd14d5abfc5939ab0b0767234e2d8e2593af258e
   libPhoneNumber-iOS: 0a32a9525cf8744fe02c5206eb30d571e38f7d75
+  libwebp: e90b9c01d99205d03b6bb8f2c8c415e5a4ef66f0
   location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
+  Mantle: 4c0ed6ce47c96eccc4dc3bb071deb3def0e2c3be
   multi_image_picker: 58577ab96d99b35c82d626db7d81906d14c2b667
   nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
   OneSignal: fd223b247d46e0aa97c7712f3e031c29798d018a
@@ -351,6 +391,10 @@ SPEC CHECKSUMS:
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   permission_handler: eac8e15b4a1a3fba55b761d19f3f4e6b005d15b6
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
+  SDWebImage: 7acbb57630ac7db4a495547fb73916ff3e432f6b
+  SDWebImageWebPCoder: bbf46e29fb8d1980a78ad3d5e9b4123c77f10ebc
+  Sentry: 9d055e2de30a77685e86b219acf02e59b82091fc
+  sentry_flutter: 8b2b2e1c0101ef562106b5d272d3c0c741512c01
   share: 0b2c3e82132f5888bccca3351c504d0003b3b410
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904

@@ -3355,8 +3355,6 @@ class _ProfilePageState extends State<ProfilePage>
             profilepicture = profilepic;
             username = usernam;
           });
-
-          await OneSignal.shared.setEmail(email: email);
         } else {
           if (mounted)
             setState(() {

@@ -280,6 +280,12 @@ class _OrderBuyerPageState extends State<OrderBuyerPage> {
       comple = jsonbody['sellerreviewed'];
     }
 
+    var sz;
+    if (jsonbody['ordersize'] == 'nosize') {
+      sz = '';
+    } else {
+      sz = jsonbody['ordersize'];
+    }
     setState(() {
       itemprice = jsonbody['totalpayable'];
       totalpaid = jsonbody['totalpayable'];
@@ -289,6 +295,8 @@ class _OrderBuyerPageState extends State<OrderBuyerPage> {
       trackingnumber = track;
       completed = comple;
       delivered = deliver;
+      size = sz;
+      quantity = jsonbody['orderquantity'];
       deliverystage = delstage;
       buyerid = jsonbody['senderid'];
       buyername = jsonbody['buyername'];
@@ -300,6 +308,9 @@ class _OrderBuyerPageState extends State<OrderBuyerPage> {
       country = jsonbody['deliveryaddress']['country'];
     });
   }
+
+  var quantity;
+  var size;
 
   var time = 0;
   checktransactioncompletedloop() async {

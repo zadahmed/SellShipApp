@@ -826,7 +826,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
     if (mounted) {
       setState(() {
         skip = 0;
-        limit = 50;
+        limit = 10;
         loading = true;
         notifbadge = false;
         notbadge = false;
@@ -839,7 +839,6 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
     readstorage();
     foryou();
     getsellerrecommendation();
-    foryoupagescroll();
   }
 
   bool foryouloading = true;
@@ -1458,78 +1457,6 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                   return getsellerrecommendation();
                 },
                 slivers: <Widget>[
-                  SliverStaggeredGrid.countBuilder(
-                    crossAxisCount: 2,
-                    itemCount: foryoulist.length,
-                    staggeredTileBuilder: (int index) =>
-                        new StaggeredTile.fit(1),
-                    mainAxisSpacing: 4.0,
-                    crossAxisSpacing: 4.0,
-                    itemBuilder: (BuildContext context, index) {
-                      return InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                                builder: (context) => Details(
-                                    item: foryoulist[index],
-                                    itemid: foryoulist[index].itemid,
-                                    image: foryoulist[index].image,
-                                    name: foryoulist[index].name,
-                                    sold: foryoulist[index].sold,
-                                    source: 'foryou')),
-                          );
-                        },
-                        child: Stack(children: <Widget>[
-                          Container(
-                            height: 150,
-                            width: MediaQuery.of(context).size.width,
-                            child: ClipRRect(
-                              child: Hero(
-                                tag: 'foryou${foryoulist[index].itemid}',
-                                child: CachedNetworkImage(
-                                  height: 200,
-                                  width: 300,
-                                  fadeInDuration: Duration(microseconds: 5),
-                                  imageUrl: foryoulist[index].image.isEmpty
-                                      ? SpinKitDoubleBounce(
-                                          color: Colors.deepOrange)
-                                      : foryoulist[index].image,
-                                  fit: BoxFit.cover,
-                                  placeholder: (context, url) =>
-                                      SpinKitDoubleBounce(
-                                          color: Colors.deepOrange),
-                                  errorWidget: (context, url, error) =>
-                                      Icon(Icons.error),
-                                ),
-                              ),
-                            ),
-                          ),
-                          foryoulist[index].sold == true
-                              ? Align(
-                                  alignment: Alignment.center,
-                                  child: Container(
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      color: Colors.black.withOpacity(0.4),
-                                    ),
-                                    width: 210,
-                                    child: Center(
-                                      child: Text(
-                                        'Sold',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontFamily: 'Helvetica',
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  ))
-                              : Container(),
-                        ]),
-                      );
-                    },
-                  ),
                   SliverToBoxAdapter(
                     child: Padding(
                       padding: EdgeInsets.only(top: 10),
@@ -1730,90 +1657,85 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                           )),
                     ),
                   ),
-                  foryouscroll.isNotEmpty
-                      ? SliverStaggeredGrid.countBuilder(
-                          crossAxisCount: 2,
-                          itemCount: foryouscroll.length,
-                          staggeredTileBuilder: (int index) =>
-                              new StaggeredTile.fit(1),
-                          mainAxisSpacing: 4.0,
-                          crossAxisSpacing: 4.0,
-                          itemBuilder: (BuildContext context, index) {
-                            return InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  CupertinoPageRoute(
-                                      builder: (context) => Details(
-                                          itemid: foryouscroll[index].itemid,
-                                          image: foryouscroll[index].image,
-                                          name: foryouscroll[index].name,
-                                          sold: foryouscroll[index].sold,
-                                          source: 'foryouscroll')),
-                                );
-                              },
-                              child: Stack(children: <Widget>[
-                                Container(
-                                  height: 150,
-                                  width: MediaQuery.of(context).size.width,
-                                  child: ClipRRect(
-                                    child: Hero(
-                                      tag:
-                                          'foryouscroll${foryouscroll[index].itemid}',
-                                      child: CachedNetworkImage(
-                                        height: 200,
-                                        width: 300,
-                                        fadeInDuration:
-                                            Duration(microseconds: 5),
-                                        imageUrl:
-                                            foryouscroll[index].image.isEmpty
-                                                ? SpinKitDoubleBounce(
-                                                    color: Colors.deepOrange)
-                                                : foryouscroll[index].image,
-                                        fit: BoxFit.cover,
-                                        placeholder: (context, url) =>
-                                            SpinKitDoubleBounce(
-                                                color: Colors.deepOrange),
-                                        errorWidget: (context, url, error) =>
-                                            Icon(Icons.error),
+                  SliverStaggeredGrid.countBuilder(
+                    crossAxisCount: 2,
+                    itemCount: foryoulist.length,
+                    staggeredTileBuilder: (int index) =>
+                        new StaggeredTile.fit(1),
+                    mainAxisSpacing: 4.0,
+                    crossAxisSpacing: 4.0,
+                    itemBuilder: (BuildContext context, index) {
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                                builder: (context) => Details(
+                                    item: foryoulist[index],
+                                    itemid: foryoulist[index].itemid,
+                                    image: foryoulist[index].image,
+                                    name: foryoulist[index].name,
+                                    sold: foryoulist[index].sold,
+                                    source: 'foryou')),
+                          );
+                        },
+                        child: Stack(children: <Widget>[
+                          Container(
+                            height: 150,
+                            width: MediaQuery.of(context).size.width,
+                            child: ClipRRect(
+                              child: Hero(
+                                tag: 'foryou${foryoulist[index].itemid}',
+                                child: CachedNetworkImage(
+                                  height: 200,
+                                  width: 300,
+                                  fadeInDuration: Duration(microseconds: 5),
+                                  imageUrl: foryoulist[index].image.isEmpty
+                                      ? SpinKitDoubleBounce(
+                                          color: Colors.deepOrange)
+                                      : foryoulist[index].image,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) =>
+                                      SpinKitDoubleBounce(
+                                          color: Colors.deepOrange),
+                                  errorWidget: (context, url, error) =>
+                                      Icon(Icons.error),
+                                ),
+                              ),
+                            ),
+                          ),
+                          foryoulist[index].sold == true
+                              ? Align(
+                                  alignment: Alignment.center,
+                                  child: Container(
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      color: Colors.black.withOpacity(0.4),
+                                    ),
+                                    width: 210,
+                                    child: Center(
+                                      child: Text(
+                                        'Sold',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                                foryouscroll[index].sold == true
-                                    ? Align(
-                                        alignment: Alignment.center,
-                                        child: Container(
-                                          height: 50,
-                                          decoration: BoxDecoration(
-                                            color:
-                                                Colors.black.withOpacity(0.4),
-                                          ),
-                                          width: 210,
-                                          child: Center(
-                                            child: Text(
-                                              'Sold',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ))
-                                    : Container(),
-                              ]),
-                            );
-                          },
-                        )
-                      : SliverToBoxAdapter(child: Container())
+                                  ))
+                              : Container(),
+                        ]),
+                      );
+                    },
+                  ),
                 ],
                 onLoad: () {
                   setState(() {
-                    foryouskip = foryouskip + 30;
-                    foryoulimit = foryoulimit + 30;
+                    skip = skip + 10;
+                    limit = limit + 10;
                   });
-                  return foryoupagescroll();
+                  return foryou();
                 },
               )
         : Container(
@@ -1865,44 +1787,38 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
 
   foryou() async {
     var userid = await storage.read(key: 'userid');
-    List<Item> testforoyou = List<Item>();
-    var url = 'https://api.sellship.co/api/foryou/feed/' + userid + '/0/10';
+    var url = 'https://api.sellship.co/api/foryou/feed/' +
+        userid +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
 
     final response = await http.get(url);
     if (response.statusCode == 200) {
-      print(response.body);
       var jsonbody = json.decode(response.body);
-      if (jsonbody.isEmpty) {
-        if (mounted)
-          setState(() {
-            testforoyou = [];
-            foryouloading = false;
-          });
-      } else {
-        var jsonbody = json.decode(response.body);
 
-        for (var i = 0; i < jsonbody.length; i++) {
-          Item item = Item(
-            itemid: jsonbody[i]['_id']['\$oid'],
-            image: jsonbody[i]['image'],
-            name: jsonbody[i]['name'],
-            sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
-          );
-          testforoyou.add(item);
-        }
-        if (mounted)
-          setState(() {
-            alive = true;
-            foryouloading = false;
-            foryoulist = testforoyou.toSet().toList();
-          });
+      for (var i = 0; i < jsonbody.length; i++) {
+        Item item = Item(
+          itemid: jsonbody[i]['_id']['\$oid'],
+          image: jsonbody[i]['image'],
+          name: jsonbody[i]['name'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+        );
+        foryoulist.add(item);
       }
+      if (mounted)
+        setState(() {
+          alive = true;
+          foryouloading = false;
+          foryoulist = foryoulist.toSet().toList();
+        });
     } else {
       print(response.statusCode);
     }
   }
 
-  int foryouskip = 10;
+  int foryouskip = 0;
   int foryoulimit = 40;
 
   foryoupagescroll() async {
@@ -1919,12 +1835,10 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
       print(response.body);
       var jsonbody = json.decode(response.body);
       if (jsonbody.isEmpty) {
-        if (foryouskip == 10) {
-          if (mounted)
-            setState(() {
-              foryouscroll = [];
-            });
-        }
+        if (mounted)
+          setState(() {
+            foryouscroll = [];
+          });
       } else {
         var jsonbody = json.decode(response.body);
 

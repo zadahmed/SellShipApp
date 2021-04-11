@@ -108,23 +108,31 @@ class _DiscoverState extends State<Discover>
 
             Iterable inReverse = ites.reversed;
             List<String> jsoninreverse = inReverse.toList();
-            setState(() {
-              favourites = jsoninreverse;
-            });
+            if (mounted) {
+              setState(() {
+                favourites = jsoninreverse;
+              });
+            }
           } else {
+            if (mounted) {
+              setState(() {
+                favourites = [];
+              });
+            }
+          }
+        } else {
+          if (mounted) {
             setState(() {
               favourites = [];
             });
           }
-        } else {
+        }
+      } else {
+        if (mounted) {
           setState(() {
             favourites = [];
           });
         }
-      } else {
-        setState(() {
-          favourites = [];
-        });
       }
       print(favourites);
     }
@@ -170,13 +178,17 @@ class _DiscoverState extends State<Discover>
       below100list.add(item);
     }
     if (below100list != null) {
-      setState(() {
-        below100list = below100list;
-      });
+      if (mounted) {
+        setState(() {
+          below100list = below100list;
+        });
+      }
     } else {
-      setState(() {
-        below100list = [];
-      });
+      if (mounted) {
+        setState(() {
+          below100list = [];
+        });
+      }
     }
 
     return below100list;
@@ -221,15 +233,19 @@ class _DiscoverState extends State<Discover>
         itemsgrid.add(item);
       }
       if (itemsgrid != null) {
-        setState(() {
-          itemsgrid = itemsgrid;
-          loading = false;
-        });
+        if (mounted) {
+          setState(() {
+            itemsgrid = itemsgrid;
+            loading = false;
+          });
+        }
       } else {
-        setState(() {
-          itemsgrid = [];
-          loading = false;
-        });
+        if (mounted) {
+          setState(() {
+            itemsgrid = [];
+            loading = false;
+          });
+        }
       }
 
       return itemsgrid;
@@ -276,15 +292,19 @@ class _DiscoverState extends State<Discover>
         itemsgrid.add(item);
       }
       if (itemsgrid != null) {
-        setState(() {
-          itemsgrid = itemsgrid;
-          loading = false;
-        });
+        if (mounted) {
+          setState(() {
+            itemsgrid = itemsgrid;
+            loading = false;
+          });
+        }
       } else {
-        setState(() {
-          itemsgrid = [];
-          loading = false;
-        });
+        if (mounted) {
+          setState(() {
+            itemsgrid = [];
+            loading = false;
+          });
+        }
       }
 
       return itemsgrid;
@@ -330,15 +350,19 @@ class _DiscoverState extends State<Discover>
         itemsgrid.add(item);
       }
       if (itemsgrid != null) {
-        setState(() {
-          itemsgrid = itemsgrid;
-          loading = false;
-        });
+        if (mounted) {
+          setState(() {
+            itemsgrid = itemsgrid;
+            loading = false;
+          });
+        }
       } else {
-        setState(() {
-          itemsgrid = [];
-          loading = false;
-        });
+        if (mounted) {
+          setState(() {
+            itemsgrid = [];
+            loading = false;
+          });
+        }
       }
 
       return itemsgrid;
@@ -845,12 +869,13 @@ class _DiscoverState extends State<Discover>
 
       await storage.write(
           key: 'longitude', value: location.longitude.toString());
-      setState(() {
-        position =
-            LatLng(location.latitude.toDouble(), location.longitude.toDouble());
-        getcity();
-      });
-
+      if (mounted) {
+        setState(() {
+          position = LatLng(
+              location.latitude.toDouble(), location.longitude.toDouble());
+          getcity();
+        });
+      }
       List<Placemark> placemarks = await placemarkFromCoordinates(
           position.latitude, position.longitude,
           localeIdentifier: 'en');
@@ -863,17 +888,21 @@ class _DiscoverState extends State<Discover>
       });
       await storage.write(key: 'city', value: cit);
       await storage.write(key: 'locationcountry', value: countr);
-      setState(() {
-        city = cit;
-        locationcountry = countr;
-      });
+      if (mounted) {
+        setState(() {
+          city = cit;
+          locationcountry = countr;
+        });
+      }
       fetchnearme(skip, limit);
     } on Exception catch (e) {
       print(e);
       Location.Location().requestPermission();
-      setState(() {
-        loading = false;
-      });
+      if (mounted) {
+        setState(() {
+          loading = false;
+        });
+      }
     }
   }
 
@@ -899,11 +928,12 @@ class _DiscoverState extends State<Discover>
     var countr = place.country;
     await storage.write(key: 'city', value: cit);
     await storage.write(key: 'locationcountry', value: countr);
-
-    setState(() {
-      city = cit;
-      locationcountry = countr;
-    });
+    if (mounted) {
+      setState(() {
+        city = cit;
+        locationcountry = countr;
+      });
+    }
   }
 
   String city;
@@ -924,16 +954,20 @@ class _DiscoverState extends State<Discover>
         var notif = notificationinfo['notification'];
         var notcoun = notificationinfo['notcount'];
         if (notif <= 0) {
-          setState(() {
-            notifcount = notif;
-            notifbadge = false;
-          });
+          if (mounted) {
+            setState(() {
+              notifcount = notif;
+              notifbadge = false;
+            });
+          }
           FlutterAppBadger.removeBadge();
         } else if (notif > 0) {
-          setState(() {
-            notifcount = notif;
-            notifbadge = true;
-          });
+          if (mounted) {
+            setState(() {
+              notifcount = notif;
+              notifbadge = true;
+            });
+          }
         }
 
         print(notifcount);
@@ -3197,9 +3231,11 @@ class _DiscoverState extends State<Discover>
       nearmeItems.add(item);
     }
 
-    setState(() {
-      nearmeItems = nearmeItems;
-    });
+    if (mounted) {
+      setState(() {
+        nearmeItems = nearmeItems;
+      });
+    }
 
     return nearmeItems;
   }
@@ -3220,9 +3256,11 @@ class _DiscoverState extends State<Discover>
       for (int i = 0; i < categoryrespons.length; i++) {
         brands.add(categoryrespons[i]);
       }
-      setState(() {
-        brands = brands;
-      });
+      if (mounted) {
+        setState(() {
+          brands = brands;
+        });
+      }
     } else {
       print(categoryresponse.statusCode);
     }

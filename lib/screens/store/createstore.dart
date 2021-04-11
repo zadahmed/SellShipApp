@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:SellShip/screens/store/createlayout.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:permission_handler/permission_handler.dart' as Permission;
@@ -21,7 +22,6 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 class CreateStore extends StatefulWidget {
   final String userid;
   final String storename;
-  final String username;
   final String storetype;
   final String category;
   final String storeusername;
@@ -35,7 +35,6 @@ class CreateStore extends StatefulWidget {
     this.storeusername,
     this.storetype,
     this.category,
-    this.username,
   }) : super(key: key);
 
   @override
@@ -348,7 +347,6 @@ class _CreateStoreState extends State<CreateStore> {
                                     MaterialPageRoute(
                                       builder: (context) => CreateLayout(
                                         userid: widget.userid,
-                                        username: widget.username,
                                         storename: widget.storename,
                                         storelogo: _image,
                                         storecategory: widget.category,
@@ -372,7 +370,6 @@ class _CreateStoreState extends State<CreateStore> {
                                     MaterialPageRoute(
                                       builder: (context) => CreateLayout(
                                         userid: widget.userid,
-                                        username: widget.username,
                                         storetype: widget.storetype,
                                         storename: widget.storename,
                                         storelogo: _image,

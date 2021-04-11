@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/screens/comments.dart';
+import 'package:SellShip/screens/filterpage.dart';
 import 'package:SellShip/screens/orderbuyer.dart';
 import 'package:SellShip/screens/orderbuyeruae.dart';
 import 'package:SellShip/screens/orderseller.dart';
@@ -254,24 +255,70 @@ class RecentlyAddedState extends State<RecentlyAdded> {
 
   ScrollController _scrollController = ScrollController();
 
+  Route _createRoute() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => FilterPage(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var begin = Offset(0.0, 1.0);
+        var end = Offset.zero;
+        var curve = Curves.ease;
+
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: InkWell(
+        enableFeedback: true,
+        onTap: () {
+          Navigator.of(context).push(_createRoute());
+        },
+        child: Container(
+            width: 100,
+            height: 40,
+            decoration: BoxDecoration(boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                offset: Offset(0.0, 2.0), //(x,y)
+                blurRadius: 4.0,
+              ),
+            ], color: Colors.white, borderRadius: BorderRadius.circular(25)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Feather.sliders,
+                  size: 18,
+                  color: Colors.black,
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Text(
+                  'Filter',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Helvetica',
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            )),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       backgroundColor: Colors.white,
       body: loading == false ? home(context) : loadingwidget(context),
-      floatingActionButton: showfloatingbutton == true
-          ? FloatingActionButton(
-              backgroundColor: Colors.white,
-              child: Icon(
-                Icons.keyboard_arrow_up,
-                color: Colors.deepPurpleAccent,
-              ),
-              onPressed: () {
-                _scrollController.animateTo(0,
-                    duration: Duration(milliseconds: 100), curve: Curves.ease);
-              },
-            )
-          : Container(),
     );
   }
 

@@ -5,6 +5,7 @@ import 'package:SellShip/main.dart';
 import 'package:SellShip/screens/balance.dart';
 import 'package:SellShip/screens/changecountry.dart';
 import 'package:SellShip/screens/favourites.dart';
+import 'package:SellShip/screens/helpcentre.dart';
 import 'package:SellShip/screens/myitems.dart';
 import 'package:SellShip/screens/onboardinginterests.dart';
 import 'package:SellShip/screens/privacypolicy.dart';
@@ -325,43 +326,33 @@ class _SettingsState extends State<Settings> {
                 },
               ),
             ),
-            userid != null
-                ? Container(
-                    color: Colors.white,
-                    child: InkWell(
-                      onTap: () async {
-                        await Intercom.initialize(
-                          'z4m2b833',
-                          androidApiKey:
-                              'android_sdk-78eb7d5e9dd5f4b508ddeec4b3c54d7491676661',
-                          iosApiKey:
-                              'ios_sdk-2744ef1f27a14461bfda4cb07e8fc44364a38005',
-                        );
-                        await Intercom.registerIdentifiedUser(email: email);
-
-                        Intercom.displayMessenger();
-                      },
-                      child: ListTile(
-                        leading: Icon(
-                          Icons.help_outline,
-                          color: Colors.deepOrange,
-                        ),
-                        trailing: Icon(
-                          Icons.chevron_right,
-                          size: 16,
-                          color: Colors.deepOrange,
-                        ),
-                        title: Text(
-                          'Help & Support',
-                          style: TextStyle(
-                            fontFamily: 'Helvetica',
-                            fontSize: 16,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    ))
-                : Container(),
+            Container(
+              color: Colors.white,
+              child: ListTile(
+                leading: Icon(
+                  Feather.file_text,
+                  color: Colors.deepOrange,
+                ),
+                trailing: Icon(
+                  Icons.chevron_right,
+                  size: 16,
+                  color: Colors.deepOrange,
+                ),
+                title: Text(
+                  'FAQ & Help Centre',
+                  style: TextStyle(
+                    fontFamily: 'Helvetica',
+                    fontSize: 16.0,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HelpCentre()),
+                  );
+                },
+              ),
+            ),
             Divider(
               color: Colors.grey,
               thickness: 0.1,
@@ -539,6 +530,43 @@ class _SettingsState extends State<Settings> {
                 ),
               ),
             ),
+            userid != null
+                ? Container(
+                    color: Colors.white,
+                    child: InkWell(
+                      onTap: () async {
+                        await Intercom.initialize(
+                          'z4m2b833',
+                          androidApiKey:
+                              'android_sdk-78eb7d5e9dd5f4b508ddeec4b3c54d7491676661',
+                          iosApiKey:
+                              'ios_sdk-2744ef1f27a14461bfda4cb07e8fc44364a38005',
+                        );
+                        await Intercom.registerIdentifiedUser(email: email);
+
+                        Intercom.displayMessenger();
+                      },
+                      child: ListTile(
+                        leading: Icon(
+                          Icons.help_outline,
+                          color: Colors.deepOrange,
+                        ),
+                        trailing: Icon(
+                          Icons.chevron_right,
+                          size: 16,
+                          color: Colors.deepOrange,
+                        ),
+                        title: Text(
+                          'Contact Support',
+                          style: TextStyle(
+                            fontFamily: 'Helvetica',
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ))
+                : Container(),
             Container(
               color: Colors.white,
               child: ListTile(

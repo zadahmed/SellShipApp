@@ -94,9 +94,13 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
       for (int i = 0; i < cartitems.length; i++) {
         var decodeditem = json.decode(cartitems[i]);
 
-        print(decodeditem);
         Item newItem = Item(
             name: decodeditem['name'],
+            selectedsize: decodeditem['selectedsize'] == null
+                ? 'nosize'
+                : decodeditem['selectedsize'],
+            quantity:
+                decodeditem['quantity'] == null ? 1 : decodeditem['quantity'],
             itemid: decodeditem['itemid'],
             price: decodeditem['price'].toString(),
             image: decodeditem['image'],
@@ -104,7 +108,8 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
             username: decodeditem['sellername']);
 
         subtotal = double.parse(widget.offer);
-        print(newItem.itemid);
+        print(newItem.selectedsize);
+        print(newItem.quantity);
 
         listitems.add(newItem);
       }
@@ -534,7 +539,10 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
                             color: Colors.black45,
                           ),
                         ),
-                        Text(currency + ' ' + subtotal.toString(),
+                        Text(
+                            currency != null
+                                ? currency + ' ' + subtotal.toString()
+                                : '',
                             style: TextStyle(
                               fontWeight: FontWeight.w900,
                               fontSize: 20,
@@ -555,7 +563,7 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
                           } else {
                             showDialog(
                                 context: context,
-                                barrierDismissible: false,
+                                barrierDismissible: true,
                                 useRootNavigator: false,
                                 builder: (_) => Container(
                                     height: 50,
@@ -589,10 +597,10 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
                             var returnurl;
                             if (widget.ordertype == 'EXISTING') {
                               returnurl =
-                                  'https://api.sellship.co/api/payment/EXISTING/${messageid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${subtotal}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}';
+                                  'https://api.sellship.co/api/payment/EXISTING/${messageid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${subtotal}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}/${listitems[0].quantity}/${listitems[0].selectedsize}';
                             } else {
                               returnurl =
-                                  'https://api.sellship.co/api/payment/NEW/${messageid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${subtotal}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}';
+                                  'https://api.sellship.co/api/payment/NEW/${messageid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${subtotal}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}/${listitems[0].quantity}/${listitems[0].selectedsize}';
                             }
 
                             Map<String, Object> body = {
@@ -613,25 +621,25 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
                               },
                             };
 
-                            var url =
-                                "https://api-stg.noonpayments.com/payment/v1/order";
-
-                            var key =
-                                "SellShip.SellShipApp:7d016fdd70a64b68bc99d2cece27b48d";
-                            List encodedText = utf8.encode(key);
-                            String base64Str = base64Encode(encodedText);
-                            print('Key_Test $base64Str');
-
                             // var url =
-                            //     "https://api.noonpayments.com/payment/v1/order";
+                            //     "https://api-stg.noonpayments.com/payment/v1/order";
                             //
                             // var key =
-                            //     "SellShip.SellShipApp:a42e7bc936354e9c807c0ff02670ab37";
+                            //     "SellShip.SellShipApp:7d016fdd70a64b68bc99d2cece27b48d";
                             // List encodedText = utf8.encode(key);
                             // String base64Str = base64Encode(encodedText);
-                            //
-                            //var heade = 'Key_Live $base64Str';
-                            var heade = 'Key_Test $base64Str';
+                            // print('Key_Test $base64Str');
+                            // var heade = 'Key_Test $base64Str';
+
+                            var url =
+                                "https://api.noonpayments.com/payment/v1/order";
+
+                            var key =
+                                "SellShip.SellShipApp:a42e7bc936354e9c807c0ff02670ab37";
+                            List encodedText = utf8.encode(key);
+                            String base64Str = base64Encode(encodedText);
+
+                            var heade = 'Key_Live $base64Str';
 
                             Map<String, String> headers = {
                               'Authorization': heade,
@@ -644,6 +652,7 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
                               body: json.encode(body),
                               headers: headers,
                             );
+                            print(response.body);
 
                             if (response.statusCode == 200) {
                               var jsonmessage = json.decode(response.body);

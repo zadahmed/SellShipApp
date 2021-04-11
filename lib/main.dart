@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/screens/details.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'providers/itemProvider.dart';
 import 'providers/userProvider.dart';
@@ -28,7 +30,17 @@ void main() async {
   OneSignal.shared
       .setInFocusDisplayType(OSNotificationDisplayType.notification);
 
-  runApp(MyApp());
+  await SentryFlutter.init(
+    (options) {
+      options.dsn =
+          'https://c71fb642da6d4c138ddf0148d297f5ca@o568777.ingest.sentry.io/5714098';
+    },
+    appRunner: () => runApp(MyApp()),
+  );
+  await Sentry.captureException(
+    IOException,
+    stackTrace: StackTrace.fromString('Stack'),
+  );
 }
 
 class MyApp extends StatefulWidget {

@@ -190,7 +190,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                 decoration: BoxDecoration(
                                     border: Border.all(
                                         color: Colors.black.withOpacity(0.2)),
-                                    borderRadius: BorderRadius.circular(15),
+                                    borderRadius: BorderRadius.circular(5),
                                     color: Colors.white),
                                 height: 40,
                                 width:
@@ -229,7 +229,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                 decoration: BoxDecoration(
                                     border: Border.all(
                                         color: Colors.black.withOpacity(0.2)),
-                                    borderRadius: BorderRadius.circular(15),
+                                    borderRadius: BorderRadius.circular(5),
                                     color: Colors.white),
                                 height: 40,
                                 width:
@@ -359,7 +359,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                       decoration: BoxDecoration(
                           border:
                               Border.all(color: Colors.black.withOpacity(0.2)),
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(5),
                           color: Colors.white),
                       height: 40,
                       width: MediaQuery.of(context).size.width,

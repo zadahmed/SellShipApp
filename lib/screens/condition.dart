@@ -730,25 +730,43 @@ class _ConditionState extends State<Condition> {
         key: scaffoldState,
         backgroundColor: Colors.white,
         floatingActionButton: InkWell(
+          enableFeedback: true,
           onTap: () {
             Navigator.of(context).push(_createRoute());
           },
           child: Container(
-            width: 80,
-            height: 40,
-            decoration: BoxDecoration(boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                offset: Offset(0.0, 2.0), //(x,y)
-                blurRadius: 4.0,
-              ),
-            ], color: Colors.white, borderRadius: BorderRadius.circular(25)),
-            child: Icon(
-              Feather.sliders,
-              size: 18,
-              color: Colors.deepOrange,
-            ),
-          ),
+              width: 100,
+              height: 40,
+              decoration: BoxDecoration(boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  offset: Offset(0.0, 2.0), //(x,y)
+                  blurRadius: 4.0,
+                ),
+              ], color: Colors.white, borderRadius: BorderRadius.circular(25)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Feather.sliders,
+                    size: 18,
+                    color: Colors.black,
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    'Filter',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Helvetica',
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+              )),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         body: DefaultTabController(

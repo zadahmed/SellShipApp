@@ -11,7 +11,7 @@ class Item {
   final String price;
   final String userid;
   final String username;
-  final List<dynamic> tags;
+  List tags;
   final String messageid;
   int likes;
   final int comments;
