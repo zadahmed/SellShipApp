@@ -152,13 +152,25 @@ class _AddItemState extends State<AddItem> {
           approved = jsonbody[i]['approved'];
         }
 
+        var loca;
+        if (jsonbody[i].containsKey('storelocation')) {
+          loca = [24.4043863, 54.5293394];
+        } else {
+          loca = jsonbody[i]['storelocation'];
+        }
+
+
+
         Stores store = Stores(
             approved: approved,
             storeid: jsonbody[i]['_id']['\$oid'],
             storetype: jsonbody[i]['storetype'],
+            storelocation: loca,
             storecategory: jsonbody[i]['storecategory'],
             storelogo: jsonbody[i]['storelogo'],
             storename: jsonbody[i]['storename']);
+
+        print(loca);
 
         ites.add(store);
       }
@@ -196,7 +208,7 @@ class _AddItemState extends State<AddItem> {
   List<Stores> storeslist = List<Stores>();
 
   getuser() async {
-    // await storage.delete(key: 'storeid');
+
     var countr = await storage.read(key: 'country');
 
     if (countr.trim().toLowerCase() == 'united arab emirates') {
@@ -220,60 +232,60 @@ class _AddItemState extends State<AddItem> {
     setState(() {
       userid = userid;
     });
-    Location.Location _location = new Location.Location();
-
-    bool _serviceEnabled;
-    Location.PermissionStatus _permissionGranted;
-
-    _serviceEnabled = await _location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await _location.requestService();
-      if (!_serviceEnabled) {
-        return;
-      }
-    }
-
-    _permissionGranted = await _location.hasPermission();
-    if (_permissionGranted == Location.PermissionStatus.denied) {
-      setState(() {
-        loading = false;
-        position = LatLng(25.2048, 55.2708);
-      });
-      showDialog(
-          context: context,
-          barrierDismissible: false,
-          useRootNavigator: false,
-          builder: (_) => AssetGiffyDialog(
-                image: Image.asset(
-                  'assets/oops.gif',
-                  fit: BoxFit.cover,
-                ),
-                title: Text(
-                  'Turn on Location Services!',
-                  style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600),
-                ),
-                description: Text(
-                  'You need to provide access to your location in order to Add an Item within your community',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(),
-                ),
-                onlyOkButton: true,
-                entryAnimation: EntryAnimation.DEFAULT,
-                onOkButtonPressed: () async {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                  AppSettings.openLocationSettings();
-                },
-              ));
-    } else if (_permissionGranted == Location.PermissionStatus.granted) {
-      var location = await _location.getLocation();
-      var positio =
-          LatLng(location.latitude.toDouble(), location.longitude.toDouble());
-
-      setState(() {
-        position = positio;
-      });
-    }
+    // Location.Location _location = new Location.Location();
+    //
+    // bool _serviceEnabled;
+    // Location.PermissionStatus _permissionGranted;
+    //
+    // _serviceEnabled = await _location.serviceEnabled();
+    // if (!_serviceEnabled) {
+    //   _serviceEnabled = await _location.requestService();
+    //   if (!_serviceEnabled) {
+    //     return;
+    //   }
+    // }
+    //
+    // _permissionGranted = await _location.hasPermission();
+    // if (_permissionGranted == Location.PermissionStatus.denied) {
+    //   setState(() {
+    //     loading = false;
+    //     position = LatLng(25.2048, 55.2708);
+    //   });
+    //   showDialog(
+    //       context: context,
+    //       barrierDismissible: false,
+    //       useRootNavigator: false,
+    //       builder: (_) => AssetGiffyDialog(
+    //             image: Image.asset(
+    //               'assets/oops.gif',
+    //               fit: BoxFit.cover,
+    //             ),
+    //             title: Text(
+    //               'Turn on Location Services!',
+    //               style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600),
+    //             ),
+    //             description: Text(
+    //               'You need to provide access to your location in order to Add an Item within your community',
+    //               textAlign: TextAlign.center,
+    //               style: TextStyle(),
+    //             ),
+    //             onlyOkButton: true,
+    //             entryAnimation: EntryAnimation.DEFAULT,
+    //             onOkButtonPressed: () async {
+    //               Navigator.pop(context);
+    //               Navigator.pop(context);
+    //               AppSettings.openLocationSettings();
+    //             },
+    //           ));
+    // } else if (_permissionGranted == Location.PermissionStatus.granted) {
+    //   var location = await _location.getLocation();
+    //   var positio =
+    //       LatLng(location.latitude.toDouble(), location.longitude.toDouble());
+    //
+    //   setState(() {
+    //     position = positio;
+    //   });
+    // }
   }
 
   GlobalKey _toolTipKey = GlobalKey();
@@ -587,6 +599,10 @@ class _AddItemState extends State<AddItem> {
                                                 if (newValue.approved == true &&
                                                     newValue.storeid !=
                                                         'createastore') {
+                                                  if(newValue.storelocation == null){
+                                                    newValue.storelocation = [25.2048, 55.2708];
+                                                  }
+
                                                   setState(() {
                                                     _selectedStore = newValue;
                                                   });
@@ -3224,137 +3240,137 @@ class _AddItemState extends State<AddItem> {
                                               ))
                                           : Container()
                                       : Container(),
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                      left: 15,
-                                      top: 15,
-                                      bottom: 10,
-                                    ),
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        'Location',
-                                        style: TextStyle(
-                                            fontFamily: 'Helvetica',
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w700),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 15,
-                                        bottom: 5,
-                                        top: 10,
-                                        right: 15),
-                                    child: Container(
-                                        padding: EdgeInsets.all(10),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(15)),
-                                        ),
-                                        child: ListTile(
-                                            onTap: () async {
-                                              final locationdetails =
-                                                  await Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        AddLocation()),
-                                              );
-                                              print(locationdetails);
-
-                                              setState(() {
-                                                percentindictor = 1;
-                                                city = locationdetails['city'];
-                                                country =
-                                                    locationdetails['country'];
-                                                _lastMapPosition =
-                                                    locationdetails[
-                                                        'lastmapposition'];
-
-                                                locdetials =
-                                                    country + ' > ' + city;
-                                              });
-                                            },
-                                            title: locdetials == null
-                                                ? Container(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width /
-                                                            2,
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      children: <Widget>[
-                                                        Text(
-                                                          'Choose your Location',
-                                                          textAlign:
-                                                              TextAlign.right,
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'Helvetica',
-                                                              fontSize: 16,
-                                                              color: Colors
-                                                                  .deepPurple),
-                                                        ),
-                                                        Icon(
-                                                            Icons
-                                                                .keyboard_arrow_right,
-                                                            color: Colors
-                                                                .deepPurple)
-                                                      ],
-                                                    ))
-                                                : Container(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                    .size
-                                                                    .width /
-                                                                2 +
-                                                            50,
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      children: <Widget>[
-                                                        Container(
-                                                          width: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width /
-                                                              2,
-                                                          child: Text(
-                                                            locdetials,
-                                                            textAlign:
-                                                                TextAlign.left,
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    'Helvetica',
-                                                                fontSize: 16,
-                                                                color: Colors
-                                                                    .deepPurple),
-                                                          ),
-                                                        ),
-                                                        Icon(
-                                                            Icons
-                                                                .keyboard_arrow_right,
-                                                            color: Colors
-                                                                .deepPurple)
-                                                      ],
-                                                    )))),
-                                  ),
-                                  SizedBox(
-                                    height: 10.0,
-                                  ),
+                            //       Padding(
+                            //         padding: EdgeInsets.only(
+                            //           left: 15,
+                            //           top: 15,
+                            //           bottom: 10,
+                            //         ),
+                            //         child: Align(
+                            //           alignment: Alignment.centerLeft,
+                            //           child: Text(
+                            //             'Location',
+                            //             style: TextStyle(
+                            //                 fontFamily: 'Helvetica',
+                            //                 fontSize: 20,
+                            //                 fontWeight: FontWeight.w700),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //       Padding(
+                            //         padding: EdgeInsets.only(
+                            //             left: 15,
+                            //             bottom: 5,
+                            //             top: 10,
+                            //             right: 15),
+                            //         child: Container(
+                            //             padding: EdgeInsets.all(10),
+                            //             decoration: BoxDecoration(
+                            //               color: Colors.white,
+                            //               borderRadius: BorderRadius.all(
+                            //                   Radius.circular(15)),
+                            //             ),
+                            //             child: ListTile(
+                            //                 onTap: () async {
+                            //                   final locationdetails =
+                            //                       await Navigator.push(
+                            //                     context,
+                            //                     MaterialPageRoute(
+                            //                         builder: (context) =>
+                            //                             AddLocation()),
+                            //                   );
+                            //                   print(locationdetails);
+                            //
+                            //                   setState(() {
+                            //                     percentindictor = 1;
+                            //                     city = locationdetails['city'];
+                            //                     country =
+                            //                         locationdetails['country'];
+                            //                     _lastMapPosition =
+                            //                         locationdetails[
+                            //                             'lastmapposition'];
+                            //
+                            //                     locdetials =
+                            //                         country + ' > ' + city;
+                            //                   });
+                            //                 },
+                            //                 title: locdetials == null
+                            //                     ? Container(
+                            //                         width:
+                            //                             MediaQuery.of(context)
+                            //                                     .size
+                            //                                     .width /
+                            //                                 2,
+                            //                         child: Row(
+                            //                           mainAxisAlignment:
+                            //                               MainAxisAlignment
+                            //                                   .spaceBetween,
+                            //                           crossAxisAlignment:
+                            //                               CrossAxisAlignment
+                            //                                   .center,
+                            //                           children: <Widget>[
+                            //                             Text(
+                            //                               'Choose your Location',
+                            //                               textAlign:
+                            //                                   TextAlign.right,
+                            //                               style: TextStyle(
+                            //                                   fontFamily:
+                            //                                       'Helvetica',
+                            //                                   fontSize: 16,
+                            //                                   color: Colors
+                            //                                       .deepPurple),
+                            //                             ),
+                            //                             Icon(
+                            //                                 Icons
+                            //                                     .keyboard_arrow_right,
+                            //                                 color: Colors
+                            //                                     .deepPurple)
+                            //                           ],
+                            //                         ))
+                            //                     : Container(
+                            //                         width:
+                            //                             MediaQuery.of(context)
+                            //                                         .size
+                            //                                         .width /
+                            //                                     2 +
+                            //                                 50,
+                            //                         child: Row(
+                            //                           mainAxisAlignment:
+                            //                               MainAxisAlignment
+                            //                                   .spaceBetween,
+                            //                           crossAxisAlignment:
+                            //                               CrossAxisAlignment
+                            //                                   .center,
+                            //                           children: <Widget>[
+                            //                             Container(
+                            //                               width: MediaQuery.of(
+                            //                                           context)
+                            //                                       .size
+                            //                                       .width /
+                            //                                   2,
+                            //                               child: Text(
+                            //                                 locdetials,
+                            //                                 textAlign:
+                            //                                     TextAlign.left,
+                            //                                 style: TextStyle(
+                            //                                     fontFamily:
+                            //                                         'Helvetica',
+                            //                                     fontSize: 16,
+                            //                                     color: Colors
+                            //                                         .deepPurple),
+                            //                               ),
+                            //                             ),
+                            //                             Icon(
+                            //                                 Icons
+                            //                                     .keyboard_arrow_right,
+                            //                                 color: Colors
+                            //                                     .deepPurple)
+                            //                           ],
+                            //                         )))),
+                            //       ),
+                            //       SizedBox(
+                            //         height: 10.0,
+                            //       ),
                                 ],
                               ),
                             ),
@@ -3363,6 +3379,9 @@ class _AddItemState extends State<AddItem> {
                                   ? Padding(
                                       child: InkWell(
                                         onTap: () async {
+
+                                          print(_selectedStore.storelocation);
+                                          print(_selectedStore.storelocation[0]);
                                           if (_selectedStore.storecategory !=
                                               'Secondhand Seller') {
                                             _selectedCondition = 'New';
@@ -3447,10 +3466,6 @@ class _AddItemState extends State<AddItem> {
                                           } else if (_selectedweight == -1) {
                                             showInSnackBar(
                                                 'Please choose the weight of your item');
-                                          } else if (city == null ||
-                                              country == null) {
-                                            showInSnackBar(
-                                                'Please choose the location of your item on the map!');
                                           } else {
                                             if (businessdescriptionController
                                                 .text.isEmpty) {
@@ -3834,14 +3849,13 @@ class _AddItemState extends State<AddItem> {
                                                   'buyerprotection':
                                                       buyerprotection,
                                                   'latitude':
-                                                      _lastMapPosition.latitude,
-                                                  'longitude': _lastMapPosition
-                                                      .longitude,
+                                                      _selectedStore.storelocation[1],
+                                                  'longitude':  _selectedStore.storelocation[0],
                                                   'description':
                                                       businessdescriptionController
                                                           .text,
-                                                  'city': city.trim(),
-                                                  'country': country.trim(),
+                                                  'city': 'Dubai',
+                                                  'country': 'United Arab Emirates',
                                                   'condition':
                                                       _selectedCondition,
                                                   'brand': bran,
@@ -3908,14 +3922,13 @@ class _AddItemState extends State<AddItem> {
                                                   'buyerprotection':
                                                       buyerprotection,
                                                   'latitude':
-                                                      _lastMapPosition.latitude,
-                                                  'longitude': _lastMapPosition
-                                                      .longitude,
+                                                  _selectedStore.storelocation[1],
+                                                  'longitude':  _selectedStore.storelocation[0],
                                                   'description':
-                                                      businessdescriptionController
-                                                          .text,
-                                                  'city': city.trim(),
-                                                  'country': country.trim(),
+                                                  businessdescriptionController
+                                                      .text,
+                                                  'city': 'Dubai',
+                                                  'country': 'United Arab Emirates',
                                                   'condition':
                                                       _selectedCondition,
                                                   'brand': bran,
@@ -3985,14 +3998,13 @@ class _AddItemState extends State<AddItem> {
                                                           ? ''
                                                           : _selectedsubsubCategory,
                                                   'latitude':
-                                                      _lastMapPosition.latitude,
-                                                  'longitude': _lastMapPosition
-                                                      .longitude,
+                                                  _selectedStore.storelocation[1],
+                                                  'longitude':  _selectedStore.storelocation[0],
                                                   'description':
-                                                      businessdescriptionController
-                                                          .text,
-                                                  'city': city.trim(),
-                                                  'country': country.trim(),
+                                                  businessdescriptionController
+                                                      .text,
+                                                  'city': 'Dubai',
+                                                  'country': 'United Arab Emirates',
                                                   'condition':
                                                       _selectedCondition,
                                                   'brand': bran,
@@ -4071,16 +4083,16 @@ class _AddItemState extends State<AddItem> {
                                                           ? ''
                                                           : _selectedsubsubCategory,
                                                   'latitude':
-                                                      _lastMapPosition.latitude,
-                                                  'longitude': _lastMapPosition
-                                                      .longitude,
+                                                  _selectedStore.storelocation[1],
+                                                  'longitude':  _selectedStore.storelocation[0],
+                                                  'description':
+                                                  businessdescriptionController
+                                                      .text,
+                                                  'city': 'Dubai',
+                                                  'country': 'United Arab Emirates',
                                                   'storetype':
                                                       _selectedStore.storetype,
-                                                  'description':
-                                                      businessdescriptionController
-                                                          .text,
-                                                  'city': city.trim(),
-                                                  'country': country.trim(),
+
                                                   'condition':
                                                       _selectedCondition,
                                                   'brand': bran,
@@ -4163,17 +4175,17 @@ class _AddItemState extends State<AddItem> {
                                                           ? ''
                                                           : _selectedsubsubCategory,
                                                   'latitude':
-                                                      _lastMapPosition.latitude,
-                                                  'longitude': _lastMapPosition
-                                                      .longitude,
+                                                  _selectedStore.storelocation[1],
+                                                  'longitude':  _selectedStore.storelocation[0],
                                                   'description':
-                                                      businessdescriptionController
-                                                          .text,
-                                                  'city': city.trim(),
+                                                  businessdescriptionController
+                                                      .text,
+                                                  'city': 'Dubai',
+                                                  'country': 'United Arab Emirates',
                                                   'tags': tags.isEmpty
                                                       ? []
                                                       : {tags},
-                                                  'country': country.trim(),
+
                                                   'condition':
                                                       _selectedCondition,
                                                   'brand': bran,
@@ -4265,14 +4277,13 @@ class _AddItemState extends State<AddItem> {
                                                           ? ''
                                                           : _selectedsubsubCategory,
                                                   'latitude':
-                                                      _lastMapPosition.latitude,
-                                                  'longitude': _lastMapPosition
-                                                      .longitude,
+                                                  _selectedStore.storelocation[1],
+                                                  'longitude':  _selectedStore.storelocation[0],
                                                   'description':
-                                                      businessdescriptionController
-                                                          .text,
-                                                  'city': city.trim(),
-                                                  'country': country.trim(),
+                                                  businessdescriptionController
+                                                      .text,
+                                                  'city': 'Dubai',
+                                                  'country': 'United Arab Emirates',
                                                   'condition':
                                                       _selectedCondition,
                                                   'brand': bran,

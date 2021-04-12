@@ -32,6 +32,7 @@ class CreateLayout extends StatefulWidget {
   final String storeaddress;
   final String storecity;
   final String storeusername;
+  List<double> storelocation;
   final String storedescription;
 
   CreateLayout(
@@ -40,6 +41,7 @@ class CreateLayout extends StatefulWidget {
       this.storename,
       this.storeusername,
       this.storedescription,
+      this.storelocation,
       this.storelogo,
       this.storetype,
       this.storeaddress,
@@ -545,6 +547,8 @@ class _CreateLayoutState extends State<CreateLayout> {
                                 widget.storelogo.path.split('/').last;
                             var userid = await storage.read(key: 'userid');
 
+                            print(widget.storelocation);
+
                             formData = FormData.fromMap({
                               'storecategory': widget.storecategory == null
                                   ? widget.storetype
@@ -552,6 +556,8 @@ class _CreateLayoutState extends State<CreateLayout> {
                               'storetype': widget.storetype,
                               'storename': widget.storename,
                               'storeusername': widget.storeusername,
+                              'latitude': widget.storelocation[0].toString(),
+                              'longitude': widget.storelocation[1].toString(),
                               'userid': userid,
                               'layout': 'default',
                               'storeaddress': widget.storeaddress,
@@ -596,6 +602,7 @@ class _CreateLayoutState extends State<CreateLayout> {
                                     storeabout: widget.storeabout,
                                     storeusername: widget.storeusername,
                                     storeaddress: widget.storeaddress,
+                                    storelocation: widget.storelocation,
                                     storecity: widget.storecity,
                                     storetype: widget.storetype,
                                   ),

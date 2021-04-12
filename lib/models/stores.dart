@@ -11,6 +11,7 @@ class Stores {
   final bool approved;
   final String address;
   final String views;
+  List<double> storelocation;
   final String storeusername;
 
   Stores({
@@ -19,6 +20,7 @@ class Stores {
     this.storeusername,
     this.views,
     this.approved,
+    this.storelocation,
     this.address,
     this.sold,
     this.reviews,

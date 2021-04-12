@@ -8,6 +8,7 @@ import 'package:SellShip/screens/orderseller.dart';
 
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
 import 'package:flag/flag.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,9 +19,11 @@ import 'package:flutter_credit_card/credit_card_widget.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:search_map_place/search_map_place.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:http/http.dart' as http;
 
@@ -36,6 +39,8 @@ class AddressModel {
   String addressline2;
   String city;
   String country;
+  double latitude;
+  double longitude;
   String area;
   String phonenumber;
 
@@ -44,6 +49,8 @@ class AddressModel {
       this.address,
       this.phonenumber,
       this.addressline1,
+      this.latitude,
+      this.longitude,
       this.addressline2,
       this.area,
       this.city,
@@ -149,7 +156,7 @@ class _AddressState extends State<Address> {
     'TOURIST CLUB AREA',
     'AL MARYAH ISLAND',
     'AL REEM ISLAND',
-    'EMASSIES DISTRICT',
+    'EMBASSIES DISTRICT',
     'AL HOSN',
     'AL MANHAL',
     'AL DHAFRAH',
@@ -418,6 +425,12 @@ class _AddressState extends State<Address> {
             addressline1: jsonbody[i]['addressline1'],
             addressline2: jsonbody[i]['addressline2'],
             city: jsonbody[i]['city'],
+            latitude: jsonbody[i]['location'] == null
+                ? 25.2048
+                : jsonbody[i]['location'][0],
+            longitude: jsonbody[i]['location'] == null
+                ? 55.2708
+                : jsonbody[i]['location'][1],
             country: jsonbody[i]['country'],
             area: jsonbody[i]['area'],
             address: ' ' +
@@ -1328,7 +1341,8 @@ class _AddressState extends State<Address> {
                                                                   shape: RoundedRectangleBorder(
                                                                       borderRadius:
                                                                           BorderRadius.circular(
-                                                                              20.0)), //this right here
+                                                                              20.0)),
+                                                                  //this right here
                                                                   child: Container(
                                                                       height: 170,
                                                                       padding: EdgeInsets.all(15),
@@ -1364,92 +1378,137 @@ class _AddressState extends State<Address> {
                                                                       )));
                                                             });
 
-                                                        var url = 'https://api.sellship.co/api/addaddress/' +
-                                                            userid +
-                                                            '/' +
-                                                            selectedaddress +
-                                                            '/' +
-                                                            selectedarea +
-                                                            '/' +
-                                                            addresslinecontroller
-                                                                .text
-                                                                .trim() +
-                                                            '/' +
-                                                            addressline2controller
-                                                                .text
-                                                                .trim() +
-                                                            '/' +
-                                                            selectedCity +
-                                                            '/' +
-                                                            phonenumber +
-                                                            '/' +
-                                                            country;
+                                                        var _dio = new Dio();
 
-                                                        final response =
-                                                            await http.get(url);
+                                                        String gurl =
+                                                            "https://maps.googleapis.com/maps/api/geocode/json";
+                                                        Map<String, String>
+                                                            qParams = {
+                                                          'key':
+                                                              'AIzaSyAL0gczX37-cNVHC_4aV6lWE3RSNqeamf4',
+                                                          'address': selectedarea +
+                                                              ' ' +
+                                                              addresslinecontroller
+                                                                  .text
+                                                                  .trim() +
+                                                              ' ' +
+                                                              addressline2controller
+                                                                  .text
+                                                                  .trim() +
+                                                              ' ' +
+                                                              selectedCity +
+                                                              ' ' +
+                                                              country,
+                                                        };
 
-                                                        if (response
-                                                                .statusCode ==
+                                                        var res =
+                                                            await _dio.get(gurl,
+                                                                queryParameters:
+                                                                    qParams);
+
+                                                        if (res.statusCode ==
                                                             200) {
-                                                          var jsonbody = json
-                                                              .decode(response
-                                                                  .body);
+                                                          var addressposition =
+                                                              res.data['results']
+                                                                          [0][
+                                                                      'geometry']
+                                                                  ['location'];
 
-                                                          print(jsonbody);
+                                                          print(
+                                                              addressposition);
+                                                          var lat =
+                                                              addressposition[
+                                                                  'lat'];
+                                                          var long =
+                                                              addressposition[
+                                                                  'lng'];
 
-                                                          showDialog(
-                                                              context: context,
-                                                              useRootNavigator:
-                                                                  false,
-                                                              builder: (_) =>
-                                                                  AssetGiffyDialog(
-                                                                    image: Image
-                                                                        .asset(
-                                                                      'assets/yay.gif',
-                                                                      fit: BoxFit
-                                                                          .cover,
-                                                                    ),
-                                                                    title: Text(
-                                                                      'Address Added!',
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              22.0,
-                                                                          fontWeight:
-                                                                              FontWeight.w600),
-                                                                    ),
-                                                                    onlyOkButton:
-                                                                        true,
-                                                                    entryAnimation:
-                                                                        EntryAnimation
-                                                                            .DEFAULT,
-                                                                    onOkButtonPressed:
-                                                                        () {
-                                                                      setState(
+                                                          var url = 'https://api.sellship.co/api/addaddress/' +
+                                                              userid +
+                                                              '/' +
+                                                              selectedaddress +
+                                                              '/' +
+                                                              selectedarea +
+                                                              '/' +
+                                                              addresslinecontroller
+                                                                  .text
+                                                                  .trim() +
+                                                              '/' +
+                                                              addressline2controller
+                                                                  .text
+                                                                  .trim() +
+                                                              '/' +
+                                                              selectedCity +
+                                                              '/' +
+                                                              phonenumber +
+                                                              '/' +
+                                                              country +
+                                                              '/' +
+                                                              lat.toString() +
+                                                              '/' +
+                                                              long.toString();
+
+                                                          final response =
+                                                              await http
+                                                                  .get(url);
+
+                                                          if (response
+                                                                  .statusCode ==
+                                                              200) {
+                                                            showDialog(
+                                                                context:
+                                                                    context,
+                                                                useRootNavigator:
+                                                                    false,
+                                                                builder: (_) =>
+                                                                    AssetGiffyDialog(
+                                                                      image: Image
+                                                                          .asset(
+                                                                        'assets/yay.gif',
+                                                                        fit: BoxFit
+                                                                            .cover,
+                                                                      ),
+                                                                      title:
+                                                                          Text(
+                                                                        'Address Added!',
+                                                                        style: TextStyle(
+                                                                            fontSize:
+                                                                                22.0,
+                                                                            fontWeight:
+                                                                                FontWeight.w600),
+                                                                      ),
+                                                                      onlyOkButton:
+                                                                          true,
+                                                                      entryAnimation:
+                                                                          EntryAnimation
+                                                                              .DEFAULT,
+                                                                      onOkButtonPressed:
                                                                           () {
-                                                                        loading =
-                                                                            true;
-                                                                      });
-                                                                      loadaddresses();
-                                                                      Navigator.of(
-                                                                              context)
-                                                                          .pop(
-                                                                              'dialog');
-                                                                      Navigator.of(
-                                                                              context)
-                                                                          .pop(
-                                                                              'dialog');
-                                                                      Navigator.of(
-                                                                              context)
-                                                                          .pop(
-                                                                              'dialog');
-                                                                    },
-                                                                  ));
+                                                                        setState(
+                                                                            () {
+                                                                          loading =
+                                                                              true;
+                                                                        });
+                                                                        loadaddresses();
+                                                                        Navigator.of(context)
+                                                                            .pop('dialog');
+                                                                        Navigator.of(context)
+                                                                            .pop('dialog');
+                                                                        Navigator.of(context)
+                                                                            .pop('dialog');
+                                                                      },
+                                                                    ));
+                                                          } else {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop('dialog');
+
+                                                            print(response
+                                                                .statusCode);
+                                                          }
                                                         } else {
                                                           Navigator.of(context)
                                                               .pop('dialog');
-
-                                                          print(response
-                                                              .statusCode);
                                                         }
                                                       }
                                                     },
@@ -1535,6 +1594,10 @@ class _AddressState extends State<Address> {
 
                                   var returnedaddress = {
                                     'address': addresseslist[index],
+                                    'location': [
+                                      addresseslist[index].latitude,
+                                      addresseslist[index].longitude
+                                    ],
                                     'phonenumber':
                                         addresseslist[index].phonenumber,
                                   };

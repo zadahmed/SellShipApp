@@ -32,6 +32,7 @@ class CreateStoreTier extends StatefulWidget {
   final String storecity;
   final String storedescription;
   final String storeusername;
+  List<double> storelocation;
 
   CreateStoreTier(
       {Key key,
@@ -40,6 +41,7 @@ class CreateStoreTier extends StatefulWidget {
       this.storelogo,
       this.storetype,
       this.storedescription,
+      this.storelocation,
       this.storeaddress,
       this.storecity,
       this.storecategory,
@@ -703,12 +705,16 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                               widget.storelogo.path.split('/').last;
                           var userid = await storage.read(key: 'userid');
 
+                          print(widget.storelocation);
+
                           formData = FormData.fromMap({
                             'storecategory': widget.storecategory,
                             'storetype': widget.storetype,
                             'storename': widget.storename,
                             'userid': userid,
                             'layout': 'default',
+                            'latitude': widget.storelocation[0].toString(),
+                            'longitude': widget.storelocation[1].toString(),
                             'storeaddress': widget.storeaddress,
                             'storeusername': widget.storeusername,
                             'storecity': widget.storecity,

@@ -68,6 +68,8 @@ class _CreateStoreState extends State<CreateStore> {
 
   AddressModel selectedaddress;
 
+  var storelocation;
+
   @override
   void initState() {
     super.initState();
@@ -286,6 +288,8 @@ class _CreateStoreState extends State<CreateStore> {
                                           );
                                           if (addressresult != null) {
                                             setState(() {
+                                              storelocation =
+                                                  addressresult['location'];
                                               selectedaddress =
                                                   addressresult['address'];
                                               phonenumber =
@@ -295,8 +299,10 @@ class _CreateStoreState extends State<CreateStore> {
                                             setState(() {
                                               selectedaddress = null;
                                               phonenumber = null;
+                                              storelocation = null;
                                             });
                                           }
+                                          print(storelocation);
                                         },
                                         child: Row(
                                           mainAxisAlignment:
@@ -355,6 +361,7 @@ class _CreateStoreState extends State<CreateStore> {
                                         storeaddress: selectedaddress.address,
                                         storetype: widget.storetype,
                                         storecity: selectedaddress.city,
+                                        storelocation: storelocation,
                                         storedescription:
                                             widget.storedescription,
                                       ),
@@ -378,6 +385,7 @@ class _CreateStoreState extends State<CreateStore> {
                                         storeabout: '',
                                         storeaddress: selectedaddress.address,
                                         storecity: selectedaddress.city,
+                                        storelocation: storelocation,
                                         storedescription:
                                             widget.storedescription,
                                       ),
