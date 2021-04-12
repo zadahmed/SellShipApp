@@ -1433,6 +1433,7 @@ class _ChatPageViewBuyerState extends State<ChatPageViewBuyer> {
                                             child: ListTile(
                                               title: Text(
                                                 itemselling.name,
+                                                overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
                                                     fontFamily: 'Helvetica',
                                                     fontSize: 16,

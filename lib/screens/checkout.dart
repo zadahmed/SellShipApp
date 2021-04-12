@@ -558,11 +558,15 @@ class _CheckoutState extends State<Checkout> {
                                                 MainAxisAlignment.end,
                                             children: [
                                               listitems[index].selectedsize !=
-                                                      'nosize'
+                                                          'nosize' &&
+                                                      listitems[index]
+                                                              .selectedsize !=
+                                                          null
                                                   ? Text(
                                                       'Size: ' +
                                                           listitems[index]
-                                                              .selectedsize,
+                                                              .selectedsize
+                                                              .toString(),
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: TextStyle(
@@ -990,7 +994,9 @@ class _CheckoutState extends State<Checkout> {
                                   Map<String, Object> body = {
                                     "apiOperation": "INITIATE",
                                     "order": {
-                                      "name": listitems[0].name,
+                                      "name": listitems[0].name.length > 30
+                                          ? listitems[0].name.substring(0, 30)
+                                          : listitems[0].name,
                                       "channel": "web",
                                       "reference": trref,
                                       "amount": subtotal,

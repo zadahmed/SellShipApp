@@ -1751,6 +1751,7 @@ class _ChatPageOfferNavState extends State<ChatPageOfferNav> {
                                             child: ListTile(
                                               title: Text(
                                                 itemselling.name,
+                                                overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
                                                     fontFamily: 'Helvetica',
                                                     fontSize: 16,

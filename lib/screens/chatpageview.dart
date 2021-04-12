@@ -1388,6 +1388,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                         child: ListTile(
                                           title: Text(
                                             widget.itemname,
+                                            overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
                                                 fontFamily: 'Helvetica',
                                                 fontSize: 16,
