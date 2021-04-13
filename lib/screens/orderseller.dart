@@ -360,332 +360,6 @@ class _OrderSellerState extends State<OrderSeller> {
 
   int deliverystage;
 
-  Widget shipfrom(BuildContext context) {
-    if (deliverystage == 0) {
-      return Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
-                offset: const Offset(0.0, 0.6),
-                blurRadius: 5.0),
-          ],
-        ),
-        child: ListTile(
-            onTap: () async {
-              final result = await Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Address()),
-              );
-
-              if (result is String) {
-                setState(() {
-                  deliveryaddress = result;
-                  addressreturned = true;
-                });
-              } else {
-                setState(() {
-                  addressline1 = result['addrLine1'];
-                  city = result['city'];
-                  state = result['state'];
-                  zipcode = result['zip_code'];
-
-                  deliveryaddress = result['address'];
-                  addressreturned = true;
-                });
-              }
-            },
-            leading: Text(
-              'Ship from',
-              style: TextStyle(
-                  fontFamily: 'Helvetica',
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700),
-            ),
-            title: addressreturned == false
-                ? Container()
-                : Text(
-                    deliveryaddress,
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                        fontFamily: 'Helvetica',
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500),
-                  ),
-            trailing: Icon(
-              Icons.arrow_forward_ios,
-              size: 10,
-            )),
-      );
-    } else if (deliverystage == 1) {
-      return Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      offset: const Offset(0.0, 0.6),
-                      blurRadius: 5.0),
-                ],
-              ),
-              child: ListTile(
-                onTap: () async {
-                  var url =
-                      'http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=' +
-                          trackingnumber;
-
-                  if (await canLaunch(url)) {
-                    await launch(url);
-                  } else {
-                    throw 'Could not launch $url';
-                  }
-                },
-                leading: Text(
-                  'Tracking Number',
-                  style: TextStyle(
-                      fontFamily: 'Helvetica',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700),
-                ),
-                trailing: Text(
-                  trackingnumber,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 14,
-                    letterSpacing: 0.0,
-                    color: Colors.deepPurple,
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      offset: const Offset(0.0, 0.6),
-                      blurRadius: 5.0),
-                ],
-              ),
-              child: ListTile(
-                onTap: () async {
-                  var url = 'https://www.ups.com/dropoff/?loc=en_us';
-
-                  if (await canLaunch(url)) {
-                    await launch(url);
-                  } else {
-                    throw 'Could not launch $url';
-                  }
-                },
-                leading: Text(
-                  'Shipping Carrier',
-                  style: TextStyle(
-                      fontFamily: 'Helvetica',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700),
-                ),
-                title: Icon(
-                  FontAwesome5Brands.ups,
-                  color: Colors.deepOrange,
-                  size: 35,
-                ),
-                trailing: Container(
-                  height: 48,
-                  width: 160,
-                  decoration: BoxDecoration(
-                    color: Colors.deepPurpleAccent,
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(10.0),
-                    ),
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(
-                          color: Colors.deepPurpleAccent.withOpacity(0.4),
-                          offset: const Offset(1.1, 1.1),
-                          blurRadius: 10.0),
-                    ],
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Find Nearby Drop Off',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 14,
-                        letterSpacing: 0.0,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            )
-          ]);
-    } else if (deliverystage == 2) {
-      return Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      offset: const Offset(0.0, 0.6),
-                      blurRadius: 5.0),
-                ],
-              ),
-              child: ListTile(
-                onTap: () async {
-                  var url =
-                      'http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=' +
-                          trackingnumber;
-
-                  if (await canLaunch(url)) {
-                    await launch(url);
-                  } else {
-                    throw 'Could not launch $url';
-                  }
-                },
-                leading: Text(
-                  'Tracking Number',
-                  style: TextStyle(
-                      fontFamily: 'Helvetica',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700),
-                ),
-                trailing: Text(
-                  trackingnumber,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 14,
-                    letterSpacing: 0.0,
-                    color: Colors.deepPurple,
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      offset: const Offset(0.0, 0.6),
-                      blurRadius: 5.0),
-                ],
-              ),
-              child: ListTile(
-                onTap: () async {
-                  var url = 'https://www.ups.com/dropoff/?loc=en_us';
-
-                  if (await canLaunch(url)) {
-                    await launch(url);
-                  } else {
-                    throw 'Could not launch $url';
-                  }
-                },
-                leading: Text(
-                  'Shipping Carrier',
-                  style: TextStyle(
-                      fontFamily: 'Helvetica',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700),
-                ),
-                title: Icon(
-                  FontAwesome5Brands.ups,
-                  color: Colors.deepOrange,
-                  size: 35,
-                ),
-                trailing: Container(
-                  height: 48,
-                  width: 160,
-                  decoration: BoxDecoration(
-                    color: Colors.deepPurpleAccent,
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(10.0),
-                    ),
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(
-                          color: Colors.deepPurpleAccent.withOpacity(0.4),
-                          offset: const Offset(1.1, 1.1),
-                          blurRadius: 10.0),
-                    ],
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Find Nearby Drop Off',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 14,
-                        letterSpacing: 0.0,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            )
-          ]);
-    } else if (deliverystage == 3) {
-      return Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      offset: const Offset(0.0, 0.6),
-                      blurRadius: 5.0),
-                ],
-              ),
-              child: ListTile(
-                onTap: () async {
-                  var url =
-                      'http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=' +
-                          trackingnumber;
-
-                  if (await canLaunch(url)) {
-                    await launch(url);
-                  } else {
-                    throw 'Could not launch $url';
-                  }
-                },
-                leading: Text(
-                  'Tracking Number',
-                  style: TextStyle(
-                      fontFamily: 'Helvetica',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700),
-                ),
-                trailing: Text(
-                  trackingnumber,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 14,
-                    letterSpacing: 0.0,
-                    color: Colors.deepPurple,
-                  ),
-                ),
-              ),
-            ),
-          ]);
-    }
-  }
-
   Widget deliveryinformation(BuildContext context) {
     if (deliverystage == 0) {
       return Container(
@@ -1545,6 +1219,161 @@ class _OrderSellerState extends State<OrderSeller> {
                                     ),
                                   ],
                                 ),
+                                completed == false
+                                    ? delivered == false
+                                        ? Padding(
+                                            padding: EdgeInsets.only(top: 20),
+                                            child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  InkWell(
+                                                      onTap: () async {
+                                                        var url =
+                                                            'https://api.sellship.co/api/sendlabel/{$messageid}';
+                                                        final response =
+                                                            await http.get(url);
+                                                        showDialog(
+                                                            context: context,
+                                                            barrierDismissible:
+                                                                false,
+                                                            useRootNavigator:
+                                                                false,
+                                                            builder: (_) =>
+                                                                new AlertDialog(
+                                                                  shape: RoundedRectangleBorder(
+                                                                      borderRadius:
+                                                                          BorderRadius.all(
+                                                                              Radius.circular(10.0))),
+                                                                  content:
+                                                                      Builder(
+                                                                    builder:
+                                                                        (context) {
+                                                                      return Container(
+                                                                          height:
+                                                                              170,
+                                                                          child:
+                                                                              Column(
+                                                                            mainAxisAlignment:
+                                                                                MainAxisAlignment.center,
+                                                                            crossAxisAlignment:
+                                                                                CrossAxisAlignment.center,
+                                                                            children: [
+                                                                              CircleAvatar(
+                                                                                backgroundColor: Colors.deepOrangeAccent,
+                                                                                child: Icon(
+                                                                                  Icons.receipt,
+                                                                                  color: Colors.white,
+                                                                                ),
+                                                                              ),
+                                                                              SizedBox(
+                                                                                height: 10,
+                                                                              ),
+                                                                              Text(
+                                                                                'Please check your email, to find the delivery pickup label.',
+                                                                                textAlign: TextAlign.center,
+                                                                                style: TextStyle(
+                                                                                  fontFamily: 'Helvetica',
+                                                                                  fontSize: 18,
+                                                                                  fontWeight: FontWeight.bold,
+                                                                                  color: Colors.black,
+                                                                                ),
+                                                                              ),
+                                                                              SizedBox(
+                                                                                height: 20,
+                                                                              ),
+                                                                              TextButton(
+                                                                                child: Text(
+                                                                                  'Close',
+                                                                                  textAlign: TextAlign.center,
+                                                                                  style: TextStyle(fontSize: 16.0, color: Colors.red, fontWeight: FontWeight.w800),
+                                                                                ),
+                                                                                onPressed: () {
+                                                                                  Navigator.of(context).pop();
+                                                                                },
+                                                                              ),
+                                                                            ],
+                                                                          ));
+                                                                    },
+                                                                  ),
+                                                                ));
+                                                      },
+                                                      enableFeedback: true,
+                                                      child: Container(
+                                                        height: 52,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color:
+                                                              Colors.deepOrange,
+                                                          borderRadius:
+                                                              const BorderRadius
+                                                                  .all(
+                                                            Radius.circular(
+                                                                5.0),
+                                                          ),
+                                                        ),
+                                                        child: Center(
+                                                            child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Icon(
+                                                              Icons.print,
+                                                              color:
+                                                                  Colors.white,
+                                                              size: 18,
+                                                            ),
+                                                            SizedBox(
+                                                              width: 2,
+                                                            ),
+                                                            Text(
+                                                              'Print Label',
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                              style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                fontSize: 16,
+                                                                letterSpacing:
+                                                                    0.0,
+                                                                color: Colors
+                                                                    .white,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        )),
+                                                      )),
+                                                  SizedBox(
+                                                    height: 20,
+                                                  ),
+                                                  Text(
+                                                    'Packing Instructions',
+                                                    textAlign: TextAlign.left,
+                                                    style: TextStyle(
+                                                        fontFamily: 'Helvetica',
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.black),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Text(
+                                                    """1. Pack the items you're shipping with care.\n\n2.Print your shipping label and attach it to the package. Cover any existing shipping labels.\n\n3.Give the package to the carrier identified on the label. Ensure the label can be seen by the carrier, as it helps track the shippment throughout the delivery process.""",
+                                                    style: TextStyle(
+                                                        fontFamily: 'Helvetica',
+                                                        fontSize: 16,
+                                                        color: Colors.black),
+                                                  ),
+                                                ]))
+                                        : Container()
+                                    : Container(),
                                 completed == true
                                     ? delivered == true
                                         ? SizedBox(

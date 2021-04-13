@@ -37,10 +37,6 @@ void main() async {
     },
     appRunner: () => runApp(MyApp()),
   );
-  await Sentry.captureException(
-    IOException,
-    stackTrace: StackTrace.fromString('Stack'),
-  );
 }
 
 class MyApp extends StatefulWidget {
