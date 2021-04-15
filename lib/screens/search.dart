@@ -406,10 +406,12 @@ class _SearchState extends State<Search>
       });
     }
 
-    setState(() {
-      country = countr;
-      position = LatLng(double.parse(latitude), double.parse(longitude));
-    });
+    if (mounted) {
+      setState(() {
+        country = countr;
+        position = LatLng(double.parse(latitude), double.parse(longitude));
+      });
+    }
   }
 
   TextEditingController searchcontroller = new TextEditingController();

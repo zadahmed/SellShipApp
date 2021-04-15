@@ -1408,20 +1408,30 @@ class _AddressState extends State<Address> {
 
                                                         if (res.statusCode ==
                                                             200) {
-                                                          var addressposition =
-                                                              res.data['results']
-                                                                          [0][
-                                                                      'geometry']
-                                                                  ['location'];
+                                                          var lat;
+                                                          var long;
+                                                          if (res.data
+                                                              .containsKey(
+                                                                  'results')) {
+                                                            var addressposition =
+                                                                res.data['results']
+                                                                            [0][
+                                                                        'geometry']
+                                                                    [
+                                                                    'location'];
 
-                                                          print(
-                                                              addressposition);
-                                                          var lat =
-                                                              addressposition[
-                                                                  'lat'];
-                                                          var long =
-                                                              addressposition[
-                                                                  'lng'];
+                                                            print(
+                                                                addressposition);
+                                                            lat =
+                                                                addressposition[
+                                                                    'lat'];
+                                                            long =
+                                                                addressposition[
+                                                                    'lng'];
+                                                          } else {
+                                                            lat = 25.2048;
+                                                            long = 55.2708;
+                                                          }
 
                                                           var url = 'https://api.sellship.co/api/addaddress/' +
                                                               userid +

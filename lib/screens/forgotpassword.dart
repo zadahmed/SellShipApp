@@ -23,28 +23,50 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        leading: InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => RootScreen(index: 4)),
-              );
-            },
-            child: Icon(Icons.arrow_back_ios)),
-        iconTheme: IconThemeData(color: Colors.deepPurple),
         elevation: 0,
+        leading: InkWell(
+          child: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.black,
+          ),
+          onTap: () {
+            Navigator.pop(context);
+          },
+        ),
+        iconTheme: IconThemeData(color: Colors.black),
+        backgroundColor: Colors.white,
         title: Text(
           'Forgot Password',
           style: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 16,
-            letterSpacing: 0.0,
-            color: Colors.deepPurple,
-            fontFamily: 'Helvetica',
-          ),
+              fontFamily: 'Helvetica',
+              fontSize: 18,
+              color: Colors.black,
+              fontWeight: FontWeight.w800),
         ),
-        backgroundColor: Colors.white,
       ),
+      // appBar: AppBar(
+      //   leading: InkWell(
+      //       onTap: () {
+      //         Navigator.push(
+      //           context,
+      //           MaterialPageRoute(builder: (context) => RootScreen(index: 4)),
+      //         );
+      //       },
+      //       child: Icon(Icons.arrow_back_ios)),
+      //   iconTheme: IconThemeData(color: Colors.deepPurple),
+      //   elevation: 0,
+      //   title: Text(
+      //     'Forgot Password',
+      //     style: TextStyle(
+      //       fontWeight: FontWeight.w600,
+      //       fontSize: 16,
+      //       letterSpacing: 0.0,
+      //       color: Colors.deepPurple,
+      //       fontFamily: 'Helvetica',
+      //     ),
+      //   ),
+      //   backgroundColor: Colors.white,
+      // ),
       body: Column(
         children: <Widget>[
           SizedBox(
@@ -55,36 +77,43 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             child: FadeAnimation(
                 1.2,
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Text(
-                      'Email Address',
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontFamily: "SF",
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black87),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    TextField(
-                      controller: emailcontroller,
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontFamily: "SF",
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black),
-                      decoration: InputDecoration(
-                        hintText: "Enter your Email Address",
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey[400])),
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey[400])),
-                      ),
-                    ),
+                    Padding(
+                        padding: EdgeInsets.only(left: 30, top: 20, right: 30),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Container(
+                              height: 60,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 5),
+                              width: MediaQuery.of(context).size.width - 80,
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(131, 146, 165, 0.1),
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                              child: TextField(
+                                onChanged: (text) {},
+                                controller: emailcontroller,
+                                cursorColor: Colors.black,
+                                decoration: InputDecoration(
+                                  labelStyle: TextStyle(
+                                      fontFamily: 'Helvetica', fontSize: 18),
+                                  hintText: "Email Address",
+                                  hintStyle: TextStyle(
+                                      fontFamily: 'Helvetica', fontSize: 18),
+                                  icon: Icon(
+                                    Feather.mail,
+                                    color: Colors.blueGrey,
+                                  ),
+                                  border: InputBorder.none,
+                                ),
+                              ),
+                            ),
+                          ],
+                        )),
                     SizedBox(
                       height: 30,
                     ),
@@ -141,18 +170,18 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                             Navigator.of(context,
                                                     rootNavigator: true)
                                                 .pop('dialog');
-                                            Navigator.push(
+                                            Navigator.pop(
                                               context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      RootScreen()),
+                                            );
+                                            Navigator.pop(
+                                              context,
                                             );
                                           },
                                           child: Container(
                                             padding: EdgeInsets.only(
                                                 top: 20.0, bottom: 20.0),
                                             decoration: BoxDecoration(
-                                              color: Colors.deepPurple,
+                                              color: Colors.deepOrange,
                                             ),
                                             child: Text(
                                               "Close",
@@ -175,17 +204,14 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         }
                       },
                       child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 48,
+                        height: 60,
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                        width: MediaQuery.of(context).size.width - 80,
                         decoration: BoxDecoration(
-                            color: Colors.deepPurple,
-                            borderRadius: BorderRadius.circular(5),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Color(0xFF9DA3B4).withOpacity(0.1),
-                                  blurRadius: 65.0,
-                                  offset: Offset(0.0, 15.0))
-                            ]),
+                          color: Colors.deepOrange,
+                          borderRadius: BorderRadius.circular(25),
+                        ),
                         child: Center(
                             child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -202,7 +228,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                               "Send Password Reset Email",
                               style: TextStyle(
                                   fontFamily: 'Helvetica',
-                                  fontSize: 16,
+                                  fontSize: 18,
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold),
                             )

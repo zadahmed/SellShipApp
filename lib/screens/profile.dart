@@ -3379,48 +3379,50 @@ class _ProfilePageState extends State<ProfilePage>
 
   getStoreData() async {
     var userid = await storage.read(key: 'userid');
-    var storeurl = 'https://api.sellship.co/api/userstores/' + userid;
+    if (userid != null) {
+      var storeurl = 'https://api.sellship.co/api/userstores/' + userid;
 
-    final storeresponse = await http.get(storeurl);
+      final storeresponse = await http.get(storeurl);
 
-    if (storeresponse.statusCode == 200) {
-      var jsonbody = json.decode(storeresponse.body);
-      List<Stores> ites = List<Stores>();
-      for (int i = 0; i < jsonbody.length; i++) {
-        var approved;
-        if (jsonbody[i]['approved'] == null) {
-          approved = false;
-        } else {
-          approved = jsonbody[i]['approved'];
+      if (storeresponse.statusCode == 200) {
+        var jsonbody = json.decode(storeresponse.body);
+        List<Stores> ites = List<Stores>();
+        for (int i = 0; i < jsonbody.length; i++) {
+          var approved;
+          if (jsonbody[i]['approved'] == null) {
+            approved = false;
+          } else {
+            approved = jsonbody[i]['approved'];
+          }
+
+          var view;
+          if (jsonbody[i]['views'] == null) {
+            view = false;
+          } else {
+            view = jsonbody[i]['views'];
+          }
+
+          Stores store = Stores(
+              approved: approved,
+              views: view.toString(),
+              storeid: jsonbody[i]['_id']['\$oid'],
+              storecategory: jsonbody[i]['storecategory'],
+              storelogo: jsonbody[i]['storelogo'],
+              storename: jsonbody[i]['storename']);
+
+          ites.add(store);
         }
 
-        var view;
-        if (jsonbody[i]['views'] == null) {
-          view = false;
-        } else {
-          view = jsonbody[i]['views'];
-        }
-
-        Stores store = Stores(
-            approved: approved,
-            views: view.toString(),
-            storeid: jsonbody[i]['_id']['\$oid'],
-            storecategory: jsonbody[i]['storecategory'],
-            storelogo: jsonbody[i]['storelogo'],
-            storename: jsonbody[i]['storename']);
-
-        ites.add(store);
+        setState(() {
+          storeslist = ites;
+          profileloading = false;
+        });
+      } else {
+        setState(() {
+          storeslist = [];
+          profileloading = false;
+        });
       }
-
-      setState(() {
-        storeslist = ites;
-        profileloading = false;
-      });
-    } else {
-      setState(() {
-        storeslist = [];
-        profileloading = false;
-      });
     }
   }
 }

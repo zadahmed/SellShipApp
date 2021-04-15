@@ -1099,70 +1099,74 @@ class _DiscoverState extends State<Discover>
   foryou() async {
     var userid = await storage.read(key: 'userid');
     List<Item> testforoyou = List<Item>();
-    var url = 'https://api.sellship.co/api/foryou/feed/' + userid + '/0/10';
+    if (userid != null) {
+      var url = 'https://api.sellship.co/api/foryou/feed/' + userid + '/0/10';
 
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      print(response.body);
-      var jsonbody = json.decode(response.body);
-      if (jsonbody.isEmpty) {
-        if (mounted)
-          setState(() {
-            testforoyou = [];
-          });
-      } else {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        print(response.body);
         var jsonbody = json.decode(response.body);
+        if (jsonbody.isEmpty) {
+          if (mounted)
+            setState(() {
+              testforoyou = [];
+            });
+        } else {
+          var jsonbody = json.decode(response.body);
 
-        for (var i = 0; i < jsonbody.length; i++) {
-          Item item = Item(
-            itemid: jsonbody[i]['_id']['\$oid'],
-            image: jsonbody[i]['image'],
-            name: jsonbody[i]['name'],
-            sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
-          );
-          testforoyou.add(item);
+          for (var i = 0; i < jsonbody.length; i++) {
+            Item item = Item(
+              itemid: jsonbody[i]['_id']['\$oid'],
+              image: jsonbody[i]['image'],
+              name: jsonbody[i]['name'],
+              sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+            );
+            testforoyou.add(item);
+          }
+          if (mounted)
+            setState(() {
+              foryoulist = testforoyou.toSet().toList();
+            });
         }
-        if (mounted)
-          setState(() {
-            foryoulist = testforoyou.toSet().toList();
-          });
+      } else {
+        print(response.statusCode);
       }
-    } else {
-      print(response.statusCode);
     }
   }
 
   getsellerrecommendation() async {
     userList.clear();
     var userid = await storage.read(key: 'userid');
-    var url = 'https://api.sellship.co/api/follower/recommendations/' +
-        userid +
-        '/' +
-        country;
+    if (userid != null) {
+      var url = 'https://api.sellship.co/api/follower/recommendations/' +
+          userid +
+          '/' +
+          country;
 
-    List<Stores> testList = new List<Stores>();
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      var jsonbody = json.decode(response.body);
+      List<Stores> testList = new List<Stores>();
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        var jsonbody = json.decode(response.body);
 
-      for (var jsondata in jsonbody) {
-        print(jsondata);
-        Stores store = new Stores(
-            storeid: jsondata['_id']['\$oid'],
-            storename: jsondata['storename'],
-            storetype: jsondata['storetype'],
-            storecategory: jsondata['storecategory'],
-            storelogo: jsondata['storelogo']);
+        for (var jsondata in jsonbody) {
+          print(jsondata);
+          Stores store = new Stores(
+              storeid: jsondata['_id']['\$oid'],
+              storename: jsondata['storename'],
+              storetype: jsondata['storetype'],
+              storecategory: jsondata['storecategory'],
+              storelogo: jsondata['storelogo']);
 
-        if (!testList.contains(store)) {
-          testList.add(store);
+          if (!testList.contains(store)) {
+            testList.add(store);
+          }
         }
-      }
 
-      if (mounted)
-        setState(() {
-          userList = testList;
-        });
+        if (mounted)
+          setState(() {
+            userList = testList;
+          });
+      }
     }
   }
 
@@ -2993,58 +2997,61 @@ class _DiscoverState extends State<Discover>
   gettopdata() async {
     var country = await storage.read(key: 'country');
     var userid = await storage.read(key: 'userid');
-    var url = 'https://api.sellship.co/api/top/' +
-        country +
-        '/' +
-        userid +
-        '/' +
-        '0' +
-        '/' +
-        '20';
+    if (userid != null) {
+      var url = 'https://api.sellship.co/api/top/' +
+          country +
+          '/' +
+          userid +
+          '/' +
+          '0' +
+          '/' +
+          '20';
 
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      var jsonbody = json.decode(response.body);
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        var jsonbody = json.decode(response.body);
 
-      for (var i = 0; i < jsonbody.length; i++) {
-        var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+        for (var i = 0; i < jsonbody.length; i++) {
+          var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
 
-        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
-        var dateuploaded = timeago.format(dateuploade);
-        Item item = Item(
-          itemid: jsonbody[i]['_id']['\$oid'],
-          date: dateuploaded,
-          name: jsonbody[i]['name'],
-          condition: jsonbody[i]['condition'] == null
-              ? 'Like New'
-              : jsonbody[i]['condition'],
-          username: jsonbody[i]['username'],
-          image: jsonbody[i]['image'],
-          userid: jsonbody[i]['userid'],
-          likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
-          comments: jsonbody[i]['comments'] == null
-              ? 0
-              : jsonbody[i]['comments'].length,
-          price: jsonbody[i]['price'].toString(),
-          category: jsonbody[i]['category'],
-          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
-        );
-        topitems.add(item);
-      }
+          DateTime dateuploade =
+              DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+          var dateuploaded = timeago.format(dateuploade);
+          Item item = Item(
+            itemid: jsonbody[i]['_id']['\$oid'],
+            date: dateuploaded,
+            name: jsonbody[i]['name'],
+            condition: jsonbody[i]['condition'] == null
+                ? 'Like New'
+                : jsonbody[i]['condition'],
+            username: jsonbody[i]['username'],
+            image: jsonbody[i]['image'],
+            userid: jsonbody[i]['userid'],
+            likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+            comments: jsonbody[i]['comments'] == null
+                ? 0
+                : jsonbody[i]['comments'].length,
+            price: jsonbody[i]['price'].toString(),
+            category: jsonbody[i]['category'],
+            sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+          );
+          topitems.add(item);
+        }
 
-      if (topitems != null) {
-        if (mounted)
-          setState(() {
-            topitems = topitems;
-          });
+        if (topitems != null) {
+          if (mounted)
+            setState(() {
+              topitems = topitems;
+            });
+        } else {
+          if (mounted)
+            setState(() {
+              topitems = [];
+            });
+        }
       } else {
-        if (mounted)
-          setState(() {
-            topitems = [];
-          });
+        print('error');
       }
-    } else {
-      print('error');
     }
   }
 
@@ -3054,24 +3061,26 @@ class _DiscoverState extends State<Discover>
     subcategoryList.clear();
     subcategoryListsecond.clear();
     var userid = await storage.read(key: 'userid');
-    var url = 'https://api.sellship.co/api/top/subcategories/' + userid;
+    if (userid != null) {
+      var url = 'https://api.sellship.co/api/top/subcategories/' + userid;
 
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      var jsonbody = json.decode(response.body);
-      for (int i = 0; i < jsonbody.length; i++) {
-        Subcategory cat = new Subcategory(
-            name: jsonbody[i]['name'], image: jsonbody[i]['image']);
-        subcategoryList.add(cat);
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        var jsonbody = json.decode(response.body);
+        for (int i = 0; i < jsonbody.length; i++) {
+          Subcategory cat = new Subcategory(
+              name: jsonbody[i]['name'], image: jsonbody[i]['image']);
+          subcategoryList.add(cat);
+        }
+        setState(() {
+          subcategoryList = subcategoryList;
+          subcategoryListsecond = subcategoryList.sublist(
+            6,
+          );
+        });
+      } else {
+        print(response.statusCode);
       }
-      setState(() {
-        subcategoryList = subcategoryList;
-        subcategoryListsecond = subcategoryList.sublist(
-          6,
-        );
-      });
-    } else {
-      print(response.statusCode);
     }
   }
 

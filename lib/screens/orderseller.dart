@@ -184,6 +184,8 @@ class _OrderSellerState extends State<OrderSeller> {
       messageid = widget.messageid;
     });
 
+    print(messageid);
+
     getDetails();
   }
 
@@ -1232,7 +1234,8 @@ class _OrderSellerState extends State<OrderSeller> {
                                                   InkWell(
                                                       onTap: () async {
                                                         var url =
-                                                            'https://api.sellship.co/api/sendlabel/{$messageid}';
+                                                            'https://api.sellship.co/api/sendlabel/$messageid';
+                                                        print(url);
                                                         final response =
                                                             await http.get(url);
                                                         showDialog(
