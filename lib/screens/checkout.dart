@@ -994,9 +994,7 @@ class _CheckoutState extends State<Checkout> {
                                   Map<String, Object> body = {
                                     "apiOperation": "INITIATE",
                                     "order": {
-                                      "name": listitems[0].name.length > 30
-                                          ? listitems[0].name.substring(0, 30)
-                                          : listitems[0].name,
+                                      "name": 'SellShip Order',
                                       "channel": "web",
                                       "reference": trref,
                                       "amount": subtotal,
@@ -1031,7 +1029,6 @@ class _CheckoutState extends State<Checkout> {
                                       "SellShip.SellShipApp:a42e7bc936354e9c807c0ff02670ab37";
                                   List encodedText = utf8.encode(key);
                                   String base64Str = base64Encode(encodedText);
-                                  print('Key_Live $base64Str');
 
                                   var heade = 'Key_Live $base64Str';
 
@@ -1046,6 +1043,8 @@ class _CheckoutState extends State<Checkout> {
                                     body: json.encode(body),
                                     headers: headers,
                                   );
+
+                                  print(response.body);
 
                                   if (response.statusCode == 200) {
                                     var jsonmessage =

@@ -606,9 +606,7 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
                             Map<String, Object> body = {
                               "apiOperation": "INITIATE",
                               "order": {
-                                "name": listitems[0].name.length > 30
-                                    ? listitems[0].name.substring(0, 30)
-                                    : listitems[0].name,
+                                "name": 'SellShip Order',
                                 "channel": "web",
                                 "reference": trref,
                                 "amount": subtotal,

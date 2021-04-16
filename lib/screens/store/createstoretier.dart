@@ -747,91 +747,171 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                                             storeid: storeid,
                                           )),
                                   ModalRoute.withName('/'));
-                            } else if (selectedlayout == 2) {
-                              amount = 320;
-                            } else if (selectedlayout == 3) {
-                              amount = 1250;
                             }
+                            // } else if (selectedlayout == 2) {
+                            //   amount = 320;
+                            //   Map<String, Object> noonbody = {
+                            //     "apiOperation": "INITIATE",
+                            //     "order": {
+                            //       "name": businesstier + '/' + storeid.toString(),
+                            //       "channel": "web",
+                            //       "reference": storeid.toString(),
+                            //       "amount": amount.toString(),
+                            //       "currency": "AED",
+                            //       "category": "pay",
+                            //     },
+                            //     "configuration": {
+                            //       "tokenizeCC": true,
+                            //       "paymentAction": "Sale",
+                            //       "returnUrl":
+                            //       'https://api.sellship.co/api/payment/subscription/${storeid}/${businesstier}/${amount.toString()}'
+                            //     },
+                            //     "subscription": {
+                            //       "type": "Recurring",
+                            //       "amount": amount.toString(),
+                            //       "name": businesstier,
+                            //     }
+                            //   };
+                            //
+                            //   var returnurl =
+                            //       'https://api.sellship.co/api/payment/subscription/${storeid}/${businesstier}/${amount.toString()}';
+                            //   var noonurl =
+                            //       "https://api.noonpayments.com/payment/v1/order";
+                            //
+                            //   var key =
+                            //       "SellShip.SellShipApp:a42e7bc936354e9c807c0ff02670ab37";
+                            //   List encodedText = utf8.encode(key);
+                            //   String base64Str = base64Encode(encodedText);
+                            //
+                            //   var heade = 'Key_Live $base64Str';
+                            //
+                            //   Map<String, String> headers = {
+                            //     'Authorization': heade,
+                            //     'Content-type': 'application/json',
+                            //     'Accept': 'application/json',
+                            //   };
+                            //
+                            //   final noonresponse = await http.post(
+                            //     noonurl,
+                            //     body: json.encode(noonbody),
+                            //     headers: headers,
+                            //   );
+                            //
+                            //   print(noonresponse.body);
+                            //   var jsonmessage = json.decode(noonresponse.body);
+                            //
+                            //   if (jsonmessage != null) {
+                            //     var posturl = jsonmessage['result']
+                            //     ['checkoutData']['postUrl'];
+                            //
+                            //     var orderid =
+                            //     jsonmessage['result']['order']['id'];
+                            //
+                            //     final orderresponse = await http.get(
+                            //       'https://api.sellship.co/api/noon/save/orderid/subscription/${orderid}/${storeid}',
+                            //     );
+                            //
+                            //     print(orderresponse.statusCode);
+                            //
+                            //     await storage.write(
+                            //         key: 'storeid', value: storeid);
+                            //
+                            //     Navigator.of(context, rootNavigator: false).pop();
+                            //     Navigator.push(
+                            //       context,
+                            //       MaterialPageRoute(
+                            //           builder: (BuildContext context) =>
+                            //               Paymentsubs(
+                            //                   orderid: orderid.toString(),
+                            //                   storeid: storeid,
+                            //                   businesstier: businesstier,
+                            //                   url: posturl,
+                            //                   returnurl: returnurl)),
+                            //     );
+                            //   }
+                            // } else if (selectedlayout == 3) {
+                            //   amount = 1250;
+                            //   Map<String, Object> noonbody = {
+                            //     "apiOperation": "INITIATE",
+                            //     "order": {
+                            //       "name": businesstier + '/' + storeid.toString(),
+                            //       "channel": "web",
+                            //       "reference": storeid.toString(),
+                            //       "amount": amount.toString(),
+                            //       "currency": "AED",
+                            //       "category": "pay",
+                            //     },
+                            //     "configuration": {
+                            //       "tokenizeCC": true,
+                            //       "paymentAction": "Sale",
+                            //       "returnUrl":
+                            //       'https://api.sellship.co/api/payment/subscription/${storeid}/${businesstier}/${amount.toString()}'
+                            //     },
+                            //     "subscription": {
+                            //       "type": "Recurring",
+                            //       "amount": amount.toString(),
+                            //       "name": businesstier,
+                            //     }
+                            //   };
+                            //
+                            //   var returnurl =
+                            //       'https://api.sellship.co/api/payment/subscription/${storeid}/${businesstier}/${amount.toString()}';
+                            //   var noonurl =
+                            //       "https://api.noonpayments.com/payment/v1/order";
+                            //
+                            //   var key =
+                            //       "SellShip.SellShipApp:a42e7bc936354e9c807c0ff02670ab37";
+                            //   List encodedText = utf8.encode(key);
+                            //   String base64Str = base64Encode(encodedText);
+                            //
+                            //   var heade = 'Key_Live $base64Str';
+                            //
+                            //   Map<String, String> headers = {
+                            //     'Authorization': heade,
+                            //     'Content-type': 'application/json',
+                            //     'Accept': 'application/json',
+                            //   };
+                            //
+                            //   final noonresponse = await http.post(
+                            //     noonurl,
+                            //     body: json.encode(noonbody),
+                            //     headers: headers,
+                            //   );
+                            //
+                            //   print(noonresponse.body);
+                            //   var jsonmessage = json.decode(noonresponse.body);
+                            //
+                            //   if (jsonmessage != null) {
+                            //     var posturl = jsonmessage['result']
+                            //     ['checkoutData']['postUrl'];
+                            //
+                            //     var orderid =
+                            //     jsonmessage['result']['order']['id'];
+                            //
+                            //     final orderresponse = await http.get(
+                            //       'https://api.sellship.co/api/noon/save/orderid/subscription/${orderid}/${storeid}',
+                            //     );
+                            //
+                            //     print(orderresponse.statusCode);
+                            //
+                            //     await storage.write(
+                            //         key: 'storeid', value: storeid);
+                            //
+                            //     Navigator.of(context, rootNavigator: false).pop();
+                            //     Navigator.push(
+                            //       context,
+                            //       MaterialPageRoute(
+                            //           builder: (BuildContext context) =>
+                            //               Paymentsubs(
+                            //                   orderid: orderid.toString(),
+                            //                   storeid: storeid,
+                            //                   businesstier: businesstier,
+                            //                   url: posturl,
+                            //                   returnurl: returnurl)),
+                            //     );
+                            //   }
+                            // }
 
-                            Map<String, Object> noonbody = {
-                              "apiOperation": "INITIATE",
-                              "order": {
-                                "name": businesstier + '/' + storeid.toString(),
-                                "channel": "web",
-                                "reference": storeid.toString(),
-                                "amount": amount.toString(),
-                                "currency": "AED",
-                                "category": "pay",
-                              },
-                              "configuration": {
-                                "tokenizeCC": true,
-                                "paymentAction": "Sale",
-                                "returnUrl":
-                                    'https://api.sellship.co/api/payment/subscription/${storeid}/${businesstier}/${amount.toString()}'
-                              },
-                              "subscription": {
-                                "type": "Recurring",
-                                "amount": amount.toString(),
-                                "name": businesstier,
-                              }
-                            };
-
-                            var returnurl =
-                                'https://api.sellship.co/api/payment/subscription/${storeid}/${businesstier}/${amount.toString()}';
-                            var noonurl =
-                                "https://api.noonpayments.com/payment/v1/order";
-
-                            var key =
-                                "SellShip.SellShipApp:a42e7bc936354e9c807c0ff02670ab37";
-                            List encodedText = utf8.encode(key);
-                            String base64Str = base64Encode(encodedText);
-
-                            var heade = 'Key_Live $base64Str';
-
-                            Map<String, String> headers = {
-                              'Authorization': heade,
-                              'Content-type': 'application/json',
-                              'Accept': 'application/json',
-                            };
-
-                            final noonresponse = await http.post(
-                              noonurl,
-                              body: json.encode(noonbody),
-                              headers: headers,
-                            );
-
-                            print(noonresponse.body);
-                            var jsonmessage = json.decode(noonresponse.body);
-
-                            if (jsonmessage != null) {
-                              var posturl = jsonmessage['result']
-                                  ['checkoutData']['postUrl'];
-
-                              var orderid =
-                                  jsonmessage['result']['order']['id'];
-
-                              final orderresponse = await http.get(
-                                'https://api.sellship.co/api/noon/save/orderid/subscription/${orderid}/${storeid}',
-                              );
-
-                              print(orderresponse.statusCode);
-
-                              await storage.write(
-                                  key: 'storeid', value: storeid);
-
-                              Navigator.of(context, rootNavigator: false).pop();
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        Paymentsubs(
-                                            orderid: orderid.toString(),
-                                            storeid: storeid,
-                                            businesstier: businesstier,
-                                            url: posturl,
-                                            returnurl: returnurl)),
-                              );
-                            }
                           } else {
                             Navigator.of(context, rootNavigator: false).pop();
                             showInSnackBar('Looks like something went wrong');
