@@ -181,6 +181,8 @@ PODS:
   - "permission_handler (5.0.1+1)":
     - Flutter
   - PromisesObjC (1.2.12)
+  - screen (0.0.1):
+    - Flutter
   - SDWebImage/Core (5.11.0)
   - SDWebImageWebPCoder (0.8.3):
     - libwebp (~> 1.0)
@@ -201,6 +203,12 @@ PODS:
   - url_launcher (0.0.1):
     - Flutter
   - vibration (1.7.3):
+    - Flutter
+  - video_player (0.0.1):
+    - Flutter
+  - wakelock (0.0.1):
+    - Flutter
+  - webview_flutter (0.0.1):
     - Flutter
 
 DEPENDENCIES:
@@ -232,12 +240,16 @@ DEPENDENCIES:
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
+  - screen (from `.symlinks/plugins/screen/ios`)
   - sentry_flutter (from `.symlinks/plugins/sentry_flutter/ios`)
   - share (from `.symlinks/plugins/share/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
   - vibration (from `.symlinks/plugins/vibration/ios`)
+  - video_player (from `.symlinks/plugins/video_player/ios`)
+  - wakelock (from `.symlinks/plugins/wakelock/ios`)
+  - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
 
 SPEC REPOS:
   trunk:
@@ -325,6 +337,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/path_provider/ios"
   permission_handler:
     :path: ".symlinks/plugins/permission_handler/ios"
+  screen:
+    :path: ".symlinks/plugins/screen/ios"
   sentry_flutter:
     :path: ".symlinks/plugins/sentry_flutter/ios"
   share:
@@ -337,6 +351,12 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher/ios"
   vibration:
     :path: ".symlinks/plugins/vibration/ios"
+  video_player:
+    :path: ".symlinks/plugins/video_player/ios"
+  wakelock:
+    :path: ".symlinks/plugins/wakelock/ios"
+  webview_flutter:
+    :path: ".symlinks/plugins/webview_flutter/ios"
 
 SPEC CHECKSUMS:
   app_review: 6f51001269c59a2f4a5b5ae68b7d106401152764
@@ -391,6 +411,7 @@ SPEC CHECKSUMS:
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   permission_handler: eac8e15b4a1a3fba55b761d19f3f4e6b005d15b6
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
+  screen: abd91ca7bf3426e1cc3646d27e9b2358d6bf07b0
   SDWebImage: 7acbb57630ac7db4a495547fb73916ff3e432f6b
   SDWebImageWebPCoder: bbf46e29fb8d1980a78ad3d5e9b4123c77f10ebc
   Sentry: 9d055e2de30a77685e86b219acf02e59b82091fc
@@ -400,6 +421,9 @@ SPEC CHECKSUMS:
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
   url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
   vibration: b5a33e764c3f609a975b9dca73dce20fdde627dc
+  video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
+  wakelock: 0d4a70faf8950410735e3f61fb15d517c8a6efc4
+  webview_flutter: d2b4d6c66968ad042ad94cbb791f5b72b4678a96
 
 PODFILE CHECKSUM: ef2c8299b8f6724a71a3278b1f050a9c1b1ce563
 

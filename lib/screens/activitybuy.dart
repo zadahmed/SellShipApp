@@ -136,6 +136,7 @@ class _ActivityBuyState extends State<ActivityBuy>
               price: itemmap[i]['offer'].toString(),
               offerstage: itemmap[i]['offerstage'],
               date: date.toString(),
+              storetype: itemmap[i]['item']['storetype'],
               buyerid: buyerid,
               userid: itemmap[i]['item']['userid'],
               username: itemmap[i]['item']['username'],
@@ -858,6 +859,8 @@ class _ActivityBuyState extends State<ActivityBuy>
                                                           .sold,
                                                       storeid: buyingItem[index]
                                                           .userid,
+                                                      storetype: buyingItem[index]
+                                                          .storetype,
                                                       storename: buyingItem[index]
                                                           .username,
                                                       itemid: buyingItem[index]
@@ -879,10 +882,9 @@ class _ActivityBuyState extends State<ActivityBuy>
                                                       offerstage:
                                                           buyingItem[index]
                                                               .offerstage,
-                                                      itemimage: buyingItem[index]
-                                                          .image,
-                                                      itemname:
-                                                          buyingItem[index].name,
+                                                      itemimage:
+                                                          buyingItem[index].image,
+                                                      itemname: buyingItem[index].name,
                                                       item: buyingItem[index])),
                                             );
                                             if (result == null) {

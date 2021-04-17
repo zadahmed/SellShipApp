@@ -2182,7 +2182,7 @@ class _DetailsState extends State<Details> {
                           : Container(),
                       similaritems.isNotEmpty
                           ? Container(
-                              height: 280,
+                              height: 285,
                               width: MediaQuery.of(context).size.width,
                               child: ListView.builder(
                                 itemCount: similaritems.length,

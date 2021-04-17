@@ -193,6 +193,7 @@ class _ActivitySellState extends State<ActivitySell>
               image: itemmap[i]['item']['image'],
               weight: itemmap[i]['item']['weight'].toString(),
               price: itemmap[i]['offer'].toString(),
+              storetype: itemmap[i]['item']['storetype'],
               messageid: itemmap[i]['messageid'].toString(),
               offerstage: itemmap[i]['offerstage'],
               buyerid: buyerid,
@@ -879,6 +880,9 @@ class _ActivitySellState extends State<ActivitySell>
                                                         senderid:
                                                             sellingItem[index]
                                                                 .sellerid,
+                                                        storetype:
+                                                            sellingItem[index]
+                                                                .storetype,
                                                         recipentname:
                                                             sellingItem[index]
                                                                 .buyername,

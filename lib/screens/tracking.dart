@@ -48,11 +48,38 @@ class _TrackingDetailsState extends State<TrackingDetails> {
     print(jsonresponse);
     if (response.statusCode == 200) {
       for (int i = 0; i < jsonresponse.length; i++) {
-        Tracking track = new Tracking(
-            deliverydate: jsonresponse[i]['colDate'],
-            detailedstatus: jsonresponse[i]['colStatus'],
-            deliverystatus: capitalize(jsonresponse[i]['Status']));
-        trackinglis.add(track);
+        var status;
+        if (jsonresponse[i]['Status'] == 'POD') {
+          status = 'Item Delivered';
+          Tracking track = new Tracking(
+              deliverydate: jsonresponse[i]['colDate'],
+              detailedstatus: jsonresponse[i]['colStatus'],
+              deliverystatus: status);
+          trackinglis.add(track);
+        } else if (jsonresponse[i]['Status'] == 'OFD') {
+          status = 'Order Out For Delivery';
+          Tracking track = new Tracking(
+              deliverydate: jsonresponse[i]['colDate'],
+              detailedstatus: jsonresponse[i]['colStatus'],
+              deliverystatus: status);
+          trackinglis.add(track);
+        } else if (jsonresponse[i]['Status'] == 'CheckedIn') {
+          status = 'Item Picked Up';
+          Tracking track = new Tracking(
+              deliverydate: jsonresponse[i]['colDate'],
+              detailedstatus: jsonresponse[i]['colStatus'],
+              deliverystatus: status);
+          trackinglis.add(track);
+        } else if (jsonresponse[i]['Status'] == 'PickedUp') {
+          status = 'Order Created';
+          Tracking track = new Tracking(
+              deliverydate: jsonresponse[i]['colDate'],
+              detailedstatus: jsonresponse[i]['colStatus'],
+              deliverystatus: status);
+          trackinglis.add(track);
+        } else {
+          status = jsonresponse[i]['Status'];
+        }
       }
     }
 
@@ -142,13 +169,18 @@ class _TrackingDetailsState extends State<TrackingDetails> {
                                 ],
                               )
                             : Container(),
+                        SizedBox(
+                          height: 5,
+                        ),
                         trackinglist.isNotEmpty
                             ? Expanded(
                                 child: ListView.builder(
                                     itemCount: trackinglist.length,
                                     itemBuilder: (context, index) {
                                       return Padding(
-                                          padding: EdgeInsets.only(bottom: 10),
+                                          padding: EdgeInsets.only(
+                                            bottom: 5,
+                                          ),
                                           child: Container(
                                               height: 100,
                                               child: Row(
@@ -180,7 +212,7 @@ class _TrackingDetailsState extends State<TrackingDetails> {
                                                                               context)
                                                                           .size
                                                                           .width /
-                                                                      3 -
+                                                                      2 -
                                                                   10,
                                                               child: Text(
                                                                 trackinglist[
@@ -200,28 +232,6 @@ class _TrackingDetailsState extends State<TrackingDetails> {
                                                             ),
                                                             SizedBox(
                                                               height: 5,
-                                                            ),
-                                                            Container(
-                                                              height: 60,
-                                                              width: MediaQuery.of(
-                                                                              context)
-                                                                          .size
-                                                                          .width /
-                                                                      3 -
-                                                                  10,
-                                                              child: Text(
-                                                                trackinglist[
-                                                                        index]
-                                                                    .detailedstatus,
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontFamily:
-                                                                      'Helvetica',
-                                                                  fontSize: 16,
-                                                                  color: Colors
-                                                                      .grey,
-                                                                ),
-                                                              ),
                                                             ),
                                                           ],
                                                         ),

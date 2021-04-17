@@ -6,8 +6,10 @@ import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/global.dart';
 import 'package:SellShip/models/Items.dart';
+import 'package:SellShip/models/blogs.dart';
 import 'package:SellShip/models/stores.dart';
 import 'package:SellShip/models/user.dart';
+import 'package:SellShip/screens/blogPage.dart';
 import 'package:SellShip/screens/comments.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/filter.dart';
@@ -24,6 +26,7 @@ import 'package:SellShip/screens/subcategory.dart';
 import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -840,6 +843,7 @@ class _DiscoverState extends State<Discover>
 
     foryou();
     gettopdata();
+    getlatestblogs();
     getsubcategoriesinterested();
     readstorage();
   }
@@ -1134,6 +1138,31 @@ class _DiscoverState extends State<Discover>
     }
   }
 
+  List<Blogs> blogsList = new List<Blogs>();
+
+  getlatestblogs() async {
+    blogsList.clear();
+    var url = 'https://api.sellship.co/latest/blogs';
+
+    List<Stores> testList = new List<Stores>();
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      var jsonbody = json.decode(response.body);
+      for (var jsondata in jsonbody) {
+        Blogs blog = new Blogs(
+            blogid: jsondata['id'],
+            blogcontent: jsondata['content']['rendered'],
+            blogimage: jsondata['jetpack_featured_media_url'],
+            blogname: jsondata['title']['rendered'],
+            blogpublished: jsondata['data'],
+            blogurl: jsondata['link']);
+        blogsList.add(blog);
+      }
+      print(blogsList.length);
+      print('sss');
+    }
+  }
+
   getsellerrecommendation() async {
     userList.clear();
     var userid = await storage.read(key: 'userid');
@@ -1246,7 +1275,7 @@ class _DiscoverState extends State<Discover>
                   ? SliverToBoxAdapter(
                       child: Padding(
                           padding: EdgeInsets.only(
-                              left: 16, top: 5, bottom: 10, right: 36),
+                              left: 16, top: 10, bottom: 10, right: 36),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -1403,7 +1432,7 @@ class _DiscoverState extends State<Discover>
               topitems.isNotEmpty
                   ? SliverToBoxAdapter(
                       child: Container(
-                      height: 280,
+                      height: 285,
                       width: MediaQuery.of(context).size.width,
                       child: ListView.builder(
                         itemCount: topitems.length > 20 ? 20 : topitems.length,
@@ -1955,7 +1984,7 @@ class _DiscoverState extends State<Discover>
               below100list.isNotEmpty
                   ? SliverToBoxAdapter(
                       child: Container(
-                      height: 280,
+                      height: 285,
                       width: MediaQuery.of(context).size.width,
                       child: ListView.builder(
                         itemCount: below100list.length,
@@ -1964,7 +1993,7 @@ class _DiscoverState extends State<Discover>
                           return new Padding(
                             padding: EdgeInsets.all(10),
                             child: Container(
-                              height: 280,
+                              height: 285,
                               width: MediaQuery.of(context).size.width / 2 - 20,
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -2415,7 +2444,7 @@ class _DiscoverState extends State<Discover>
               nearmeItems.isNotEmpty
                   ? SliverToBoxAdapter(
                       child: Container(
-                      height: 280,
+                      height: 285,
                       width: MediaQuery.of(context).size.width,
                       child: ListView.builder(
                         itemCount: nearmeItems.length,
@@ -2424,7 +2453,7 @@ class _DiscoverState extends State<Discover>
                           return new Padding(
                             padding: EdgeInsets.all(10),
                             child: Container(
-                              height: 280,
+                              height: 285,
                               width: MediaQuery.of(context).size.width / 2 - 10,
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -2691,6 +2720,107 @@ class _DiscoverState extends State<Discover>
                           );
                         },
                       ),
+                    ))
+                  : SliverToBoxAdapter(),
+              blogsList.isNotEmpty
+                  ? SliverToBoxAdapter(
+                      child: Padding(
+                      padding: EdgeInsets.only(
+                          left: 16, bottom: 10, right: 36, top: 15),
+                      child: Text(
+                        'Latest Articles',
+                        style: TextStyle(
+                            fontFamily: 'Helvetica',
+                            fontSize: 22.0,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ))
+                  : SliverToBoxAdapter(),
+              blogsList.isNotEmpty
+                  ? SliverToBoxAdapter(
+                      child: CarouselSlider(
+                      options: CarouselOptions(
+                        height: 200.0,
+                        aspectRatio: 16 / 9,
+                        viewportFraction: 1,
+                        initialPage: 0,
+                        enableInfiniteScroll: true,
+                        reverse: false,
+                        autoPlay: true,
+                        autoPlayInterval: Duration(seconds: 3),
+                        autoPlayAnimationDuration: Duration(milliseconds: 800),
+                        autoPlayCurve: Curves.fastOutSlowIn,
+                        enlargeCenterPage: true,
+                      ),
+                      items: blogsList.map((blog) {
+                        return Builder(
+                          builder: (BuildContext context) {
+                            return InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                        builder: (context) => BlogPage(
+                                              title: blog.blogname,
+                                              content: blog.blogcontent,
+                                              related: blog.relatedposts,
+                                              image: blog.blogimage,
+                                              blogid: blog.blogid,
+                                            )),
+                                  );
+                                },
+                                enableFeedback: true,
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                        height: 200,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal: 5.0),
+                                        decoration: BoxDecoration(
+                                            color: Colors.deepOrange,
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          child: Hero(
+                                            tag: 'Blog${blog.blogid}',
+                                            child: CachedNetworkImage(
+                                              imageUrl: blog.blogimage,
+                                              fit: BoxFit.cover,
+                                              fadeInDuration:
+                                                  Duration(microseconds: 5),
+                                              placeholder: (context, url) =>
+                                                  SpinKitDoubleBounce(
+                                                      color: Colors.deepOrange),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Icon(Icons.error),
+                                            ),
+                                          ),
+                                        )),
+                                    Align(
+                                      alignment: Alignment.bottomLeft,
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                            bottom: 10, left: 20, right: 10),
+                                        child: Text(
+                                          blog.blogname,
+                                          style: TextStyle(
+                                              fontFamily: 'Helvetica',
+                                              fontSize: 20.0,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w800),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ));
+                          },
+                        );
+                      }).toList(),
                     ))
                   : SliverToBoxAdapter(),
               SliverToBoxAdapter(

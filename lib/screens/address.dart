@@ -1380,25 +1380,33 @@ class _AddressState extends State<Address> {
 
                                                         var _dio = new Dio();
 
+                                                        var address =
+                                                            addresslinecontroller
+                                                                .text
+                                                                .replaceAll(
+                                                                    "\\W", "");
+                                                        var address2 =
+                                                            addressline2controller
+                                                                .text
+                                                                .replaceAll(
+                                                                    "\\W", "");
+
                                                         String gurl =
                                                             "https://maps.googleapis.com/maps/api/geocode/json";
                                                         Map<String, String>
                                                             qParams = {
                                                           'key':
                                                               'AIzaSyAL0gczX37-cNVHC_4aV6lWE3RSNqeamf4',
-                                                          'address': selectedarea +
-                                                              ' ' +
-                                                              addresslinecontroller
-                                                                  .text
-                                                                  .trim() +
-                                                              ' ' +
-                                                              addressline2controller
-                                                                  .text
-                                                                  .trim() +
-                                                              ' ' +
-                                                              selectedCity +
-                                                              ' ' +
-                                                              country,
+                                                          'address':
+                                                              selectedarea +
+                                                                  ' ' +
+                                                                  address +
+                                                                  ' ' +
+                                                                  address2 +
+                                                                  ' ' +
+                                                                  selectedCity +
+                                                                  ' ' +
+                                                                  country,
                                                         };
 
                                                         var res =
@@ -1440,13 +1448,9 @@ class _AddressState extends State<Address> {
                                                               '/' +
                                                               selectedarea +
                                                               '/' +
-                                                              addresslinecontroller
-                                                                  .text
-                                                                  .trim() +
+                                                              address +
                                                               '/' +
-                                                              addressline2controller
-                                                                  .text
-                                                                  .trim() +
+                                                              address2 +
                                                               '/' +
                                                               selectedCity +
                                                               '/' +

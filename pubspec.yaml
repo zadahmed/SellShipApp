@@ -87,6 +87,8 @@ dependencies:
   json_serializable: ^3.5.1
   flutter_image_compress: ^0.7.0
   sentry_flutter: ^4.0.6
+  flutter_html: ^1.0.2
+
 
 
 dev_dependencies:
@@ -155,6 +157,7 @@ flutter:
     - assets/storedetails.jpg
     - assets/celebration.png
     - assets/error404.png
+    - assets/chatbg.png
 
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg

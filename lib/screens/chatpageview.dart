@@ -14,6 +14,7 @@ import 'package:SellShip/screens/rootscreen.dart';
 import 'package:SellShip/screens/storepagepublic.dart';
 import 'package:SellShip/screens/useritems.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/ball_pulse_footer.dart';
@@ -47,6 +48,7 @@ class ChatPageView extends StatefulWidget {
   final bool itemsold;
   final String storename;
   final String storeid;
+  final String storetype;
 
   const ChatPageView({
     Key key,
@@ -56,6 +58,7 @@ class ChatPageView extends StatefulWidget {
     this.itemname,
     this.itemimage,
     this.itemsold,
+    this.storetype,
     this.messageid,
     this.offerstage,
     this.itemprice,
@@ -108,6 +111,8 @@ class _ChatPageViewState extends State<ChatPageView> {
     getItem();
   }
 
+  TextEditingController messagecontroller = TextEditingController();
+
   var profilepicture;
 
   var currency;
@@ -117,7 +122,7 @@ class _ChatPageViewState extends State<ChatPageView> {
   Widget buyeroptions(BuildContext context) {
     if (offerstage == 0) {
       return Container(
-        height: 60,
+        height: widget.storetype == 'Secondhand Seller' ? 130 : 60,
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
             color: Colors.grey.shade100,
@@ -155,13 +160,150 @@ class _ChatPageViewState extends State<ChatPageView> {
                         )
                       ],
                     )))),
+            widget.storetype == 'Secondhand Seller'
+                ? Padding(
+                    padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                    child: Container(
+                      padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
+                      height: 60,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Row(
+                        children: <Widget>[
+                          // GestureDetector(
+                          //   onTap: () {},
+                          //   child: Container(
+                          //     height: 30,
+                          //     width: 30,
+                          //     decoration: BoxDecoration(
+                          //       color: Colors.deepOrangeAccent,
+                          //       borderRadius: BorderRadius.circular(30),
+                          //     ),
+                          //     child: Icon(
+                          //       Icons.add,
+                          //       color: Colors.white,
+                          //       size: 20,
+                          //     ),
+                          //   ),
+                          // ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Expanded(
+                            child: TextField(
+                              controller: messagecontroller,
+                              scrollPadding: EdgeInsets.symmetric(
+                                  vertical:
+                                      MediaQuery.of(context).viewInsets.bottom +
+                                          20),
+                              decoration: InputDecoration(
+                                  hintText: "Send message...",
+                                  hintStyle: TextStyle(color: Colors.black54),
+                                  border: InputBorder.none),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          FloatingActionButton(
+                            onPressed: () async {
+                              final f = new DateFormat('hh:mm');
+                              DateTime date =
+                                  new DateTime.fromMillisecondsSinceEpoch(
+                                      DateTime.now().millisecondsSinceEpoch);
+                              var s = f.format(date);
+
+                              var msg = messagecontroller.text;
+
+                              childList.add(Padding(
+                                  padding: const EdgeInsets.only(
+                                      right: 8.0,
+                                      left: 8.0,
+                                      top: 4.0,
+                                      bottom: 4.0),
+                                  child: Container(
+                                      alignment: Alignment.centerRight,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: <Widget>[
+                                          Container(
+                                            constraints: BoxConstraints(
+                                                maxWidth: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    3 /
+                                                    4,
+                                                minWidth: 50),
+                                            padding: EdgeInsets.all(12.0),
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey.shade50,
+                                              borderRadius:
+                                                  BorderRadius.circular(15.0),
+                                            ),
+                                            child: Stack(children: <Widget>[
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                  right: 2.0,
+                                                  left: 2.0,
+                                                ),
+                                                child: Text(
+                                                  messagecontroller.text,
+                                                  style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 16,
+                                                      color: Colors.black),
+                                                ),
+                                              ),
+                                            ]),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(right: 10),
+                                            child: Text(
+                                              s,
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 12,
+                                                  color: Colors.black),
+                                            ),
+                                          ),
+                                        ],
+                                      ))));
+
+                              messagecontroller.clear();
+                              Dio dio = new Dio();
+                              FormData formData = FormData.fromMap({
+                                'message': msg,
+                              });
+
+                              print(messagecontroller.text);
+                              var addurl =
+                                  'https://api.sellship.co/api/sendmessage/${widget.senderid}/${widget.recipentid}/${widget.messageid}';
+                              var response =
+                                  await dio.post(addurl, data: formData);
+                              print(response.data);
+                            },
+                            child: Icon(
+                              Icons.send,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                            backgroundColor: Colors.deepOrangeAccent,
+                            elevation: 0,
+                          ),
+                        ],
+                      ),
+                    ))
+                : Container(),
           ],
         ),
       );
     }
     if (offerstage == 1) {
       return Container(
-          height: 60,
+          height: widget.storetype == 'Secondhand Seller' ? 130 : 60,
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
               color: Colors.grey.shade100,
@@ -253,11 +395,157 @@ class _ChatPageViewState extends State<ChatPageView> {
                                 ))))),
                   ],
                 ),
+                widget.storetype == 'Secondhand Seller'
+                    ? Padding(
+                        padding:
+                            EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                        child: Container(
+                          padding:
+                              EdgeInsets.only(left: 10, bottom: 10, top: 10),
+                          height: 60,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Row(
+                            children: <Widget>[
+                              // GestureDetector(
+                              //   onTap: () {},
+                              //   child: Container(
+                              //     height: 30,
+                              //     width: 30,
+                              //     decoration: BoxDecoration(
+                              //       color: Colors.deepOrangeAccent,
+                              //       borderRadius: BorderRadius.circular(30),
+                              //     ),
+                              //     child: Icon(
+                              //       Icons.add,
+                              //       color: Colors.white,
+                              //       size: 20,
+                              //     ),
+                              //   ),
+                              // ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              Expanded(
+                                child: TextField(
+                                  controller: messagecontroller,
+                                  scrollPadding: EdgeInsets.symmetric(
+                                      vertical: MediaQuery.of(context)
+                                              .viewInsets
+                                              .bottom +
+                                          20),
+                                  decoration: InputDecoration(
+                                      hintText: "Send message...",
+                                      hintStyle:
+                                          TextStyle(color: Colors.black54),
+                                      border: InputBorder.none),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              FloatingActionButton(
+                                onPressed: () async {
+                                  final f = new DateFormat('hh:mm');
+                                  DateTime date =
+                                      new DateTime.fromMillisecondsSinceEpoch(
+                                          DateTime.now()
+                                              .millisecondsSinceEpoch);
+                                  var s = f.format(date);
+
+                                  var msg = messagecontroller.text;
+
+                                  childList.add(Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 8.0,
+                                          left: 8.0,
+                                          top: 4.0,
+                                          bottom: 4.0),
+                                      child: Container(
+                                          alignment: Alignment.centerRight,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: <Widget>[
+                                              Container(
+                                                constraints: BoxConstraints(
+                                                    maxWidth:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            3 /
+                                                            4,
+                                                    minWidth: 50),
+                                                padding: EdgeInsets.all(12.0),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey.shade50,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          15.0),
+                                                ),
+                                                child: Stack(children: <Widget>[
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                      right: 2.0,
+                                                      left: 2.0,
+                                                    ),
+                                                    child: Text(
+                                                      messagecontroller.text,
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 16,
+                                                          color: Colors.black),
+                                                    ),
+                                                  ),
+                                                ]),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    EdgeInsets.only(right: 10),
+                                                child: Text(
+                                                  s,
+                                                  style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 12,
+                                                      color: Colors.black),
+                                                ),
+                                              ),
+                                            ],
+                                          ))));
+
+                                  messagecontroller.clear();
+
+                                  Dio dio = new Dio();
+                                  FormData formData = FormData.fromMap({
+                                    'message': msg,
+                                  });
+
+                                  var addurl =
+                                      'https://api.sellship.co/api/sendmessage/${widget.senderid}/${widget.recipentid}/${widget.messageid}';
+                                  var response =
+                                      await dio.post(addurl, data: formData);
+                                },
+                                child: Icon(
+                                  Icons.send,
+                                  color: Colors.white,
+                                  size: 18,
+                                ),
+                                backgroundColor: Colors.deepOrangeAccent,
+                                elevation: 0,
+                              ),
+                            ],
+                          ),
+                        ))
+                    : Container(),
               ]));
     }
     if (offerstage == 2) {
       return Container(
-          height: 60,
+          height: widget.storetype == 'Secondhand Seller' ? 130 : 60,
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
               color: Colors.grey.shade100,
@@ -308,11 +596,156 @@ class _ChatPageViewState extends State<ChatPageView> {
                                 )
                               ],
                             ))))),
+                widget.storetype == 'Secondhand Seller'
+                    ? Padding(
+                        padding:
+                            EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                        child: Container(
+                          padding:
+                              EdgeInsets.only(left: 10, bottom: 10, top: 10),
+                          height: 60,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Row(
+                            children: <Widget>[
+                              // GestureDetector(
+                              //   onTap: () {},
+                              //   child: Container(
+                              //     height: 30,
+                              //     width: 30,
+                              //     decoration: BoxDecoration(
+                              //       color: Colors.deepOrangeAccent,
+                              //       borderRadius: BorderRadius.circular(30),
+                              //     ),
+                              //     child: Icon(
+                              //       Icons.add,
+                              //       color: Colors.white,
+                              //       size: 20,
+                              //     ),
+                              //   ),
+                              // ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              Expanded(
+                                child: TextField(
+                                  controller: messagecontroller,
+                                  scrollPadding: EdgeInsets.symmetric(
+                                      vertical: MediaQuery.of(context)
+                                              .viewInsets
+                                              .bottom +
+                                          20),
+                                  decoration: InputDecoration(
+                                      hintText: "Send message...",
+                                      hintStyle:
+                                          TextStyle(color: Colors.black54),
+                                      border: InputBorder.none),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              FloatingActionButton(
+                                onPressed: () async {
+                                  final f = new DateFormat('hh:mm');
+                                  DateTime date =
+                                      new DateTime.fromMillisecondsSinceEpoch(
+                                          DateTime.now()
+                                              .millisecondsSinceEpoch);
+                                  var s = f.format(date);
+
+                                  var msg = messagecontroller.text;
+                                  childList.add(Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 8.0,
+                                          left: 8.0,
+                                          top: 4.0,
+                                          bottom: 4.0),
+                                      child: Container(
+                                          alignment: Alignment.centerRight,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: <Widget>[
+                                              Container(
+                                                constraints: BoxConstraints(
+                                                    maxWidth:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            3 /
+                                                            4,
+                                                    minWidth: 50),
+                                                padding: EdgeInsets.all(12.0),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey.shade50,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          15.0),
+                                                ),
+                                                child: Stack(children: <Widget>[
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                      right: 2.0,
+                                                      left: 2.0,
+                                                    ),
+                                                    child: Text(
+                                                      messagecontroller.text,
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 16,
+                                                          color: Colors.black),
+                                                    ),
+                                                  ),
+                                                ]),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    EdgeInsets.only(right: 10),
+                                                child: Text(
+                                                  s,
+                                                  style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 12,
+                                                      color: Colors.black),
+                                                ),
+                                              ),
+                                            ],
+                                          ))));
+
+                                  messagecontroller.clear();
+
+                                  Dio dio = new Dio();
+                                  FormData formData = FormData.fromMap({
+                                    'message': msg,
+                                  });
+
+                                  var addurl =
+                                      'https://api.sellship.co/api/sendmessage/${widget.senderid}/${widget.recipentid}/${widget.messageid}';
+                                  var response =
+                                      await dio.post(addurl, data: formData);
+                                },
+                                child: Icon(
+                                  Icons.send,
+                                  color: Colors.white,
+                                  size: 18,
+                                ),
+                                backgroundColor: Colors.deepOrangeAccent,
+                                elevation: 0,
+                              ),
+                            ],
+                          ),
+                        ))
+                    : Container(),
               ]));
     }
     if (offerstage == -1) {
       return Container(
-        height: 120,
+        height: widget.storetype == 'Secondhand Seller' ? 190 : 120,
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
             color: Colors.grey.shade100,
@@ -381,13 +814,152 @@ class _ChatPageViewState extends State<ChatPageView> {
                         ],
                       )))),
             ),
+            widget.storetype == 'Secondhand Seller'
+                ? Padding(
+                    padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                    child: Container(
+                      padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
+                      height: 60,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Row(
+                        children: <Widget>[
+                          // GestureDetector(
+                          //   onTap: () {},
+                          //   child: Container(
+                          //     height: 30,
+                          //     width: 30,
+                          //     decoration: BoxDecoration(
+                          //       color: Colors.deepOrangeAccent,
+                          //       borderRadius: BorderRadius.circular(30),
+                          //     ),
+                          //     child: Icon(
+                          //       Icons.add,
+                          //       color: Colors.white,
+                          //       size: 20,
+                          //     ),
+                          //   ),
+                          // ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Expanded(
+                            child: TextField(
+                              controller: messagecontroller,
+                              scrollPadding: EdgeInsets.symmetric(
+                                  vertical:
+                                      MediaQuery.of(context).viewInsets.bottom +
+                                          20),
+                              decoration: InputDecoration(
+                                  hintText: "Send message...",
+                                  hintStyle: TextStyle(color: Colors.black54),
+                                  border: InputBorder.none),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          FloatingActionButton(
+                            onPressed: () async {
+                              final f = new DateFormat('hh:mm');
+                              DateTime date =
+                                  new DateTime.fromMillisecondsSinceEpoch(
+                                      DateTime.now().millisecondsSinceEpoch);
+                              var s = f.format(date);
+
+                              var msg = messagecontroller.text;
+
+                              childList.add(Padding(
+                                  padding: const EdgeInsets.only(
+                                      right: 8.0,
+                                      left: 8.0,
+                                      top: 4.0,
+                                      bottom: 4.0),
+                                  child: Container(
+                                      alignment: Alignment.centerRight,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: <Widget>[
+                                          Container(
+                                            constraints: BoxConstraints(
+                                                maxWidth: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    3 /
+                                                    4,
+                                                minWidth: 50),
+                                            padding: EdgeInsets.all(12.0),
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey.shade50,
+                                              borderRadius:
+                                                  BorderRadius.circular(15.0),
+                                            ),
+                                            child: Stack(children: <Widget>[
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                  right: 2.0,
+                                                  left: 2.0,
+                                                ),
+                                                child: Text(
+                                                  messagecontroller.text,
+                                                  style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 16,
+                                                      color: Colors.black),
+                                                ),
+                                              ),
+                                            ]),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(right: 10),
+                                            child: Text(
+                                              s,
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 12,
+                                                  color: Colors.black),
+                                            ),
+                                          ),
+                                        ],
+                                      ))));
+
+                              messagecontroller.clear();
+                              Dio dio = new Dio();
+                              FormData formData = FormData.fromMap({
+                                'message': msg,
+                              });
+
+                              print(messagecontroller.text);
+                              var addurl =
+                                  'https://api.sellship.co/api/sendmessage/${widget.senderid}/${widget.recipentid}/${widget.messageid}';
+                              var response =
+                                  await dio.post(addurl, data: formData);
+                              print(response.data);
+                            },
+                            child: Icon(
+                              Icons.send,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                            backgroundColor: Colors.deepOrangeAccent,
+                            elevation: 0,
+                          ),
+                        ],
+                      ),
+                    ))
+                : Container(),
           ],
         ),
       );
     }
     if (offerstage == 3) {
       return Container(
-        height: 60,
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        height: widget.storetype == 'Secondhand Seller' ? 130 : 60,
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
             color: Colors.grey.shade100,
@@ -478,14 +1050,151 @@ class _ChatPageViewState extends State<ChatPageView> {
                               ))))),
                 ),
               ],
-            )
+            ),
+            widget.storetype == 'Secondhand Seller'
+                ? Padding(
+                    padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                    child: Container(
+                      padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
+                      height: 60,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Row(
+                        children: <Widget>[
+                          // GestureDetector(
+                          //   onTap: () {},
+                          //   child: Container(
+                          //     height: 30,
+                          //     width: 30,
+                          //     decoration: BoxDecoration(
+                          //       color: Colors.deepOrangeAccent,
+                          //       borderRadius: BorderRadius.circular(30),
+                          //     ),
+                          //     child: Icon(
+                          //       Icons.add,
+                          //       color: Colors.white,
+                          //       size: 20,
+                          //     ),
+                          //   ),
+                          // ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Expanded(
+                            child: TextField(
+                              controller: messagecontroller,
+                              scrollPadding: EdgeInsets.symmetric(
+                                  vertical:
+                                      MediaQuery.of(context).viewInsets.bottom +
+                                          20),
+                              decoration: InputDecoration(
+                                  hintText: "Send message...",
+                                  hintStyle: TextStyle(color: Colors.black54),
+                                  border: InputBorder.none),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          FloatingActionButton(
+                            onPressed: () async {
+                              final f = new DateFormat('hh:mm');
+                              DateTime date =
+                                  new DateTime.fromMillisecondsSinceEpoch(
+                                      DateTime.now().millisecondsSinceEpoch);
+                              var s = f.format(date);
+
+                              var msg = messagecontroller.text;
+
+                              childList.add(Padding(
+                                  padding: const EdgeInsets.only(
+                                      right: 8.0,
+                                      left: 8.0,
+                                      top: 4.0,
+                                      bottom: 4.0),
+                                  child: Container(
+                                      alignment: Alignment.centerRight,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: <Widget>[
+                                          Container(
+                                            constraints: BoxConstraints(
+                                                maxWidth: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    3 /
+                                                    4,
+                                                minWidth: 50),
+                                            padding: EdgeInsets.all(12.0),
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey.shade50,
+                                              borderRadius:
+                                                  BorderRadius.circular(15.0),
+                                            ),
+                                            child: Stack(children: <Widget>[
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                  right: 2.0,
+                                                  left: 2.0,
+                                                ),
+                                                child: Text(
+                                                  messagecontroller.text,
+                                                  style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 16,
+                                                      color: Colors.black),
+                                                ),
+                                              ),
+                                            ]),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(right: 10),
+                                            child: Text(
+                                              s,
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 12,
+                                                  color: Colors.black),
+                                            ),
+                                          ),
+                                        ],
+                                      ))));
+
+                              messagecontroller.clear();
+                              Dio dio = new Dio();
+                              FormData formData = FormData.fromMap({
+                                'message': msg,
+                              });
+
+                              print(messagecontroller.text);
+                              var addurl =
+                                  'https://api.sellship.co/api/sendmessage/${widget.senderid}/${widget.recipentid}/${widget.messageid}';
+                              var response =
+                                  await dio.post(addurl, data: formData);
+                              print(response.data);
+                            },
+                            child: Icon(
+                              Icons.send,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                            backgroundColor: Colors.deepOrangeAccent,
+                            elevation: 0,
+                          ),
+                        ],
+                      ),
+                    ))
+                : Container(),
           ],
         ),
       );
     }
     if (offerstage == 4) {
       return Container(
-        height: 60,
+        height: widget.storetype == 'Secondhand Seller' ? 130 : 60,
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
             color: Colors.grey.shade100,
@@ -576,14 +1285,151 @@ class _ChatPageViewState extends State<ChatPageView> {
                               ))))),
                 ),
               ],
-            )
+            ),
+            widget.storetype == 'Secondhand Seller'
+                ? Padding(
+                    padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                    child: Container(
+                      padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
+                      height: 60,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Row(
+                        children: <Widget>[
+                          // GestureDetector(
+                          //   onTap: () {},
+                          //   child: Container(
+                          //     height: 30,
+                          //     width: 30,
+                          //     decoration: BoxDecoration(
+                          //       color: Colors.deepOrangeAccent,
+                          //       borderRadius: BorderRadius.circular(30),
+                          //     ),
+                          //     child: Icon(
+                          //       Icons.add,
+                          //       color: Colors.white,
+                          //       size: 20,
+                          //     ),
+                          //   ),
+                          // ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Expanded(
+                            child: TextField(
+                              controller: messagecontroller,
+                              scrollPadding: EdgeInsets.symmetric(
+                                  vertical:
+                                      MediaQuery.of(context).viewInsets.bottom +
+                                          20),
+                              decoration: InputDecoration(
+                                  hintText: "Send message...",
+                                  hintStyle: TextStyle(color: Colors.black54),
+                                  border: InputBorder.none),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          FloatingActionButton(
+                            onPressed: () async {
+                              final f = new DateFormat('hh:mm');
+                              DateTime date =
+                                  new DateTime.fromMillisecondsSinceEpoch(
+                                      DateTime.now().millisecondsSinceEpoch);
+                              var s = f.format(date);
+
+                              var msg = messagecontroller.text;
+
+                              childList.add(Padding(
+                                  padding: const EdgeInsets.only(
+                                      right: 8.0,
+                                      left: 8.0,
+                                      top: 4.0,
+                                      bottom: 4.0),
+                                  child: Container(
+                                      alignment: Alignment.centerRight,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: <Widget>[
+                                          Container(
+                                            constraints: BoxConstraints(
+                                                maxWidth: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    3 /
+                                                    4,
+                                                minWidth: 50),
+                                            padding: EdgeInsets.all(12.0),
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey.shade50,
+                                              borderRadius:
+                                                  BorderRadius.circular(15.0),
+                                            ),
+                                            child: Stack(children: <Widget>[
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                  right: 2.0,
+                                                  left: 2.0,
+                                                ),
+                                                child: Text(
+                                                  messagecontroller.text,
+                                                  style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 16,
+                                                      color: Colors.black),
+                                                ),
+                                              ),
+                                            ]),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(right: 10),
+                                            child: Text(
+                                              s,
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 12,
+                                                  color: Colors.black),
+                                            ),
+                                          ),
+                                        ],
+                                      ))));
+
+                              messagecontroller.clear();
+                              Dio dio = new Dio();
+                              FormData formData = FormData.fromMap({
+                                'message': msg,
+                              });
+
+                              print(messagecontroller.text);
+                              var addurl =
+                                  'https://api.sellship.co/api/sendmessage/${widget.senderid}/${widget.recipentid}/${widget.messageid}';
+                              var response =
+                                  await dio.post(addurl, data: formData);
+                              print(response.data);
+                            },
+                            child: Icon(
+                              Icons.send,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                            backgroundColor: Colors.deepOrangeAccent,
+                            elevation: 0,
+                          ),
+                        ],
+                      ),
+                    ))
+                : Container(),
           ],
         ),
       );
     }
     if (offerstage == 5) {
       return Container(
-        height: 60,
+        height: widget.storetype == 'Secondhand Seller' ? 130 : 60,
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
             color: Colors.grey.shade100,
@@ -674,7 +1520,144 @@ class _ChatPageViewState extends State<ChatPageView> {
                               ))))),
                 ),
               ],
-            )
+            ),
+            widget.storetype == 'Secondhand Seller'
+                ? Padding(
+                    padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                    child: Container(
+                      padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
+                      height: 60,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Row(
+                        children: <Widget>[
+                          // GestureDetector(
+                          //   onTap: () {},
+                          //   child: Container(
+                          //     height: 30,
+                          //     width: 30,
+                          //     decoration: BoxDecoration(
+                          //       color: Colors.deepOrangeAccent,
+                          //       borderRadius: BorderRadius.circular(30),
+                          //     ),
+                          //     child: Icon(
+                          //       Icons.add,
+                          //       color: Colors.white,
+                          //       size: 20,
+                          //     ),
+                          //   ),
+                          // ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Expanded(
+                            child: TextField(
+                              controller: messagecontroller,
+                              scrollPadding: EdgeInsets.symmetric(
+                                  vertical:
+                                      MediaQuery.of(context).viewInsets.bottom +
+                                          20),
+                              decoration: InputDecoration(
+                                  hintText: "Send message...",
+                                  hintStyle: TextStyle(color: Colors.black54),
+                                  border: InputBorder.none),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          FloatingActionButton(
+                            onPressed: () async {
+                              final f = new DateFormat('hh:mm');
+                              DateTime date =
+                                  new DateTime.fromMillisecondsSinceEpoch(
+                                      DateTime.now().millisecondsSinceEpoch);
+                              var s = f.format(date);
+
+                              var msg = messagecontroller.text;
+
+                              childList.add(Padding(
+                                  padding: const EdgeInsets.only(
+                                      right: 8.0,
+                                      left: 8.0,
+                                      top: 4.0,
+                                      bottom: 4.0),
+                                  child: Container(
+                                      alignment: Alignment.centerRight,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: <Widget>[
+                                          Container(
+                                            constraints: BoxConstraints(
+                                                maxWidth: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    3 /
+                                                    4,
+                                                minWidth: 50),
+                                            padding: EdgeInsets.all(12.0),
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey.shade50,
+                                              borderRadius:
+                                                  BorderRadius.circular(15.0),
+                                            ),
+                                            child: Stack(children: <Widget>[
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                  right: 2.0,
+                                                  left: 2.0,
+                                                ),
+                                                child: Text(
+                                                  messagecontroller.text,
+                                                  style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 16,
+                                                      color: Colors.black),
+                                                ),
+                                              ),
+                                            ]),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(right: 10),
+                                            child: Text(
+                                              s,
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 12,
+                                                  color: Colors.black),
+                                            ),
+                                          ),
+                                        ],
+                                      ))));
+
+                              messagecontroller.clear();
+                              Dio dio = new Dio();
+                              FormData formData = FormData.fromMap({
+                                'message': msg,
+                              });
+
+                              print(messagecontroller.text);
+                              var addurl =
+                                  'https://api.sellship.co/api/sendmessage/${widget.senderid}/${widget.recipentid}/${widget.messageid}';
+                              var response =
+                                  await dio.post(addurl, data: formData);
+                              print(response.data);
+                            },
+                            child: Icon(
+                              Icons.send,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                            backgroundColor: Colors.deepOrangeAccent,
+                            elevation: 0,
+                          ),
+                        ],
+                      ),
+                    ))
+                : Container(),
           ],
         ),
       );
@@ -1040,7 +2023,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                           minWidth: 50),
                       padding: EdgeInsets.all(12.0),
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
+                        color: Colors.grey.shade50,
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                       child: Stack(children: <Widget>[
@@ -1268,6 +2251,7 @@ class _ChatPageViewState extends State<ChatPageView> {
 
   Widget chatView(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         bottomNavigationBar: SafeArea(child: buyeroptions(context)),
         body: GestureDetector(
             onTap: () {
@@ -1433,7 +2417,12 @@ class _ChatPageViewState extends State<ChatPageView> {
                 ),
                 SliverFillRemaining(
                   child: Container(
-                    color: Colors.white,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: new ExactAssetImage('assets/chatbg.png'),
+                            fit: BoxFit.cover,
+                            colorFilter: ColorFilter.mode(
+                                Colors.grey, BlendMode.softLight))),
                     child: Stack(
                       fit: StackFit.loose,
                       children: <Widget>[

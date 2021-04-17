@@ -143,11 +143,6 @@ class _StorePublicState extends State<StorePublic> {
                 followers = follower.length;
                 followcolor = Colors.deepOrange;
               });
-            } else {
-              setState(() {
-                followers = follower.length;
-                follow = false;
-              });
             }
           }
         }
@@ -272,13 +267,11 @@ class _StorePublicState extends State<StorePublic> {
                                           alignment: Alignment.center,
                                           child: Container(
                                             height: 50,
+                                            padding: EdgeInsets.only(
+                                                left: 5, right: 5),
                                             decoration: BoxDecoration(
                                               color: Colors.deepOrangeAccent
                                                   .withOpacity(0.8),
-                                              borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(10),
-                                                  topRight:
-                                                      Radius.circular(10)),
                                             ),
                                             width: MediaQuery.of(context)
                                                 .size
