@@ -238,6 +238,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                           onChanged: (text) {},
                                           controller: signupEmailController,
                                           cursorColor: Colors.black,
+                                          keyboardType: TextInputType.emailAddress,
                                           decoration: InputDecoration(
                                             labelStyle: TextStyle(
                                                 fontFamily: 'Helvetica',

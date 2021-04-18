@@ -121,485 +121,56 @@ class _ChatPageViewState extends State<ChatPageView> {
 
   Widget buyeroptions(BuildContext context) {
     if (offerstage == 0) {
-      return Container(
-        height: widget.storetype == 'Secondhand Seller' ? 130 : 60,
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-            color: Colors.grey.shade100,
-            borderRadius: BorderRadius.circular(10)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Padding(
-                padding: EdgeInsets.all(10),
-                child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                    decoration: BoxDecoration(
-                      border:
-                          Border.all(color: Colors.deepPurple.withOpacity(0.2)),
-                      color: Colors.deepPurple.withOpacity(0.2),
-                      borderRadius: BorderRadius.all(Radius.circular(5)),
-                    ),
-                    height: 40,
-                    width: MediaQuery.of(context).size.width,
-                    child: Center(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Icon(Icons.timer, color: Colors.deepPurple, size: 16),
-                        SizedBox(width: 5),
-                        Text(
-                          'Pending Offer',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Colors.deepPurple,
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    )))),
-            widget.storetype == 'Secondhand Seller'
-                ? Padding(
-                    padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                    child: Container(
-                      padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
-                      height: 60,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Row(
-                        children: <Widget>[
-                          // GestureDetector(
-                          //   onTap: () {},
-                          //   child: Container(
-                          //     height: 30,
-                          //     width: 30,
-                          //     decoration: BoxDecoration(
-                          //       color: Colors.deepOrangeAccent,
-                          //       borderRadius: BorderRadius.circular(30),
-                          //     ),
-                          //     child: Icon(
-                          //       Icons.add,
-                          //       color: Colors.white,
-                          //       size: 20,
-                          //     ),
-                          //   ),
-                          // ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          Expanded(
-                            child: TextField(
-                              controller: messagecontroller,
-                              scrollPadding: EdgeInsets.symmetric(
-                                  vertical:
-                                      MediaQuery.of(context).viewInsets.bottom +
-                                          20),
-                              decoration: InputDecoration(
-                                  hintText: "Send message...",
-                                  hintStyle: TextStyle(color: Colors.black54),
-                                  border: InputBorder.none),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          FloatingActionButton(
-                            onPressed: () async {
-                              final f = new DateFormat('hh:mm');
-                              DateTime date =
-                                  new DateTime.fromMillisecondsSinceEpoch(
-                                      DateTime.now().millisecondsSinceEpoch);
-                              var s = f.format(date);
-
-                              var msg = messagecontroller.text;
-
-                              childList.add(Padding(
-                                  padding: const EdgeInsets.only(
-                                      right: 8.0,
-                                      left: 8.0,
-                                      top: 4.0,
-                                      bottom: 4.0),
-                                  child: Container(
-                                      alignment: Alignment.centerRight,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: <Widget>[
-                                          Container(
-                                            constraints: BoxConstraints(
-                                                maxWidth: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    3 /
-                                                    4,
-                                                minWidth: 50),
-                                            padding: EdgeInsets.all(12.0),
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey.shade50,
-                                              borderRadius:
-                                                  BorderRadius.circular(15.0),
-                                            ),
-                                            child: Stack(children: <Widget>[
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                  right: 2.0,
-                                                  left: 2.0,
-                                                ),
-                                                child: Text(
-                                                  messagecontroller.text,
-                                                  style: TextStyle(
-                                                      fontFamily: 'Helvetica',
-                                                      fontSize: 16,
-                                                      color: Colors.black),
-                                                ),
-                                              ),
-                                            ]),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.only(right: 10),
-                                            child: Text(
-                                              s,
-                                              style: TextStyle(
-                                                  fontFamily: 'Helvetica',
-                                                  fontSize: 12,
-                                                  color: Colors.black),
-                                            ),
-                                          ),
-                                        ],
-                                      ))));
-
-                              messagecontroller.clear();
-                              Dio dio = new Dio();
-                              FormData formData = FormData.fromMap({
-                                'message': msg,
-                              });
-
-                              print(messagecontroller.text);
-                              var addurl =
-                                  'https://api.sellship.co/api/sendmessage/${widget.senderid}/${widget.recipentid}/${widget.messageid}';
-                              var response =
-                                  await dio.post(addurl, data: formData);
-                              print(response.data);
-                            },
-                            child: Icon(
-                              Icons.send,
-                              color: Colors.white,
-                              size: 18,
-                            ),
-                            backgroundColor: Colors.deepOrangeAccent,
-                            elevation: 0,
-                          ),
-                        ],
-                      ),
-                    ))
-                : Container(),
-          ],
-        ),
-      );
-    }
-    if (offerstage == 1) {
-      return Container(
-          height: widget.storetype == 'Secondhand Seller' ? 130 : 60,
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-              color: Colors.grey.shade100,
-              borderRadius: BorderRadius.circular(10)),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Padding(
-                        padding: EdgeInsets.all(10),
-                        child: InkWell(
-                            onTap: () {
-                              showDialog(
-                                  context: context,
-                                  useRootNavigator: false,
-                                  barrierDismissible: false,
-                                  builder: (_) => SpinKitDoubleBounce(
-                                        color: Colors.deepOrange,
-                                      ));
-
-                              acceptoffer();
-                            },
-                            child: Container(
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: Colors.black.withOpacity(0.2)),
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: Colors.white),
-                                height: 40,
-                                width:
-                                    MediaQuery.of(context).size.width / 2 - 20,
-                                child: Center(
-                                    child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Icon(Icons.check),
-                                    SizedBox(width: 5),
-                                    Text(
-                                      'Accept Offer',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold),
-                                    )
-                                  ],
-                                ))))),
-                    Padding(
-                        padding: EdgeInsets.all(10),
-                        child: InkWell(
-                            onTap: () {
-                              showDialog(
-                                  context: context,
-                                  useRootNavigator: false,
-                                  barrierDismissible: false,
-                                  builder: (_) => SpinKitDoubleBounce(
-                                        color: Colors.deepOrange,
-                                      ));
-                              canceloffer();
-                            },
-                            child: Container(
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: Colors.black.withOpacity(0.2)),
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: Colors.white),
-                                height: 40,
-                                width:
-                                    MediaQuery.of(context).size.width / 2 - 20,
-                                child: Center(
-                                    child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Icon(Icons.cancel),
-                                    SizedBox(width: 5),
-                                    Text(
-                                      'Cancel Offer',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold),
-                                    )
-                                  ],
-                                ))))),
-                  ],
-                ),
-                widget.storetype == 'Secondhand Seller'
-                    ? Padding(
-                        padding:
-                            EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                        child: Container(
-                          padding:
-                              EdgeInsets.only(left: 10, bottom: 10, top: 10),
-                          height: 60,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Row(
-                            children: <Widget>[
-                              // GestureDetector(
-                              //   onTap: () {},
-                              //   child: Container(
-                              //     height: 30,
-                              //     width: 30,
-                              //     decoration: BoxDecoration(
-                              //       color: Colors.deepOrangeAccent,
-                              //       borderRadius: BorderRadius.circular(30),
-                              //     ),
-                              //     child: Icon(
-                              //       Icons.add,
-                              //       color: Colors.white,
-                              //       size: 20,
-                              //     ),
-                              //   ),
-                              // ),
-                              SizedBox(
-                                width: 15,
-                              ),
-                              Expanded(
-                                child: TextField(
-                                  controller: messagecontroller,
-                                  scrollPadding: EdgeInsets.symmetric(
-                                      vertical: MediaQuery.of(context)
-                                              .viewInsets
-                                              .bottom +
-                                          20),
-                                  decoration: InputDecoration(
-                                      hintText: "Send message...",
-                                      hintStyle:
-                                          TextStyle(color: Colors.black54),
-                                      border: InputBorder.none),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 15,
-                              ),
-                              FloatingActionButton(
-                                onPressed: () async {
-                                  final f = new DateFormat('hh:mm');
-                                  DateTime date =
-                                      new DateTime.fromMillisecondsSinceEpoch(
-                                          DateTime.now()
-                                              .millisecondsSinceEpoch);
-                                  var s = f.format(date);
-
-                                  var msg = messagecontroller.text;
-
-                                  childList.add(Padding(
-                                      padding: const EdgeInsets.only(
-                                          right: 8.0,
-                                          left: 8.0,
-                                          top: 4.0,
-                                          bottom: 4.0),
-                                      child: Container(
-                                          alignment: Alignment.centerRight,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: <Widget>[
-                                              Container(
-                                                constraints: BoxConstraints(
-                                                    maxWidth:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            3 /
-                                                            4,
-                                                    minWidth: 50),
-                                                padding: EdgeInsets.all(12.0),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.grey.shade50,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          15.0),
-                                                ),
-                                                child: Stack(children: <Widget>[
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                      right: 2.0,
-                                                      left: 2.0,
-                                                    ),
-                                                    child: Text(
-                                                      messagecontroller.text,
-                                                      style: TextStyle(
-                                                          fontFamily:
-                                                              'Helvetica',
-                                                          fontSize: 16,
-                                                          color: Colors.black),
-                                                    ),
-                                                  ),
-                                                ]),
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    EdgeInsets.only(right: 10),
-                                                child: Text(
-                                                  s,
-                                                  style: TextStyle(
-                                                      fontFamily: 'Helvetica',
-                                                      fontSize: 12,
-                                                      color: Colors.black),
-                                                ),
-                                              ),
-                                            ],
-                                          ))));
-
-                                  messagecontroller.clear();
-
-                                  Dio dio = new Dio();
-                                  FormData formData = FormData.fromMap({
-                                    'message': msg,
-                                  });
-
-                                  var addurl =
-                                      'https://api.sellship.co/api/sendmessage/${widget.senderid}/${widget.recipentid}/${widget.messageid}';
-                                  var response =
-                                      await dio.post(addurl, data: formData);
-                                },
-                                child: Icon(
-                                  Icons.send,
-                                  color: Colors.white,
-                                  size: 18,
-                                ),
-                                backgroundColor: Colors.deepOrangeAccent,
-                                elevation: 0,
-                              ),
-                            ],
-                          ),
-                        ))
-                    : Container(),
-              ]));
-    }
-    if (offerstage == 2) {
-      return Container(
-          height: widget.storetype == 'Secondhand Seller' ? 130 : 60,
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-              color: Colors.grey.shade100,
-              borderRadius: BorderRadius.circular(10)),
-          child: Column(
+      return Padding(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+            height: widget.storetype == 'Secondhand Seller' ? 130 : 60,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(10)),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
                     padding: EdgeInsets.all(10),
-                    child: InkWell(
-                        enableFeedback: true,
-                        onTap: () async {
-                          SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
-                          prefs.remove('cartitems');
-
-                          String item = jsonEncode(widget.item);
-                          prefs.setStringList('cartitems', [item]);
-
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => CheckoutOffer(
-                                    ordertype: 'EXISTING',
-                                    itemid: widget.itemid,
-                                    offer: itemprice.toString(),
-                                    messageid: widget.messageid)),
-                          );
-                        },
-                        child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.green),
-                            height: 40,
-                            width: MediaQuery.of(context).size.width - 20,
-                            child: Center(
-                                child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Proceed to Checkout',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                )
-                              ],
-                            ))))),
+                    child: Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                              color: Colors.deepPurple.withOpacity(0.2)),
+                          color: Colors.deepPurple.withOpacity(0.2),
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                        ),
+                        height: 40,
+                        width: MediaQuery.of(context).size.width,
+                        child: Center(
+                            child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(Icons.timer,
+                                color: Colors.deepPurple, size: 16),
+                            SizedBox(width: 5),
+                            Text(
+                              'Pending Offer',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.deepPurple,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          ],
+                        )))),
                 widget.storetype == 'Secondhand Seller'
                     ? Padding(
-                        padding:
-                            EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                        padding: EdgeInsets.only(
+                          left: 10,
+                          right: 10,
+                        ),
                         child: Container(
                           padding:
                               EdgeInsets.only(left: 10, bottom: 10, top: 10),
@@ -657,6 +228,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                   var s = f.format(date);
 
                                   var msg = messagecontroller.text;
+
                                   childList.add(Padding(
                                       padding: const EdgeInsets.only(
                                           right: 8.0,
@@ -718,16 +290,17 @@ class _ChatPageViewState extends State<ChatPageView> {
                                           ))));
 
                                   messagecontroller.clear();
-
                                   Dio dio = new Dio();
                                   FormData formData = FormData.fromMap({
                                     'message': msg,
                                   });
 
+                                  print(messagecontroller.text);
                                   var addurl =
                                       'https://api.sellship.co/api/sendmessage/${widget.senderid}/${widget.recipentid}/${widget.messageid}';
                                   var response =
                                       await dio.post(addurl, data: formData);
+                                  print(response.data);
                                 },
                                 child: Icon(
                                   Icons.send,
@@ -741,291 +314,740 @@ class _ChatPageViewState extends State<ChatPageView> {
                           ),
                         ))
                     : Container(),
-              ]));
+              ],
+            ),
+          ));
+    }
+    if (offerstage == 1) {
+      return Padding(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+              height: widget.storetype == 'Secondhand Seller' ? 130 : 60,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(10)),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Padding(
+                            padding: EdgeInsets.all(10),
+                            child: InkWell(
+                                onTap: () {
+                                  showDialog(
+                                      context: context,
+                                      useRootNavigator: false,
+                                      barrierDismissible: false,
+                                      builder: (_) => SpinKitDoubleBounce(
+                                            color: Colors.deepOrange,
+                                          ));
+
+                                  acceptoffer();
+                                },
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color:
+                                                Colors.black.withOpacity(0.2)),
+                                        borderRadius: BorderRadius.circular(5),
+                                        color: Colors.white),
+                                    height: 40,
+                                    width:
+                                        MediaQuery.of(context).size.width / 2 -
+                                            20,
+                                    child: Center(
+                                        child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.check),
+                                        SizedBox(width: 5),
+                                        Text(
+                                          'Accept Offer',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold),
+                                        )
+                                      ],
+                                    ))))),
+                        Padding(
+                            padding: EdgeInsets.all(10),
+                            child: InkWell(
+                                onTap: () {
+                                  showDialog(
+                                      context: context,
+                                      useRootNavigator: false,
+                                      barrierDismissible: false,
+                                      builder: (_) => SpinKitDoubleBounce(
+                                            color: Colors.deepOrange,
+                                          ));
+                                  canceloffer();
+                                },
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color:
+                                                Colors.black.withOpacity(0.2)),
+                                        borderRadius: BorderRadius.circular(5),
+                                        color: Colors.white),
+                                    height: 40,
+                                    width:
+                                        MediaQuery.of(context).size.width / 2 -
+                                            20,
+                                    child: Center(
+                                        child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.cancel),
+                                        SizedBox(width: 5),
+                                        Text(
+                                          'Cancel Offer',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold),
+                                        )
+                                      ],
+                                    ))))),
+                      ],
+                    ),
+                    widget.storetype == 'Secondhand Seller'
+                        ? Padding(
+                            padding: EdgeInsets.only(
+                              left: 10,
+                              right: 10,
+                            ),
+                            child: Container(
+                              padding: EdgeInsets.only(
+                                  left: 10, bottom: 10, top: 10),
+                              height: 60,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Row(
+                                children: <Widget>[
+                                  // GestureDetector(
+                                  //   onTap: () {},
+                                  //   child: Container(
+                                  //     height: 30,
+                                  //     width: 30,
+                                  //     decoration: BoxDecoration(
+                                  //       color: Colors.deepOrangeAccent,
+                                  //       borderRadius: BorderRadius.circular(30),
+                                  //     ),
+                                  //     child: Icon(
+                                  //       Icons.add,
+                                  //       color: Colors.white,
+                                  //       size: 20,
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                  SizedBox(
+                                    width: 15,
+                                  ),
+                                  Expanded(
+                                    child: TextField(
+                                      controller: messagecontroller,
+                                      scrollPadding: EdgeInsets.symmetric(
+                                          vertical: MediaQuery.of(context)
+                                                  .viewInsets
+                                                  .bottom +
+                                              20),
+                                      decoration: InputDecoration(
+                                          hintText: "Send message...",
+                                          hintStyle:
+                                              TextStyle(color: Colors.black54),
+                                          border: InputBorder.none),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 15,
+                                  ),
+                                  FloatingActionButton(
+                                    onPressed: () async {
+                                      final f = new DateFormat('hh:mm');
+                                      DateTime date = new DateTime
+                                              .fromMillisecondsSinceEpoch(
+                                          DateTime.now()
+                                              .millisecondsSinceEpoch);
+                                      var s = f.format(date);
+
+                                      var msg = messagecontroller.text;
+
+                                      childList.add(Padding(
+                                          padding: const EdgeInsets.only(
+                                              right: 8.0,
+                                              left: 8.0,
+                                              top: 4.0,
+                                              bottom: 4.0),
+                                          child: Container(
+                                              alignment: Alignment.centerRight,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
+                                                children: <Widget>[
+                                                  Container(
+                                                    constraints: BoxConstraints(
+                                                        maxWidth: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            3 /
+                                                            4,
+                                                        minWidth: 50),
+                                                    padding:
+                                                        EdgeInsets.all(12.0),
+                                                    decoration: BoxDecoration(
+                                                      color:
+                                                          Colors.grey.shade50,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15.0),
+                                                    ),
+                                                    child: Stack(
+                                                        children: <Widget>[
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                              right: 2.0,
+                                                              left: 2.0,
+                                                            ),
+                                                            child: Text(
+                                                              messagecontroller
+                                                                  .text,
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'Helvetica',
+                                                                  fontSize: 16,
+                                                                  color: Colors
+                                                                      .black),
+                                                            ),
+                                                          ),
+                                                        ]),
+                                                  ),
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        right: 10),
+                                                    child: Text(
+                                                      s,
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 12,
+                                                          color: Colors.black),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ))));
+
+                                      messagecontroller.clear();
+
+                                      Dio dio = new Dio();
+                                      FormData formData = FormData.fromMap({
+                                        'message': msg,
+                                      });
+
+                                      var addurl =
+                                          'https://api.sellship.co/api/sendmessage/${widget.senderid}/${widget.recipentid}/${widget.messageid}';
+                                      var response = await dio.post(addurl,
+                                          data: formData);
+                                    },
+                                    child: Icon(
+                                      Icons.send,
+                                      color: Colors.white,
+                                      size: 18,
+                                    ),
+                                    backgroundColor: Colors.deepOrangeAccent,
+                                    elevation: 0,
+                                  ),
+                                ],
+                              ),
+                            ))
+                        : Container(),
+                  ])));
+    }
+    if (offerstage == 2) {
+      return Padding(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+              height: widget.storetype == 'Secondhand Seller' ? 130 : 60,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(10)),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Padding(
+                        padding: EdgeInsets.all(10),
+                        child: InkWell(
+                            enableFeedback: true,
+                            onTap: () async {
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              prefs.remove('cartitems');
+
+                              String item = jsonEncode(widget.item);
+                              prefs.setStringList('cartitems', [item]);
+
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => CheckoutOffer(
+                                        ordertype: 'EXISTING',
+                                        itemid: widget.itemid,
+                                        offer: itemprice.toString(),
+                                        messageid: widget.messageid)),
+                              );
+                            },
+                            child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.green),
+                                height: 40,
+                                width: MediaQuery.of(context).size.width - 20,
+                                child: Center(
+                                    child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Proceed to Checkout',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    )
+                                  ],
+                                ))))),
+                    widget.storetype == 'Secondhand Seller'
+                        ? Padding(
+                            padding: EdgeInsets.only(
+                              left: 10,
+                              right: 10,
+                            ),
+                            child: Container(
+                              padding: EdgeInsets.only(
+                                  left: 10, bottom: 10, top: 10),
+                              height: 60,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Row(
+                                children: <Widget>[
+                                  // GestureDetector(
+                                  //   onTap: () {},
+                                  //   child: Container(
+                                  //     height: 30,
+                                  //     width: 30,
+                                  //     decoration: BoxDecoration(
+                                  //       color: Colors.deepOrangeAccent,
+                                  //       borderRadius: BorderRadius.circular(30),
+                                  //     ),
+                                  //     child: Icon(
+                                  //       Icons.add,
+                                  //       color: Colors.white,
+                                  //       size: 20,
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                  SizedBox(
+                                    width: 15,
+                                  ),
+                                  Expanded(
+                                    child: TextField(
+                                      controller: messagecontroller,
+                                      scrollPadding: EdgeInsets.symmetric(
+                                          vertical: MediaQuery.of(context)
+                                                  .viewInsets
+                                                  .bottom +
+                                              20),
+                                      decoration: InputDecoration(
+                                          hintText: "Send message...",
+                                          hintStyle:
+                                              TextStyle(color: Colors.black54),
+                                          border: InputBorder.none),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 15,
+                                  ),
+                                  FloatingActionButton(
+                                    onPressed: () async {
+                                      final f = new DateFormat('hh:mm');
+                                      DateTime date = new DateTime
+                                              .fromMillisecondsSinceEpoch(
+                                          DateTime.now()
+                                              .millisecondsSinceEpoch);
+                                      var s = f.format(date);
+
+                                      var msg = messagecontroller.text;
+                                      childList.add(Padding(
+                                          padding: const EdgeInsets.only(
+                                              right: 8.0,
+                                              left: 8.0,
+                                              top: 4.0,
+                                              bottom: 4.0),
+                                          child: Container(
+                                              alignment: Alignment.centerRight,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
+                                                children: <Widget>[
+                                                  Container(
+                                                    constraints: BoxConstraints(
+                                                        maxWidth: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            3 /
+                                                            4,
+                                                        minWidth: 50),
+                                                    padding:
+                                                        EdgeInsets.all(12.0),
+                                                    decoration: BoxDecoration(
+                                                      color:
+                                                          Colors.grey.shade50,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15.0),
+                                                    ),
+                                                    child: Stack(
+                                                        children: <Widget>[
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                              right: 2.0,
+                                                              left: 2.0,
+                                                            ),
+                                                            child: Text(
+                                                              messagecontroller
+                                                                  .text,
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'Helvetica',
+                                                                  fontSize: 16,
+                                                                  color: Colors
+                                                                      .black),
+                                                            ),
+                                                          ),
+                                                        ]),
+                                                  ),
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        right: 10),
+                                                    child: Text(
+                                                      s,
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 12,
+                                                          color: Colors.black),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ))));
+
+                                      messagecontroller.clear();
+
+                                      Dio dio = new Dio();
+                                      FormData formData = FormData.fromMap({
+                                        'message': msg,
+                                      });
+
+                                      var addurl =
+                                          'https://api.sellship.co/api/sendmessage/${widget.senderid}/${widget.recipentid}/${widget.messageid}';
+                                      var response = await dio.post(addurl,
+                                          data: formData);
+                                    },
+                                    child: Icon(
+                                      Icons.send,
+                                      color: Colors.white,
+                                      size: 18,
+                                    ),
+                                    backgroundColor: Colors.deepOrangeAccent,
+                                    elevation: 0,
+                                  ),
+                                ],
+                              ),
+                            ))
+                        : Container(),
+                  ])));
     }
     if (offerstage == -1) {
-      return Container(
-        height: widget.storetype == 'Secondhand Seller' ? 190 : 120,
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-            color: Colors.grey.shade100,
-            borderRadius: BorderRadius.circular(10)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Padding(
-                padding: EdgeInsets.all(10),
-                child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.red.withOpacity(0.2)),
-                      color: Colors.red.withOpacity(0.2),
-                      borderRadius: BorderRadius.all(Radius.circular(5)),
-                    ),
-                    height: 40,
-                    width: MediaQuery.of(context).size.width,
-                    child: Center(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Icon(Icons.cancel, color: Colors.red, size: 16),
-                        SizedBox(width: 5),
-                        Text(
-                          'Offer Declined',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    )))),
-            Padding(
-              padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-              child: InkWell(
-                  onTap: () {
-                    showMe(context);
-                  },
-                  child: Container(
-                      decoration: BoxDecoration(
-                          border:
-                              Border.all(color: Colors.black.withOpacity(0.2)),
-                          borderRadius: BorderRadius.circular(5),
-                          color: Colors.white),
-                      height: 40,
-                      width: MediaQuery.of(context).size.width,
-                      child: Center(
-                          child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Icon(Icons.local_offer),
-                          SizedBox(width: 5),
-                          Text(
-                            'Make a New Offer',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold),
-                          )
-                        ],
-                      )))),
-            ),
-            widget.storetype == 'Secondhand Seller'
-                ? Padding(
-                    padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+      return Padding(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+            height: widget.storetype == 'Secondhand Seller' ? 190 : 120,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(10)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                    padding: EdgeInsets.all(10),
                     child: Container(
-                      padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
-                      height: 60,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Row(
-                        children: <Widget>[
-                          // GestureDetector(
-                          //   onTap: () {},
-                          //   child: Container(
-                          //     height: 30,
-                          //     width: 30,
-                          //     decoration: BoxDecoration(
-                          //       color: Colors.deepOrangeAccent,
-                          //       borderRadius: BorderRadius.circular(30),
-                          //     ),
-                          //     child: Icon(
-                          //       Icons.add,
-                          //       color: Colors.white,
-                          //       size: 20,
-                          //     ),
-                          //   ),
-                          // ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          Expanded(
-                            child: TextField(
-                              controller: messagecontroller,
-                              scrollPadding: EdgeInsets.symmetric(
-                                  vertical:
-                                      MediaQuery.of(context).viewInsets.bottom +
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                        decoration: BoxDecoration(
+                          border:
+                              Border.all(color: Colors.red.withOpacity(0.2)),
+                          color: Colors.red.withOpacity(0.2),
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                        ),
+                        height: 40,
+                        width: MediaQuery.of(context).size.width,
+                        child: Center(
+                            child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(Icons.cancel, color: Colors.red, size: 16),
+                            SizedBox(width: 5),
+                            Text(
+                              'Offer Declined',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          ],
+                        )))),
+                Padding(
+                  padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: InkWell(
+                      onTap: () {
+                        showMe(context);
+                      },
+                      child: Container(
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: Colors.black.withOpacity(0.2)),
+                              borderRadius: BorderRadius.circular(5),
+                              color: Colors.white),
+                          height: 40,
+                          width: MediaQuery.of(context).size.width,
+                          child: Center(
+                              child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(Icons.local_offer),
+                              SizedBox(width: 5),
+                              Text(
+                                'Make a New Offer',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          )))),
+                ),
+                widget.storetype == 'Secondhand Seller'
+                    ? Padding(
+                        padding: EdgeInsets.only(
+                          left: 10,
+                          right: 10,
+                        ),
+                        child: Container(
+                          padding:
+                              EdgeInsets.only(left: 10, bottom: 10, top: 10),
+                          height: 60,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Row(
+                            children: <Widget>[
+                              // GestureDetector(
+                              //   onTap: () {},
+                              //   child: Container(
+                              //     height: 30,
+                              //     width: 30,
+                              //     decoration: BoxDecoration(
+                              //       color: Colors.deepOrangeAccent,
+                              //       borderRadius: BorderRadius.circular(30),
+                              //     ),
+                              //     child: Icon(
+                              //       Icons.add,
+                              //       color: Colors.white,
+                              //       size: 20,
+                              //     ),
+                              //   ),
+                              // ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              Expanded(
+                                child: TextField(
+                                  controller: messagecontroller,
+                                  scrollPadding: EdgeInsets.symmetric(
+                                      vertical: MediaQuery.of(context)
+                                              .viewInsets
+                                              .bottom +
                                           20),
-                              decoration: InputDecoration(
-                                  hintText: "Send message...",
-                                  hintStyle: TextStyle(color: Colors.black54),
-                                  border: InputBorder.none),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          FloatingActionButton(
-                            onPressed: () async {
-                              final f = new DateFormat('hh:mm');
-                              DateTime date =
-                                  new DateTime.fromMillisecondsSinceEpoch(
-                                      DateTime.now().millisecondsSinceEpoch);
-                              var s = f.format(date);
+                                  decoration: InputDecoration(
+                                      hintText: "Send message...",
+                                      hintStyle:
+                                          TextStyle(color: Colors.black54),
+                                      border: InputBorder.none),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              FloatingActionButton(
+                                onPressed: () async {
+                                  final f = new DateFormat('hh:mm');
+                                  DateTime date =
+                                      new DateTime.fromMillisecondsSinceEpoch(
+                                          DateTime.now()
+                                              .millisecondsSinceEpoch);
+                                  var s = f.format(date);
 
-                              var msg = messagecontroller.text;
+                                  var msg = messagecontroller.text;
 
-                              childList.add(Padding(
-                                  padding: const EdgeInsets.only(
-                                      right: 8.0,
-                                      left: 8.0,
-                                      top: 4.0,
-                                      bottom: 4.0),
-                                  child: Container(
-                                      alignment: Alignment.centerRight,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: <Widget>[
-                                          Container(
-                                            constraints: BoxConstraints(
-                                                maxWidth: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    3 /
-                                                    4,
-                                                minWidth: 50),
-                                            padding: EdgeInsets.all(12.0),
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey.shade50,
-                                              borderRadius:
-                                                  BorderRadius.circular(15.0),
-                                            ),
-                                            child: Stack(children: <Widget>[
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                  right: 2.0,
-                                                  left: 2.0,
+                                  childList.add(Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 8.0,
+                                          left: 8.0,
+                                          top: 4.0,
+                                          bottom: 4.0),
+                                      child: Container(
+                                          alignment: Alignment.centerRight,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: <Widget>[
+                                              Container(
+                                                constraints: BoxConstraints(
+                                                    maxWidth:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            3 /
+                                                            4,
+                                                    minWidth: 50),
+                                                padding: EdgeInsets.all(12.0),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey.shade50,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          15.0),
                                                 ),
+                                                child: Stack(children: <Widget>[
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                      right: 2.0,
+                                                      left: 2.0,
+                                                    ),
+                                                    child: Text(
+                                                      messagecontroller.text,
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 16,
+                                                          color: Colors.black),
+                                                    ),
+                                                  ),
+                                                ]),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    EdgeInsets.only(right: 10),
                                                 child: Text(
-                                                  messagecontroller.text,
+                                                  s,
                                                   style: TextStyle(
                                                       fontFamily: 'Helvetica',
-                                                      fontSize: 16,
+                                                      fontSize: 12,
                                                       color: Colors.black),
                                                 ),
                                               ),
-                                            ]),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.only(right: 10),
-                                            child: Text(
-                                              s,
-                                              style: TextStyle(
-                                                  fontFamily: 'Helvetica',
-                                                  fontSize: 12,
-                                                  color: Colors.black),
-                                            ),
-                                          ),
-                                        ],
-                                      ))));
+                                            ],
+                                          ))));
 
-                              messagecontroller.clear();
-                              Dio dio = new Dio();
-                              FormData formData = FormData.fromMap({
-                                'message': msg,
-                              });
+                                  messagecontroller.clear();
+                                  Dio dio = new Dio();
+                                  FormData formData = FormData.fromMap({
+                                    'message': msg,
+                                  });
 
-                              print(messagecontroller.text);
-                              var addurl =
-                                  'https://api.sellship.co/api/sendmessage/${widget.senderid}/${widget.recipentid}/${widget.messageid}';
-                              var response =
-                                  await dio.post(addurl, data: formData);
-                              print(response.data);
-                            },
-                            child: Icon(
-                              Icons.send,
-                              color: Colors.white,
-                              size: 18,
-                            ),
-                            backgroundColor: Colors.deepOrangeAccent,
-                            elevation: 0,
+                                  print(messagecontroller.text);
+                                  var addurl =
+                                      'https://api.sellship.co/api/sendmessage/${widget.senderid}/${widget.recipentid}/${widget.messageid}';
+                                  var response =
+                                      await dio.post(addurl, data: formData);
+                                  print(response.data);
+                                },
+                                child: Icon(
+                                  Icons.send,
+                                  color: Colors.white,
+                                  size: 18,
+                                ),
+                                backgroundColor: Colors.deepOrangeAccent,
+                                elevation: 0,
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ))
-                : Container(),
-          ],
-        ),
-      );
+                        ))
+                    : Container(),
+              ],
+            ),
+          ));
     }
     if (offerstage == 3) {
-      return Container(
-        padding:
-            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-        height: widget.storetype == 'Secondhand Seller' ? 130 : 60,
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-            color: Colors.grey.shade100,
-            borderRadius: BorderRadius.circular(10)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Row(
+      return Padding(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+            height: widget.storetype == 'Secondhand Seller' ? 130 : 60,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(10)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 10),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                color:
-                                    Colors.deepPurpleAccent.withOpacity(0.2)),
-                            color: Colors.deepPurpleAccent.withOpacity(0.2),
-                            borderRadius: BorderRadius.all(Radius.circular(5)),
-                          ),
-                          height: 40,
-                          child: Center(
-                              child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(Icons.delivery_dining,
-                                  color: Colors.deepPurpleAccent, size: 16),
-                              SizedBox(width: 5),
-                              Text(
-                                'Waiting for Delivery',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: Colors.deepPurpleAccent,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold),
-                              )
-                            ],
-                          )))),
-                ),
-                Expanded(
-                  child: InkWell(
-                      enableFeedback: true,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => OrderBuyerPage(
-                                    itemid: widget.itemid,
-                                    messageid: widget.messageid,
-                                  )),
-                        );
-                      },
+                Row(
+                  children: [
+                    Expanded(
                       child: Padding(
-                          padding: EdgeInsets.only(
-                              left: 5, right: 20, top: 10, bottom: 10),
+                          padding: EdgeInsets.all(10),
                           child: Container(
                               padding: EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 10),
                               decoration: BoxDecoration(
-                                color: Colors.white,
                                 border: Border.all(
-                                    color: Colors.black.withOpacity(0.2)),
+                                    color: Colors.deepPurpleAccent
+                                        .withOpacity(0.2)),
+                                color: Colors.deepPurpleAccent.withOpacity(0.2),
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(5)),
                               ),
@@ -1035,232 +1057,249 @@ class _ChatPageViewState extends State<ChatPageView> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Icon(FontAwesomeIcons.receipt,
-                                      color: Colors.black, size: 16),
+                                  Icon(Icons.delivery_dining,
+                                      color: Colors.deepPurpleAccent, size: 16),
                                   SizedBox(width: 5),
                                   Text(
-                                    'View Order',
+                                    'Waiting for Delivery',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 16,
+                                        color: Colors.deepPurpleAccent,
+                                        fontSize: 15,
                                         fontWeight: FontWeight.bold),
                                   )
                                 ],
-                              ))))),
+                              )))),
+                    ),
+                    Expanded(
+                      child: InkWell(
+                          enableFeedback: true,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => OrderBuyerPage(
+                                        itemid: widget.itemid,
+                                        messageid: widget.messageid,
+                                      )),
+                            );
+                          },
+                          child: Padding(
+                              padding: EdgeInsets.only(
+                                  left: 5, right: 20, top: 10, bottom: 10),
+                              child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 10),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                        color: Colors.black.withOpacity(0.2)),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(5)),
+                                  ),
+                                  height: 40,
+                                  child: Center(
+                                      child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Icon(FontAwesomeIcons.receipt,
+                                          color: Colors.black, size: 16),
+                                      SizedBox(width: 5),
+                                      Text(
+                                        'View Order',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    ],
+                                  ))))),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            widget.storetype == 'Secondhand Seller'
-                ? Padding(
-                    padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                    child: Container(
-                      padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
-                      height: 60,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Row(
-                        children: <Widget>[
-                          // GestureDetector(
-                          //   onTap: () {},
-                          //   child: Container(
-                          //     height: 30,
-                          //     width: 30,
-                          //     decoration: BoxDecoration(
-                          //       color: Colors.deepOrangeAccent,
-                          //       borderRadius: BorderRadius.circular(30),
-                          //     ),
-                          //     child: Icon(
-                          //       Icons.add,
-                          //       color: Colors.white,
-                          //       size: 20,
-                          //     ),
-                          //   ),
-                          // ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          Expanded(
-                            child: TextField(
-                              controller: messagecontroller,
-                              scrollPadding: EdgeInsets.symmetric(
-                                  vertical:
-                                      MediaQuery.of(context).viewInsets.bottom +
+                widget.storetype == 'Secondhand Seller'
+                    ? Padding(
+                        padding: EdgeInsets.only(
+                          left: 10,
+                          right: 10,
+                        ),
+                        child: Container(
+                          padding:
+                              EdgeInsets.only(left: 10, bottom: 10, top: 10),
+                          height: 60,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Row(
+                            children: <Widget>[
+                              // GestureDetector(
+                              //   onTap: () {},
+                              //   child: Container(
+                              //     height: 30,
+                              //     width: 30,
+                              //     decoration: BoxDecoration(
+                              //       color: Colors.deepOrangeAccent,
+                              //       borderRadius: BorderRadius.circular(30),
+                              //     ),
+                              //     child: Icon(
+                              //       Icons.add,
+                              //       color: Colors.white,
+                              //       size: 20,
+                              //     ),
+                              //   ),
+                              // ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              Expanded(
+                                child: TextField(
+                                  controller: messagecontroller,
+                                  scrollPadding: EdgeInsets.symmetric(
+                                      vertical: MediaQuery.of(context)
+                                              .viewInsets
+                                              .bottom +
                                           20),
-                              decoration: InputDecoration(
-                                  hintText: "Send message...",
-                                  hintStyle: TextStyle(color: Colors.black54),
-                                  border: InputBorder.none),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          FloatingActionButton(
-                            onPressed: () async {
-                              final f = new DateFormat('hh:mm');
-                              DateTime date =
-                                  new DateTime.fromMillisecondsSinceEpoch(
-                                      DateTime.now().millisecondsSinceEpoch);
-                              var s = f.format(date);
+                                  decoration: InputDecoration(
+                                      hintText: "Send message...",
+                                      hintStyle:
+                                          TextStyle(color: Colors.black54),
+                                      border: InputBorder.none),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              FloatingActionButton(
+                                onPressed: () async {
+                                  final f = new DateFormat('hh:mm');
+                                  DateTime date =
+                                      new DateTime.fromMillisecondsSinceEpoch(
+                                          DateTime.now()
+                                              .millisecondsSinceEpoch);
+                                  var s = f.format(date);
 
-                              var msg = messagecontroller.text;
+                                  var msg = messagecontroller.text;
 
-                              childList.add(Padding(
-                                  padding: const EdgeInsets.only(
-                                      right: 8.0,
-                                      left: 8.0,
-                                      top: 4.0,
-                                      bottom: 4.0),
-                                  child: Container(
-                                      alignment: Alignment.centerRight,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: <Widget>[
-                                          Container(
-                                            constraints: BoxConstraints(
-                                                maxWidth: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    3 /
-                                                    4,
-                                                minWidth: 50),
-                                            padding: EdgeInsets.all(12.0),
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey.shade50,
-                                              borderRadius:
-                                                  BorderRadius.circular(15.0),
-                                            ),
-                                            child: Stack(children: <Widget>[
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                  right: 2.0,
-                                                  left: 2.0,
+                                  childList.add(Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 8.0,
+                                          left: 8.0,
+                                          top: 4.0,
+                                          bottom: 4.0),
+                                      child: Container(
+                                          alignment: Alignment.centerRight,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: <Widget>[
+                                              Container(
+                                                constraints: BoxConstraints(
+                                                    maxWidth:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            3 /
+                                                            4,
+                                                    minWidth: 50),
+                                                padding: EdgeInsets.all(12.0),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey.shade50,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          15.0),
                                                 ),
+                                                child: Stack(children: <Widget>[
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                      right: 2.0,
+                                                      left: 2.0,
+                                                    ),
+                                                    child: Text(
+                                                      messagecontroller.text,
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 16,
+                                                          color: Colors.black),
+                                                    ),
+                                                  ),
+                                                ]),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    EdgeInsets.only(right: 10),
                                                 child: Text(
-                                                  messagecontroller.text,
+                                                  s,
                                                   style: TextStyle(
                                                       fontFamily: 'Helvetica',
-                                                      fontSize: 16,
+                                                      fontSize: 12,
                                                       color: Colors.black),
                                                 ),
                                               ),
-                                            ]),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.only(right: 10),
-                                            child: Text(
-                                              s,
-                                              style: TextStyle(
-                                                  fontFamily: 'Helvetica',
-                                                  fontSize: 12,
-                                                  color: Colors.black),
-                                            ),
-                                          ),
-                                        ],
-                                      ))));
+                                            ],
+                                          ))));
 
-                              messagecontroller.clear();
-                              Dio dio = new Dio();
-                              FormData formData = FormData.fromMap({
-                                'message': msg,
-                              });
+                                  messagecontroller.clear();
+                                  Dio dio = new Dio();
+                                  FormData formData = FormData.fromMap({
+                                    'message': msg,
+                                  });
 
-                              print(messagecontroller.text);
-                              var addurl =
-                                  'https://api.sellship.co/api/sendmessage/${widget.senderid}/${widget.recipentid}/${widget.messageid}';
-                              var response =
-                                  await dio.post(addurl, data: formData);
-                              print(response.data);
-                            },
-                            child: Icon(
-                              Icons.send,
-                              color: Colors.white,
-                              size: 18,
-                            ),
-                            backgroundColor: Colors.deepOrangeAccent,
-                            elevation: 0,
+                                  print(messagecontroller.text);
+                                  var addurl =
+                                      'https://api.sellship.co/api/sendmessage/${widget.senderid}/${widget.recipentid}/${widget.messageid}';
+                                  var response =
+                                      await dio.post(addurl, data: formData);
+                                  print(response.data);
+                                },
+                                child: Icon(
+                                  Icons.send,
+                                  color: Colors.white,
+                                  size: 18,
+                                ),
+                                backgroundColor: Colors.deepOrangeAccent,
+                                elevation: 0,
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ))
-                : Container(),
-          ],
-        ),
-      );
+                        ))
+                    : Container(),
+              ],
+            ),
+          ));
     }
     if (offerstage == 4) {
-      return Container(
-        height: widget.storetype == 'Secondhand Seller' ? 130 : 60,
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-            color: Colors.grey.shade100,
-            borderRadius: BorderRadius.circular(10)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Row(
+      return Padding(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+            height: widget.storetype == 'Secondhand Seller' ? 130 : 60,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(10)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 10),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                color:
-                                    Colors.deepPurpleAccent.withOpacity(0.2)),
-                            color: Colors.deepPurpleAccent.withOpacity(0.2),
-                            borderRadius: BorderRadius.all(Radius.circular(5)),
-                          ),
-                          height: 40,
-                          child: Center(
-                              child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(Icons.delivery_dining,
-                                  color: Colors.deepPurpleAccent, size: 16),
-                              SizedBox(width: 5),
-                              Text(
-                                'Item Delivered',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: Colors.deepPurpleAccent,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold),
-                              )
-                            ],
-                          )))),
-                ),
-                Expanded(
-                  child: InkWell(
-                      enableFeedback: true,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => OrderBuyerPage(
-                                    itemid: widget.itemid,
-                                    messageid: widget.messageid,
-                                  )),
-                        );
-                      },
+                Row(
+                  children: [
+                    Expanded(
                       child: Padding(
-                          padding: EdgeInsets.only(
-                              left: 5, right: 20, top: 10, bottom: 10),
+                          padding: EdgeInsets.all(10),
                           child: Container(
                               padding: EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 10),
                               decoration: BoxDecoration(
-                                color: Colors.white,
                                 border: Border.all(
-                                    color: Colors.black.withOpacity(0.2)),
+                                    color: Colors.deepPurpleAccent
+                                        .withOpacity(0.2)),
+                                color: Colors.deepPurpleAccent.withOpacity(0.2),
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(5)),
                               ),
@@ -1270,232 +1309,249 @@ class _ChatPageViewState extends State<ChatPageView> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Icon(FontAwesomeIcons.receipt,
-                                      color: Colors.black, size: 16),
+                                  Icon(Icons.delivery_dining,
+                                      color: Colors.deepPurpleAccent, size: 16),
                                   SizedBox(width: 5),
                                   Text(
-                                    'View Order',
+                                    'Item Delivered',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 16,
+                                        color: Colors.deepPurpleAccent,
+                                        fontSize: 15,
                                         fontWeight: FontWeight.bold),
                                   )
                                 ],
-                              ))))),
+                              )))),
+                    ),
+                    Expanded(
+                      child: InkWell(
+                          enableFeedback: true,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => OrderBuyerPage(
+                                        itemid: widget.itemid,
+                                        messageid: widget.messageid,
+                                      )),
+                            );
+                          },
+                          child: Padding(
+                              padding: EdgeInsets.only(
+                                  left: 5, right: 20, top: 10, bottom: 10),
+                              child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 10),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                        color: Colors.black.withOpacity(0.2)),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(5)),
+                                  ),
+                                  height: 40,
+                                  child: Center(
+                                      child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Icon(FontAwesomeIcons.receipt,
+                                          color: Colors.black, size: 16),
+                                      SizedBox(width: 5),
+                                      Text(
+                                        'View Order',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    ],
+                                  ))))),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            widget.storetype == 'Secondhand Seller'
-                ? Padding(
-                    padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                    child: Container(
-                      padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
-                      height: 60,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Row(
-                        children: <Widget>[
-                          // GestureDetector(
-                          //   onTap: () {},
-                          //   child: Container(
-                          //     height: 30,
-                          //     width: 30,
-                          //     decoration: BoxDecoration(
-                          //       color: Colors.deepOrangeAccent,
-                          //       borderRadius: BorderRadius.circular(30),
-                          //     ),
-                          //     child: Icon(
-                          //       Icons.add,
-                          //       color: Colors.white,
-                          //       size: 20,
-                          //     ),
-                          //   ),
-                          // ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          Expanded(
-                            child: TextField(
-                              controller: messagecontroller,
-                              scrollPadding: EdgeInsets.symmetric(
-                                  vertical:
-                                      MediaQuery.of(context).viewInsets.bottom +
+                widget.storetype == 'Secondhand Seller'
+                    ? Padding(
+                        padding: EdgeInsets.only(
+                          left: 10,
+                          right: 10,
+                        ),
+                        child: Container(
+                          padding:
+                              EdgeInsets.only(left: 10, bottom: 10, top: 10),
+                          height: 60,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Row(
+                            children: <Widget>[
+                              // GestureDetector(
+                              //   onTap: () {},
+                              //   child: Container(
+                              //     height: 30,
+                              //     width: 30,
+                              //     decoration: BoxDecoration(
+                              //       color: Colors.deepOrangeAccent,
+                              //       borderRadius: BorderRadius.circular(30),
+                              //     ),
+                              //     child: Icon(
+                              //       Icons.add,
+                              //       color: Colors.white,
+                              //       size: 20,
+                              //     ),
+                              //   ),
+                              // ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              Expanded(
+                                child: TextField(
+                                  controller: messagecontroller,
+                                  scrollPadding: EdgeInsets.symmetric(
+                                      vertical: MediaQuery.of(context)
+                                              .viewInsets
+                                              .bottom +
                                           20),
-                              decoration: InputDecoration(
-                                  hintText: "Send message...",
-                                  hintStyle: TextStyle(color: Colors.black54),
-                                  border: InputBorder.none),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          FloatingActionButton(
-                            onPressed: () async {
-                              final f = new DateFormat('hh:mm');
-                              DateTime date =
-                                  new DateTime.fromMillisecondsSinceEpoch(
-                                      DateTime.now().millisecondsSinceEpoch);
-                              var s = f.format(date);
+                                  decoration: InputDecoration(
+                                      hintText: "Send message...",
+                                      hintStyle:
+                                          TextStyle(color: Colors.black54),
+                                      border: InputBorder.none),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              FloatingActionButton(
+                                onPressed: () async {
+                                  final f = new DateFormat('hh:mm');
+                                  DateTime date =
+                                      new DateTime.fromMillisecondsSinceEpoch(
+                                          DateTime.now()
+                                              .millisecondsSinceEpoch);
+                                  var s = f.format(date);
 
-                              var msg = messagecontroller.text;
+                                  var msg = messagecontroller.text;
 
-                              childList.add(Padding(
-                                  padding: const EdgeInsets.only(
-                                      right: 8.0,
-                                      left: 8.0,
-                                      top: 4.0,
-                                      bottom: 4.0),
-                                  child: Container(
-                                      alignment: Alignment.centerRight,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: <Widget>[
-                                          Container(
-                                            constraints: BoxConstraints(
-                                                maxWidth: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    3 /
-                                                    4,
-                                                minWidth: 50),
-                                            padding: EdgeInsets.all(12.0),
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey.shade50,
-                                              borderRadius:
-                                                  BorderRadius.circular(15.0),
-                                            ),
-                                            child: Stack(children: <Widget>[
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                  right: 2.0,
-                                                  left: 2.0,
+                                  childList.add(Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 8.0,
+                                          left: 8.0,
+                                          top: 4.0,
+                                          bottom: 4.0),
+                                      child: Container(
+                                          alignment: Alignment.centerRight,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: <Widget>[
+                                              Container(
+                                                constraints: BoxConstraints(
+                                                    maxWidth:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            3 /
+                                                            4,
+                                                    minWidth: 50),
+                                                padding: EdgeInsets.all(12.0),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey.shade50,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          15.0),
                                                 ),
+                                                child: Stack(children: <Widget>[
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                      right: 2.0,
+                                                      left: 2.0,
+                                                    ),
+                                                    child: Text(
+                                                      messagecontroller.text,
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 16,
+                                                          color: Colors.black),
+                                                    ),
+                                                  ),
+                                                ]),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    EdgeInsets.only(right: 10),
                                                 child: Text(
-                                                  messagecontroller.text,
+                                                  s,
                                                   style: TextStyle(
                                                       fontFamily: 'Helvetica',
-                                                      fontSize: 16,
+                                                      fontSize: 12,
                                                       color: Colors.black),
                                                 ),
                                               ),
-                                            ]),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.only(right: 10),
-                                            child: Text(
-                                              s,
-                                              style: TextStyle(
-                                                  fontFamily: 'Helvetica',
-                                                  fontSize: 12,
-                                                  color: Colors.black),
-                                            ),
-                                          ),
-                                        ],
-                                      ))));
+                                            ],
+                                          ))));
 
-                              messagecontroller.clear();
-                              Dio dio = new Dio();
-                              FormData formData = FormData.fromMap({
-                                'message': msg,
-                              });
+                                  messagecontroller.clear();
+                                  Dio dio = new Dio();
+                                  FormData formData = FormData.fromMap({
+                                    'message': msg,
+                                  });
 
-                              print(messagecontroller.text);
-                              var addurl =
-                                  'https://api.sellship.co/api/sendmessage/${widget.senderid}/${widget.recipentid}/${widget.messageid}';
-                              var response =
-                                  await dio.post(addurl, data: formData);
-                              print(response.data);
-                            },
-                            child: Icon(
-                              Icons.send,
-                              color: Colors.white,
-                              size: 18,
-                            ),
-                            backgroundColor: Colors.deepOrangeAccent,
-                            elevation: 0,
+                                  print(messagecontroller.text);
+                                  var addurl =
+                                      'https://api.sellship.co/api/sendmessage/${widget.senderid}/${widget.recipentid}/${widget.messageid}';
+                                  var response =
+                                      await dio.post(addurl, data: formData);
+                                  print(response.data);
+                                },
+                                child: Icon(
+                                  Icons.send,
+                                  color: Colors.white,
+                                  size: 18,
+                                ),
+                                backgroundColor: Colors.deepOrangeAccent,
+                                elevation: 0,
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ))
-                : Container(),
-          ],
-        ),
-      );
+                        ))
+                    : Container(),
+              ],
+            ),
+          ));
     }
     if (offerstage == 5) {
-      return Container(
-        height: widget.storetype == 'Secondhand Seller' ? 130 : 60,
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-            color: Colors.grey.shade100,
-            borderRadius: BorderRadius.circular(10)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Row(
+      return Padding(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+            height: widget.storetype == 'Secondhand Seller' ? 130 : 60,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(10)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 10),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                color:
-                                    Colors.deepPurpleAccent.withOpacity(0.2)),
-                            color: Colors.deepPurpleAccent.withOpacity(0.2),
-                            borderRadius: BorderRadius.all(Radius.circular(5)),
-                          ),
-                          height: 40,
-                          child: Center(
-                              child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(Icons.check,
-                                  color: Colors.deepPurpleAccent, size: 16),
-                              SizedBox(width: 5),
-                              Text(
-                                'Order Completed',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: Colors.deepPurpleAccent,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold),
-                              )
-                            ],
-                          )))),
-                ),
-                Expanded(
-                  child: InkWell(
-                      enableFeedback: true,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => OrderBuyerPage(
-                                    itemid: widget.itemid,
-                                    messageid: widget.messageid,
-                                  )),
-                        );
-                      },
+                Row(
+                  children: [
+                    Expanded(
                       child: Padding(
-                          padding: EdgeInsets.only(
-                              left: 5, right: 20, top: 10, bottom: 10),
+                          padding: EdgeInsets.all(10),
                           child: Container(
                               padding: EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 10),
                               decoration: BoxDecoration(
-                                color: Colors.white,
                                 border: Border.all(
-                                    color: Colors.black.withOpacity(0.2)),
+                                    color: Colors.deepPurpleAccent
+                                        .withOpacity(0.2)),
+                                color: Colors.deepPurpleAccent.withOpacity(0.2),
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(5)),
                               ),
@@ -1505,162 +1561,221 @@ class _ChatPageViewState extends State<ChatPageView> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Icon(FontAwesomeIcons.receipt,
-                                      color: Colors.black, size: 16),
+                                  Icon(Icons.check,
+                                      color: Colors.deepPurpleAccent, size: 16),
                                   SizedBox(width: 5),
                                   Text(
-                                    'View Order',
+                                    'Order Completed',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 16,
+                                        color: Colors.deepPurpleAccent,
+                                        fontSize: 15,
                                         fontWeight: FontWeight.bold),
                                   )
                                 ],
-                              ))))),
+                              )))),
+                    ),
+                    Expanded(
+                      child: InkWell(
+                          enableFeedback: true,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => OrderBuyerPage(
+                                        itemid: widget.itemid,
+                                        messageid: widget.messageid,
+                                      )),
+                            );
+                          },
+                          child: Padding(
+                              padding: EdgeInsets.only(
+                                  left: 5, right: 20, top: 10, bottom: 10),
+                              child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 10),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                        color: Colors.black.withOpacity(0.2)),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(5)),
+                                  ),
+                                  height: 40,
+                                  child: Center(
+                                      child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Icon(FontAwesomeIcons.receipt,
+                                          color: Colors.black, size: 16),
+                                      SizedBox(width: 5),
+                                      Text(
+                                        'View Order',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    ],
+                                  ))))),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            widget.storetype == 'Secondhand Seller'
-                ? Padding(
-                    padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                    child: Container(
-                      padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
-                      height: 60,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Row(
-                        children: <Widget>[
-                          // GestureDetector(
-                          //   onTap: () {},
-                          //   child: Container(
-                          //     height: 30,
-                          //     width: 30,
-                          //     decoration: BoxDecoration(
-                          //       color: Colors.deepOrangeAccent,
-                          //       borderRadius: BorderRadius.circular(30),
-                          //     ),
-                          //     child: Icon(
-                          //       Icons.add,
-                          //       color: Colors.white,
-                          //       size: 20,
-                          //     ),
-                          //   ),
-                          // ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          Expanded(
-                            child: TextField(
-                              controller: messagecontroller,
-                              scrollPadding: EdgeInsets.symmetric(
-                                  vertical:
-                                      MediaQuery.of(context).viewInsets.bottom +
+                widget.storetype == 'Secondhand Seller'
+                    ? Padding(
+                        padding: EdgeInsets.only(
+                          left: 10,
+                          right: 10,
+                        ),
+                        child: Container(
+                          padding:
+                              EdgeInsets.only(left: 10, bottom: 10, top: 10),
+                          height: 60,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Row(
+                            children: <Widget>[
+                              // GestureDetector(
+                              //   onTap: () {},
+                              //   child: Container(
+                              //     height: 30,
+                              //     width: 30,
+                              //     decoration: BoxDecoration(
+                              //       color: Colors.deepOrangeAccent,
+                              //       borderRadius: BorderRadius.circular(30),
+                              //     ),
+                              //     child: Icon(
+                              //       Icons.add,
+                              //       color: Colors.white,
+                              //       size: 20,
+                              //     ),
+                              //   ),
+                              // ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              Expanded(
+                                child: TextField(
+                                  controller: messagecontroller,
+                                  scrollPadding: EdgeInsets.symmetric(
+                                      vertical: MediaQuery.of(context)
+                                              .viewInsets
+                                              .bottom +
                                           20),
-                              decoration: InputDecoration(
-                                  hintText: "Send message...",
-                                  hintStyle: TextStyle(color: Colors.black54),
-                                  border: InputBorder.none),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          FloatingActionButton(
-                            onPressed: () async {
-                              final f = new DateFormat('hh:mm');
-                              DateTime date =
-                                  new DateTime.fromMillisecondsSinceEpoch(
-                                      DateTime.now().millisecondsSinceEpoch);
-                              var s = f.format(date);
+                                  decoration: InputDecoration(
+                                      hintText: "Send message...",
+                                      hintStyle:
+                                          TextStyle(color: Colors.black54),
+                                      border: InputBorder.none),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              FloatingActionButton(
+                                onPressed: () async {
+                                  final f = new DateFormat('hh:mm');
+                                  DateTime date =
+                                      new DateTime.fromMillisecondsSinceEpoch(
+                                          DateTime.now()
+                                              .millisecondsSinceEpoch);
+                                  var s = f.format(date);
 
-                              var msg = messagecontroller.text;
+                                  var msg = messagecontroller.text;
 
-                              childList.add(Padding(
-                                  padding: const EdgeInsets.only(
-                                      right: 8.0,
-                                      left: 8.0,
-                                      top: 4.0,
-                                      bottom: 4.0),
-                                  child: Container(
-                                      alignment: Alignment.centerRight,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: <Widget>[
-                                          Container(
-                                            constraints: BoxConstraints(
-                                                maxWidth: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    3 /
-                                                    4,
-                                                minWidth: 50),
-                                            padding: EdgeInsets.all(12.0),
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey.shade50,
-                                              borderRadius:
-                                                  BorderRadius.circular(15.0),
-                                            ),
-                                            child: Stack(children: <Widget>[
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                  right: 2.0,
-                                                  left: 2.0,
+                                  childList.add(Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 8.0,
+                                          left: 8.0,
+                                          top: 4.0,
+                                          bottom: 4.0),
+                                      child: Container(
+                                          alignment: Alignment.centerRight,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: <Widget>[
+                                              Container(
+                                                constraints: BoxConstraints(
+                                                    maxWidth:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            3 /
+                                                            4,
+                                                    minWidth: 50),
+                                                padding: EdgeInsets.all(12.0),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey.shade50,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          15.0),
                                                 ),
+                                                child: Stack(children: <Widget>[
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                      right: 2.0,
+                                                      left: 2.0,
+                                                    ),
+                                                    child: Text(
+                                                      messagecontroller.text,
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 16,
+                                                          color: Colors.black),
+                                                    ),
+                                                  ),
+                                                ]),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    EdgeInsets.only(right: 10),
                                                 child: Text(
-                                                  messagecontroller.text,
+                                                  s,
                                                   style: TextStyle(
                                                       fontFamily: 'Helvetica',
-                                                      fontSize: 16,
+                                                      fontSize: 12,
                                                       color: Colors.black),
                                                 ),
                                               ),
-                                            ]),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.only(right: 10),
-                                            child: Text(
-                                              s,
-                                              style: TextStyle(
-                                                  fontFamily: 'Helvetica',
-                                                  fontSize: 12,
-                                                  color: Colors.black),
-                                            ),
-                                          ),
-                                        ],
-                                      ))));
+                                            ],
+                                          ))));
 
-                              messagecontroller.clear();
-                              Dio dio = new Dio();
-                              FormData formData = FormData.fromMap({
-                                'message': msg,
-                              });
+                                  messagecontroller.clear();
+                                  Dio dio = new Dio();
+                                  FormData formData = FormData.fromMap({
+                                    'message': msg,
+                                  });
 
-                              print(messagecontroller.text);
-                              var addurl =
-                                  'https://api.sellship.co/api/sendmessage/${widget.senderid}/${widget.recipentid}/${widget.messageid}';
-                              var response =
-                                  await dio.post(addurl, data: formData);
-                              print(response.data);
-                            },
-                            child: Icon(
-                              Icons.send,
-                              color: Colors.white,
-                              size: 18,
-                            ),
-                            backgroundColor: Colors.deepOrangeAccent,
-                            elevation: 0,
+                                  print(messagecontroller.text);
+                                  var addurl =
+                                      'https://api.sellship.co/api/sendmessage/${widget.senderid}/${widget.recipentid}/${widget.messageid}';
+                                  var response =
+                                      await dio.post(addurl, data: formData);
+                                  print(response.data);
+                                },
+                                child: Icon(
+                                  Icons.send,
+                                  color: Colors.white,
+                                  size: 18,
+                                ),
+                                backgroundColor: Colors.deepOrangeAccent,
+                                elevation: 0,
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ))
-                : Container(),
-          ],
-        ),
-      );
+                        ))
+                    : Container(),
+              ],
+            ),
+          ));
     }
   }
 
@@ -2252,6 +2367,7 @@ class _ChatPageViewState extends State<ChatPageView> {
   Widget chatView(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomPadding: false,
         bottomNavigationBar: SafeArea(child: buyeroptions(context)),
         body: GestureDetector(
             onTap: () {

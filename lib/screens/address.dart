@@ -518,8 +518,10 @@ class _AddressState extends State<Address> {
                         onTap: () {
                           showDialog(
                               context: context,
+                              barrierDismissible: false,
                               useRootNavigator: false,
                               builder: (BuildContext context) {
+                                final _formKey = GlobalKey<FormState>();
                                 return AlertDialog(
                                     shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.all(
@@ -531,30 +533,49 @@ class _AddressState extends State<Address> {
                                             StateSetter updateState) {
                                       return Container(
                                           height: MediaQuery.of(context)
-                                                      .size
-                                                      .height /
-                                                  2 +
-                                              100,
+                                                  .size
+                                                  .height /
+                                              1.6,
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width -
-                                              50,
+                                              30,
                                           child: Scrollbar(
                                               child: SingleChildScrollView(
+                                                  child: Form(
+                                            key: _formKey,
                                             child: Column(
                                               children: <Widget>[
                                                 SizedBox(
                                                   height: 5,
                                                 ),
-                                                Text(
-                                                  'Add Address',
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.w800,
-                                                    fontSize: 18,
-                                                    letterSpacing: 0.0,
-                                                    color: Colors.black,
-                                                  ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                      'Add Address',
+                                                      textAlign: TextAlign.left,
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w800,
+                                                        fontSize: 18,
+                                                        letterSpacing: 0.0,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                    InkWell(
+                                                        onTap: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        child: Icon(
+                                                          Icons.close,
+                                                          color:
+                                                              Colors.blueGrey,
+                                                        )),
+                                                  ],
                                                 ),
                                                 SizedBox(
                                                   height: 20,
@@ -582,55 +603,64 @@ class _AddressState extends State<Address> {
                                                     ),
                                                     child: Center(
                                                       child:
-                                                          DropdownButtonHideUnderline(
-                                                        child: DropdownButton(
-                                                          autofocus: true,
+                                                          DropdownButtonFormField(
+                                                        autofocus: true,
+                                                        style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 16,
+                                                        ),
+                                                        validator: (value) =>
+                                                            value == null
+                                                                ? 'Please choose an address type'
+                                                                : null,
+                                                        icon: Icon(Icons
+                                                            .keyboard_arrow_down),
+                                                        hint: Text(
+                                                          'Address Type',
                                                           style: TextStyle(
-                                                            fontFamily:
-                                                                'Helvetica',
+                                                            color: Colors
+                                                                .grey.shade300,
                                                             fontSize: 16,
                                                           ),
-                                                          icon: Icon(Icons
-                                                              .keyboard_arrow_down),
-                                                          hint: Text(
-                                                            'Address Type',
-                                                            style: TextStyle(
-                                                              color: Colors.grey
-                                                                  .shade300,
-                                                              fontSize: 16,
-                                                            ),
-                                                          ),
-                                                          value:
-                                                              selectedaddress,
-                                                          onChanged: (value) {
-                                                            updateState(() {
-                                                              selectedaddress =
-                                                                  value;
-                                                            });
-                                                          },
-                                                          items: <String>[
-                                                            'Home',
-                                                            'Work',
-                                                            'Other',
-                                                          ].map((String value) {
-                                                            return new DropdownMenuItem<
-                                                                    String>(
-                                                                value: value,
-                                                                child:
-                                                                    Container(
-                                                                  width: MediaQuery.of(
-                                                                              context)
-                                                                          .size
-                                                                          .width -
-                                                                      200,
-                                                                  child:
-                                                                      ListTile(
-                                                                    title: Text(
-                                                                        value),
-                                                                  ),
-                                                                ));
-                                                          }).toList(),
                                                         ),
+                                                        value: selectedaddress,
+                                                        onChanged: (value) {
+                                                          updateState(() {
+                                                            selectedaddress =
+                                                                value;
+                                                          });
+                                                        },
+                                                        items: <String>[
+                                                          'Home',
+                                                          'Work',
+                                                          'Other',
+                                                        ].map((String value) {
+                                                          return new DropdownMenuItem<
+                                                                  String>(
+                                                              value: value,
+                                                              child: Container(
+                                                                width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width -
+                                                                    200,
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        left:
+                                                                            10),
+                                                                child: Text(
+                                                                  value,
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      fontSize:
+                                                                          16,
+                                                                      color: Colors
+                                                                          .black),
+                                                                ),
+                                                              ));
+                                                        }).toList(),
                                                       ),
                                                     ),
                                                   ),
@@ -663,8 +693,13 @@ class _AddressState extends State<Address> {
                                                     child: Center(
                                                       child:
                                                           DropdownButtonHideUnderline(
-                                                        child: DropdownButton(
+                                                        child:
+                                                            DropdownButtonFormField(
                                                           autofocus: true,
+                                                          validator: (value) =>
+                                                              value == null
+                                                                  ? 'Please choose a city'
+                                                                  : null,
                                                           style: TextStyle(
                                                             fontFamily:
                                                                 'Helvetica',
@@ -805,10 +840,19 @@ class _AddressState extends State<Address> {
                                                                           .size
                                                                           .width -
                                                                       200,
-                                                                  child:
-                                                                      ListTile(
-                                                                    title: Text(
-                                                                        value),
+                                                                  padding: EdgeInsets
+                                                                      .only(
+                                                                          left:
+                                                                              10),
+                                                                  child: Text(
+                                                                    value,
+                                                                    style: TextStyle(
+                                                                        fontFamily:
+                                                                            'Helvetica',
+                                                                        fontSize:
+                                                                            16,
+                                                                        color: Colors
+                                                                            .black),
                                                                   ),
                                                                 ));
                                                           }).toList(),
@@ -845,8 +889,13 @@ class _AddressState extends State<Address> {
                                                     child: Center(
                                                       child:
                                                           DropdownButtonHideUnderline(
-                                                        child: DropdownButton(
+                                                        child:
+                                                            DropdownButtonFormField(
                                                           autofocus: true,
+                                                          validator: (value) =>
+                                                              value == null
+                                                                  ? 'Please choose an area'
+                                                                  : null,
                                                           style: TextStyle(
                                                             fontFamily:
                                                                 'Helvetica',
@@ -881,11 +930,19 @@ class _AddressState extends State<Address> {
                                                                           .size
                                                                           .width -
                                                                       200,
-                                                                  child:
-                                                                      ListTile(
-                                                                    title: Text(
-                                                                        capitalize(
-                                                                            value.toLowerCase())),
+                                                                  padding: EdgeInsets
+                                                                      .only(
+                                                                          left:
+                                                                              10),
+                                                                  child: Text(
+                                                                    value,
+                                                                    style: TextStyle(
+                                                                        fontFamily:
+                                                                            'Helvetica',
+                                                                        fontSize:
+                                                                            16,
+                                                                        color: Colors
+                                                                            .black),
                                                                   ),
                                                                 ));
                                                           }).toList(),
@@ -912,7 +969,11 @@ class _AddressState extends State<Address> {
                                                         ),
                                                       ],
                                                     ),
-                                                    child: TextField(
+                                                    child: TextFormField(
+                                                      validator: (value) => value
+                                                              .isEmpty
+                                                          ? 'Please enter an Apartment/Villa/Office Number'
+                                                          : null,
                                                       cursorColor:
                                                           Color(0xFF979797),
                                                       controller:
@@ -1012,7 +1073,11 @@ class _AddressState extends State<Address> {
                                                         ),
                                                       ],
                                                     ),
-                                                    child: TextField(
+                                                    child: TextFormField(
+                                                      validator: (value) => value
+                                                              .isEmpty
+                                                          ? 'Please enter an Apartment/Villa/Office/Street Name'
+                                                          : null,
                                                       cursorColor:
                                                           Color(0xFF979797),
                                                       controller:
@@ -1121,6 +1186,10 @@ class _AddressState extends State<Address> {
                                                     ),
                                                     child:
                                                         InternationalPhoneNumberInput(
+                                                      validator: (value) => value
+                                                              .isEmpty
+                                                          ? 'Please enter a Mobile Number'
+                                                          : null,
                                                       isEnabled: true,
                                                       onInputChanged:
                                                           (PhoneNumber
@@ -1132,9 +1201,6 @@ class _AddressState extends State<Address> {
                                                           });
                                                         }
                                                       },
-                                                      autoValidateMode:
-                                                          AutovalidateMode
-                                                              .onUserInteraction,
                                                       countries: ['AE'],
                                                       textFieldController:
                                                           phonenumbercontroller,
@@ -1262,72 +1328,13 @@ class _AddressState extends State<Address> {
                                                 ),
                                                 InkWell(
                                                     onTap: () async {
-                                                      if (addresslinecontroller
-                                                              .text.isEmpty ||
-                                                          addressline2controller
-                                                              .text.isEmpty ||
-                                                          selectedCity ==
-                                                              null ||
-                                                          selectedaddress ==
-                                                              null ||
-                                                          phonenumbercontroller
-                                                              .text.isEmpty) {
-                                                        showDialog(
-                                                            context: context,
-                                                            useRootNavigator:
-                                                                false,
-                                                            barrierDismissible:
-                                                                false,
-                                                            builder:
-                                                                (context) =>
-                                                                    AlertDialog(
-                                                                      title:
-                                                                          Icon(
-                                                                        Icons
-                                                                            .error,
-                                                                        color: Colors
-                                                                            .red,
-                                                                      ),
-                                                                      content: Text(
-                                                                          "Oops looks like something is missing."),
-                                                                      actions: [
-                                                                        InkWell(
-                                                                            onTap:
-                                                                                () {
-                                                                              Navigator.pop(context);
-                                                                            },
-                                                                            child:
-                                                                                Padding(
-                                                                              padding: EdgeInsets.all(10),
-                                                                              child: Container(
-                                                                                height: 48,
-                                                                                width: 100,
-                                                                                decoration: BoxDecoration(
-                                                                                  color: Colors.black,
-                                                                                  borderRadius: const BorderRadius.all(
-                                                                                    Radius.circular(10.0),
-                                                                                  ),
-                                                                                  boxShadow: <BoxShadow>[
-                                                                                    BoxShadow(color: Colors.black.withOpacity(0.4), offset: const Offset(1.1, 1.1), blurRadius: 10.0),
-                                                                                  ],
-                                                                                ),
-                                                                                child: Center(
-                                                                                  child: Text(
-                                                                                    'Close',
-                                                                                    textAlign: TextAlign.left,
-                                                                                    style: TextStyle(
-                                                                                      fontWeight: FontWeight.w600,
-                                                                                      fontSize: 16,
-                                                                                      letterSpacing: 0.0,
-                                                                                      color: Colors.white,
-                                                                                    ),
-                                                                                  ),
-                                                                                ),
-                                                                              ),
-                                                                            ))
-                                                                      ],
-                                                                    ));
-                                                      } else {
+                                                      _formKey.currentState
+                                                          .validate();
+                                                      print(_formKey
+                                                          .currentState
+                                                          .validate());
+                                                      if (_formKey.currentState
+                                                          .validate()) {
                                                         showDialog(
                                                             context: context,
                                                             barrierDismissible:
@@ -1524,6 +1531,62 @@ class _AddressState extends State<Address> {
                                                           Navigator.of(context)
                                                               .pop('dialog');
                                                         }
+                                                      } else {
+                                                        showDialog(
+                                                            context: context,
+                                                            useRootNavigator:
+                                                                false,
+                                                            barrierDismissible:
+                                                                false,
+                                                            builder:
+                                                                (context) =>
+                                                                    AlertDialog(
+                                                                      title:
+                                                                          Icon(
+                                                                        Icons
+                                                                            .error,
+                                                                        color: Colors
+                                                                            .red,
+                                                                      ),
+                                                                      content: Text(
+                                                                          "Oops looks like something is missing."),
+                                                                      actions: [
+                                                                        InkWell(
+                                                                            onTap:
+                                                                                () {
+                                                                              Navigator.pop(context);
+                                                                            },
+                                                                            child:
+                                                                                Padding(
+                                                                              padding: EdgeInsets.all(10),
+                                                                              child: Container(
+                                                                                height: 48,
+                                                                                width: 100,
+                                                                                decoration: BoxDecoration(
+                                                                                  color: Colors.black,
+                                                                                  borderRadius: const BorderRadius.all(
+                                                                                    Radius.circular(10.0),
+                                                                                  ),
+                                                                                  boxShadow: <BoxShadow>[
+                                                                                    BoxShadow(color: Colors.black.withOpacity(0.4), offset: const Offset(1.1, 1.1), blurRadius: 10.0),
+                                                                                  ],
+                                                                                ),
+                                                                                child: Center(
+                                                                                  child: Text(
+                                                                                    'Close',
+                                                                                    textAlign: TextAlign.left,
+                                                                                    style: TextStyle(
+                                                                                      fontWeight: FontWeight.w600,
+                                                                                      fontSize: 16,
+                                                                                      letterSpacing: 0.0,
+                                                                                      color: Colors.white,
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ))
+                                                                      ],
+                                                                    ));
                                                       }
                                                     },
                                                     child: Padding(
@@ -1577,7 +1640,7 @@ class _AddressState extends State<Address> {
                                                     )),
                                               ],
                                             ),
-                                          )));
+                                          ))));
                                     }));
                               });
                         },

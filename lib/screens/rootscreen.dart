@@ -91,7 +91,7 @@ class _RootScreenState extends State<RootScreen> {
           Navigator.push(
             context,
             CupertinoPageRoute(
-                builder: (context) => Store(
+                builder: (context) => StorePublic(
                       storename: data['storename'],
                       storeid: data['storeid'],
                     )),

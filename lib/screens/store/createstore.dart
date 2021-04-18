@@ -2,7 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:SellShip/screens/store/createlayout.dart';
+import 'package:SellShip/screens/store/createstorepage.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:permission_handler/permission_handler.dart' as Permission;
@@ -45,6 +48,8 @@ class _CreateStoreState extends State<CreateStore> {
   String userid;
   String storename;
   var phonenumber;
+
+  final storage = new FlutterSecureStorage();
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -343,55 +348,202 @@ class _CreateStoreState extends State<CreateStore> {
                       children: [
                         InkWell(
                           onTap: () async {
-                            if (widget.storetype == 'Secondhand Seller') {
-                              if (selectedaddress == null || _image == null) {
-                                showInSnackBar(
-                                    'Looks like something is missing. Please ensure all your store information has been entered');
-                              } else {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => CreateLayout(
-                                        userid: widget.userid,
-                                        storename: widget.storename,
-                                        storelogo: _image,
-                                        storecategory: widget.category,
-                                        storeusername: widget.storeusername,
-                                        storeabout: '',
-                                        storeaddress: selectedaddress.address,
-                                        storetype: widget.storetype,
-                                        storecity: selectedaddress.city,
-                                        storelocation: storelocation,
-                                        storedescription:
-                                            widget.storedescription,
-                                      ),
-                                    ));
-                              }
+                            // if (widget.storetype == 'Secondhand Seller') {
+                            if (selectedaddress == null || _image == null) {
+                              showInSnackBar(
+                                  'Looks like something is missing. Please ensure all your store information has been entered');
                             } else {
-                              if (selectedaddress == null || _image == null) {
-                                showInSnackBar(
-                                    'Looks like something is missing. Please ensure all your store information has been entered');
-                              } else {
-                                Navigator.push(
+                              showDialog(
+                                  context: context,
+                                  useRootNavigator: false,
+                                  barrierDismissible: false,
+                                  builder: (_) => new AlertDialog(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10.0))),
+                                        content: Builder(
+                                          builder: (context) {
+                                            return Container(
+                                                height: 100,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      'Creating your shiny new store..',
+                                                      style: TextStyle(
+                                                        fontFamily: 'Helvetica',
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 15,
+                                                    ),
+                                                    Container(
+                                                        height: 50,
+                                                        width: 50,
+                                                        child:
+                                                            SpinKitDoubleBounce(
+                                                          color:
+                                                              Colors.deepOrange,
+                                                        )),
+                                                  ],
+                                                ));
+                                          },
+                                        ),
+                                      ));
+                              Dio dio = new Dio();
+                              FormData formData;
+                              var addurl =
+                                  'https://api.sellship.co/create/store';
+                              String fileName = _image.path.split('/').last;
+                              var userid = await storage.read(key: 'userid');
+
+                              formData = FormData.fromMap({
+                                'storecategory': widget.category == null
+                                    ? widget.storetype
+                                    : widget.category,
+                                'storetype': widget.storetype,
+                                'storename': widget.storename,
+                                'storeusername': widget.storeusername,
+                                'latitude': selectedaddress.latitude.toString(),
+                                'longitude':
+                                    selectedaddress.longitude.toString(),
+                                'userid': userid,
+                                'layout': 'default',
+                                'storeaddress': selectedaddress.address,
+                                'storedescription': widget.storedescription,
+                                'storecity': selectedaddress.city,
+                                'storebio': '',
+                                'storelogo': await MultipartFile.fromFile(
+                                    _image.path,
+                                    filename: fileName)
+                              });
+
+                              var response =
+                                  await dio.post(addurl, data: formData);
+
+                              if (response.statusCode == 200) {
+                                var storeid = response.data['id']['\$oid'];
+                                await storage.write(
+                                    key: 'storeid', value: storeid);
+                                Navigator.of(context, rootNavigator: false)
+                                    .pop();
+                                Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => CreateLayout(
-                                        userid: widget.userid,
-                                        storetype: widget.storetype,
-                                        storename: widget.storename,
-                                        storelogo: _image,
-                                        storecategory: widget.category,
-                                        storeusername: widget.storeusername,
-                                        storeabout: '',
-                                        storeaddress: selectedaddress.address,
-                                        storecity: selectedaddress.city,
-                                        storelocation: storelocation,
-                                        storedescription:
-                                            widget.storedescription,
-                                      ),
-                                    ));
+                                        builder: (BuildContext context) =>
+                                            CreateStorePage(
+                                              storeid: storeid,
+                                            )),
+                                    ModalRoute.withName('/'));
+                              } else {
+                                Navigator.of(context, rootNavigator: false)
+                                    .pop();
+                                showDialog(
+                                    context: context,
+                                    useRootNavigator: false,
+                                    barrierDismissible: false,
+                                    builder: (_) => new AlertDialog(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10.0))),
+                                          content: Builder(
+                                            builder: (context) {
+                                              return Container(
+                                                  height: 100,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        'Looks like something went wrong 😔',
+                                                        style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 18,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 15,
+                                                      ),
+                                                      TextButton(
+                                                        child: Text(
+                                                          'Close',
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                              fontSize: 16.0,
+                                                              color: Colors.red,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w800),
+                                                        ),
+                                                        onPressed: () {
+                                                          Navigator.of(context,
+                                                                  rootNavigator:
+                                                                      false)
+                                                              .pop();
+                                                        },
+                                                      ),
+                                                    ],
+                                                  ));
+                                            },
+                                          ),
+                                        ));
                               }
                             }
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //       builder: (context) => CreateLayout(
+                            //         userid: widget.userid,
+                            //         storename: widget.storename,
+                            //         storelogo: _image,
+                            //         storecategory: widget.category,
+                            //         storeusername: widget.storeusername,
+                            //         storeabout: '',
+                            //         storeaddress: selectedaddress.address,
+                            //         storetype: widget.storetype,
+                            //         storecity: selectedaddress.city,
+                            //         storelocation: storelocation,
+                            //         storedescription:
+                            //             widget.storedescription,
+                            //       ),
+                            //     ));
+
+                            // } else {
+                            //   if (selectedaddress == null || _image == null) {
+                            //     showInSnackBar(
+                            //         'Looks like something is missing. Please ensure all your store information has been entered');
+                            //   } else {
+                            //     Navigator.push(
+                            //         context,
+                            //         MaterialPageRoute(
+                            //           builder: (context) => CreateLayout(
+                            //             userid: widget.userid,
+                            //             storetype: widget.storetype,
+                            //             storename: widget.storename,
+                            //             storelogo: _image,
+                            //             storecategory: widget.category,
+                            //             storeusername: widget.storeusername,
+                            //             storeabout: '',
+                            //             storeaddress: selectedaddress.address,
+                            //             storecity: selectedaddress.city,
+                            //             storelocation: storelocation,
+                            //             storedescription:
+                            //                 widget.storedescription,
+                            //           ),
+                            //         ));
+                            //   }
+                            // }
                           },
                           child: Container(
                             height: 60,
