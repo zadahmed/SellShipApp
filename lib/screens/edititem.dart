@@ -10,6 +10,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
@@ -343,6 +344,7 @@ class EditItemState extends State<EditItem>
           //
           buyerprotection =
               jsonbody[0]['buyerprotection'] == 'true' ? true : false;
+          freedelivery = jsonbody[0]['freedelivery'] == 'true' ? true : false;
           acceptoffers = jsonbody[0]['acceptoffers'] == 'true' ? true : false;
           quantity = newItem.quantity;
 
@@ -352,24 +354,33 @@ class EditItemState extends State<EditItem>
           _selectedweight = weights.indexOf(newItem.weight.toString());
           itemweight = int.parse((newItem.weight.toString()));
 
-          var weightfees;
-          if (_selectedweight == 0) {
-            weightfees = 20.0;
-          } else if (_selectedweight == 1) {
-            weightfees = 30.0;
-          } else if (_selectedweight == 2) {
-            weightfees = 50.0;
-          } else if (_selectedweight == 3) {
-            weightfees = 110.0;
+          if (freedelivery == true) {
+            var weightfees;
+            if (_selectedweight == 0) {
+              weightfees = 20.0;
+            } else if (_selectedweight == 1) {
+              weightfees = 30.0;
+            } else if (_selectedweight == 2) {
+              weightfees = 50.0;
+            } else if (_selectedweight == 3) {
+              weightfees = 110.0;
+            }
+
+            var ffees = double.parse(newItem.price.toString()) / 1.15;
+            totalpayable = ffees - weightfees;
+            businesspricecontroller.text = totalpayable.toStringAsFixed(2);
+            ourfees = (totalpayable + weightfees) * 0.15;
+            fees = double.parse(newItem.price);
+            weightfee = weightfees;
+          } else {
+            var ffees = double.parse(newItem.price.toString()) / 1.15;
+            totalpayable = ffees;
+            businesspricecontroller.text = totalpayable.toStringAsFixed(2);
+            ourfees = (totalpayable) * 0.15;
+            fees = double.parse(newItem.price);
+            weightfee = 0;
           }
 
-          var ffees = double.parse(newItem.price.toString()) / 1.15;
-
-          totalpayable = ffees - weightfees;
-          businesspricecontroller.text = totalpayable.toStringAsFixed(0);
-          ourfees = (totalpayable + weightfees) * 0.15;
-          fees = double.parse(newItem.price);
-          weightfee = weightfees;
           city = newItem.city;
 
           country = newItem.country;
@@ -431,6 +442,7 @@ class EditItemState extends State<EditItem>
 
   var buyerprotection;
   var acceptoffers;
+  var freedelivery;
   LatLng _lastMapPosition;
 
   List<String> photoguidelinesimages = [
@@ -457,41 +469,59 @@ class EditItemState extends State<EditItem>
   final businesspricecontroller = TextEditingController();
 
   calculateearning() async {
-    await storage.write(key: 'additem', value: 'true');
-    var weightfees;
-    if (_selectedweight == 0) {
-      weightfees = 20;
-    } else if (_selectedweight == 1) {
-      weightfees = 30;
-    } else if (_selectedweight == 2) {
-      weightfees = 50;
-    } else if (_selectedweight == 3) {
-      weightfees = 110;
-    }
-
-    var s;
-
-    if (int.parse(businesspricecontroller.text) < 20) {
-      if (int.parse(businesspricecontroller.text) <= 0) {
-        fees = 0;
-      } else {
-        s = (int.parse(businesspricecontroller.text) + weightfees);
-        s = s * 0.15;
-        fees = int.parse(businesspricecontroller.text) + weightfees + s;
+    if (freedelivery == true) {
+      await storage.write(key: 'additem', value: 'true');
+      var weightfees;
+      if (_selectedweight == 0) {
+        weightfees = 20;
+      } else if (_selectedweight == 1) {
+        weightfees = 30;
+      } else if (_selectedweight == 2) {
+        weightfees = 50;
+      } else if (_selectedweight == 3) {
+        weightfees = 110;
       }
-    } else {
-      s = (int.parse(businesspricecontroller.text) + weightfees);
-      s = s * 0.15;
-      fees = int.parse(businesspricecontroller.text) + weightfees + s;
-    }
 
-    setState(() {
-      totalpayable = totalpayable;
-      fees = fees;
-      ourfees = s;
-      weightfee = weightfees;
-      percentindictor = 0.8;
-    });
+      var s;
+
+      if (double.parse(businesspricecontroller.text.toString()) < 20) {
+        if (double.parse(businesspricecontroller.text.toString()) <= 0) {
+          fees = 0;
+        } else {
+          s = (double.parse(businesspricecontroller.text.toString()) +
+              weightfees);
+          s = s * 0.15;
+          fees = double.parse(businesspricecontroller.text.toString()) +
+              weightfees +
+              s;
+        }
+      } else {
+        s = (double.parse(businesspricecontroller.text.toString()) +
+            weightfees);
+        s = s * 0.15;
+        fees = double.parse(businesspricecontroller.text.toString()) +
+            weightfees +
+            s;
+      }
+
+      setState(() {
+        totalpayable = totalpayable;
+        fees = fees;
+        ourfees = s;
+        weightfee = weightfees;
+        percentindictor = 0.8;
+      });
+    } else {
+      var s = (double.parse(businesspricecontroller.text));
+      s = s * 0.15;
+      fees = double.parse(businesspricecontroller.text) + s;
+      setState(() {
+        fees = fees;
+        ourfees = s;
+        weightfee = 0;
+        percentindictor = 0.8;
+      });
+    }
   }
 
   var weightfee;
@@ -2224,8 +2254,51 @@ class EditItemState extends State<EditItem>
                         ),
                       ),
                       Padding(
+                          padding:
+                              EdgeInsets.only(left: 15, bottom: 10, right: 15),
+                          child: Container(
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15)),
+                            ),
+                            child: SwitchListTile(
+                                value: freedelivery,
+                                activeColor: Colors.deepPurple,
+                                title: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      'Offer free delivery to buyers?',
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 16,
+                                          color: Colors.black),
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      'Buyers are more interested in items that have free delivery.',
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 12,
+                                          color: Colors.deepOrange),
+                                    ),
+                                  ],
+                                ),
+                                onChanged: (value) {
+                                  setState(() {
+                                    freedelivery = value;
+                                  });
+                                  calculateearning();
+                                }),
+                          )),
+                      Padding(
                         padding: EdgeInsets.only(
-                            left: 15, bottom: 5, top: 10, right: 15),
+                            left: 15, bottom: 5, top: 5, right: 15),
                         child: Container(
                           height: 85,
                           padding: EdgeInsets.all(20),
@@ -3117,104 +3190,153 @@ class EditItemState extends State<EditItem>
                                       List<int> _image6;
 
                                       if (images.length == 1) {
-                                        ByteData byteData = await images[0]
-                                            .getByteData(quality: 50);
+                                        ByteData byteData =
+                                            await images[0].getByteData();
                                         _image = byteData.buffer.asUint8List();
+                                        _image = await FlutterImageCompress
+                                            .compressWithList(_image,
+                                                quality: 15);
                                       } else if (images.length == 2) {
-                                        ByteData byteData = await images[0]
-                                            .getByteData(quality: 50);
+                                        ByteData byteData =
+                                            await images[0].getByteData();
                                         _image = byteData.buffer.asUint8List();
 
-                                        ByteData byteData2 = await images[1]
-                                            .getByteData(quality: 50);
+                                        _image = await FlutterImageCompress
+                                            .compressWithList(_image,
+                                                quality: 15);
+                                        ByteData byteData2 =
+                                            await images[1].getByteData();
                                         _image2 =
                                             byteData2.buffer.asUint8List();
+                                        _image2 = await FlutterImageCompress
+                                            .compressWithList(_image2,
+                                                quality: 15);
                                       } else if (images.length == 3) {
-                                        ByteData byteData = await images[0]
-                                            .getByteData(quality: 50);
+                                        ByteData byteData =
+                                            await images[0].getByteData();
                                         _image = byteData.buffer.asUint8List();
-
-                                        ByteData byteData2 = await images[1]
-                                            .getByteData(quality: 50);
+                                        _image = await FlutterImageCompress
+                                            .compressWithList(_image,
+                                                quality: 15);
+                                        ByteData byteData2 =
+                                            await images[1].getByteData();
                                         _image2 =
                                             byteData2.buffer.asUint8List();
-
-                                        ByteData byteData3 = await images[2]
-                                            .getByteData(quality: 50);
+                                        _image2 = await FlutterImageCompress
+                                            .compressWithList(_image2,
+                                                quality: 15);
+                                        ByteData byteData3 =
+                                            await images[2].getByteData();
                                         _image3 =
                                             byteData3.buffer.asUint8List();
+                                        _image3 = await FlutterImageCompress
+                                            .compressWithList(_image3,
+                                                quality: 15);
                                       } else if (images.length == 4) {
-                                        ByteData byteData = await images[0]
-                                            .getByteData(quality: 50);
+                                        ByteData byteData =
+                                            await images[0].getByteData();
                                         _image = byteData.buffer.asUint8List();
-
-                                        ByteData byteData2 = await images[1]
-                                            .getByteData(quality: 50);
+                                        _image = await FlutterImageCompress
+                                            .compressWithList(_image,
+                                                quality: 15);
+                                        ByteData byteData2 =
+                                            await images[1].getByteData();
                                         _image2 =
                                             byteData2.buffer.asUint8List();
-
-                                        ByteData byteData3 = await images[2]
-                                            .getByteData(quality: 50);
+                                        _image2 = await FlutterImageCompress
+                                            .compressWithList(_image2,
+                                                quality: 15);
+                                        ByteData byteData3 =
+                                            await images[2].getByteData();
                                         _image3 =
                                             byteData3.buffer.asUint8List();
-
-                                        ByteData byteData4 = await images[3]
-                                            .getByteData(quality: 50);
+                                        _image3 = await FlutterImageCompress
+                                            .compressWithList(_image3,
+                                                quality: 15);
+                                        ByteData byteData4 =
+                                            await images[3].getByteData();
                                         _image4 =
                                             byteData4.buffer.asUint8List();
+                                        _image4 = await FlutterImageCompress
+                                            .compressWithList(_image4,
+                                                quality: 15);
                                       } else if (images.length == 5) {
-                                        ByteData byteData = await images[0]
-                                            .getByteData(quality: 50);
+                                        ByteData byteData =
+                                            await images[0].getByteData();
                                         _image = byteData.buffer.asUint8List();
-
-                                        ByteData byteData2 = await images[1]
-                                            .getByteData(quality: 50);
+                                        _image = await FlutterImageCompress
+                                            .compressWithList(_image,
+                                                quality: 15);
+                                        ByteData byteData2 =
+                                            await images[1].getByteData();
                                         _image2 =
                                             byteData2.buffer.asUint8List();
-
-                                        ByteData byteData3 = await images[2]
-                                            .getByteData(quality: 50);
+                                        _image2 = await FlutterImageCompress
+                                            .compressWithList(_image2,
+                                                quality: 15);
+                                        ByteData byteData3 =
+                                            await images[2].getByteData();
                                         _image3 =
                                             byteData3.buffer.asUint8List();
-
-                                        ByteData byteData4 = await images[3]
-                                            .getByteData(quality: 50);
+                                        _image3 = await FlutterImageCompress
+                                            .compressWithList(_image3,
+                                                quality: 15);
+                                        ByteData byteData4 =
+                                            await images[3].getByteData();
                                         _image4 =
                                             byteData4.buffer.asUint8List();
-
-                                        ByteData byteData5 = await images[4]
-                                            .getByteData(quality: 50);
+                                        _image4 = await FlutterImageCompress
+                                            .compressWithList(_image4,
+                                                quality: 15);
+                                        ByteData byteData5 =
+                                            await images[4].getByteData();
                                         _image5 =
                                             byteData5.buffer.asUint8List();
+                                        _image5 = await FlutterImageCompress
+                                            .compressWithList(_image5,
+                                                quality: 15);
                                       } else if (images.length == 6) {
-                                        ByteData byteData = await images[0]
-                                            .getByteData(quality: 50);
+                                        ByteData byteData =
+                                            await images[0].getByteData();
                                         _image = byteData.buffer.asUint8List();
-
-                                        ByteData byteData2 = await images[1]
-                                            .getByteData(quality: 50);
+                                        _image = await FlutterImageCompress
+                                            .compressWithList(_image,
+                                                quality: 15);
+                                        ByteData byteData2 =
+                                            await images[1].getByteData();
                                         _image2 =
                                             byteData2.buffer.asUint8List();
-
-                                        ByteData byteData3 = await images[2]
-                                            .getByteData(quality: 50);
+                                        _image2 = await FlutterImageCompress
+                                            .compressWithList(_image2,
+                                                quality: 15);
+                                        ByteData byteData3 =
+                                            await images[2].getByteData();
                                         _image3 =
                                             byteData3.buffer.asUint8List();
-
-                                        ByteData byteData4 = await images[3]
-                                            .getByteData(quality: 50);
+                                        _image3 = await FlutterImageCompress
+                                            .compressWithList(_image3,
+                                                quality: 15);
+                                        ByteData byteData4 =
+                                            await images[3].getByteData();
                                         _image4 =
                                             byteData4.buffer.asUint8List();
-
-                                        ByteData byteData5 = await images[4]
-                                            .getByteData(quality: 50);
+                                        _image4 = await FlutterImageCompress
+                                            .compressWithList(_image4,
+                                                quality: 15);
+                                        ByteData byteData5 =
+                                            await images[4].getByteData();
                                         _image5 =
                                             byteData5.buffer.asUint8List();
-
-                                        ByteData byteData6 = await images[5]
-                                            .getByteData(quality: 50);
+                                        _image5 = await FlutterImageCompress
+                                            .compressWithList(_image5,
+                                                quality: 15);
+                                        ByteData byteData6 =
+                                            await images[5].getByteData();
                                         _image6 =
                                             byteData6.buffer.asUint8List();
+                                        _image6 = await FlutterImageCompress
+                                            .compressWithList(_image6,
+                                                quality: 15);
                                       }
 
                                       Dio dio = new Dio();
@@ -3297,6 +3419,7 @@ class EditItemState extends State<EditItem>
                                           'latitude': _lastMapPosition.latitude,
                                           'longitude':
                                               _lastMapPosition.longitude,
+                                          'freedelivery': freedelivery,
                                           'description':
                                               businessdescriptionController
                                                   .text,
@@ -3348,6 +3471,7 @@ class EditItemState extends State<EditItem>
                                           'tags': tags.isEmpty ? [] : {tags},
                                           'category': _selectedCategory,
                                           'subcategory': _selectedsubCategory,
+                                          'freedelivery': freedelivery,
                                           'subsubcategory':
                                               _selectedsubsubCategory == null
                                                   ? ''
@@ -3406,6 +3530,7 @@ class EditItemState extends State<EditItem>
                                           'colors': selectedColors.isEmpty
                                               ? []
                                               : {selectedColors},
+                                          'freedelivery': freedelivery,
                                           'size': _selectedsize == null
                                               ? ''
                                               : _selectedsize,
@@ -3473,6 +3598,7 @@ class EditItemState extends State<EditItem>
                                           'originalprice':
                                               businesspricecontroller.text
                                                   .toString(),
+                                          'freedelivery': freedelivery,
                                           'colors': selectedColors.isEmpty
                                               ? []
                                               : {selectedColors},
@@ -3571,6 +3697,7 @@ class EditItemState extends State<EditItem>
                                           'size': selectedSizes.isEmpty
                                               ? []
                                               : {selectedSizes},
+                                          'freedelivery': freedelivery,
                                           'acceptoffers': acceptoffers,
                                           'buyerprotection': buyerprotection,
                                           'city': city.trim(),
@@ -3681,6 +3808,7 @@ class EditItemState extends State<EditItem>
                                               : _selectedsubsubCategory,
                                       'latitude': _lastMapPosition.latitude,
                                       'longitude': _lastMapPosition.longitude,
+                                      'freedelivery': freedelivery,
                                       'description':
                                           businessdescriptionController.text,
                                       'city': city.trim(),
@@ -3721,7 +3849,7 @@ class EditItemState extends State<EditItem>
                                                           FontWeight.w600),
                                                 ),
                                                 description: Text(
-                                                  'Your Item\'s Uploaded',
+                                                  'Your Item\'s Updated',
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(),
                                                 ),

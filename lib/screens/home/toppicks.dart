@@ -563,13 +563,13 @@ class TopPicksState extends State<TopPicks> {
                                               }
                                             },
                                             child: CircleAvatar(
-                                              radius: 18,
+                                              radius: 16,
                                               backgroundColor:
-                                                  Colors.deepPurple,
+                                                  Colors.deepOrange,
                                               child: Icon(
                                                 FontAwesome.heart,
                                                 color: Colors.white,
-                                                size: 16,
+                                                size: 15,
                                               ),
                                             ))
                                         : InkWell(

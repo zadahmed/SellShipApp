@@ -454,7 +454,7 @@ class _NotifcationPageState extends State<NotifcationPage>
                                                                     context)
                                                                 .size
                                                                 .width /
-                                                            1.6,
+                                                            1.7,
                                                         child: notifs[index]
                                                                     .unread ==
                                                                 false

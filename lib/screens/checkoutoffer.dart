@@ -24,10 +24,12 @@ class CheckoutOffer extends StatefulWidget {
   String offer;
   String messageid;
   String ordertype;
+  bool freedelivery;
 
   CheckoutOffer({
     Key key,
     this.messageid,
+    this.freedelivery,
     this.ordertype,
     this.itemid,
     this.offer,
@@ -89,7 +91,7 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
     }
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List cartitems = prefs.getStringList('cartitems');
-
+    var deliverycharges;
     if (cartitems != null) {
       for (int i = 0; i < cartitems.length; i++) {
         var decodeditem = json.decode(cartitems[i]);
@@ -101,15 +103,38 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
                 : decodeditem['selectedsize'],
             quantity:
                 decodeditem['quantity'] == null ? 1 : decodeditem['quantity'],
+            weight: decodeditem['weight'],
+            freedelivery: decodeditem['freedelivery'],
             itemid: decodeditem['itemid'],
             price: decodeditem['price'].toString(),
             image: decodeditem['image'],
             userid: decodeditem['sellerid'],
             username: decodeditem['sellername']);
 
+        if (newItem.freedelivery == false) {
+          var weightfees;
+          if (newItem.weight == '5') {
+            weightfees = 20;
+          } else if (newItem.weight == '10') {
+            weightfees = 30;
+          } else if (newItem.weight == '20') {
+            weightfees = 50;
+          } else if (newItem.weight == '50') {
+            weightfees = 110;
+          }
+
+          setState(() {
+            deliveryamount = 'AED ' + weightfees.toString();
+            deliverycharges = double.parse(weightfees.toString());
+          });
+        } else {
+          setState(() {
+            deliveryamount = 'FREE';
+            deliverycharges = 0.0;
+          });
+        }
+
         subtotal = double.parse(widget.offer);
-        print(newItem.selectedsize);
-        print(newItem.quantity);
 
         listitems.add(newItem);
       }
@@ -117,9 +142,12 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
 
     setState(() {
       subtotal = subtotal;
+      total = subtotal + deliverycharges;
       listitems = listitems;
     });
   }
+
+  var deliveryamount;
 
   Item newItem;
   var addressline1;
@@ -371,11 +399,11 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
                                 fontWeight: FontWeight.w800),
                           ),
                           Text(
-                            'Free',
+                            deliveryamount,
                             style: TextStyle(
                               fontFamily: 'Helvetica',
                               fontSize: 16,
-                              color: Colors.green,
+                              color: Colors.black,
                             ),
                           ),
                         ],
@@ -541,7 +569,7 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
                         ),
                         Text(
                             currency != null
-                                ? currency + ' ' + subtotal.toString()
+                                ? currency + ' ' + total.toString()
                                 : '',
                             style: TextStyle(
                               fontWeight: FontWeight.w900,
@@ -597,10 +625,10 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
                             var returnurl;
                             if (widget.ordertype == 'EXISTING') {
                               returnurl =
-                                  'https://api.sellship.co/api/payment/EXISTING/${messageid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${subtotal}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}/${listitems[0].quantity}/${listitems[0].selectedsize}';
+                                  'https://api.sellship.co/api/payment/EXISTING/${messageid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${total.toStringAsFixed(2)}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}/${listitems[0].quantity}/${listitems[0].selectedsize}';
                             } else {
                               returnurl =
-                                  'https://api.sellship.co/api/payment/NEW/${messageid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${subtotal}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}/${listitems[0].quantity}/${listitems[0].selectedsize}';
+                                  'https://api.sellship.co/api/payment/NEW/${messageid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${total.toStringAsFixed(2)}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}/${listitems[0].quantity}/${listitems[0].selectedsize}';
                             }
 
                             Map<String, Object> body = {
@@ -609,7 +637,7 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
                                 "name": 'SellShip Order',
                                 "channel": "web",
                                 "reference": trref,
-                                "amount": subtotal,
+                                "amount": total.toStringAsFixed(2),
                                 "currency": "AED",
                                 "category": "pay",
                               },

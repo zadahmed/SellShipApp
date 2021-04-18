@@ -43,6 +43,7 @@ class Item {
   final bool approved;
   final bool makeoffers;
   final bool buyerprotection;
+  final bool freedelivery;
   String selectedsize;
   final String storetype;
 
@@ -62,6 +63,7 @@ class Item {
       this.image1,
       this.date,
       this.weight,
+      this.freedelivery,
       this.image2,
       this.selectedsize,
       this.image3,
@@ -101,7 +103,9 @@ class Item {
       image: json['image'],
       userid: json['userid'],
       price: json['price'],
+      freedelivery: json['freedelivery'],
       category: json['category'],
+      weight: json['weight'],
       quantity: json['quantity'],
       selectedsize: json['selectedsize'],
     );
@@ -115,8 +119,10 @@ class Item {
         'price': price,
         'username': username,
         'sellerid': sellerid,
+        'freedelivery': freedelivery,
         'sellername': sellername,
         'quantity': quantity,
+        'weight': weight,
         'selectedsize': selectedsize,
       };
 

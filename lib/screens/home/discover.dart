@@ -1611,13 +1611,13 @@ class _DiscoverState extends State<Discover>
                                                     }
                                                   },
                                                   child: CircleAvatar(
-                                                    radius: 18,
+                                                    radius: 16,
                                                     backgroundColor:
-                                                        Colors.deepPurple,
+                                                        Colors.deepOrange,
                                                     child: Icon(
                                                       FontAwesome.heart,
                                                       color: Colors.white,
-                                                      size: 16,
+                                                      size: 15,
                                                     ),
                                                   ))
                                               : InkWell(
@@ -1665,15 +1665,20 @@ class _DiscoverState extends State<Discover>
                                                     }
                                                   },
                                                   child: CircleAvatar(
-                                                    radius: 18,
-                                                    backgroundColor:
-                                                        Colors.white,
-                                                    child: Icon(
-                                                      Feather.heart,
-                                                      color: Colors.blueGrey,
-                                                      size: 16,
-                                                    ),
-                                                  ))
+                                                      radius: 16,
+                                                      backgroundColor: Colors
+                                                          .blueGrey.shade50,
+                                                      child: CircleAvatar(
+                                                        radius: 15,
+                                                        backgroundColor:
+                                                            Colors.white,
+                                                        child: Icon(
+                                                          Feather.heart,
+                                                          color:
+                                                              Colors.blueGrey,
+                                                          size: 16,
+                                                        ),
+                                                      )))
                                           : CircleAvatar(
                                               radius: 16,
                                               backgroundColor:
@@ -2179,13 +2184,13 @@ class _DiscoverState extends State<Discover>
                                                     }
                                                   },
                                                   child: CircleAvatar(
-                                                    radius: 18,
+                                                    radius: 16,
                                                     backgroundColor:
-                                                        Colors.deepPurple,
+                                                        Colors.deepOrange,
                                                     child: Icon(
                                                       FontAwesome.heart,
                                                       color: Colors.white,
-                                                      size: 16,
+                                                      size: 15,
                                                     ),
                                                   ))
                                               : InkWell(
@@ -2647,13 +2652,13 @@ class _DiscoverState extends State<Discover>
                                                     }
                                                   },
                                                   child: CircleAvatar(
-                                                    radius: 18,
+                                                    radius: 16,
                                                     backgroundColor:
-                                                        Colors.deepPurple,
+                                                        Colors.deepOrange,
                                                     child: Icon(
                                                       FontAwesome.heart,
                                                       color: Colors.white,
-                                                      size: 16,
+                                                      size: 15,
                                                     ),
                                                   ))
                                               : InkWell(
@@ -3012,12 +3017,12 @@ class _DiscoverState extends State<Discover>
                                             }
                                           },
                                           child: CircleAvatar(
-                                            radius: 18,
-                                            backgroundColor: Colors.deepPurple,
+                                            radius: 16,
+                                            backgroundColor: Colors.deepOrange,
                                             child: Icon(
                                               FontAwesome.heart,
                                               color: Colors.white,
-                                              size: 16,
+                                              size: 15,
                                             ),
                                           ))
                                       : InkWell(

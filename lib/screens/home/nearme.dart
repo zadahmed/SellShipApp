@@ -577,13 +577,13 @@ class NearMeState extends State<NearMe> {
                                               }
                                             },
                                             child: CircleAvatar(
-                                              radius: 18,
+                                              radius: 16,
                                               backgroundColor:
-                                                  Colors.deepPurple,
+                                                  Colors.deepOrange,
                                               child: Icon(
                                                 FontAwesome.heart,
                                                 color: Colors.white,
-                                                size: 16,
+                                                size: 15,
                                               ),
                                             ))
                                         : InkWell(
@@ -1045,13 +1045,13 @@ class NearMeState extends State<NearMe> {
                                                 child: Padding(
                                                     padding: EdgeInsets.all(10),
                                                     child: CircleAvatar(
-                                                      radius: 18,
+                                                      radius: 16,
                                                       backgroundColor:
-                                                          Colors.deepPurple,
+                                                          Colors.deepOrange,
                                                       child: Icon(
                                                         FontAwesome.heart,
                                                         color: Colors.white,
-                                                        size: 16,
+                                                        size: 15,
                                                       ),
                                                     ))))
                                         : InkWell(

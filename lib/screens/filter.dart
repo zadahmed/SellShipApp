@@ -428,12 +428,12 @@ class FilteredState extends State<Filtered> {
                                           }
                                         },
                                         child: CircleAvatar(
-                                          radius: 18,
-                                          backgroundColor: Colors.deepPurple,
+                                          radius: 16,
+                                          backgroundColor: Colors.deepOrange,
                                           child: Icon(
                                             FontAwesome.heart,
                                             color: Colors.white,
-                                            size: 16,
+                                            size: 15,
                                           ),
                                         ))
                                     : InkWell(

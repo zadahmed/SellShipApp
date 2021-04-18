@@ -2326,13 +2326,13 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                                     }
                                                   },
                                                   child: CircleAvatar(
-                                                    radius: 18,
+                                                    radius: 16,
                                                     backgroundColor:
-                                                        Colors.deepPurple,
+                                                        Colors.deepOrange,
                                                     child: Icon(
                                                       FontAwesome.heart,
                                                       color: Colors.white,
-                                                      size: 16,
+                                                      size: 15,
                                                     ),
                                                   ))
                                               : InkWell(
@@ -2644,13 +2644,13 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                                     }
                                                   },
                                                   child: CircleAvatar(
-                                                    radius: 18,
+                                                    radius: 16,
                                                     backgroundColor:
-                                                        Colors.deepPurple,
+                                                        Colors.deepOrange,
                                                     child: Icon(
                                                       FontAwesome.heart,
                                                       color: Colors.white,
-                                                      size: 16,
+                                                      size: 15,
                                                     ),
                                                   ))
                                               : InkWell(
@@ -2963,13 +2963,13 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                                     }
                                                   },
                                                   child: CircleAvatar(
-                                                    radius: 18,
+                                                    radius: 16,
                                                     backgroundColor:
-                                                        Colors.deepPurple,
+                                                        Colors.deepOrange,
                                                     child: Icon(
                                                       FontAwesome.heart,
                                                       color: Colors.white,
-                                                      size: 16,
+                                                      size: 15,
                                                     ),
                                                   ))
                                               : InkWell(
@@ -3313,12 +3313,12 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                             }
                                           },
                                           child: CircleAvatar(
-                                            radius: 18,
-                                            backgroundColor: Colors.deepPurple,
+                                            radius: 16,
+                                            backgroundColor: Colors.deepOrange,
                                             child: Icon(
                                               FontAwesome.heart,
                                               color: Colors.white,
-                                              size: 16,
+                                              size: 15,
                                             ),
                                           ))
                                       : InkWell(

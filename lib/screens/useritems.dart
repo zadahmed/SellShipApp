@@ -130,8 +130,15 @@ class _UserItemsState extends State<UserItems> {
           fls = 0;
         }
 
+        var pp;
+        if (profilemap['profilepicture'] != null) {
+          pp = profilemap['profilepicture'];
+        } else {
+          pp = '';
+        }
+
         setState(() {
-          profilepicture = profilemap['profilepicture'];
+          profilepicture = pp;
           reviewrating = rr;
           following = fls;
           slist = store;
@@ -149,29 +156,36 @@ class _UserItemsState extends State<UserItems> {
   Stores mystore;
 
   getuser() async {
-    for (int i = 0; i < slist.length; i++) {
-      var url = 'https://api.sellship.co/api/user/store/' + slist[i]['\$oid'];
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        var jsonbody = json.decode(response.body);
-        Stores store = Stores(
-            storeid: jsonbody['_id']['\$oid'],
-            reviews: jsonbody['reviewnumber'] == null
-                ? '0'
-                : jsonbody['reviewnumber'].toString(),
-            sold: jsonbody['sold'] == null ? '0' : jsonbody['sold'].toString(),
-            storecategory: jsonbody['storecategory'],
-            storetype: jsonbody['storetype'],
-            storelogo:
-                jsonbody['storelogo'] == null ? '' : jsonbody['storelogo'],
-            storebio: jsonbody['storebio'],
-            storename: jsonbody['storename']);
+    if (slist.isNotEmpty) {
+      for (int i = 0; i < slist.length; i++) {
+        var url = 'https://api.sellship.co/api/user/store/' + slist[i]['\$oid'];
+        final response = await http.get(url);
+        if (response.statusCode == 200) {
+          var jsonbody = json.decode(response.body);
+          Stores store = Stores(
+              storeid: jsonbody['_id']['\$oid'],
+              reviews: jsonbody['reviewnumber'] == null
+                  ? '0'
+                  : jsonbody['reviewnumber'].toString(),
+              sold:
+                  jsonbody['sold'] == null ? '0' : jsonbody['sold'].toString(),
+              storecategory: jsonbody['storecategory'],
+              storetype: jsonbody['storetype'],
+              storelogo:
+                  jsonbody['storelogo'] == null ? '' : jsonbody['storelogo'],
+              storebio: jsonbody['storebio'],
+              storename: jsonbody['storename']);
 
-        setState(() {
-          storelist.add(store);
-          loading = false;
-        });
+          setState(() {
+            storelist.add(store);
+            loading = false;
+          });
+        }
       }
+    } else {
+      setState(() {
+        loading = false;
+      });
     }
   }
 
@@ -373,10 +387,8 @@ class _UserItemsState extends State<UserItems> {
                                                                 BorderRadius
                                                                     .circular(
                                                                         50),
-                                                            child: profilepicture ==
-                                                                        null ||
-                                                                    profilepicture
-                                                                        .isEmpty
+                                                            child: profilepicture
+                                                                    .isEmpty
                                                                 ? Image.asset(
                                                                     'assets/personplaceholder.png',
                                                                     fit: BoxFit
@@ -682,9 +694,35 @@ class _UserItemsState extends State<UserItems> {
                           crossAxisSpacing: 4.0,
                         )
                       : SliverToBoxAdapter(
-                          child: SizedBox(
-                          height: 10,
-                        )),
+                          child: Container(
+                              child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                              Container(
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  child: Image.asset(
+                                    'assets/little_theologians_4x.png',
+                                    fit: BoxFit.fitWidth,
+                                  )),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Center(
+                                child: Text(
+                                    'Looks like ' +
+                                        username +
+                                        ' does not have any stores yet.',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 16,
+                                    )),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                            ])))
                 ])
               : SpinKitDoubleBounce(
                   color: Colors.deepOrange,

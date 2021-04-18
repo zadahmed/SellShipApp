@@ -129,15 +129,26 @@ class _ActivityBuyState extends State<ActivityBuy>
           } else {
             sellername = 'Unknown';
           }
+
+          bool freedel;
+          if (itemmap[i]['item']['freedelivery'] == 'false' ||
+              itemmap[i]['item']['freedelivery'] == null) {
+            freedel = false;
+          } else {
+            freedel = true;
+          }
+
           Item ite = Item(
               itemid: itemmap[i]['item']['_id']['\$oid'],
               name: itemmap[i]['item']['name'],
               image: itemmap[i]['item']['image'],
               price: itemmap[i]['offer'].toString(),
+              weight: itemmap[i]['item']['weight'],
               offerstage: itemmap[i]['offerstage'],
               date: date.toString(),
               storetype: itemmap[i]['item']['storetype'],
               buyerid: buyerid,
+              freedelivery: freedel,
               userid: itemmap[i]['item']['userid'],
               username: itemmap[i]['item']['username'],
               buyername: buyername,
@@ -855,6 +866,9 @@ class _ActivityBuyState extends State<ActivityBuy>
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) => ChatPageView(
+                                                      freedelivery:
+                                                          buyingItem[index]
+                                                              .freedelivery,
                                                       itemsold: buyingItem[index]
                                                           .sold,
                                                       storeid: buyingItem[index]
@@ -865,9 +879,8 @@ class _ActivityBuyState extends State<ActivityBuy>
                                                           .username,
                                                       itemid: buyingItem[index]
                                                           .itemid,
-                                                      recipentid:
-                                                          buyingItem[index]
-                                                              .sellerid,
+                                                      recipentid: buyingItem[index]
+                                                          .sellerid,
                                                       senderid: buyingItem[index]
                                                           .buyerid,
                                                       recipentname:
@@ -880,10 +893,8 @@ class _ActivityBuyState extends State<ActivityBuy>
                                                       offer: buyingItem[index]
                                                           .price,
                                                       offerstage:
-                                                          buyingItem[index]
-                                                              .offerstage,
-                                                      itemimage:
-                                                          buyingItem[index].image,
+                                                          buyingItem[index].offerstage,
+                                                      itemimage: buyingItem[index].image,
                                                       itemname: buyingItem[index].name,
                                                       item: buyingItem[index])),
                                             );

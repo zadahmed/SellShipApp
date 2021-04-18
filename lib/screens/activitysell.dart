@@ -187,6 +187,14 @@ class _ActivitySellState extends State<ActivitySell>
             buyername = 'Unknown';
           }
 
+          bool freedel;
+          if (itemmap[i]['freedelivery'] == 'false' ||
+              itemmap[i]['freedelivery'] == null) {
+            freedel = false;
+          } else {
+            freedel = true;
+          }
+
           Item ite = Item(
               itemid: itemmap[i]['item']['_id']['\$oid'],
               name: itemmap[i]['item']['name'],
@@ -198,6 +206,7 @@ class _ActivitySellState extends State<ActivitySell>
               offerstage: itemmap[i]['offerstage'],
               buyerid: buyerid,
               date: date.toString(),
+              freedelivery: freedel,
               buyername: buyername,
               sellername: sellername,
               sellerid: sellerid,
@@ -865,6 +874,9 @@ class _ActivitySellState extends State<ActivitySell>
                                               MaterialPageRoute(
                                                   builder: (context) =>
                                                       ChatPageViewSeller(
+                                                        freedelivery:
+                                                            sellingItem[index]
+                                                                .freedelivery,
                                                         itemsold:
                                                             sellingItem[index]
                                                                 .sold,

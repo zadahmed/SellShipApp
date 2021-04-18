@@ -667,6 +667,14 @@ class _DetailsState extends State<Details> {
       protection = true;
     }
 
+    bool freedel;
+    if (jsonbody[0]['freedelivery'] == 'false' ||
+        jsonbody[0]['freedelivery'] == null) {
+      freedel = false;
+    } else {
+      freedel = true;
+    }
+
     var sfs = jsonbody[0]['size'];
 
     if (sfs == null || sfs.isEmpty) {
@@ -682,6 +690,7 @@ class _DetailsState extends State<Details> {
         itemid: jsonbody[0]['_id']['\$oid'].toString(),
         price: jsonbody[0]['price'].toString(),
         description: jsonbody[0]['description'],
+        weight: jsonbody[0]['weight'],
         category: jsonbody[0]['category'],
         condition: jsonbody[0]['condition'] == null
             ? 'Like New'
@@ -703,6 +712,7 @@ class _DetailsState extends State<Details> {
         username: jsonbody[0]['username'],
         brand: jsonbody[0]['brand'] == null ? 'Other' : jsonbody[0]['brand'],
         size: sfs,
+        freedelivery: freedel,
         useremail: jsonbody[0]['useremail'],
         usernumber: jsonbody[0]['usernumber'],
         userid: jsonbody[0]['userid'],
@@ -908,22 +918,22 @@ class _DetailsState extends State<Details> {
               child: InkWell(
                   onTap: () async {
                     BranchUniversalObject buo = BranchUniversalObject(
-                        canonicalIdentifier: widget.itemid,
-                        title: widget.name,
-                        imageUrl: widget.image,
+                        canonicalIdentifier: newItem.itemid,
+                        title: newItem.name,
+                        imageUrl: newItem.image,
                         contentDescription: newItem.description,
                         contentMetadata: BranchContentMetaData()
                           ..addCustomMetadata(
                             'itemname',
-                            widget.name,
+                            newItem.name,
                           )
                           ..addCustomMetadata(
                             'source',
                             'item',
                           )
-                          ..addCustomMetadata('itemimage', widget.itemid)
+                          ..addCustomMetadata('itemimage', newItem.itemid)
                           ..addCustomMetadata('itemsold', newItem.sold)
-                          ..addCustomMetadata('itemid', widget.itemid),
+                          ..addCustomMetadata('itemid', newItem.itemid),
                         publiclyIndex: true,
                         locallyIndex: true,
                         expirationDateInMilliSec: DateTime.now()
@@ -933,7 +943,8 @@ class _DetailsState extends State<Details> {
                     FlutterBranchSdk.registerView(buo: buo);
 
                     BranchLinkProperties lp = BranchLinkProperties(
-                      channel: 'facebook',
+                      alias: newItem.username + ' ' + newItem.name,
+                      channel: 'whatsapp',
                       feature: 'sharing',
                       stage: 'new share',
                     );
@@ -2978,6 +2989,8 @@ class _DetailsState extends State<Details> {
 
                                                 String item =
                                                     jsonEncode(newItem);
+
+                                                print(item);
 
                                                 prefs.setStringList(
                                                     'cartitems', [item]);

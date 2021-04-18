@@ -42,6 +42,7 @@ class ChatPageViewSeller extends StatefulWidget {
   final bool itemsold;
   final String itemid;
   final int offerstage;
+  final bool freedelivery;
   final String storetype;
 
   const ChatPageViewSeller({
@@ -51,6 +52,7 @@ class ChatPageViewSeller extends StatefulWidget {
     this.itemimage,
     this.messageid,
     this.itemsold,
+    this.freedelivery,
     this.offerstage,
     this.weight,
     this.itemprice,
@@ -103,38 +105,45 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
   }
 
   calculateearning() {
-    var weight = int.parse(widget.weight);
-    var weightfees;
-    if (weight <= 5) {
-      weightfees = 20;
-    } else if (weight <= 10) {
-      weightfees = 30;
-    } else if (weight <= 20) {
-      weightfees = 50;
-    } else if (weight <= 50) {
-      weightfees = 110;
+    if (widget.freedelivery == true) {
+      var weight = int.parse(widget.weight);
+      var weightfees;
+      if (weight <= 5) {
+        weightfees = 20;
+      } else if (weight <= 10) {
+        weightfees = 30;
+      } else if (weight <= 20) {
+        weightfees = 50;
+      } else if (weight <= 50) {
+        weightfees = 110;
+      }
+
+      var fees = double.parse(itemprice.toString()) / 1.15;
+
+      finalfees = fees - weightfees;
+
+      var ourfee = (finalfees + weightfees) * 0.15;
+
+      setState(() {
+        ourfees = ourfee;
+        deliveryfees = weightfees;
+        finalfees = finalfees;
+      });
+    } else {
+      var fees = double.parse(itemprice.toString()) / 1.15;
+      var f = fees * 0.15;
+      setState(() {
+        ourfees = f;
+        deliveryfees = 0;
+        finalfees = fees;
+      });
     }
-
-    var fees = double.parse(itemprice.toString()) / 1.15;
-
-    finalfees = fees - weightfees;
-
-    var ourfee = (finalfees + weightfees) * 0.15;
-
-    setState(() {
-      ourfees = ourfee;
-      deliveryfees = weightfees;
-      finalfees = finalfees;
-    });
   }
 
   var ourfees;
   var deliveryfees;
 
   var finalfees;
-
-  /// UPDATE QUANTITY WHEN SOMEONE BUYS AN ITEM
-  /// SHOWCASE QUANTITY AND LIKES IN DETAIL PAGE
 
   Widget selleroptions(BuildContext context) {
     if (offerstage == 0) {
@@ -2381,31 +2390,45 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                                     cursorColor: Color(0xFF979797),
                                     controller: offercontroller,
                                     onChanged: (text) {
-                                      var weight = int.parse(widget.weight);
-                                      var weightfees;
-                                      if (weight <= 5) {
-                                        weightfees = 20;
-                                      } else if (weight <= 10) {
-                                        weightfees = 30;
-                                      } else if (weight <= 20) {
-                                        weightfees = 50;
-                                      } else if (weight <= 50) {
-                                        weightfees = 110;
+                                      if (widget.freedelivery == true) {
+                                        var weight = int.parse(widget.weight);
+                                        var weightfees;
+                                        if (weight <= 5) {
+                                          weightfees = 20;
+                                        } else if (weight <= 10) {
+                                          weightfees = 30;
+                                        } else if (weight <= 20) {
+                                          weightfees = 50;
+                                        } else if (weight <= 50) {
+                                          weightfees = 110;
+                                        }
+
+                                        var fees = double.parse(
+                                            offercontroller.text.toString());
+
+                                        finalfees = fees + weightfees;
+
+                                        var ourfee =
+                                            (finalfees + weightfees) * 0.15;
+
+                                        updateState(() {
+                                          servicefees = ourfee;
+                                          deliveryfees = weightfees;
+                                          counterofferprice =
+                                              finalfees + ourfee;
+                                        });
+                                      } else {
+                                        var fees = double.parse(
+                                            offercontroller.text.toString());
+
+                                        var ourfee = fees * 0.15;
+
+                                        updateState(() {
+                                          servicefees = ourfee;
+                                          deliveryfees = 0;
+                                          counterofferprice = fees + ourfee;
+                                        });
                                       }
-
-                                      var fees = double.parse(
-                                          offercontroller.text.toString());
-
-                                      finalfees = fees + weightfees;
-
-                                      var ourfee =
-                                          (finalfees + weightfees) * 0.15;
-
-                                      updateState(() {
-                                        servicefees = ourfee;
-                                        deliveryfees = weightfees;
-                                        counterofferprice = finalfees + ourfee;
-                                      });
                                     },
                                     style: TextStyle(
                                         fontFamily: 'Helvetica',

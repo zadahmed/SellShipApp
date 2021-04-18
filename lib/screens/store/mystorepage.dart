@@ -646,7 +646,8 @@ class _StorePageState extends State<StorePage> {
                             FlutterBranchSdk.registerView(buo: buo);
 
                             BranchLinkProperties lp = BranchLinkProperties(
-                              channel: 'facebook',
+                              alias: mystore.storeusername,
+                              channel: 'whatsapp',
                               feature: 'sharing',
                               stage: 'new share',
                             );

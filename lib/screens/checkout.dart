@@ -119,16 +119,18 @@ class _CheckoutState extends State<Checkout> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List cartitems = prefs.getStringList('cartitems');
 
+    var deliverycharges;
     if (cartitems != null) {
       for (int i = 0; i < cartitems.length; i++) {
         var decodeditem = json.decode(cartitems[i]);
 
-        print(decodeditem);
         Item newItem = Item(
             name: decodeditem['name'],
             selectedsize: decodeditem['selectedsize'],
             quantity: decodeditem['quantity'],
             itemid: decodeditem['itemid'],
+            weight: decodeditem['weight'],
+            freedelivery: decodeditem['freedelivery'],
             price: decodeditem['price'].toString(),
             image: decodeditem['image'],
             userid: decodeditem['sellerid'] == null
@@ -138,6 +140,29 @@ class _CheckoutState extends State<Checkout> {
                 ? decodeditem['username']
                 : decodeditem['sellername']);
 
+        if (newItem.freedelivery == false) {
+          var weightfees;
+          if (newItem.weight == '5') {
+            weightfees = 20;
+          } else if (newItem.weight == '10') {
+            weightfees = 30;
+          } else if (newItem.weight == '20') {
+            weightfees = 50;
+          } else if (newItem.weight == '50') {
+            weightfees = 110;
+          }
+
+          setState(() {
+            deliveryamount = 'AED ' + weightfees.toString();
+            deliverycharges = double.parse(weightfees.toString());
+          });
+        } else {
+          setState(() {
+            deliveryamount = 'FREE';
+            deliverycharges = 0.0;
+          });
+        }
+
         subtotal = subtotal + double.parse(newItem.price);
 
         listitems.add(newItem);
@@ -146,10 +171,12 @@ class _CheckoutState extends State<Checkout> {
 
     setState(() {
       subtotal = subtotal;
+      total = subtotal + deliverycharges;
       listitems = listitems;
     });
   }
 
+  var deliveryamount;
   Item newItem;
   var addressline1;
   var city;
@@ -767,11 +794,11 @@ class _CheckoutState extends State<Checkout> {
                                     fontWeight: FontWeight.w800),
                               ),
                               Text(
-                                'Free',
+                                deliveryamount,
                                 style: TextStyle(
                                   fontFamily: 'Helvetica',
                                   fontSize: 16,
-                                  color: Colors.green,
+                                  color: Colors.black,
                                 ),
                               ),
                             ],
@@ -939,7 +966,7 @@ class _CheckoutState extends State<Checkout> {
                                   color: Colors.black45,
                                 ),
                               ),
-                              Text('AED' + ' ' + subtotal.toStringAsFixed(2),
+                              Text('AED' + ' ' + total.toStringAsFixed(2),
                                   style: TextStyle(
                                     fontWeight: FontWeight.w900,
                                     fontSize: 20,
@@ -997,7 +1024,7 @@ class _CheckoutState extends State<Checkout> {
                                       "name": 'SellShip Order',
                                       "channel": "web",
                                       "reference": trref,
-                                      "amount": subtotal,
+                                      "amount": total.toStringAsFixed(2),
                                       "currency": "AED",
                                       "category": "pay",
                                     },
@@ -1006,11 +1033,11 @@ class _CheckoutState extends State<Checkout> {
                                       "locale": "en",
                                       "paymentAction": "Sale",
                                       "returnUrl":
-                                          'https://api.sellship.co/api/payment/NEW/${messageid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${subtotal}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}/${listitems[0].quantity}/${listitems[0].selectedsize}'
+                                          'https://api.sellship.co/api/payment/NEW/${messageid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${total.toStringAsFixed(2)}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}/${listitems[0].quantity}/${listitems[0].selectedsize}'
                                     },
                                   };
                                   var returnurl =
-                                      'https://api.sellship.co/api/payment/NEW/${messageid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${subtotal}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}/${listitems[0].quantity}/${listitems[0].selectedsize}';
+                                      'https://api.sellship.co/api/payment/NEW/${messageid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${total.toStringAsFixed(2)}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}/${listitems[0].quantity}/${listitems[0].selectedsize}';
 
                                   // var url =
                                   //     "https://api-stg.noonpayments.com/payment/v1/order";

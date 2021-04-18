@@ -48,6 +48,7 @@ class ChatPageView extends StatefulWidget {
   final bool itemsold;
   final String storename;
   final String storeid;
+  final bool freedelivery;
   final String storetype;
 
   const ChatPageView({
@@ -55,6 +56,7 @@ class ChatPageView extends StatefulWidget {
     this.recipentname,
     this.storename,
     this.storeid,
+    this.freedelivery,
     this.itemname,
     this.itemimage,
     this.itemsold,
@@ -612,6 +614,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                     builder: (context) => CheckoutOffer(
                                         ordertype: 'EXISTING',
                                         itemid: widget.itemid,
+                                        freedelivery: widget.freedelivery,
                                         offer: itemprice.toString(),
                                         messageid: widget.messageid)),
                               );

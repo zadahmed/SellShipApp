@@ -1860,7 +1860,9 @@ class _AddItemState extends State<AddItem> {
                                                             'L',
                                                             'XL',
                                                             'XXL',
-                                                            'XXXL'
+                                                            'XXXL',
+                                                            'No-Size',
+                                                            'Free-Size',
                                                           ];
 
                                                           List<String>
@@ -1889,6 +1891,7 @@ class _AddItemState extends State<AddItem> {
                                                             '44',
                                                             '46',
                                                             '48',
+
                                                           ];
 
                                                           List<String>
@@ -1918,7 +1921,8 @@ class _AddItemState extends State<AddItem> {
                                                             '13',
                                                             '14',
                                                             '15',
-                                                            '16'
+                                                            '16',
+
                                                           ];
 
                                                           List<String>
@@ -4439,7 +4443,7 @@ class _AddItemState extends State<AddItem> {
                                                                       height:
                                                                           380,
                                                                       child:
-                                                                          ListView(
+                                                                          Column(
                                                                         children: [
                                                                           Container(
                                                                             height:
