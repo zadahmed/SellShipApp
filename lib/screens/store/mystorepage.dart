@@ -119,9 +119,31 @@ class _StorePageState extends State<StorePage> {
     final response = await http.get(url);
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
+
+      var follower = jsonbody['follower'];
+
+      if (follower != null) {
+        if (follower.length == 0) {
+          setState(() {
+            followers = 0;
+          });
+        } else {
+          setState(() {
+            followers = follower.length;
+          });
+        }
+      } else {
+        setState(() {
+          followers = 0;
+        });
+      }
       Stores store = Stores(
           storetype: jsonbody['storetype'],
           storeid: jsonbody['_id']['\$oid'],
+          reviews: jsonbody['reviewnumber'] == null
+              ? '0'
+              : jsonbody['reviewnumber'].toString(),
+          sold: jsonbody['sold'] == null ? '0' : jsonbody['sold'].toString(),
           storecategory: jsonbody['storecategory'],
           storelogo: jsonbody['storelogo'],
           storebio: jsonbody['storebio'],
@@ -1007,9 +1029,9 @@ class _StorePageState extends State<StorePage> {
                                                       CrossAxisAlignment.center,
                                                   children: <Widget>[
                                                     Text(
-                                                      itemssold == null
+                                                      mystore.sold == null
                                                           ? '0'
-                                                          : itemssold
+                                                          : mystore.sold
                                                               .toString(),
                                                       style: TextStyle(
                                                           fontFamily:
@@ -1041,9 +1063,9 @@ class _StorePageState extends State<StorePage> {
                                                       CrossAxisAlignment.center,
                                                   children: <Widget>[
                                                     Text(
-                                                      following == null
+                                                      mystore.reviews == null
                                                           ? '0'
-                                                          : following
+                                                          : mystore.reviews
                                                               .toString(),
                                                       style: TextStyle(
                                                           fontFamily:

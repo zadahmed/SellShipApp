@@ -169,7 +169,7 @@ class _AddSubSubCategoryState extends State<AddSubSubCategory> {
       } else if (subcategory == 'Dresses') {
         setState(() {
           subcategories = [
-            'Mini, Above Knee',
+            'Mini',
             'High Low',
             'Maxi',
             'Midi',
@@ -180,24 +180,20 @@ class _AddSubSubCategoryState extends State<AddSubSubCategory> {
         setState(() {
           subcategories = [
             'Blouses',
-            'Button-down',
-            'Halters',
             'Knit Tops',
             'Polo Shirts',
             'T-Shirts',
             'Tank, Cami',
             'Tunics',
-            'Wraps'
+            'Wraps',
           ];
         });
       } else if (subcategory == 'Coats & Jackets') {
         setState(() {
           subcategories = [
             'Fleece Jackets',
-            'Jean Jackets',
-            'Motorcycle Jackets',
-            'Parkas',
-            'Peacoats',
+            'Denim Jackets',
+            'Leather Jackets',
             'Puffers',
             'Trench Coats',
             'Vests',
@@ -209,13 +205,12 @@ class _AddSubSubCategoryState extends State<AddSubSubCategory> {
           subcategories = [
             'Cardigans',
             'Collared',
-            'Cowl Neck',
             'Crewneck',
             'Full-zip',
             'Hooded',
             'Ponchos',
             'V-neck',
-            'Vest, Sleeveless'
+            'Vest, Sleeveless',
           ];
         });
       } else if (subcategory == 'Bags') {
@@ -269,8 +264,7 @@ class _AddSubSubCategoryState extends State<AddSubSubCategory> {
       } else if (subcategory == 'Jeans') {
         setState(() {
           subcategories = [
-            'Boot Cut',
-            'Boyfriend',
+            'High waisted',
             'Capri, Cropped',
             'Flare',
             'Leggings & Jeggings',
@@ -300,7 +294,6 @@ class _AddSubSubCategoryState extends State<AddSubSubCategory> {
         setState(() {
           subcategories = [
             'Leggings',
-            'Tights',
             'Pants',
             'Shorts',
             'Skirts',
@@ -355,9 +348,8 @@ class _AddSubSubCategoryState extends State<AddSubSubCategory> {
           subcategories = [
             'Fleece Jackets',
             'Flight/Bomber Jackets',
-            'Jean Jackets',
-            'Motorcycle Jackets',
-            'Parkas',
+            'Denim Jackets',
+            'Leather Jackets',
             'Puffers',
             'Rainwear',
             'Vests',

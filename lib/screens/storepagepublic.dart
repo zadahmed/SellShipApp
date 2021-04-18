@@ -153,9 +153,6 @@ class _StorePublicState extends State<StorePublic> {
         });
       }
 
-      print('sss');
-      print(followers);
-
       var s = jsonbody['storename'];
 
       mystore = Stores(

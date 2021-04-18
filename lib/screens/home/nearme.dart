@@ -626,23 +626,31 @@ class NearMeState extends State<NearMe> {
                                               }
                                             },
                                             child: CircleAvatar(
-                                              radius: 18,
-                                              backgroundColor: Colors.white,
-                                              child: Icon(
-                                                Feather.heart,
-                                                color: Colors.blueGrey,
-                                                size: 16,
-                                              ),
-                                            ))
+                                                radius: 16,
+                                                backgroundColor:
+                                                    Colors.blueGrey.shade50,
+                                                child: CircleAvatar(
+                                                  radius: 15,
+                                                  backgroundColor: Colors.white,
+                                                  child: Icon(
+                                                    Feather.heart,
+                                                    color: Colors.blueGrey,
+                                                    size: 16,
+                                                  ),
+                                                )))
                                     : CircleAvatar(
-                                        radius: 18,
-                                        backgroundColor: Colors.white,
-                                        child: Icon(
-                                          Feather.heart,
-                                          color: Colors.blueGrey,
-                                          size: 16,
-                                        ),
-                                      )
+                                        radius: 16,
+                                        backgroundColor:
+                                            Colors.blueGrey.shade50,
+                                        child: CircleAvatar(
+                                          radius: 15,
+                                          backgroundColor: Colors.white,
+                                          child: Icon(
+                                            Feather.heart,
+                                            color: Colors.blueGrey,
+                                            size: 16,
+                                          ),
+                                        ))
                               ],
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1104,14 +1112,18 @@ class NearMeState extends State<NearMe> {
                                         child: Padding(
                                             padding: EdgeInsets.all(10),
                                             child: CircleAvatar(
-                                              radius: 18,
-                                              backgroundColor: Colors.white,
-                                              child: Icon(
-                                                Feather.heart,
-                                                color: Colors.blueGrey,
-                                                size: 16,
-                                              ),
-                                            ))),
+                                                radius: 16,
+                                                backgroundColor:
+                                                    Colors.blueGrey.shade50,
+                                                child: CircleAvatar(
+                                                  radius: 15,
+                                                  backgroundColor: Colors.white,
+                                                  child: Icon(
+                                                    Feather.heart,
+                                                    color: Colors.blueGrey,
+                                                    size: 16,
+                                                  ),
+                                                )))),
                           ],
                         ),
                         SizedBox(

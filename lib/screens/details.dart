@@ -1223,9 +1223,8 @@ class _DetailsState extends State<Details> {
                                           style: TextStyle(
                                             fontFamily: 'Helvetica',
                                             fontSize: 14,
-                                            decoration:
-                                                TextDecoration.underline,
                                             color: Colors.black,
+                                            fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                       ),
@@ -1233,7 +1232,7 @@ class _DetailsState extends State<Details> {
                                         width: 2,
                                       ),
                                       Text(
-                                        '/',
+                                        '>',
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
                                           fontFamily: 'Helvetica',
@@ -1264,9 +1263,8 @@ class _DetailsState extends State<Details> {
                                           style: TextStyle(
                                             fontFamily: 'Helvetica',
                                             fontSize: 14,
-                                            decoration:
-                                                TextDecoration.underline,
                                             color: Colors.black,
+                                            fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                       ),
@@ -1274,7 +1272,7 @@ class _DetailsState extends State<Details> {
                                         width: 2,
                                       ),
                                       Text(
-                                        '/',
+                                        '>',
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
                                           fontFamily: 'Helvetica',
@@ -1305,9 +1303,8 @@ class _DetailsState extends State<Details> {
                                           style: TextStyle(
                                             fontFamily: 'Helvetica',
                                             fontSize: 14,
-                                            decoration:
-                                                TextDecoration.underline,
                                             color: Colors.black,
+                                            fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                       ),

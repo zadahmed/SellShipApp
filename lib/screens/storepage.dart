@@ -120,11 +120,39 @@ class _StoreState extends State<Store> {
     final response = await http.get(url);
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
+
+      var follower = jsonbody['follower'];
+
+      if (follower != null) {
+        if (follower.length == 0) {
+          setState(() {
+            followers = 0;
+          });
+        } else {
+          for (int i = 0; i < follower.length; i++) {
+            var meuser = await storage.read(key: 'userid');
+            if (meuser == follower[i]['\$oid']) {
+              setState(() {
+                followers = follower.length;
+              });
+            }
+          }
+        }
+      } else {
+        setState(() {
+          followers = 0;
+        });
+      }
+
       Stores store = Stores(
           storeusername: jsonbody['storeusername'] == null
               ? jsonbody['storename']
               : jsonbody['storeusername'],
           storetype: jsonbody['storetype'],
+          reviews: jsonbody['reviewnumber'] == null
+              ? '0'
+              : jsonbody['reviewnumber'].toString(),
+          sold: jsonbody['sold'] == null ? '0' : jsonbody['sold'].toString(),
           storeid: jsonbody['_id']['\$oid'],
           storecategory: jsonbody['storecategory'],
           storelogo: jsonbody['storelogo'],
@@ -956,9 +984,9 @@ class _StoreState extends State<Store> {
                                                       CrossAxisAlignment.center,
                                                   children: <Widget>[
                                                     Text(
-                                                      itemssold == null
+                                                      mystore.sold == null
                                                           ? '0'
-                                                          : itemssold
+                                                          : mystore.sold
                                                               .toString(),
                                                       style: TextStyle(
                                                           fontFamily:
@@ -990,9 +1018,9 @@ class _StoreState extends State<Store> {
                                                       CrossAxisAlignment.center,
                                                   children: <Widget>[
                                                     Text(
-                                                      following == null
+                                                      mystore.reviews == null
                                                           ? '0'
-                                                          : following
+                                                          : mystore.reviews
                                                               .toString(),
                                                       style: TextStyle(
                                                           fontFamily:

@@ -356,6 +356,7 @@ class _AddItemState extends State<AddItem> {
 
   bool quantityswitch = false;
   bool acceptoffers = false;
+  bool freedelivery = false;
   bool buyerprotection = true;
 
   int _selectedweight = -1;
@@ -1864,24 +1865,27 @@ class _AddItemState extends State<AddItem> {
 
                                                           List<String>
                                                               bottomsizes = [
+                                                            '2',
+                                                            '4',
+                                                            '6',
+                                                            '8',
+                                                            '10',
+                                                            '12',
+                                                            '14',
+                                                            '16',
+                                                            '18',
+                                                            '20',
+                                                            '22',
+                                                            '24',
                                                             '26',
-                                                            '27',
                                                             '28',
-                                                            '29',
                                                             '30',
-                                                            '31',
                                                             '32',
-                                                            '33',
                                                             '34',
-                                                            '35',
                                                             '36',
-                                                            '37',
                                                             '38',
-                                                            '39',
                                                             '40',
-                                                            '41',
                                                             '42',
-                                                            '43',
                                                             '44',
                                                             '46',
                                                             '48',
@@ -1889,6 +1893,10 @@ class _AddItemState extends State<AddItem> {
 
                                                           List<String>
                                                               shoesizes = [
+                                                            '2',
+                                                            '2.5',
+                                                            '3',
+                                                            '3.5',
                                                             '4',
                                                             '4.5',
                                                             '5',
@@ -1909,7 +1917,8 @@ class _AddItemState extends State<AddItem> {
                                                             '12.5',
                                                             '13',
                                                             '14',
-                                                            '15'
+                                                            '15',
+                                                            '16'
                                                           ];
 
                                                           List<String>
@@ -1984,7 +1993,7 @@ class _AddItemState extends State<AddItem> {
                                                                                     padding: EdgeInsets.only(left: 15, bottom: 15),
                                                                                     child: Center(
                                                                                       child: Text(
-                                                                                        'Choose your Size',
+                                                                                        'Choose your Size ( UK )',
                                                                                         textAlign: TextAlign.right,
                                                                                         style: TextStyle(fontFamily: 'Helvetica', fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
                                                                                       ),
@@ -2481,6 +2490,51 @@ class _AddItemState extends State<AddItem> {
                                           }),
                                     ),
                                   ),
+                                  Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 15, bottom: 10, right: 15),
+                                      child: Container(
+                                        padding: EdgeInsets.all(5),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(15)),
+                                        ),
+                                        child: SwitchListTile(
+                                            value: freedelivery,
+                                            activeColor: Colors.deepPurple,
+                                            title: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Text(
+                                                  'Offer free delivery to buyers?',
+                                                  style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 16,
+                                                      color: Colors.black),
+                                                ),
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Text(
+                                                  'Buyers are more interested in items that have free delivery.',
+                                                  style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 12,
+                                                      color: Colors.deepOrange),
+                                                ),
+                                              ],
+                                            ),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                freedelivery = value;
+                                              });
+                                              calculateearning();
+                                            }),
+                                      )),
                                   SizedBox(
                                     height: 5.0,
                                   ),
@@ -2568,52 +2622,61 @@ class _AddItemState extends State<AddItem> {
                                       ),
                                     ),
                                   ),
-                                  fees != null
-                                      ? Padding(
-                                          padding: EdgeInsets.only(
-                                              left: 15, right: 15),
-                                          child: Container(
-                                            padding: EdgeInsets.all(20),
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(15),
-                                                  topRight:
-                                                      Radius.circular(15)),
-                                            ),
-                                            child: Align(
-                                                alignment: Alignment.centerLeft,
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: <Widget>[
-                                                    Text(
-                                                      'Delivery Fees',
-                                                      style: TextStyle(
-                                                          fontFamily:
-                                                              'Helvetica',
-                                                          fontSize: 16,
-                                                          color: Colors.black),
-                                                    ),
-                                                    Text(
-                                                      weightfee
-                                                              .toString()
-                                                              .isNotEmpty
-                                                          ? currency +
-                                                              ' ' +
-                                                              weightfee
+                                  freedelivery == true
+                                      ? fees != null
+                                          ? Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: 15, right: 15),
+                                              child: Container(
+                                                padding: EdgeInsets.all(20),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                  15),
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  15)),
+                                                ),
+                                                child: Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: <Widget>[
+                                                        Text(
+                                                          'Delivery Fees',
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'Helvetica',
+                                                              fontSize: 14,
+                                                              color: Colors
+                                                                  .blueGrey),
+                                                        ),
+                                                        Text(
+                                                          weightfee
                                                                   .toString()
-                                                          : '0',
-                                                      style: TextStyle(
-                                                          fontFamily:
-                                                              'Helvetica',
-                                                          fontSize: 18,
-                                                          color: Colors.black),
-                                                    )
-                                                  ],
-                                                )),
-                                          ))
+                                                                  .isNotEmpty
+                                                              ? currency +
+                                                                  ' ' +
+                                                                  weightfee
+                                                                      .toString()
+                                                              : '0',
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'Helvetica',
+                                                              fontSize: 14,
+                                                              color: Colors
+                                                                  .blueGrey),
+                                                        )
+                                                      ],
+                                                    )),
+                                              ))
+                                          : Container()
                                       : Container(),
                                   fees != null
                                       ? Padding(
@@ -2632,12 +2695,13 @@ class _AddItemState extends State<AddItem> {
                                                           .spaceBetween,
                                                   children: <Widget>[
                                                     Text(
-                                                      'Service Fees',
+                                                      'Processing & Service Fees',
                                                       style: TextStyle(
                                                           fontFamily:
                                                               'Helvetica',
-                                                          fontSize: 16,
-                                                          color: Colors.black),
+                                                          fontSize: 14,
+                                                          color:
+                                                              Colors.blueGrey),
                                                     ),
                                                     Text(
                                                       ourfees
@@ -2652,8 +2716,9 @@ class _AddItemState extends State<AddItem> {
                                                       style: TextStyle(
                                                           fontFamily:
                                                               'Helvetica',
-                                                          fontSize: 18,
-                                                          color: Colors.black),
+                                                          fontSize: 14,
+                                                          color:
+                                                              Colors.blueGrey),
                                                     )
                                                   ],
                                                 )),
@@ -2685,8 +2750,9 @@ class _AddItemState extends State<AddItem> {
                                                       style: TextStyle(
                                                           fontFamily:
                                                               'Helvetica',
-                                                          fontSize: 16,
-                                                          color: Colors.black),
+                                                          fontSize: 14,
+                                                          color:
+                                                              Colors.blueGrey),
                                                     ),
                                                     Text(
                                                       businesspricecontroller
@@ -2699,8 +2765,9 @@ class _AddItemState extends State<AddItem> {
                                                       style: TextStyle(
                                                           fontFamily:
                                                               'Helvetica',
-                                                          fontSize: 18,
-                                                          color: Colors.black),
+                                                          fontSize: 14,
+                                                          color:
+                                                              Colors.blueGrey),
                                                     )
                                                   ],
                                                 )),
@@ -2738,7 +2805,7 @@ class _AddItemState extends State<AddItem> {
                                                                         topRight:
                                                                             const Radius.circular(
                                                                                 20.0))),
-                                                                child: Column(
+                                                                child: ListView(
                                                                     children: [
                                                                       Row(
                                                                         children: [
@@ -2860,7 +2927,7 @@ class _AddItemState extends State<AddItem> {
                                   Padding(
                                       padding: EdgeInsets.only(
                                           left: 15,
-                                          bottom: 5,
+                                          bottom: 10,
                                           top: 10,
                                           right: 15),
                                       child: Container(
@@ -2988,7 +3055,7 @@ class _AddItemState extends State<AddItem> {
                                           ? Padding(
                                               padding: EdgeInsets.only(
                                                   left: 15,
-                                                  bottom: 5,
+                                                  bottom: 10,
                                                   top: 10,
                                                   right: 15),
                                               child: Container(
@@ -3864,6 +3931,7 @@ class _AddItemState extends State<AddItem> {
                                                   'condition':
                                                       _selectedCondition,
                                                   'brand': bran,
+                                                  'freedelivery': freedelivery,
                                                   'userid':
                                                       _selectedStore.storeid,
                                                   'selleruserid': userid,
@@ -3945,6 +4013,7 @@ class _AddItemState extends State<AddItem> {
                                                       _selectedStore.storename,
                                                   'useremail': email,
                                                   'usernumber': phonenumber,
+                                                  'freedelivery': freedelivery,
                                                   'weight': itemweight,
                                                   'weightmetric': metric,
                                                   'quantity': quantity,
@@ -4021,6 +4090,7 @@ class _AddItemState extends State<AddItem> {
                                                       _selectedStore.storeid,
                                                   'username':
                                                       _selectedStore.storename,
+                                                  'freedelivery': freedelivery,
                                                   'useremail': email,
                                                   'usernumber': phonenumber,
                                                   'weight': itemweight,
@@ -4115,6 +4185,7 @@ class _AddItemState extends State<AddItem> {
                                                   'weight': itemweight,
                                                   'weightmetric': metric,
                                                   'quantity': quantity,
+                                                  'freedelivery': freedelivery,
                                                   'date_uploaded':
                                                       DateTime.now().toString(),
                                                   'image':
@@ -4206,6 +4277,7 @@ class _AddItemState extends State<AddItem> {
                                                       _selectedStore.storename,
                                                   'useremail': email,
                                                   'usernumber': phonenumber,
+                                                  'freedelivery': freedelivery,
                                                   'weight': itemweight,
                                                   'weightmetric': metric,
                                                   'quantity': quantity,
@@ -4278,6 +4350,7 @@ class _AddItemState extends State<AddItem> {
                                                       : {tags},
                                                   'category': _selectedCategory,
                                                   'acceptoffers': acceptoffers,
+                                                  'freedelivery': freedelivery,
                                                   'storetype':
                                                       _selectedStore.storetype,
                                                   'subcategory':
@@ -4366,9 +4439,7 @@ class _AddItemState extends State<AddItem> {
                                                                       height:
                                                                           380,
                                                                       child:
-                                                                          Column(
-                                                                        crossAxisAlignment:
-                                                                            CrossAxisAlignment.center,
+                                                                          ListView(
                                                                         children: [
                                                                           Container(
                                                                             height:
@@ -4532,39 +4603,54 @@ class _AddItemState extends State<AddItem> {
   calculateearning() async {
     await storage.write(key: 'additem', value: 'true');
     var weightfees;
-    if (_selectedweight == 0) {
-      weightfees = 20;
-    } else if (_selectedweight == 1) {
-      weightfees = 30;
-    } else if (_selectedweight == 2) {
-      weightfees = 50;
-    } else if (_selectedweight == 3) {
-      weightfees = 110;
-    }
 
-    var s;
+    if (freedelivery == true) {
+      if (_selectedweight == 0) {
+        weightfees = 20;
+      } else if (_selectedweight == 1) {
+        weightfees = 30;
+      } else if (_selectedweight == 2) {
+        weightfees = 50;
+      } else if (_selectedweight == 3) {
+        weightfees = 110;
+      }
 
-    if (int.parse(businesspricecontroller.text) < 20) {
-      if (int.parse(businesspricecontroller.text) <= 0) {
-        fees = 0;
+      var s;
+
+      if (int.parse(businesspricecontroller.text) < 20) {
+        if (int.parse(businesspricecontroller.text) <= 0) {
+          fees = 0;
+        } else {
+          s = (int.parse(businesspricecontroller.text) + weightfees);
+          s = s * 0.15;
+          fees = int.parse(businesspricecontroller.text) + weightfees + s;
+        }
       } else {
         s = (int.parse(businesspricecontroller.text) + weightfees);
         s = s * 0.15;
         fees = int.parse(businesspricecontroller.text) + weightfees + s;
       }
-    } else {
-      s = (int.parse(businesspricecontroller.text) + weightfees);
-      s = s * 0.15;
-      fees = int.parse(businesspricecontroller.text) + weightfees + s;
-    }
 
-    setState(() {
-      totalpayable = totalpayable;
-      fees = fees;
-      ourfees = s;
-      weightfee = weightfees;
-      percentindictor = 0.8;
-    });
+      setState(() {
+        totalpayable = totalpayable;
+        fees = fees;
+        ourfees = s;
+        weightfee = weightfees;
+        percentindictor = 0.8;
+      });
+    } else {
+      if (businesspricecontroller.text.isNotEmpty) {
+        var s = (double.parse(businesspricecontroller.text.toString()));
+        s = s * 0.15;
+        fees = int.parse(businesspricecontroller.text) + s;
+        setState(() {
+          fees = fees;
+          ourfees = s;
+          weightfee = 0;
+          percentindictor = 0.8;
+        });
+      }
+    }
   }
 
   String userid;
