@@ -226,88 +226,88 @@ class _OrderBuyerState extends State<OrderBuyer> {
                 ),
               ));
       checktransactioncompletedloop();
+    } else if (response.statusCode == 200) {
+      var jsonbody = json.decode(response.body);
+
+      final f = new DateFormat('dd-MM-yyyy hh:mm');
+      DateTime datet =
+          new DateTime.fromMillisecondsSinceEpoch(jsonbody['date']['\$date']);
+      var s = f.format(datet);
+
+      var delstage;
+      if (jsonbody['deliverystage'] == null) {
+        delstage = 0;
+      } else {
+        delstage = jsonbody['deliverystage'];
+      }
+
+      var cancell;
+      if (jsonbody['cancelled'] == null) {
+        cancell = null;
+      } else {
+        cancell = jsonbody['cancelled'];
+      }
+
+      if (delstage == 0) {
+        deliveredtext = 'Preparing Item..';
+      } else if (delstage == 1) {
+        deliveredtext = 'Shipping Item..';
+      } else if (delstage == 2) {
+        deliveredtext = 'Item has been delivered';
+      } else if (delstage == 3) {
+        deliveredtext = 'Review Seller';
+      }
+
+      var track;
+      if (jsonbody['awbno'] == null) {
+        track = '';
+      } else {
+        track = jsonbody['awbno'];
+      }
+
+      var deliver;
+      if (jsonbody['delivered'] == null) {
+        deliver = false;
+      } else {
+        deliver = jsonbody['delivered'];
+      }
+
+      var comple;
+      if (jsonbody['sellerreviewed'] == null) {
+        comple = false;
+      } else {
+        comple = jsonbody['sellerreviewed'];
+      }
+
+      var sz;
+      if (jsonbody['ordersize'] == 'nosize') {
+        sz = '';
+      } else {
+        sz = jsonbody['ordersize'];
+      }
+
+      setState(() {
+        itemprice = jsonbody['totalpayable'];
+        totalpaid = jsonbody['totalpayable'];
+        date = s;
+        cancelled = cancell;
+        orderid = jsonbody['orderid'];
+        trackingnumber = track;
+        completed = comple;
+        delivered = deliver;
+        deliverystage = delstage;
+        buyerid = jsonbody['senderid'];
+        buyername = jsonbody['buyername'];
+        size = sz;
+        quantity = jsonbody['orderquantity'];
+        addressline1 = jsonbody['deliveryaddress']['addressline1'];
+        addressline2 = jsonbody['deliveryaddress']['addressline2'];
+        area = jsonbody['deliveryaddress']['area'];
+        city = jsonbody['deliveryaddress']['city'];
+        country = jsonbody['deliveryaddress']['country'];
+        loading = false;
+      });
     }
-
-    var jsonbody = json.decode(response.body);
-
-    final f = new DateFormat('dd-MM-yyyy hh:mm');
-    DateTime datet =
-        new DateTime.fromMillisecondsSinceEpoch(jsonbody['date']['\$date']);
-    var s = f.format(datet);
-
-    var delstage;
-    if (jsonbody['deliverystage'] == null) {
-      delstage = 0;
-    } else {
-      delstage = jsonbody['deliverystage'];
-    }
-
-    var cancell;
-    if (jsonbody['cancelled'] == null) {
-      cancell = null;
-    } else {
-      cancell = jsonbody['cancelled'];
-    }
-
-    if (delstage == 0) {
-      deliveredtext = 'Preparing Item..';
-    } else if (delstage == 1) {
-      deliveredtext = 'Shipping Item..';
-    } else if (delstage == 2) {
-      deliveredtext = 'Item has been delivered';
-    } else if (delstage == 3) {
-      deliveredtext = 'Review Seller';
-    }
-
-    var track;
-    if (jsonbody['awbno'] == null) {
-      track = '';
-    } else {
-      track = jsonbody['awbno'];
-    }
-
-    var deliver;
-    if (jsonbody['delivered'] == null) {
-      deliver = false;
-    } else {
-      deliver = jsonbody['delivered'];
-    }
-
-    var comple;
-    if (jsonbody['sellerreviewed'] == null) {
-      comple = false;
-    } else {
-      comple = jsonbody['sellerreviewed'];
-    }
-
-    var sz;
-    if (jsonbody['ordersize'] == 'nosize') {
-      sz = '';
-    } else {
-      sz = jsonbody['ordersize'];
-    }
-
-    setState(() {
-      itemprice = jsonbody['totalpayable'];
-      totalpaid = jsonbody['totalpayable'];
-      date = s;
-      cancelled = cancell;
-      orderid = jsonbody['orderid'];
-      trackingnumber = track;
-      completed = comple;
-      delivered = deliver;
-      deliverystage = delstage;
-      buyerid = jsonbody['senderid'];
-      buyername = jsonbody['buyername'];
-      size = sz;
-      quantity = jsonbody['orderquantity'];
-      addressline1 = jsonbody['deliveryaddress']['addressline1'];
-      addressline2 = jsonbody['deliveryaddress']['addressline2'];
-      area = jsonbody['deliveryaddress']['area'];
-      city = jsonbody['deliveryaddress']['city'];
-      country = jsonbody['deliveryaddress']['country'];
-      loading = false;
-    });
   }
 
   var quantity;

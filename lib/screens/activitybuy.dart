@@ -85,87 +85,89 @@ class _ActivityBuyState extends State<ActivityBuy>
     }
 
     var userid = await storage.read(key: 'userid');
-    var itemurl = 'https://api.sellship.co/api/activity/buying/' + userid;
-    final response = await http.get(itemurl);
-    if (response.statusCode == 200) {
-      var itemrespons = json.decode(response.body);
-      List itemmap = itemrespons;
+    if (userid != null) {
+      var itemurl = 'https://api.sellship.co/api/activity/buying/' + userid;
+      final response = await http.get(itemurl);
+      if (response.statusCode == 200) {
+        var itemrespons = json.decode(response.body);
+        List itemmap = itemrespons;
 
-      List<Item> ites = List<Item>();
+        List<Item> ites = List<Item>();
 
-      if (itemmap != null) {
-        for (var i = 0; i < itemmap.length; i++) {
-          var buyerid;
-          if (itemmap[i]['buyerid'].containsKey('\$oid')) {
-            buyerid = itemmap[i]['buyerid']['\$oid'];
-          } else {
-            buyerid = itemmap[i]['buyerid'];
+        if (itemmap != null) {
+          for (var i = 0; i < itemmap.length; i++) {
+            var buyerid;
+            if (itemmap[i]['buyerid'].containsKey('\$oid')) {
+              buyerid = itemmap[i]['buyerid']['\$oid'];
+            } else {
+              buyerid = itemmap[i]['buyerid'];
+            }
+
+            var buyername;
+            if (itemmap[i].containsKey('buyername')) {
+              buyername = itemmap[i]['buyername'];
+            } else {
+              buyername = 'Unknown';
+            }
+
+            var sellerid;
+            if (itemmap[i]['sellerid'].containsKey('\$oid')) {
+              sellerid = itemmap[i]['sellerid']['\$oid'];
+            } else {
+              sellerid = itemmap[i]['sellerid'];
+            }
+
+            var date;
+            if (itemmap[i]['offerdate'].containsKey('\$date')) {
+              date = itemmap[i]['offerdate']['\$date'];
+            } else {
+              date = 0;
+            }
+
+            var sellername;
+            if (itemmap[i].containsKey('sellername')) {
+              sellername = itemmap[i]['sellername'];
+            } else {
+              sellername = 'Unknown';
+            }
+
+            bool freedel;
+            if (itemmap[i]['item']['freedelivery'] == 'false' ||
+                itemmap[i]['item']['freedelivery'] == null) {
+              freedel = false;
+            } else {
+              freedel = true;
+            }
+
+            Item ite = Item(
+                itemid: itemmap[i]['item']['_id']['\$oid'],
+                name: itemmap[i]['item']['name'],
+                image: itemmap[i]['item']['image'],
+                price: itemmap[i]['offer'].toString(),
+                weight: itemmap[i]['item']['weight'],
+                offerstage: itemmap[i]['offerstage'],
+                date: date.toString(),
+                storetype: itemmap[i]['item']['storetype'],
+                buyerid: buyerid,
+                freedelivery: freedel,
+                userid: itemmap[i]['item']['userid'],
+                username: itemmap[i]['item']['username'],
+                buyername: buyername,
+                messageid: itemmap[i]['messageid'].toString(),
+                sellername: sellername,
+                sellerid: sellerid,
+                sold: itemmap[i]['item']['sold']);
+            ites.add(ite);
           }
+          ites.sort((a, b) => int.parse(b.date).compareTo((int.parse(a.date))));
 
-          var buyername;
-          if (itemmap[i].containsKey('buyername')) {
-            buyername = itemmap[i]['buyername'];
-          } else {
-            buyername = 'Unknown';
-          }
-
-          var sellerid;
-          if (itemmap[i]['sellerid'].containsKey('\$oid')) {
-            sellerid = itemmap[i]['sellerid']['\$oid'];
-          } else {
-            sellerid = itemmap[i]['sellerid'];
-          }
-
-          var date;
-          if (itemmap[i]['offerdate'].containsKey('\$date')) {
-            date = itemmap[i]['offerdate']['\$date'];
-          } else {
-            date = 0;
-          }
-
-          var sellername;
-          if (itemmap[i].containsKey('sellername')) {
-            sellername = itemmap[i]['sellername'];
-          } else {
-            sellername = 'Unknown';
-          }
-
-          bool freedel;
-          if (itemmap[i]['item']['freedelivery'] == 'false' ||
-              itemmap[i]['item']['freedelivery'] == null) {
-            freedel = false;
-          } else {
-            freedel = true;
-          }
-
-          Item ite = Item(
-              itemid: itemmap[i]['item']['_id']['\$oid'],
-              name: itemmap[i]['item']['name'],
-              image: itemmap[i]['item']['image'],
-              price: itemmap[i]['offer'].toString(),
-              weight: itemmap[i]['item']['weight'],
-              offerstage: itemmap[i]['offerstage'],
-              date: date.toString(),
-              storetype: itemmap[i]['item']['storetype'],
-              buyerid: buyerid,
-              freedelivery: freedel,
-              userid: itemmap[i]['item']['userid'],
-              username: itemmap[i]['item']['username'],
-              buyername: buyername,
-              messageid: itemmap[i]['messageid'].toString(),
-              sellername: sellername,
-              sellerid: sellerid,
-              sold: itemmap[i]['item']['sold']);
-          ites.add(ite);
+          if (mounted)
+            setState(() {
+              keepalive = false;
+              loading = false;
+              buyingItem = ites;
+            });
         }
-        ites.sort((a, b) => int.parse(b.date).compareTo((int.parse(a.date))));
-
-        if (mounted)
-          setState(() {
-            keepalive = false;
-            loading = false;
-            buyingItem = ites;
-          });
       }
     }
   }

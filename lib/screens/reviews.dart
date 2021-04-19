@@ -56,6 +56,8 @@ class _ReviewsPageState extends State<ReviewsPage> {
   List<Reviews> reviewlist = List<Reviews>();
 
   refreshreviews() async {
+    reviewlist.clear();
+    reviews.clear();
     userid = await storage.read(key: 'userid');
     if (userid != null) {
       var messageurl = 'https://api.sellship.co/api/getreviews/' + userid;

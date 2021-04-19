@@ -918,27 +918,25 @@ class _DetailsState extends State<Details> {
               child: InkWell(
                   onTap: () async {
                     BranchUniversalObject buo = BranchUniversalObject(
-                        canonicalIdentifier: newItem.itemid,
-                        title: newItem.name,
-                        imageUrl: newItem.image,
-                        contentDescription: newItem.description,
-                        contentMetadata: BranchContentMetaData()
-                          ..addCustomMetadata(
-                            'itemname',
-                            newItem.name,
-                          )
-                          ..addCustomMetadata(
-                            'source',
-                            'item',
-                          )
-                          ..addCustomMetadata('itemimage', newItem.itemid)
-                          ..addCustomMetadata('itemsold', newItem.sold)
-                          ..addCustomMetadata('itemid', newItem.itemid),
-                        publiclyIndex: true,
-                        locallyIndex: true,
-                        expirationDateInMilliSec: DateTime.now()
-                            .add(Duration(days: 365))
-                            .millisecondsSinceEpoch);
+                      canonicalIdentifier: newItem.itemid,
+                      title: newItem.name,
+                      imageUrl: newItem.image,
+                      contentDescription: newItem.description,
+                      contentMetadata: BranchContentMetaData()
+                        ..addCustomMetadata(
+                          'itemname',
+                          newItem.name,
+                        )
+                        ..addCustomMetadata(
+                          'source',
+                          'item',
+                        )
+                        ..addCustomMetadata('itemimage', newItem.itemid)
+                        ..addCustomMetadata('itemsold', newItem.sold)
+                        ..addCustomMetadata('itemid', newItem.itemid),
+                      publiclyIndex: true,
+                      locallyIndex: true,
+                    );
 
                     FlutterBranchSdk.registerView(buo: buo);
 

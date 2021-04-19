@@ -153,6 +153,13 @@ class _StorePublicState extends State<StorePublic> {
         });
       }
 
+      var reviewratin;
+      if (jsonbody['reviewrating'] == null) {
+        reviewratin = 0.0;
+      } else {
+        reviewratin = double.parse(jsonbody['reviewrating'].toString());
+      }
+
       var s = jsonbody['storename'];
 
       mystore = Stores(
@@ -173,6 +180,7 @@ class _StorePublicState extends State<StorePublic> {
       setState(() {
         mystore = mystore;
         loading = false;
+        reviewrating = reviewratin;
       });
     }
   }
@@ -344,31 +352,30 @@ class _StorePublicState extends State<StorePublic> {
             child: InkWell(
                 onTap: () async {
                   BranchUniversalObject buo = BranchUniversalObject(
-                      canonicalIdentifier: widget.storeid,
-                      title: widget.storename,
-                      imageUrl: mystore.storelogo,
-                      contentDescription: mystore.storebio,
-                      contentMetadata: BranchContentMetaData()
-                        ..addCustomMetadata(
-                          'storename',
-                          widget.storename,
-                        )
-                        ..addCustomMetadata(
-                          'source',
-                          'store',
-                        )
-                        ..addCustomMetadata('storeimage', mystore.storelogo)
-                        ..addCustomMetadata('storeid', widget.storeid),
-                      publiclyIndex: true,
-                      locallyIndex: true,
-                      expirationDateInMilliSec: DateTime.now()
-                          .add(Duration(days: 365))
-                          .millisecondsSinceEpoch);
+                    canonicalIdentifier: widget.storeid,
+                    title: widget.storename,
+                    imageUrl: mystore.storelogo,
+                    contentDescription: mystore.storebio,
+                    contentMetadata: BranchContentMetaData()
+                      ..addCustomMetadata(
+                        'storename',
+                        widget.storename,
+                      )
+                      ..addCustomMetadata(
+                        'source',
+                        'store',
+                      )
+                      ..addCustomMetadata('storeimage', mystore.storelogo)
+                      ..addCustomMetadata('storeid', widget.storeid),
+                    publiclyIndex: true,
+                    locallyIndex: true,
+                  );
 
                   FlutterBranchSdk.registerView(buo: buo);
 
+                  print(mystore.storeusername);
                   BranchLinkProperties lp = BranchLinkProperties(
-                    alias: mystore.storeusername,
+                    alias: 'store/' + mystore.storeusername,
                     channel: 'whatsapp',
                     feature: 'sharing',
                     stage: 'new share',
@@ -376,11 +383,11 @@ class _StorePublicState extends State<StorePublic> {
                   lp.addControlParam('\$uri_redirect_mode', '1');
                   BranchResponse response = await FlutterBranchSdk.getShortUrl(
                       buo: buo, linkProperties: lp);
+                  print(response.errorMessage);
                   if (response.success) {
                     final RenderBox box = context.findRenderObject();
-                    Share.share(
-                        'Check out this Store on SellShip: \n' +
-                            response.result,
+                    print(response.result);
+                    Share.share(response.result,
                         subject: widget.storename,
                         sharePositionOrigin:
                             box.localToGlobal(Offset.zero) & box.size);

@@ -204,7 +204,6 @@ class _ProfilePageState extends State<ProfilePage>
       var tab = _tabController.index;
 
       if (tab == 2) {
-        refreshreviews();
         if (mounted)
           setState(() {
             reviewloading = true;
@@ -2479,7 +2478,7 @@ class _ProfilePageState extends State<ProfilePage>
       if (response.statusCode == 200) {
         List jsonResponse = json.decode(response.body);
 
-        print(jsonResponse);
+        List<Reviews> revis = List<Reviews>();
 
         for (int i = 0; i < jsonResponse.length; i++) {
           var q = Map<String, dynamic>.from(jsonResponse[i]['date']);
@@ -2495,10 +2494,10 @@ class _ProfilePageState extends State<ProfilePage>
             username: jsonResponse[i]['reviewedusername'],
             profilepicture: jsonResponse[i]['reviewedprofilepic'],
           );
-          reviews.add(withd);
+          revis.add(withd);
         }
 
-        Iterable inReverse = reviews.reversed;
+        Iterable inReverse = revis.reversed;
         List<Reviews> jsoninreverse = inReverse.toList();
 
         if (mounted)

@@ -515,33 +515,30 @@ class _StoreState extends State<Store> {
                                       ),
                                     ));
                             BranchUniversalObject buo = BranchUniversalObject(
-                                canonicalIdentifier: widget.storeid,
-                                title: widget.storename,
-                                imageUrl: mystore.storelogo,
-                                contentDescription: mystore.storebio,
-                                contentMetadata: BranchContentMetaData()
-                                  ..addCustomMetadata(
-                                    'storename',
-                                    widget.storename,
-                                  )
-                                  ..addCustomMetadata(
-                                    'source',
-                                    'store',
-                                  )
-                                  ..addCustomMetadata(
-                                      'storeimage', mystore.storelogo)
-                                  ..addCustomMetadata(
-                                      'storeid', widget.storeid),
-                                publiclyIndex: true,
-                                locallyIndex: true,
-                                expirationDateInMilliSec: DateTime.now()
-                                    .add(Duration(days: 365))
-                                    .millisecondsSinceEpoch);
+                              canonicalIdentifier: widget.storeid,
+                              title: widget.storename,
+                              imageUrl: mystore.storelogo,
+                              contentDescription: mystore.storebio,
+                              contentMetadata: BranchContentMetaData()
+                                ..addCustomMetadata(
+                                  'storename',
+                                  widget.storename,
+                                )
+                                ..addCustomMetadata(
+                                  'source',
+                                  'store',
+                                )
+                                ..addCustomMetadata(
+                                    'storeimage', mystore.storelogo)
+                                ..addCustomMetadata('storeid', widget.storeid),
+                              publiclyIndex: true,
+                              locallyIndex: true,
+                            );
 
                             FlutterBranchSdk.registerView(buo: buo);
 
                             BranchLinkProperties lp = BranchLinkProperties(
-                              alias: mystore.storeusername,
+                              alias: 'store/' + mystore.storeusername,
                               channel: 'whatsapp',
                               feature: 'sharing',
                               stage: 'new share',
@@ -553,9 +550,8 @@ class _StoreState extends State<Store> {
                             if (response.success) {
                               Navigator.pop(context);
                               final RenderBox box = context.findRenderObject();
-                              Share.share(
-                                  'Check out My Store on SellShip: \n' +
-                                      response.result,
+                              print(response.result);
+                              Share.share(response.result,
                                   subject: widget.storename,
                                   sharePositionOrigin:
                                       box.localToGlobal(Offset.zero) &

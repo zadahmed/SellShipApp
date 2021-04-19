@@ -249,7 +249,7 @@ class _CreateStoreNameState extends State<CreateStoreName> {
                           onTap: () async {
                             if (storenamecontroller.text.isEmpty) {
                               showInSnackBar('Please Enter A Store Name');
-                            } else if (storenamecontroller.text.isEmpty) {
+                            } else if (usernamecontroller.text.isEmpty) {
                               showInSnackBar(
                                   'Please enter a username for your store');
                             } else {
@@ -295,10 +295,10 @@ class _CreateStoreNameState extends State<CreateStoreName> {
                                   });
                               var url =
                                   'https://api.sellship.co/check/store/name/' +
-                                      usernamecontroller.text;
+                                      usernamecontroller.text.trim();
 
                               final response = await http.get(url);
-                              print(response.statusCode);
+
                               if (response.statusCode == 200) {
                                 var jsondeco = json.decode(response.body);
                                 if (jsondeco['Status'] == 'Success') {
