@@ -581,25 +581,26 @@ class _AddressState extends State<Address> {
                                                   height: 20,
                                                 ),
                                                 Padding(
+                                                  padding: EdgeInsets.only(
+                                                    top: 20,
+                                                  ),
                                                   child: Container(
+                                                    height: 60,
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 20,
+                                                            vertical: 5),
                                                     width:
                                                         MediaQuery.of(context)
-                                                            .size
-                                                            .width,
+                                                                .size
+                                                                .width -
+                                                            80,
                                                     decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      border: Border.all(
-                                                          color: Colors
-                                                              .grey.shade300),
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                          color: Colors
-                                                              .grey.shade300,
-                                                          offset: Offset(
-                                                              0.0, 1.0), //(x,y)
-                                                          blurRadius: 6.0,
-                                                        ),
-                                                      ],
+                                                      color: Color.fromRGBO(
+                                                          131, 146, 165, 0.1),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              25),
                                                     ),
                                                     child: Center(
                                                       child:
@@ -664,31 +665,28 @@ class _AddressState extends State<Address> {
                                                       ),
                                                     ),
                                                   ),
-                                                  padding: EdgeInsets.only(
-                                                      left: 10,
-                                                      top: 5,
-                                                      right: 10),
                                                 ),
                                                 Padding(
+                                                  padding: EdgeInsets.only(
+                                                    top: 10,
+                                                  ),
                                                   child: Container(
+                                                    height: 60,
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 20,
+                                                            vertical: 5),
                                                     width:
                                                         MediaQuery.of(context)
-                                                            .size
-                                                            .width,
+                                                                .size
+                                                                .width -
+                                                            80,
                                                     decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      border: Border.all(
-                                                          color: Colors
-                                                              .grey.shade300),
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                          color: Colors
-                                                              .grey.shade300,
-                                                          offset: Offset(
-                                                              0.0, 1.0), //(x,y)
-                                                          blurRadius: 6.0,
-                                                        ),
-                                                      ],
+                                                      color: Color.fromRGBO(
+                                                          131, 146, 165, 0.1),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              25),
                                                     ),
                                                     child: Center(
                                                       child:
@@ -860,31 +858,28 @@ class _AddressState extends State<Address> {
                                                       ),
                                                     ),
                                                   ),
-                                                  padding: EdgeInsets.only(
-                                                      left: 10,
-                                                      top: 5,
-                                                      right: 10),
                                                 ),
                                                 Padding(
+                                                  padding: EdgeInsets.only(
+                                                    top: 10,
+                                                  ),
                                                   child: Container(
+                                                    height: 60,
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 20,
+                                                            vertical: 5),
                                                     width:
                                                         MediaQuery.of(context)
-                                                            .size
-                                                            .width,
+                                                                .size
+                                                                .width -
+                                                            80,
                                                     decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      border: Border.all(
-                                                          color: Colors
-                                                              .grey.shade300),
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                          color: Colors
-                                                              .grey.shade300,
-                                                          offset: Offset(
-                                                              0.0, 1.0), //(x,y)
-                                                          blurRadius: 6.0,
-                                                        ),
-                                                      ],
+                                                      color: Color.fromRGBO(
+                                                          131, 146, 165, 0.1),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              25),
                                                     ),
                                                     child: Center(
                                                       child:
@@ -950,24 +945,28 @@ class _AddressState extends State<Address> {
                                                       ),
                                                     ),
                                                   ),
-                                                  padding: EdgeInsets.only(
-                                                      left: 10,
-                                                      top: 5,
-                                                      right: 10),
                                                 ),
                                                 Padding(
+                                                  padding: EdgeInsets.only(
+                                                    top: 10,
+                                                  ),
                                                   child: Container(
+                                                    height: 60,
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 20,
+                                                            vertical: 5),
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            80,
                                                     decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                          color: Colors
-                                                              .grey.shade300,
-                                                          offset: Offset(
-                                                              0.0, 1.0), //(x,y)
-                                                          blurRadius: 6.0,
-                                                        ),
-                                                      ],
+                                                      color: Color.fromRGBO(
+                                                          131, 146, 165, 0.1),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              25),
                                                     ),
                                                     child: TextFormField(
                                                       validator: (value) => value
@@ -984,94 +983,47 @@ class _AddressState extends State<Address> {
                                                               .sentences,
                                                       decoration:
                                                           InputDecoration(
-                                                              labelText:
-                                                                  "Apartment/Villa Number",
-                                                              labelStyle:
-                                                                  TextStyle(
-                                                                fontFamily:
-                                                                    'Helvetica',
-                                                                fontSize: 16,
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                              ),
-                                                              hintStyle:
-                                                                  TextStyle(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                                fontSize: 16,
-                                                              ),
-                                                              focusColor:
-                                                                  Colors.black,
-                                                              enabledBorder:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                              )),
-                                                              border:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                              )),
-                                                              focusedErrorBorder:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                              )),
-                                                              disabledBorder:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                              )),
-                                                              errorBorder:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                              )),
-                                                              focusedBorder:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                              ))),
-                                                    ),
-                                                  ),
-                                                  padding: EdgeInsets.only(
-                                                      left: 10,
-                                                      top: 10,
-                                                      right: 10),
-                                                ),
-                                                Padding(
-                                                  child: Container(
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      boxShadow: [
-                                                        BoxShadow(
+                                                        labelText:
+                                                            "Apartment/Villa Number",
+                                                        labelStyle: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 16,
                                                           color: Colors
                                                               .grey.shade300,
-                                                          offset: Offset(
-                                                              0.0, 1.0), //(x,y)
-                                                          blurRadius: 6.0,
                                                         ),
-                                                      ],
+                                                        hintStyle: TextStyle(
+                                                          color: Colors
+                                                              .grey.shade300,
+                                                          fontSize: 16,
+                                                        ),
+                                                        focusColor:
+                                                            Colors.black,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                    top: 10,
+                                                  ),
+                                                  child: Container(
+                                                    height: 60,
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 20,
+                                                            vertical: 5),
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            80,
+                                                    decoration: BoxDecoration(
+                                                      color: Color.fromRGBO(
+                                                          131, 146, 165, 0.1),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              25),
                                                     ),
                                                     child: TextFormField(
                                                       validator: (value) => value
@@ -1088,101 +1040,47 @@ class _AddressState extends State<Address> {
                                                               .sentences,
                                                       decoration:
                                                           InputDecoration(
-                                                              labelText:
-                                                                  "Street/Apartment/Villa Name",
-                                                              labelStyle:
-                                                                  TextStyle(
-                                                                fontFamily:
-                                                                    'Helvetica',
-                                                                fontSize: 16,
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                              ),
-                                                              hintStyle:
-                                                                  TextStyle(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                                fontSize: 16,
-                                                              ),
-                                                              focusColor:
-                                                                  Colors.black,
-                                                              enabledBorder:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                              )),
-                                                              border:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                              )),
-                                                              focusedErrorBorder:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                              )),
-                                                              disabledBorder:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                              )),
-                                                              errorBorder:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                              )),
-                                                              focusedBorder:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                              ))),
-                                                    ),
-                                                  ),
-                                                  padding: EdgeInsets.only(
-                                                      left: 10,
-                                                      top: 10,
-                                                      right: 10),
-                                                ),
-                                                Padding(
-                                                  child: Container(
-                                                    padding: EdgeInsets.only(
-                                                        left: 10,
-                                                        right: 10,
-                                                        bottom: 5),
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      border: Border.all(
-                                                          color: Colors
-                                                              .grey.shade300),
-                                                      boxShadow: [
-                                                        BoxShadow(
+                                                        labelText:
+                                                            "Street/Apartment/Villa Name",
+                                                        labelStyle: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 16,
                                                           color: Colors
                                                               .grey.shade300,
-                                                          offset: Offset(
-                                                              0.0, 1.0), //(x,y)
-                                                          blurRadius: 6.0,
                                                         ),
-                                                      ],
+                                                        hintStyle: TextStyle(
+                                                          color: Colors
+                                                              .grey.shade300,
+                                                          fontSize: 16,
+                                                        ),
+                                                        focusColor:
+                                                            Colors.black,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                    top: 10,
+                                                  ),
+                                                  child: Container(
+                                                    height: 60,
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 20,
+                                                            vertical: 5),
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            80,
+                                                    decoration: BoxDecoration(
+                                                      color: Color.fromRGBO(
+                                                          131, 146, 165, 0.1),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              25),
                                                     ),
                                                     child:
                                                         InternationalPhoneNumberInput(
@@ -1218,28 +1116,28 @@ class _AddressState extends State<Address> {
                                                               )),
                                                     ),
                                                   ),
-                                                  padding: EdgeInsets.only(
-                                                      left: 10,
-                                                      top: 5,
-                                                      right: 10),
-                                                ),
-                                                SizedBox(
-                                                  height: 5,
                                                 ),
                                                 Padding(
+                                                  padding: EdgeInsets.only(
+                                                    top: 20,
+                                                  ),
                                                   child: Container(
+                                                    height: 60,
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 20,
+                                                            vertical: 5),
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            80,
                                                     decoration: BoxDecoration(
-                                                      color:
-                                                          Colors.grey.shade100,
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                          color: Colors
-                                                              .grey.shade300,
-                                                          offset: Offset(
-                                                              0.0, 1.0), //(x,y)
-                                                          blurRadius: 6.0,
-                                                        ),
-                                                      ],
+                                                      color: Color.fromRGBO(
+                                                          131, 146, 165, 0.1),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              25),
                                                     ),
                                                     child: TextField(
                                                       enabled: false,
@@ -1250,78 +1148,8 @@ class _AddressState extends State<Address> {
                                                               FontWeight.bold),
                                                       controller:
                                                           countrycontroller,
-                                                      enableSuggestions: true,
-                                                      textCapitalization:
-                                                          TextCapitalization
-                                                              .sentences,
-                                                      decoration:
-                                                          InputDecoration(
-                                                              labelText:
-                                                                  "Country",
-                                                              labelStyle: TextStyle(
-                                                                  fontFamily:
-                                                                      'Helvetica',
-                                                                  fontSize: 16,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
-                                                              focusColor:
-                                                                  Colors.black,
-                                                              enabledBorder:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                              )),
-                                                              border:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                              )),
-                                                              focusedErrorBorder:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                              )),
-                                                              disabledBorder:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                              )),
-                                                              errorBorder:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                              )),
-                                                              focusedBorder:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                              ))),
                                                     ),
                                                   ),
-                                                  padding: EdgeInsets.only(
-                                                      left: 10,
-                                                      top: 5,
-                                                      right: 10,
-                                                      bottom: 10),
                                                 ),
                                                 SizedBox(
                                                   height: 10,

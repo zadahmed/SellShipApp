@@ -162,11 +162,19 @@ class _StorePublicState extends State<StorePublic> {
 
       var s = jsonbody['storename'];
 
+      var cover;
+      if (jsonbody.containsKey('storecover')) {
+        cover = jsonbody['storecover'];
+      } else {
+        cover = null;
+      }
+
       mystore = Stores(
           storeusername: jsonbody['storeusername'] == null
               ? jsonbody['storename']
               : jsonbody['storeusername'],
           storeid: jsonbody['_id']['\$oid'],
+          storecover: cover,
           reviews: jsonbody['reviewnumber'] == null
               ? '0'
               : jsonbody['reviewnumber'].toString(),
@@ -351,6 +359,45 @@ class _StorePublicState extends State<StorePublic> {
             padding: EdgeInsets.only(right: 10, bottom: 5),
             child: InkWell(
                 onTap: () async {
+                  showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      useRootNavigator: false,
+                      builder: (_) => new AlertDialog(
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0))),
+                            content: Builder(
+                              builder: (context) {
+                                return Container(
+                                    height: 100,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'Sharing Store..',
+                                          style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        Container(
+                                            height: 50,
+                                            width: 50,
+                                            child: SpinKitDoubleBounce(
+                                              color: Colors.deepOrange,
+                                            )),
+                                      ],
+                                    ));
+                              },
+                            ),
+                          ));
                   BranchUniversalObject buo = BranchUniversalObject(
                     canonicalIdentifier: widget.storeid,
                     title: widget.storename,
@@ -372,26 +419,52 @@ class _StorePublicState extends State<StorePublic> {
                   );
 
                   FlutterBranchSdk.registerView(buo: buo);
-
-                  print(mystore.storeusername);
                   BranchLinkProperties lp = BranchLinkProperties(
-                    alias: 'store/' + mystore.storeusername,
+                    alias: mystore.storeusername,
                     channel: 'whatsapp',
                     feature: 'sharing',
                     stage: 'new share',
                   );
                   lp.addControlParam('\$uri_redirect_mode', '1');
+
                   BranchResponse response = await FlutterBranchSdk.getShortUrl(
                       buo: buo, linkProperties: lp);
-                  print(response.errorMessage);
+
+                  Navigator.pop(context);
                   if (response.success) {
                     final RenderBox box = context.findRenderObject();
                     print(response.result);
+                    var url =
+                        "https://api.sellship.co/api/save/share/store/${mystore.storeid}";
+
+                    FormData formData = FormData.fromMap({
+                      'shareurl': response.result,
+                    });
+
+                    Dio dio = new Dio();
+                    var respo = await dio.post(url, data: formData);
+
                     Share.share(response.result,
                         subject: widget.storename,
                         sharePositionOrigin:
                             box.localToGlobal(Offset.zero) & box.size);
                     print('${response.result}');
+                  } else {
+                    print('ss');
+                    final RenderBox box = context.findRenderObject();
+                    var url =
+                        "https://api.sellship.co/api/share/store/${mystore.storeid}";
+                    print(url);
+                    var respo = await http.get(url);
+                    print(respo.body);
+
+                    var jsonbody = json.decode(respo.body);
+                    var urls = jsonbody['url'];
+                    print(urls);
+                    Share.share(urls,
+                        subject: widget.storename,
+                        sharePositionOrigin:
+                            box.localToGlobal(Offset.zero) & box.size);
                   }
                 },
                 child: Icon(
@@ -423,15 +496,21 @@ class _StorePublicState extends State<StorePublic> {
                     Stack(
                       children: [
                         Align(
-                            alignment: Alignment.topCenter,
-                            child: Container(
-                                height: 80,
-                                width: MediaQuery.of(context).size.width,
-                                child: SvgPicture.asset(
-                                  'assets/LoginBG.svg',
-                                  semanticsLabel: 'SellShip BG',
-                                  fit: BoxFit.cover,
-                                ))),
+                          alignment: Alignment.topCenter,
+                          child: Container(
+                              height: 90,
+                              width: MediaQuery.of(context).size.width,
+                              child: mystore.storecover == null
+                                  ? SvgPicture.asset(
+                                      'assets/LoginBG.svg',
+                                      semanticsLabel: 'SellShip BG',
+                                      fit: BoxFit.cover,
+                                    )
+                                  : CachedNetworkImage(
+                                      imageUrl: mystore.storecover,
+                                      fit: BoxFit.cover,
+                                    )),
+                        ),
                         Align(
                           alignment: Alignment.center,
                           child: Padding(
@@ -526,7 +605,7 @@ class _StorePublicState extends State<StorePublic> {
                                                 CrossAxisAlignment.start),
                                         Padding(
                                             padding: EdgeInsets.only(
-                                                left: 20, top: 15),
+                                                left: 20, top: 35),
                                             child: Column(
                                                 children: [
                                                   Text(

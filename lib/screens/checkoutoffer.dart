@@ -6,6 +6,7 @@ import 'package:SellShip/payments/stripeservice.dart';
 import 'package:SellShip/screens/addpayment.dart';
 import 'package:SellShip/screens/address.dart';
 import 'package:SellShip/screens/details.dart';
+import 'package:SellShip/screens/pay.dart';
 
 import 'package:SellShip/screens/paymentweb.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -391,30 +392,6 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Delivery',
-                            style: TextStyle(
-                                fontFamily: 'Helvetica',
-                                fontSize: 18,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w800),
-                          ),
-                          Text(
-                            deliveryamount,
-                            style: TextStyle(
-                              fontFamily: 'Helvetica',
-                              fontSize: 16,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
                             'Deliver To',
                             style: TextStyle(
                                 fontFamily: 'Helvetica',
@@ -569,7 +546,7 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
                         ),
                         Text(
                             currency != null
-                                ? currency + ' ' + total.toString()
+                                ? currency + ' ' + subtotal.toString()
                                 : '',
                             style: TextStyle(
                               fontWeight: FontWeight.w900,
@@ -589,132 +566,17 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
                           if (phonenumber == null || selectedaddress == null) {
                             showInSnackBar('Please choose your address');
                           } else {
-                            showDialog(
-                                context: context,
-                                barrierDismissible: true,
-                                useRootNavigator: false,
-                                builder: (_) => Container(
-                                    height: 50,
-                                    width: 50,
-                                    child: SpinKitDoubleBounce(
-                                      color: Colors.deepOrange,
-                                    )));
-                            var uuid = uuidGenerator.v1();
-                            var trref = ('SS' + uuid);
-
-                            var messageid;
-                            if (widget.messageid == null) {
-                              messageid = uuidGenerator.v4();
-                            } else {
-                              messageid = widget.messageid;
-                            }
-
-                            var userid = await storage.read(key: 'userid');
-                            print(listitems[0].userid);
-
-                            messageid = 'SS-ORDER' +
-                                (userid.substring(0, 10) +
-                                        listitems[0]
-                                            .itemid
-                                            .toString()
-                                            .substring(0, 15) +
-                                        listitems[0].userid.substring(0, 10))
-                                    .toString();
-                            print(messageid);
-
-                            var returnurl;
-                            if (widget.ordertype == 'EXISTING') {
-                              returnurl =
-                                  'https://api.sellship.co/api/payment/EXISTING/${messageid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${total.toStringAsFixed(2)}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}/${listitems[0].quantity}/${listitems[0].selectedsize}';
-                            } else {
-                              returnurl =
-                                  'https://api.sellship.co/api/payment/NEW/${messageid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${total.toStringAsFixed(2)}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}/${listitems[0].quantity}/${listitems[0].selectedsize}';
-                            }
-
-                            Map<String, Object> body = {
-                              "apiOperation": "INITIATE",
-                              "order": {
-                                "name": 'SellShip Order',
-                                "channel": "web",
-                                "reference": trref,
-                                "amount": total.toStringAsFixed(2),
-                                "currency": "AED",
-                                "category": "pay",
-                              },
-                              "configuration": {
-                                "tokenizeCC": true,
-                                "locale": "en",
-                                "paymentAction": "Sale",
-                                "returnUrl": returnurl
-                              },
-                            };
-
-                            // var url =
-                            //     "https://api-stg.noonpayments.com/payment/v1/order";
-                            //
-                            // var key =
-                            //     "SellShip.SellShipApp:7d016fdd70a64b68bc99d2cece27b48d";
-                            // List encodedText = utf8.encode(key);
-                            // String base64Str = base64Encode(encodedText);
-                            // print('Key_Test $base64Str');
-                            // var heade = 'Key_Test $base64Str';
-
-                            var url =
-                                "https://api.noonpayments.com/payment/v1/order";
-
-                            var key =
-                                "SellShip.SellShipApp:a42e7bc936354e9c807c0ff02670ab37";
-                            List encodedText = utf8.encode(key);
-                            String base64Str = base64Encode(encodedText);
-
-                            var heade = 'Key_Live $base64Str';
-
-                            Map<String, String> headers = {
-                              'Authorization': heade,
-                              'Content-type': 'application/json',
-                              'Accept': 'application/json',
-                            };
-
-                            final response = await http.post(
-                              url,
-                              body: json.encode(body),
-                              headers: headers,
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Pay(
+                                        messageid: widget.messageid,
+                                        itemid: widget.itemid,
+                                        price: subtotal,
+                                        address: selectedaddress,
+                                        phonenumber: phonenumber,
+                                      )),
                             );
-                            print(response.body);
-
-                            if (response.statusCode == 200) {
-                              var jsonmessage = json.decode(response.body);
-
-                              var url = jsonmessage['result']['checkoutData']
-                                  ['postUrl'];
-
-                              var orderid =
-                                  jsonmessage['result']['order']['id'];
-
-                              // final orderresponse = await http.get(
-                              //   'https://api.sellship.co/api/noon/save/orderid/${messageid}/${orderid}/${userid}',
-                              // );
-
-                              // print(orderresponse.statusCode);
-                              // print(orderresponse.body);
-                              //
-                              // Navigator.of(context, rootNavigator: true).pop();
-                              //
-                              // if (orderresponse.statusCode == 200) {
-                              Navigator.of(context, rootNavigator: true).pop();
-
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        PaymentWeb(
-                                          returnurl: returnurl,
-                                          url: url,
-                                          itemid: listitems[0].itemid,
-                                          messageid: messageid,
-                                        )),
-                              );
-                            }
                           }
                         },
                         child: Container(
@@ -733,7 +595,7 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
                           ),
                           child: Center(
                             child: Text(
-                              'Pay',
+                              'Proceed to Checkout',
                               textAlign: TextAlign.left,
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,

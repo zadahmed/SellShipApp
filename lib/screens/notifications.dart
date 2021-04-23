@@ -77,7 +77,7 @@ class _NotifcationPageState extends State<NotifcationPage>
           builder: (_) {
             return DraggableScrollableSheet(
                 expand: false,
-                initialChildSize: 0.9,
+                initialChildSize: 1,
                 builder: (_, controller) {
                   return Container(
                       decoration: new BoxDecoration(
@@ -85,7 +85,7 @@ class _NotifcationPageState extends State<NotifcationPage>
                             topLeft: const Radius.circular(20.0),
                             topRight: const Radius.circular(20.0)),
                       ),
-                      child: OnboardingBottomScreen());
+                      child: OnboardingScreen());
                 });
           });
     }

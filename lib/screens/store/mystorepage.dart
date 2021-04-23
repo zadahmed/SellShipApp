@@ -8,6 +8,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
@@ -55,6 +56,7 @@ class _StorePageState extends State<StorePage> {
   bool loading;
 
   var profilepicture;
+  var coverphoto;
   var username;
 
   var itemssold;
@@ -137,6 +139,12 @@ class _StorePageState extends State<StorePage> {
           followers = 0;
         });
       }
+
+      if (jsonbody.containsKey('storecover')) {
+        coverphoto = jsonbody['storecover'];
+      } else {
+        coverphoto = null;
+      }
       Stores store = Stores(
           storetype: jsonbody['storetype'],
           storeid: jsonbody['_id']['\$oid'],
@@ -151,6 +159,7 @@ class _StorePageState extends State<StorePage> {
 
       setState(() {
         mystore = store;
+
         loading = false;
       });
     }
@@ -487,11 +496,69 @@ class _StorePageState extends State<StorePage> {
     Navigator.of(context).pop();
   }
 
+  Future getImageCameraCover() async {
+    var image = await ImagePicker.pickImage(
+        source: ImageSource.camera, maxHeight: 400, maxWidth: 400);
+
+    var url =
+        'https://api.sellship.co/api/store/cover/imageupload/' + widget.storeid;
+    Dio dio = new Dio();
+    FormData formData;
+    String fileName = image.path.split('/').last;
+    formData = FormData.fromMap({
+      'storecover': await MultipartFile.fromFile(image.path, filename: fileName)
+    });
+    var response = await dio.post(url, data: formData);
+
+    if (response.statusCode == 200) {
+      print(response.data);
+    } else {
+      print(response.statusCode);
+    }
+
+    if (mounted)
+      setState(() {
+        coverphoto = response.data;
+      });
+
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
+  }
+
+  Future getImageGalleryCover() async {
+    var image = await ImagePicker.pickImage(
+        source: ImageSource.gallery, maxHeight: 400, maxWidth: 400);
+
+    var url =
+        'https://api.sellship.co/api/store/cover/imageupload/' + widget.storeid;
+    Dio dio = new Dio();
+    FormData formData;
+    String fileName = image.path.split('/').last;
+    formData = FormData.fromMap({
+      'storecover': await MultipartFile.fromFile(image.path, filename: fileName)
+    });
+    var response = await dio.post(url, data: formData);
+
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      print(response.data);
+    } else {
+      print(response.statusCode);
+    }
+
+    if (mounted)
+      setState(() {
+        coverphoto = response.data;
+      });
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
+  }
+
   Future getImageGallery() async {
     var image = await ImagePicker.pickImage(
         source: ImageSource.gallery, maxHeight: 400, maxWidth: 400);
 
-    var url = 'https://api.sellship.co/api/imageupload/' + widget.storeid;
+    var url = 'https://api.sellship.co/api/store/imageupload/' + widget.storeid;
     Dio dio = new Dio();
     FormData formData;
     String fileName = image.path.split('/').last;
@@ -643,7 +710,7 @@ class _StorePageState extends State<StorePage> {
                             FlutterBranchSdk.registerView(buo: buo);
 
                             BranchLinkProperties lp = BranchLinkProperties(
-                              alias: 'store/' + widget.storename,
+                              alias: widget.storename,
                               channel: 'whatsapp',
                               feature: 'sharing',
                               stage: 'new share',
@@ -654,7 +721,15 @@ class _StorePageState extends State<StorePage> {
                                     buo: buo, linkProperties: lp);
                             if (response.success) {
                               Navigator.pop(context);
-                              print(response.result);
+                              var url =
+                                  "https://api.sellship.co/api/save/share/store/${mystore.storeid}";
+
+                              FormData formData = FormData.fromMap({
+                                'shareurl': response.result,
+                              });
+
+                              Dio dio = new Dio();
+                              var respo = await dio.post(url, data: formData);
                               final RenderBox box = context.findRenderObject();
                               Share.share(response.result,
                                   subject: widget.storename,
@@ -662,6 +737,22 @@ class _StorePageState extends State<StorePage> {
                                       box.localToGlobal(Offset.zero) &
                                           box.size);
                               print('${response.result}');
+                            } else {
+                              print('ss');
+                              final RenderBox box = context.findRenderObject();
+                              var url =
+                                  "https://api.sellship.co/api/share/store/${mystore.storeid}";
+                              print(url);
+                              var respo = await http.get(url);
+                              print(respo.body);
+
+                              var jsonbody = json.decode(respo.body);
+                              print(jsonbody.url);
+                              Share.share(jsonbody.url,
+                                  subject: widget.storename,
+                                  sharePositionOrigin:
+                                      box.localToGlobal(Offset.zero) &
+                                          box.size);
                             }
                           },
                           title: Text('Share',
@@ -733,13 +824,145 @@ class _StorePageState extends State<StorePage> {
                         Align(
                             alignment: Alignment.topCenter,
                             child: Container(
-                                height: 80,
+                                height: 90,
                                 width: MediaQuery.of(context).size.width,
-                                child: SvgPicture.asset(
-                                  'assets/LoginBG.svg',
-                                  semanticsLabel: 'SellShip BG',
-                                  fit: BoxFit.cover,
-                                ))),
+                                child: Stack(children: [
+                                  Container(
+                                      height: 90,
+                                      width: MediaQuery.of(context).size.width,
+                                      child: coverphoto == null
+                                          ? SvgPicture.asset(
+                                              'assets/LoginBG.svg',
+                                              semanticsLabel: 'SellShip BG',
+                                              fit: BoxFit.cover,
+                                            )
+                                          : CachedNetworkImage(
+                                              imageUrl: coverphoto,
+                                              fit: BoxFit.cover,
+                                            )),
+                                  Align(
+                                    alignment: Alignment.bottomRight,
+                                    child: InkWell(
+                                      onTap: () {
+                                        final action = CupertinoActionSheet(
+                                          message: Text(
+                                            "Upload an Image",
+                                            style: TextStyle(
+                                                fontSize: 15.0,
+                                                fontWeight: FontWeight.normal),
+                                          ),
+                                          actions: <Widget>[
+                                            CupertinoActionSheetAction(
+                                              child: Text("Upload from Camera",
+                                                  style: TextStyle(
+                                                      fontSize: 15.0,
+                                                      fontWeight:
+                                                          FontWeight.normal)),
+                                              isDefaultAction: true,
+                                              onPressed: () {
+                                                showDialog(
+                                                    context: context,
+                                                    barrierDismissible: false,
+                                                    useRootNavigator: false,
+                                                    builder:
+                                                        (_) => new AlertDialog(
+                                                              shape: RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius.all(
+                                                                          Radius.circular(
+                                                                              10.0))),
+                                                              content: Builder(
+                                                                builder:
+                                                                    (context) {
+                                                                  return Container(
+                                                                      height:
+                                                                          50,
+                                                                      width: 50,
+                                                                      child:
+                                                                          SpinKitDoubleBounce(
+                                                                        color: Colors
+                                                                            .deepOrange,
+                                                                      ));
+                                                                },
+                                                              ),
+                                                            ));
+                                                getImageCameraCover();
+                                              },
+                                            ),
+                                            CupertinoActionSheetAction(
+                                              child: Text("Upload from Gallery",
+                                                  style: TextStyle(
+                                                      fontSize: 15.0,
+                                                      fontWeight:
+                                                          FontWeight.normal)),
+                                              isDefaultAction: true,
+                                              onPressed: () {
+                                                showDialog(
+                                                    context: context,
+                                                    barrierDismissible: false,
+                                                    useRootNavigator: false,
+                                                    builder:
+                                                        (_) => new AlertDialog(
+                                                              shape: RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius.all(
+                                                                          Radius.circular(
+                                                                              10.0))),
+                                                              content: Builder(
+                                                                builder:
+                                                                    (context) {
+                                                                  return Container(
+                                                                      height:
+                                                                          50,
+                                                                      width: 50,
+                                                                      child:
+                                                                          SpinKitDoubleBounce(
+                                                                        color: Colors
+                                                                            .deepOrange,
+                                                                      ));
+                                                                },
+                                                              ),
+                                                            ));
+                                                getImageGalleryCover();
+                                              },
+                                            )
+                                          ],
+                                          cancelButton:
+                                              CupertinoActionSheetAction(
+                                            child: Text("Cancel",
+                                                style: TextStyle(
+                                                    fontSize: 15.0,
+                                                    fontWeight:
+                                                        FontWeight.normal)),
+                                            isDestructiveAction: true,
+                                            onPressed: () {
+                                              Navigator.of(context,
+                                                      rootNavigator: true)
+                                                  .pop();
+                                            },
+                                          ),
+                                        );
+                                        showCupertinoModalPopup(
+                                            context: context,
+                                            builder: (context) => action);
+                                      },
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                            right: 10, bottom: 10),
+                                        child: CircleAvatar(
+                                          radius: 16,
+                                          backgroundColor:
+                                              Color.fromRGBO(28, 45, 65, 1),
+                                          child: Icon(
+                                            Feather.camera,
+                                            color: Colors.white,
+                                            size: 16,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ]))),
                         Align(
                           alignment: Alignment.center,
                           child: Padding(
@@ -964,7 +1187,7 @@ class _StorePageState extends State<StorePage> {
                                                 CrossAxisAlignment.start),
                                         Padding(
                                             padding: EdgeInsets.only(
-                                                left: 20, top: 15),
+                                                left: 20, top: 35),
                                             child: Column(
                                                 children: [
                                                   Text(

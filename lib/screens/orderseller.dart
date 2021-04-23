@@ -306,7 +306,7 @@ class _OrderSellerState extends State<OrderSeller> {
         size = sz;
         qty = qt;
         delivered = deliver;
-        orderid = jsonbody['orderid'];
+        orderid = jsonbody['paymentid'];
         trackingnumber = track;
         deliverystage = delstage;
         buyerid = jsonbody['senderid'];

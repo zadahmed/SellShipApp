@@ -8,6 +8,7 @@ import 'package:SellShip/screens/addpayment.dart';
 import 'package:SellShip/screens/address.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/onboardingbottom.dart';
+import 'package:SellShip/screens/pay.dart';
 
 import 'package:SellShip/screens/paymentweb.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -53,7 +54,7 @@ class _CheckoutState extends State<Checkout> {
           builder: (_) {
             return DraggableScrollableSheet(
                 expand: false,
-                initialChildSize: 0.9,
+                initialChildSize: 1,
                 builder: (_, controller) {
                   return Container(
                       decoration: new BoxDecoration(
@@ -61,7 +62,7 @@ class _CheckoutState extends State<Checkout> {
                             topLeft: const Radius.circular(20.0),
                             topRight: const Radius.circular(20.0)),
                       ),
-                      child: OnboardingBottomScreen());
+                      child: OnboardingScreen());
                 });
           });
     }
@@ -786,30 +787,6 @@ class _CheckoutState extends State<Checkout> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Delivery',
-                                style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w800),
-                              ),
-                              Text(
-                                deliveryamount,
-                                style: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 16,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
                                 'Deliver To',
                                 style: TextStyle(
                                     fontFamily: 'Helvetica',
@@ -840,17 +817,22 @@ class _CheckoutState extends State<Checkout> {
                                   },
                                   child: Row(
                                     children: [
-                                      Text(
-                                        selectedaddress == null
-                                            ? 'Choose Address'
-                                            : selectedaddress.address +
-                                                '\n' +
-                                                phonenumber,
-                                        textAlign: TextAlign.right,
-                                        style: TextStyle(
-                                          fontFamily: 'Helvetica',
-                                          fontSize: 16,
-                                          color: Colors.blueGrey,
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                2,
+                                        child: Text(
+                                          selectedaddress == null
+                                              ? 'Choose Address'
+                                              : selectedaddress.address +
+                                                  '\n' +
+                                                  phonenumber,
+                                          textAlign: TextAlign.right,
+                                          style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 16,
+                                            color: Colors.blueGrey,
+                                          ),
                                         ),
                                       ),
                                       Icon(
@@ -861,38 +843,6 @@ class _CheckoutState extends State<Checkout> {
                                     ],
                                   )),
                             ],
-//                      ),
-//                      SizedBox(
-//                        height: 15,
-//                      ),
-//                      Row(
-//                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                        children: [
-//                          Text(
-//                            'Pay Using',
-//                            style: TextStyle(
-//                                fontFamily: 'Helvetica',
-//                                fontSize: 18,
-//                                color: Colors.black,
-//                                fontWeight: FontWeight.w800),
-//                          ),
-//                          Row(
-//                            children: [
-//                              Text(
-//                                'Choose Payment Method',
-//                                style: TextStyle(
-//                                  fontFamily: 'Helvetica',
-//                                  fontSize: 16,
-//                                  color: Colors.blueGrey,
-//                                ),
-//                              ),
-//                              Icon(
-//                                Icons.chevron_right,
-//                                size: 16,
-//                                color: Colors.blueGrey,
-//                              )
-//                            ],
-//                          )
                           )
                         ],
                       )))
@@ -966,7 +916,7 @@ class _CheckoutState extends State<Checkout> {
                                   color: Colors.black45,
                                 ),
                               ),
-                              Text('AED' + ' ' + total.toStringAsFixed(2),
+                              Text('AED' + ' ' + subtotal.toStringAsFixed(2),
                                   style: TextStyle(
                                     fontWeight: FontWeight.w900,
                                     fontSize: 20,
@@ -986,118 +936,17 @@ class _CheckoutState extends State<Checkout> {
                                     selectedaddress == null) {
                                   showInSnackBar('Please choose your address');
                                 } else {
-                                  showDialog(
-                                      context: context,
-                                      barrierDismissible: false,
-                                      useRootNavigator: false,
-                                      builder: (_) => Container(
-                                          height: 50,
-                                          width: 50,
-                                          child: SpinKitDoubleBounce(
-                                            color: Colors.deepOrange,
-                                          )));
-                                  var uuid = uuidGenerator.v1();
-                                  var trref = ('SS' + uuid);
-
-                                  var messageid;
-
-                                  messageid = uuidGenerator.v4();
-
-                                  var userid =
-                                      await storage.read(key: 'userid');
-                                  print(listitems[0].userid);
-
-                                  messageid = 'SS-ORDER' +
-                                      (userid.substring(0, 10) +
-                                              listitems[0]
-                                                  .itemid
-                                                  .toString()
-                                                  .substring(0, 15) +
-                                              listitems[0]
-                                                  .userid
-                                                  .substring(0, 10))
-                                          .toString();
-
-                                  Map<String, Object> body = {
-                                    "apiOperation": "INITIATE",
-                                    "order": {
-                                      "name": 'SellShip Order',
-                                      "channel": "web",
-                                      "reference": trref,
-                                      "amount": total.toStringAsFixed(2),
-                                      "currency": "AED",
-                                      "category": "pay",
-                                    },
-                                    "configuration": {
-                                      "tokenizeCC": true,
-                                      "locale": "en",
-                                      "paymentAction": "Sale",
-                                      "returnUrl":
-                                          'https://api.sellship.co/api/payment/NEW/${messageid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${total.toStringAsFixed(2)}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}/${listitems[0].quantity}/${listitems[0].selectedsize}'
-                                    },
-                                  };
-                                  var returnurl =
-                                      'https://api.sellship.co/api/payment/NEW/${messageid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${total.toStringAsFixed(2)}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}/${listitems[0].quantity}/${listitems[0].selectedsize}';
-
-                                  // var url =
-                                  //     "https://api-stg.noonpayments.com/payment/v1/order";
-                                  //
-                                  // var key =
-                                  //     "SellShip.SellShipApp:7d016fdd70a64b68bc99d2cece27b48d";
-                                  // List encodedText = utf8.encode(key);
-                                  // String base64Str = base64Encode(encodedText);
-                                  // print('Key_Test $base64Str');
-                                  // var heade = 'Key_Test $base64Str';
-
-                                  var url =
-                                      "https://api.noonpayments.com/payment/v1/order";
-
-                                  var key =
-                                      "SellShip.SellShipApp:a42e7bc936354e9c807c0ff02670ab37";
-                                  List encodedText = utf8.encode(key);
-                                  String base64Str = base64Encode(encodedText);
-
-                                  var heade = 'Key_Live $base64Str';
-
-                                  Map<String, String> headers = {
-                                    'Authorization': heade,
-                                    'Content-type': 'application/json',
-                                    'Accept': 'application/json',
-                                  };
-
-                                  final response = await http.post(
-                                    url,
-                                    body: json.encode(body),
-                                    headers: headers,
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Pay(
+                                              messageid: widget.messageid,
+                                              itemid: widget.itemid,
+                                              price: subtotal,
+                                              address: selectedaddress,
+                                              phonenumber: phonenumber,
+                                            )),
                                   );
-
-                                  print(response.body);
-
-                                  if (response.statusCode == 200) {
-                                    var jsonmessage =
-                                        json.decode(response.body);
-
-                                    var url = jsonmessage['result']
-                                        ['checkoutData']['postUrl'];
-
-                                    var orderid =
-                                        jsonmessage['result']['order']['id'];
-
-                                    Navigator.of(context, rootNavigator: true)
-                                        .pop();
-
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              PaymentWeb(
-                                                returnurl: returnurl,
-                                                url: url,
-                                                itemid: listitems[0].itemid,
-                                                messageid: messageid,
-                                              )),
-                                    );
-                                  }
                                 }
                               },
                               child: Container(
@@ -1117,7 +966,7 @@ class _CheckoutState extends State<Checkout> {
                                 ),
                                 child: Center(
                                   child: Text(
-                                    'Pay',
+                                    'Proceed to Payment',
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,

@@ -291,7 +291,7 @@ class _OrderBuyerPageState extends State<OrderBuyerPage> {
       totalpaid = jsonbody['totalpayable'];
       date = s;
       cancelled = cancell;
-      orderid = jsonbody['orderid'];
+      orderid = jsonbody['paymentid'];
       trackingnumber = track;
       completed = comple;
       delivered = deliver;
@@ -1548,21 +1548,22 @@ class _OrderBuyerPageState extends State<OrderBuyerPage> {
                                   'Order ID: ',
                                   style: TextStyle(
                                       fontFamily: 'Helvetica',
-                                      fontSize: 16,
+                                      fontSize: 12,
                                       color: Colors.blueGrey),
                                 ),
                                 SizedBox(
                                   width: 2,
                                 ),
                                 Container(
+                                    width:
+                                        MediaQuery.of(context).size.width / 1.7,
                                     child: Text(
-                                  orderid,
-                                  style: TextStyle(
-                                      fontFamily: 'Helvetica',
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color.fromRGBO(27, 44, 64, 1)),
-                                )),
+                                      orderid,
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 11,
+                                          color: Color.fromRGBO(27, 44, 64, 1)),
+                                    )),
                               ],
                             ),
                             Padding(

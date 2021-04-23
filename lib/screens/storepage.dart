@@ -538,7 +538,7 @@ class _StoreState extends State<Store> {
                             FlutterBranchSdk.registerView(buo: buo);
 
                             BranchLinkProperties lp = BranchLinkProperties(
-                              alias: 'store/' + mystore.storeusername,
+                              alias: mystore.storeusername,
                               channel: 'whatsapp',
                               feature: 'sharing',
                               stage: 'new share',
@@ -550,13 +550,38 @@ class _StoreState extends State<Store> {
                             if (response.success) {
                               Navigator.pop(context);
                               final RenderBox box = context.findRenderObject();
-                              print(response.result);
+                              var url =
+                                  "https://api.sellship.co/api/save/share/store/${mystore.storeid}";
+
+                              FormData formData = FormData.fromMap({
+                                'shareurl': response.result,
+                              });
+
+                              Dio dio = new Dio();
+                              var respo = await dio.post(url, data: formData);
                               Share.share(response.result,
                                   subject: widget.storename,
                                   sharePositionOrigin:
                                       box.localToGlobal(Offset.zero) &
                                           box.size);
                               print('${response.result}');
+                            } else {
+                              Navigator.pop(context);
+                              print('ss');
+                              final RenderBox box = context.findRenderObject();
+                              var url =
+                                  "https://api.sellship.co/api/share/store/${mystore.storeid}";
+                              print(url);
+                              var respo = await http.get(url);
+                              print(respo.body);
+
+                              var jsonbody = json.decode(respo.body);
+                              print(jsonbody.url);
+                              Share.share(jsonbody.url,
+                                  subject: widget.storename,
+                                  sharePositionOrigin:
+                                      box.localToGlobal(Offset.zero) &
+                                          box.size);
                             }
                           },
                           title: Text('Share',

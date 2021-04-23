@@ -72,29 +72,40 @@ class _ChatPageOfferNavState extends State<ChatPageOfferNav> {
   }
 
   calculateearning() {
-    var weight = int.parse(itemselling.weight);
-    var weightfees;
-    if (weight <= 5) {
-      weightfees = 20;
-    } else if (weight <= 10) {
-      weightfees = 30;
-    } else if (weight <= 20) {
-      weightfees = 50;
-    } else if (weight <= 50) {
-      weightfees = 110;
+    print(itemselling.freedelivery);
+    if (itemselling.freedelivery == true) {
+      var weight = int.parse(itemselling.weight);
+      var weightfees;
+      if (weight <= 5) {
+        weightfees = 20;
+      } else if (weight <= 10) {
+        weightfees = 30;
+      } else if (weight <= 20) {
+        weightfees = 50;
+      } else if (weight <= 50) {
+        weightfees = 110;
+      }
+
+      var fees = double.parse(itemprice.toString()) / 1.15;
+
+      finalfees = fees - weightfees;
+
+      var ourfee = (finalfees + weightfees) * 0.15;
+
+      setState(() {
+        ourfees = ourfee;
+        deliveryfees = weightfees;
+        finalfees = finalfees;
+      });
+    } else {
+      var fees = double.parse(itemprice.toString()) / 1.15;
+      var f = fees * 0.15;
+      setState(() {
+        ourfees = f;
+        deliveryfees = 0;
+        finalfees = fees;
+      });
     }
-
-    var fees = double.parse(itemprice.toString()) / 1.15;
-
-    finalfees = fees - weightfees;
-
-    var ourfee = (finalfees + weightfees) * 0.15;
-
-    setState(() {
-      ourfees = ourfee;
-      deliveryfees = weightfees;
-      finalfees = finalfees;
-    });
   }
 
   var ourfees;
@@ -2016,6 +2027,14 @@ class _ChatPageOfferNavState extends State<ChatPageOfferNav> {
           buyername = 'Unknown';
         }
 
+        bool freedel;
+        if (itemmap['freedelivery'] == 'false' ||
+            itemmap['freedelivery'] == null) {
+          freedel = false;
+        } else {
+          freedel = true;
+        }
+
         Item ite = Item(
             itemid: itemmap['item']['_id']['\$oid'],
             name: itemmap['item']['name'],
@@ -2024,6 +2043,7 @@ class _ChatPageOfferNavState extends State<ChatPageOfferNav> {
             price: itemmap['offer'].toString(),
             messageid: itemmap['messageid'].toString(),
             offerstage: itemmap['offerstage'],
+            freedelivery: freedel,
             storetype: itemmap['item']['storetype'],
             buyerid: buyerid,
             date: date.toString(),

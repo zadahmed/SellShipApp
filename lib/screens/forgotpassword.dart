@@ -170,12 +170,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                             Navigator.of(context,
                                                     rootNavigator: true)
                                                 .pop('dialog');
-                                            Navigator.pop(
-                                              context,
-                                            );
-                                            Navigator.pop(
-                                              context,
-                                            );
                                           },
                                           child: Container(
                                             padding: EdgeInsets.only(

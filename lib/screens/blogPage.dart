@@ -1,3 +1,4 @@
+import 'package:SellShip/screens/helpcentre.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -62,15 +63,44 @@ class _BlogPageState extends State<BlogPage> {
                     fontWeight: FontWeight.w800),
               ),
             ),
-            Html(
-              data: widget.content,
-              onLinkTap: (url) {
-                print("Opening $url...");
-              },
-              onImageError: (exception, stackTrace) {
-                print(exception);
-              },
+            Padding(
+              padding: EdgeInsets.only(
+                bottom: 10,
+                left: 10,
+                right: 10,
+              ),
+              child: Html(
+                data: widget.content,
+                onLinkTap: (url) {
+                  print("Opening $url...");
+                },
+                onImageError: (exception, stackTrace) {
+                  print(exception);
+                },
+              ),
             ),
+            Padding(
+                padding: EdgeInsets.only(
+                  bottom: 10,
+                  left: 10,
+                  right: 10,
+                ),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => HelpCentre()),
+                    );
+                  },
+                  child: Text(
+                    'Need more help and support? Check out our Help Centre',
+                    style: TextStyle(
+                      fontFamily: 'Helvetica',
+                      fontSize: 13.0,
+                      color: Colors.deepOrangeAccent,
+                    ),
+                  ),
+                ))
           ],
         ));
   }

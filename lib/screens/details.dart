@@ -144,7 +144,7 @@ class _DetailsState extends State<Details> {
           builder: (_) {
             return DraggableScrollableSheet(
                 expand: false,
-                initialChildSize: 0.9,
+                initialChildSize: 1,
                 builder: (_, controller) {
                   return Container(
                       decoration: new BoxDecoration(
@@ -152,7 +152,7 @@ class _DetailsState extends State<Details> {
                             topLeft: const Radius.circular(20.0),
                             topRight: const Radius.circular(20.0)),
                       ),
-                      child: OnboardingBottomScreen());
+                      child: OnboardingScreen());
                 });
           });
     }
@@ -1106,7 +1106,7 @@ class _DetailsState extends State<Details> {
                                               child: CircleAvatar(
                                                 radius: 24,
                                                 backgroundColor:
-                                                    Colors.deepPurple,
+                                                    Colors.deepOrangeAccent,
                                                 child: Icon(
                                                   FontAwesome.heart,
                                                   color: Colors.white,
@@ -2408,9 +2408,8 @@ class _DetailsState extends State<Details> {
                                                           },
                                                           child: CircleAvatar(
                                                             radius: 18,
-                                                            backgroundColor:
-                                                                Colors
-                                                                    .deepPurple,
+                                                            backgroundColor: Colors
+                                                                .deepOrangeAccent,
                                                             child: Icon(
                                                               FontAwesome.heart,
                                                               color:

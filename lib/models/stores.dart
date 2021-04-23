@@ -10,6 +10,7 @@ class Stores {
   final String storetype;
   final bool approved;
   final String address;
+  final String storecover;
   final String views;
   List<double> storelocation;
   final String storeusername;
@@ -23,6 +24,7 @@ class Stores {
     this.storelocation,
     this.address,
     this.sold,
+    this.storecover,
     this.reviews,
     this.storename,
     this.storecategory,

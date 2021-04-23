@@ -1128,39 +1128,26 @@ class _HomeScreenState extends State<HomeScreen>
                     //     )),
                   ];
                 },
-                body: Container(
-                    decoration: BoxDecoration(
-                      color: Color.fromRGBO(229, 233, 242, 1).withOpacity(0.5),
-                    ),
-                    child: Container(
-                        padding: EdgeInsets.only(top: 15),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20),
-                          ),
-                        ),
-                        child: Discover()))
+                body: Discover()))
 
-                // Container(
-                //     decoration: BoxDecoration(
-                //       color: Color.fromRGBO(229, 233, 242, 1).withOpacity(0.5),
-                //     ),
-                //     child: Container(
-                //         padding: EdgeInsets.only(top: 15),
-                //         decoration: BoxDecoration(
-                //           color: Colors.white,
-                //           borderRadius: BorderRadius.only(
-                //             topLeft: Radius.circular(20),
-                //             topRight: Radius.circular(20),
-                //           ),
-                //         ),
-                //         child: TabBarView(
-                //             controller: _tabController,
-                //             children: [Discover(), ForYou()])))
+        // Container(
+        //     decoration: BoxDecoration(
+        //       color: Color.fromRGBO(229, 233, 242, 1).withOpacity(0.5),
+        //     ),
+        //     child: Container(
+        //         padding: EdgeInsets.only(top: 15),
+        //         decoration: BoxDecoration(
+        //           color: Colors.white,
+        //           borderRadius: BorderRadius.only(
+        //             topLeft: Radius.circular(20),
+        //             topRight: Radius.circular(20),
+        //           ),
+        //         ),
+        //         child: TabBarView(
+        //             controller: _tabController,
+        //             children: [Discover(), ForYou()])))
 
-                )));
+        );
   }
 
   String view = 'home';
