@@ -1865,12 +1865,10 @@ class _SearchState extends State<Search>
                                           enableInfiniteLoad,
                                           success,
                                           noMore) {
-                                        return noMore == false
-                                            ? Container()
-                                            : SpinKitFadingCircle(
-                                                color: Colors.deepOrange,
-                                                size: 30.0,
-                                              );
+                                        return SpinKitFadingCircle(
+                                          color: Colors.deepOrange,
+                                          size: 30.0,
+                                        );
                                       }),
                                   onRefresh: () {
                                     if (mounted) {

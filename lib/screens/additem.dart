@@ -30,6 +30,7 @@ import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:permission_handler/permission_handler.dart' as Permission;
 import 'package:random_string/random_string.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 import 'package:shimmer/shimmer.dart';
@@ -4421,8 +4422,31 @@ class _AddItemState extends State<AddItem> {
                                                   'https://api.sellship.co/api/additem';
                                               var response = await dio
                                                   .post(addurl, data: formData);
-                                              print(response.data);
-                                              print(response.statusCode);
+
+                                            var reviewcount = await storage.read(key: 'reviewcount');
+                                             if(reviewcount == null){
+                                               await storage.write(key: 'reviewcount', value: '1');
+                                             }
+                                             else{
+                                               int count = int.parse(reviewcount);
+                                               count = count + 1;
+                                               await storage.write(key: 'reviewcount', value: count.toString());
+
+                                               if(count == 2){
+                                                 final InAppReview inAppReview = InAppReview.instance;
+
+                                                 if (await inAppReview.isAvailable()) {
+                                                   inAppReview.requestReview();
+                                                 }
+                                               }
+                                               if(count == 10){
+                                                 final InAppReview inAppReview = InAppReview.instance;
+
+                                                 if (await inAppReview.isAvailable()) {
+                                                   inAppReview.requestReview();
+                                                 }
+                                               }
+                                             }
 
                                               if (response.statusCode == 200) {
                                                 showDialog(

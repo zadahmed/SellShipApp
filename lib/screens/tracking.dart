@@ -7,7 +7,7 @@ import 'package:SellShip/screens/ReviewSeller.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/storepagepublic.dart';
 import 'package:SellShip/screens/useritems.dart';
-import 'package:app_review/app_review.dart';
+
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';

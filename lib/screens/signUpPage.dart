@@ -62,6 +62,8 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: true,
+        resizeToAvoidBottomPadding: true,
         key: _scaffoldKey,
         body: Container(
             color: Colors.white,
@@ -109,9 +111,9 @@ class _SignUpPageState extends State<SignUpPage> {
                         borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(20),
                             topRight: Radius.circular(20))),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                    child: ListView(
+                      // mainAxisAlignment: MainAxisAlignment.start,
+                      // crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Padding(
                           padding: EdgeInsets.all(20),
@@ -238,7 +240,8 @@ class _SignUpPageState extends State<SignUpPage> {
                                           onChanged: (text) {},
                                           controller: signupEmailController,
                                           cursorColor: Colors.black,
-                                          keyboardType: TextInputType.emailAddress,
+                                          keyboardType:
+                                              TextInputType.emailAddress,
                                           decoration: InputDecoration(
                                             labelStyle: TextStyle(
                                                 fontFamily: 'Helvetica',

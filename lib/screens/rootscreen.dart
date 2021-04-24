@@ -108,25 +108,20 @@ class _RootScreenState extends State<RootScreen> {
   getuser() async {
     var userid = await storage.read(key: 'userid');
     storeid = await storage.read(key: 'storeid');
-
-    await OneSignal.shared.setExternalUserId(userid);
-
-    var status = await OneSignal.shared.getPermissionSubscriptionState();
-
-    var playerId = status.subscriptionStatus.userId;
-
     if (userid != null) {
+      await OneSignal.shared.setExternalUserId(userid);
+
+      var status = await OneSignal.shared.getPermissionSubscriptionState();
+
+      var playerId = status.subscriptionStatus.userId;
       var url = 'https://api.sellship.co/api/save/onesignalid/' +
           userid +
           '/' +
           playerId;
-      final response = await http.get(url);
-    }
-
-    if (userid != null) {
-      var url = 'https://api.sellship.co/api/user/' + userid;
-      final response = await http.get(url);
-      var respons = json.decode(response.body);
+      await http.get(url);
+      var userurl = 'https://api.sellship.co/api/user/' + userid;
+      final userres = await http.get(userurl);
+      var respons = json.decode(userres.body);
       Map<String, dynamic> profilemap = respons;
       var profilepic = profilemap['profilepicture'];
       if (profilepic != null) {
@@ -163,24 +158,28 @@ class _RootScreenState extends State<RootScreen> {
   checklocation() async {
     Location.Location _location = new Location.Location();
 
-    var location = await _location.getLocation();
+    if (await _location.hasPermission() == Location.PermissionStatus.granted ||
+        await _location.hasPermission() ==
+            Location.PermissionStatus.grantedLimited) {
+      var location = await _location.getLocation();
 
-    var position =
-        LatLng(location.latitude.toDouble(), location.longitude.toDouble());
+      var position =
+          LatLng(location.latitude.toDouble(), location.longitude.toDouble());
 
-    List<Placemark> placemarks = await placemarkFromCoordinates(
-        position.latitude, position.longitude,
-        localeIdentifier: 'en');
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+          position.latitude, position.longitude,
+          localeIdentifier: 'en');
 
-    Placemark place = placemarks[0];
-    var countr = place.country;
+      Placemark place = placemarks[0];
+      var countr = place.country;
 
-    if (countr != 'United Arab Emirates') {
-      Navigator.pushReplacement(
-        context,
-        CupertinoPageRoute(builder: (context) => NoAvailable()),
-      );
-    } else {}
+      if (countr != 'United Arab Emirates') {
+        Navigator.pushReplacement(
+          context,
+          CupertinoPageRoute(builder: (context) => NoAvailable()),
+        );
+      } else {}
+    }
   }
 
   initnotifs() async {

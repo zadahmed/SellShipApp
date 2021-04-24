@@ -66,24 +66,6 @@ class _ActivityBuyState extends State<ActivityBuy>
     buyingItem.clear();
     var countr = await storage.read(key: 'country');
 
-    if (countr.trim().toLowerCase() == 'united arab emirates') {
-      setState(() {
-        currency = 'AED';
-      });
-    } else if (countr.trim().toLowerCase() == 'united states') {
-      setState(() {
-        currency = '\$';
-      });
-    } else if (countr.trim().toLowerCase() == 'canada') {
-      setState(() {
-        currency = '\$';
-      });
-    } else if (countr.trim().toLowerCase() == 'united kingdom') {
-      setState(() {
-        currency = '\£';
-      });
-    }
-
     var userid = await storage.read(key: 'userid');
     if (userid != null) {
       var itemurl = 'https://api.sellship.co/api/activity/buying/' + userid;
@@ -163,6 +145,7 @@ class _ActivityBuyState extends State<ActivityBuy>
 
           if (mounted)
             setState(() {
+              currency = 'AED';
               keepalive = false;
               loading = false;
               buyingItem = ites;
@@ -1040,18 +1023,18 @@ class _ActivityBuyState extends State<ActivityBuy>
                                                                         .black),
                                                               ),
                                                             ),
-                                                            // Text(
-                                                            //   '@' +
-                                                            //       buyingItem[
-                                                            //               index]
-                                                            //           .sellername,
-                                                            //   style: TextStyle(
-                                                            //       fontFamily:
-                                                            //           'Helvetica',
-                                                            //       fontSize: 14,
-                                                            //       color: Colors
-                                                            //           .grey),
-                                                            // ),
+                                                            Text(
+                                                              '@' +
+                                                                  buyingItem[
+                                                                          index]
+                                                                      .sellername,
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'Helvetica',
+                                                                  fontSize: 14,
+                                                                  color: Colors
+                                                                      .grey),
+                                                            ),
                                                             SizedBox(
                                                               height: 5,
                                                             ),

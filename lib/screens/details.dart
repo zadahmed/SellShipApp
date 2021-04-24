@@ -177,14 +177,15 @@ class _DetailsState extends State<Details> {
   getcategory() async {
     var url = "https://api.sellship.co/api/category/" + newItem.category;
     final response = await http.get(url);
-    print(response.statusCode);
 
     var jsonbody = json.decode(response.body);
 
-    setState(() {
-      categoryimage = jsonbody[0]['categoryimage'];
-      subcategory = jsonbody[0]['subcategories'].toList();
-    });
+    if (jsonbody != null) {
+      setState(() {
+        categoryimage = jsonbody[0]['categoryimage'];
+        subcategory = jsonbody[0]['subcategories'].toList();
+      });
+    }
   }
 
   var subcategory;

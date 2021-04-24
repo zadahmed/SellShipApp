@@ -44,4 +44,12 @@ class User {
     int order = other.productsnumber.compareTo(productsnumber);
     return order;
   }
+
+  @override
+  bool operator ==(other) {
+    return this.userid == other.userid;
+  }
+
+  @override
+  int get hashCode => userid.hashCode;
 }

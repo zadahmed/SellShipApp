@@ -1559,6 +1559,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                                 height: 5,
                                               ),
                                               Container(
+                                                height: 25,
                                                 child: Text(
                                                   '@' +
                                                       userList[index].storename,

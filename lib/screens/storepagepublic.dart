@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:SellShip/controllers/expandabletext.dart';
 import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/models/stores.dart';
+import 'package:SellShip/screens/followerspage.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
@@ -69,14 +70,11 @@ class _StorePublicState extends State<StorePublic> {
 
   getItemData() async {
     var itemurl = 'https://api.sellship.co/store/products/' + widget.storeid;
-    print(itemurl);
 
     final itemresponse = await http.get(itemurl);
     if (itemresponse.statusCode == 200) {
       var itemrespons = json.decode(itemresponse.body);
 
-      print('item');
-      print(itemrespons);
       List<Item> ites = List<Item>();
       if (itemrespons != null) {
         for (var i = 0; i < itemrespons.length; i++) {
@@ -131,6 +129,7 @@ class _StorePublicState extends State<StorePublic> {
       if (follower != null) {
         if (follower.length == 0) {
           setState(() {
+            followerslist = follower;
             followers = 0;
             follow = false;
           });
@@ -140,14 +139,19 @@ class _StorePublicState extends State<StorePublic> {
             if (meuser == follower[i]['\$oid']) {
               setState(() {
                 follow = true;
-                followers = follower.length;
+
                 followcolor = Colors.deepOrange;
               });
             }
           }
+          setState(() {
+            followers = follower.length;
+            followerslist = follower;
+          });
         }
       } else {
         setState(() {
+          followerslist = [];
           followers = 0;
           follow = false;
         });
@@ -192,6 +196,8 @@ class _StorePublicState extends State<StorePublic> {
       });
     }
   }
+
+  List followerslist = List();
 
   bool profileloading;
 
@@ -726,39 +732,54 @@ class _StorePublicState extends State<StorePublic> {
                                                 ),
                                               ),
                                               Padding(
-                                                padding:
-                                                    EdgeInsets.only(right: 5),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: <Widget>[
-                                                    Text(
-                                                      followers == null
-                                                          ? '0'
-                                                          : followers
-                                                              .toString(),
-                                                      style: TextStyle(
-                                                          fontFamily:
-                                                              'Helvetica',
-                                                          fontSize: 19,
-                                                          fontWeight:
-                                                              FontWeight.bold),
+                                                  padding:
+                                                      EdgeInsets.only(right: 5),
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                FollowersPage(
+                                                                  followers:
+                                                                      followerslist,
+                                                                )),
+                                                      );
+                                                    },
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: <Widget>[
+                                                        Text(
+                                                          followers == null
+                                                              ? '0'
+                                                              : followers
+                                                                  .toString(),
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'Helvetica',
+                                                              fontSize: 19,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        SizedBox(height: 5.0),
+                                                        Text(
+                                                          'Followers',
+                                                          style: TextStyle(
+                                                              fontSize: 14,
+                                                              fontFamily:
+                                                                  'Helvetica',
+                                                              color: Colors
+                                                                  .blueGrey),
+                                                        ),
+                                                      ],
                                                     ),
-                                                    SizedBox(height: 5.0),
-                                                    Text(
-                                                      'Followers',
-                                                      style: TextStyle(
-                                                          fontSize: 14,
-                                                          fontFamily:
-                                                              'Helvetica',
-                                                          color:
-                                                              Colors.blueGrey),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
+                                                  )),
                                               Padding(
                                                 padding:
                                                     EdgeInsets.only(right: 5),

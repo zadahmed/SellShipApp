@@ -18,6 +18,7 @@ import 'package:SellShip/screens/home/foryou.dart';
 import 'package:SellShip/screens/home/nearme.dart';
 import 'package:SellShip/screens/home/toppicks.dart';
 import 'package:SellShip/screens/messages.dart';
+import 'package:SellShip/screens/notavaialablecountry.dart';
 import 'package:SellShip/screens/notifications.dart';
 import 'package:SellShip/screens/search.dart';
 import 'package:SellShip/screens/storepage.dart';
@@ -154,44 +155,51 @@ class _DiscoverState extends State<Discover>
         20.toString();
 
     final response = await http.get(url);
-    var jsonbody = json.decode(response.body);
+    if (response.statusCode == 200) {
+      var jsonbody = json.decode(response.body);
 
-    for (var i = 0; i < jsonbody.length; i++) {
-      var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+      for (var i = 0; i < jsonbody.length; i++) {
+        var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
 
-      DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
-      var dateuploaded = timeago.format(dateuploade);
-      Item item = Item(
-        itemid: jsonbody[i]['_id']['\$oid'],
-        date: dateuploaded,
-        name: jsonbody[i]['name'],
-        condition: jsonbody[i]['condition'] == null
-            ? 'Like New'
-            : jsonbody[i]['condition'],
-        username: jsonbody[i]['username'],
-        image: jsonbody[i]['image'],
-        likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
-        comments: jsonbody[i]['comments'] == null
-            ? 0
-            : jsonbody[i]['comments'].length,
-        price: jsonbody[i]['price'].toString(),
-        category: jsonbody[i]['category'],
-        sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
+        Item item = Item(
+          itemid: jsonbody[i]['_id']['\$oid'],
+          date: dateuploaded,
+          name: jsonbody[i]['name'],
+          condition: jsonbody[i]['condition'] == null
+              ? 'Like New'
+              : jsonbody[i]['condition'],
+          username: jsonbody[i]['username'],
+          image: jsonbody[i]['image'],
+          likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+          comments: jsonbody[i]['comments'] == null
+              ? 0
+              : jsonbody[i]['comments'].length,
+          price: jsonbody[i]['price'].toString(),
+          category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+        );
+        below100list.add(item);
+      }
+      if (below100list != null) {
+        if (mounted) {
+          setState(() {
+            below100list = below100list;
+          });
+        }
+      } else {
+        if (mounted) {
+          setState(() {
+            below100list = [];
+          });
+        }
+      }
+    } else if (response.statusCode == 1020) {
+      Navigator.pushReplacement(
+        context,
+        CupertinoPageRoute(builder: (context) => NoAvailable()),
       );
-      below100list.add(item);
-    }
-    if (below100list != null) {
-      if (mounted) {
-        setState(() {
-          below100list = below100list;
-        });
-      }
-    } else {
-      if (mounted) {
-        setState(() {
-          below100list = [];
-        });
-      }
     }
 
     return below100list;
@@ -976,9 +984,9 @@ class _DiscoverState extends State<Discover>
 
         print(notifcount);
 
-        if (notcoun <= 0) {
+        if (notcoun <= 0 || notcount == null) {
           setState(() {
-            notcount = notcoun;
+            notcount = 0;
             notbadge = false;
           });
           FlutterAppBadger.removeBadge();
@@ -1826,6 +1834,7 @@ class _DiscoverState extends State<Discover>
                                                           height: 5,
                                                         ),
                                                         Container(
+                                                          height: 25,
                                                           child: Text(
                                                             '@' +
                                                                 userList[index]
@@ -3318,40 +3327,46 @@ class _DiscoverState extends State<Discover>
         limit.toString();
 
     final response = await http.get(url);
+    if (response.statusCode == 200) {
+      var jsonbody = json.decode(response.body);
 
-    var jsonbody = json.decode(response.body);
+      for (var i = 0; i < jsonbody.length; i++) {
+        var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
 
-    for (var i = 0; i < jsonbody.length; i++) {
-      var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
-
-      DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
-      var dateuploaded = timeago.format(dateuploade);
-      Item item = Item(
-        itemid: jsonbody[i]['_id']['\$oid'],
-        date: dateuploaded,
-        name: jsonbody[i]['name'],
-        condition: jsonbody[i]['condition'] == null
-            ? 'Like New'
-            : jsonbody[i]['condition'],
-        username: jsonbody[i]['username'],
-        image: jsonbody[i]['image'],
-        userid: jsonbody[i]['userid'],
-        likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
-        comments: jsonbody[i]['comments'] == null
-            ? 0
-            : jsonbody[i]['comments'].length,
-        price: jsonbody[i]['price'].toString(),
-        category: jsonbody[i]['category'],
-        sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
+        Item item = Item(
+          itemid: jsonbody[i]['_id']['\$oid'],
+          date: dateuploaded,
+          name: jsonbody[i]['name'],
+          condition: jsonbody[i]['condition'] == null
+              ? 'Like New'
+              : jsonbody[i]['condition'],
+          username: jsonbody[i]['username'],
+          image: jsonbody[i]['image'],
+          userid: jsonbody[i]['userid'],
+          likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+          comments: jsonbody[i]['comments'] == null
+              ? 0
+              : jsonbody[i]['comments'].length,
+          price: jsonbody[i]['price'].toString(),
+          category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+        );
+        itemsgrid.add(item);
+      }
+      if (mounted)
+        setState(() {
+          loading = false;
+          alive = true;
+          itemsgrid = itemsgrid;
+        });
+    } else if (response.statusCode == 1020) {
+      Navigator.pushReplacement(
+        context,
+        CupertinoPageRoute(builder: (context) => NoAvailable()),
       );
-      itemsgrid.add(item);
     }
-    if (mounted)
-      setState(() {
-        loading = false;
-        alive = true;
-        itemsgrid = itemsgrid;
-      });
 
     return itemsgrid;
   }
@@ -3369,42 +3384,47 @@ class _DiscoverState extends State<Discover>
         position.latitude.toString();
 
     final response = await http.get(url);
-    print(url);
 
-    var jsonbody = json.decode(response.body);
+    if (response.statusCode == 200) {
+      var jsonbody = json.decode(response.body);
 
-    for (var i = 0; i < jsonbody.length; i++) {
-      var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+      for (var i = 0; i < jsonbody.length; i++) {
+        var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
 
-      DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
-      var dateuploaded = timeago.format(dateuploade);
-      Item item = Item(
-        itemid: jsonbody[i]['_id']['\$oid'],
-        date: dateuploaded,
-        name: jsonbody[i]['name'],
-        condition: jsonbody[i]['condition'] == null
-            ? 'Like New'
-            : jsonbody[i]['condition'],
-        username: jsonbody[i]['username'],
-        image: jsonbody[i]['image'],
-        userid: jsonbody[i]['userid'],
-        likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
-        comments: jsonbody[i]['comments'] == null
-            ? 0
-            : jsonbody[i]['comments'].length,
-        price: jsonbody[i]['price'].toString(),
-        category: jsonbody[i]['category'],
-        sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
+        Item item = Item(
+          itemid: jsonbody[i]['_id']['\$oid'],
+          date: dateuploaded,
+          name: jsonbody[i]['name'],
+          condition: jsonbody[i]['condition'] == null
+              ? 'Like New'
+              : jsonbody[i]['condition'],
+          username: jsonbody[i]['username'],
+          image: jsonbody[i]['image'],
+          userid: jsonbody[i]['userid'],
+          likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+          comments: jsonbody[i]['comments'] == null
+              ? 0
+              : jsonbody[i]['comments'].length,
+          price: jsonbody[i]['price'].toString(),
+          category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+        );
+        nearmeItems.add(item);
+      }
+
+      if (mounted) {
+        setState(() {
+          nearmeItems = nearmeItems;
+        });
+      }
+    } else if (response.statusCode == 1020) {
+      Navigator.pushReplacement(
+        context,
+        CupertinoPageRoute(builder: (context) => NoAvailable()),
       );
-      nearmeItems.add(item);
     }
-
-    if (mounted) {
-      setState(() {
-        nearmeItems = nearmeItems;
-      });
-    }
-
     return nearmeItems;
   }
 
