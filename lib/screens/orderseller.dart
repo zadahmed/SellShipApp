@@ -1731,53 +1731,53 @@ class _OrderSellerState extends State<OrderSeller> {
                                                     27, 44, 64, 1)),
                                           )),
                                         ]))),
-                            Padding(
-                                padding: EdgeInsets.only(
-                                  bottom: 10,
-                                  top: 5,
-                                ),
-                                child: Container(
-                                    padding: EdgeInsets.all(20),
-                                    width: MediaQuery.of(context).size.width,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color:
-                                            Color.fromRGBO(27, 44, 64, 0.03)),
-                                    child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'Delivered to:',
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 16,
-                                                color: Colors.blueGrey),
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Container(
-                                              child: Text(
-                                            addressline1 +
-                                                '\n' +
-                                                addressline2 +
-                                                '\n' +
-                                                area +
-                                                '\n' +
-                                                city +
-                                                '\n' +
-                                                country,
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                                color: Color.fromRGBO(
-                                                    27, 44, 64, 1)),
-                                          )),
-                                        ])))
+                            // Padding(
+                            //     padding: EdgeInsets.only(
+                            //       bottom: 10,
+                            //       top: 5,
+                            //     ),
+                            //     child: Container(
+                            //         padding: EdgeInsets.all(20),
+                            //         width: MediaQuery.of(context).size.width,
+                            //         decoration: BoxDecoration(
+                            //             borderRadius: BorderRadius.circular(15),
+                            //             color:
+                            //                 Color.fromRGBO(27, 44, 64, 0.03)),
+                            //         child: Column(
+                            //             mainAxisAlignment:
+                            //                 MainAxisAlignment.start,
+                            //             crossAxisAlignment:
+                            //                 CrossAxisAlignment.start,
+                            //             children: [
+                            //               Text(
+                            //                 'Delivered to:',
+                            //                 style: TextStyle(
+                            //                     fontFamily: 'Helvetica',
+                            //                     fontSize: 16,
+                            //                     color: Colors.blueGrey),
+                            //               ),
+                            //               SizedBox(
+                            //                 height: 10,
+                            //               ),
+                            //               Container(
+                            //                   child: Text(
+                            //                 addressline1 +
+                            //                     '\n' +
+                            //                     addressline2 +
+                            //                     '\n' +
+                            //                     area +
+                            //                     '\n' +
+                            //                     city +
+                            //                     '\n' +
+                            //                     country,
+                            //                 style: TextStyle(
+                            //                     fontFamily: 'Helvetica',
+                            //                     fontSize: 16,
+                            //                     fontWeight: FontWeight.bold,
+                            //                     color: Color.fromRGBO(
+                            //                         27, 44, 64, 1)),
+                            //               )),
+                            //             ])))
                           ])),
                 ),
                 Padding(

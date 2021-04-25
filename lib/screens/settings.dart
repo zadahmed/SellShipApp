@@ -35,6 +35,7 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/screens/editprofile.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:shimmer/shimmer.dart';
@@ -296,36 +297,36 @@ class _SettingsState extends State<Settings> {
                     ),
                   )
                 : Container(),
-            Container(
-              color: Colors.white,
-              child: ListTile(
-                leading: Icon(
-                  Icons.business,
-                  color: Colors.deepOrange,
-                ),
-                trailing: Icon(
-                  Icons.chevron_right,
-                  size: 16,
-                  color: Colors.deepOrange,
-                ),
-                title: Text(
-                  'Create a Store',
-                  style: TextStyle(
-                    fontFamily: 'Helvetica',
-                    fontSize: 16.0,
-                  ),
-                ),
-                onTap: () {
-                  //TODO Send them to subscription based on Tier
-
-                  //
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => CreateStoreName()),
-                  );
-                },
-              ),
-            ),
+            // Container(
+            //   color: Colors.white,
+            //   child: ListTile(
+            //     leading: Icon(
+            //       Icons.business,
+            //       color: Colors.deepOrange,
+            //     ),
+            //     trailing: Icon(
+            //       Icons.chevron_right,
+            //       size: 16,
+            //       color: Colors.deepOrange,
+            //     ),
+            //     title: Text(
+            //       'Create a Store',
+            //       style: TextStyle(
+            //         fontFamily: 'Helvetica',
+            //         fontSize: 16.0,
+            //       ),
+            //     ),
+            //     onTap: () {
+            //       //TODO Send them to subscription based on Tier
+            //
+            //       //
+            //       Navigator.push(
+            //         context,
+            //         MaterialPageRoute(builder: (context) => CreateStoreName()),
+            //       );
+            //     },
+            //   ),
+            // ),
             Container(
               color: Colors.white,
               child: ListTile(
@@ -349,6 +350,33 @@ class _SettingsState extends State<Settings> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => HelpCentre()),
+                  );
+                },
+              ),
+            ),
+            Container(
+              color: Colors.white,
+              child: ListTile(
+                leading: Icon(
+                  Feather.star,
+                  color: Colors.deepOrange,
+                ),
+                trailing: Icon(
+                  Icons.chevron_right,
+                  size: 16,
+                  color: Colors.deepOrange,
+                ),
+                title: Text(
+                  'Review Us',
+                  style: TextStyle(
+                    fontFamily: 'Helvetica',
+                    fontSize: 16.0,
+                  ),
+                ),
+                onTap: () {
+                  final InAppReview _inAppReview = InAppReview.instance;
+                  _inAppReview.openStoreListing(
+                    appStoreId: '1550513300',
                   );
                 },
               ),

@@ -2778,9 +2778,9 @@ class _ProfilePageState extends State<ProfilePage>
                                   },
                                   child: storeslist[index].approved == true
                                       ? Container(
-                                          height: 100,
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 15, vertical: 5),
+                                          height: 225,
+                                          // padding: EdgeInsets.symmetric(
+                                          //     horizontal: 15, vertical: 5),
                                           decoration: BoxDecoration(
                                               color: Colors.white,
                                               boxShadow: [
@@ -2793,161 +2793,171 @@ class _ProfilePageState extends State<ProfilePage>
                                               ],
                                               borderRadius:
                                                   BorderRadius.circular(5)),
-                                          child: Row(
+                                          child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
+                                              Container(
+                                                height: 175,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                    child: storeslist[index]
+                                                            .storelogo
+                                                            .isNotEmpty
+                                                        ? Hero(
+                                                            tag:
+                                                                'store${storeslist[index].storeid}',
+                                                            child:
+                                                                CachedNetworkImage(
+                                                              imageUrl:
+                                                                  storeslist[
+                                                                          index]
+                                                                      .storelogo,
+                                                              height: 200,
+                                                              width: 300,
+                                                              fadeInDuration:
+                                                                  Duration(
+                                                                      microseconds:
+                                                                          5),
+                                                              fit: BoxFit.cover,
+                                                              placeholder: (context,
+                                                                      url) =>
+                                                                  SpinKitDoubleBounce(
+                                                                      color: Colors
+                                                                          .deepOrange),
+                                                              errorWidget: (context,
+                                                                      url,
+                                                                      error) =>
+                                                                  Icon(Icons
+                                                                      .error),
+                                                            ),
+                                                          )
+                                                        : SpinKitFadingCircle(
+                                                            color: Colors
+                                                                .deepOrange,
+                                                          )),
+                                              ),
                                               Row(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.center,
                                                   mainAxisAlignment:
-                                                      MainAxisAlignment.start,
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   children: [
-                                                    InkWell(
-                                                      onTap: () {},
-                                                      child: Container(
-                                                        height: 80,
-                                                        width: 80,
-                                                        child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        5),
-                                                            child: storeslist[
-                                                                        index]
-                                                                    .storelogo
-                                                                    .isNotEmpty
-                                                                ? Hero(
-                                                                    tag:
-                                                                        'store${storeslist[index].storeid}',
-                                                                    child:
-                                                                        CachedNetworkImage(
-                                                                      imageUrl:
-                                                                          storeslist[index]
-                                                                              .storelogo,
-                                                                      height:
-                                                                          200,
-                                                                      width:
-                                                                          300,
-                                                                      fadeInDuration:
-                                                                          Duration(
-                                                                              microseconds: 5),
-                                                                      fit: BoxFit
-                                                                          .cover,
-                                                                      placeholder: (context,
-                                                                              url) =>
-                                                                          SpinKitDoubleBounce(
-                                                                              color: Colors.deepOrange),
-                                                                      errorWidget: (context,
-                                                                              url,
-                                                                              error) =>
-                                                                          Icon(Icons
-                                                                              .error),
-                                                                    ),
-                                                                  )
-                                                                : SpinKitFadingCircle(
-                                                                    color: Colors
-                                                                        .deepOrange,
-                                                                  )),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Container(
-                                                          height: 25,
-                                                          width: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width /
-                                                                  3 -
-                                                              10,
-                                                          child: Text(
+                                                    Padding(
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Container(
+                                                            height: 20,
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width /
+                                                                2,
+                                                            child: Text(
+                                                              storeslist[index]
+                                                                  .storename,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .start,
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'Helvetica',
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                      .black),
+                                                            ),
+                                                          ),
+                                                          Text(
                                                             storeslist[index]
-                                                                .storename,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            textAlign:
-                                                                TextAlign.start,
+                                                                .storecategory,
+                                                            textAlign: TextAlign
+                                                                .center,
                                                             style: TextStyle(
                                                                 fontFamily:
                                                                     'Helvetica',
-                                                                fontSize: 16,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
+                                                                fontSize: 14.0,
                                                                 color: Colors
                                                                     .black),
                                                           ),
-                                                        ),
-                                                        Text(
-                                                          storeslist[index]
-                                                              .storecategory,
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'Helvetica',
-                                                              fontSize: 14.0,
-                                                              color:
-                                                                  Colors.black),
-                                                        ),
-                                                      ],
+                                                          SizedBox(
+                                                            height: 10,
+                                                          )
+                                                        ],
+                                                      ),
+                                                      padding: EdgeInsets.only(
+                                                        left: 10,
+                                                      ),
                                                     ),
-                                                  ]),
-                                              Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                  children: [
                                                     Row(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                            storeslist[index]
-                                                                .views,
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    'Helvetica',
-                                                                fontSize: 12,
-                                                                color: Colors
-                                                                    .grey)),
-                                                        SizedBox(
-                                                          width: 2,
-                                                        ),
-                                                        Icon(
-                                                          Icons
-                                                              .remove_red_eye_outlined,
-                                                          color: Colors.grey,
-                                                          size: 12,
-                                                        ),
-                                                        SizedBox(
-                                                          width: 5,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Icon(
-                                                      Feather.chevron_right,
-                                                      color: Colors.grey,
-                                                    )
-                                                  ])
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .end,
+                                                        children: [
+                                                          Row(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .center,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
+                                                                  storeslist[
+                                                                          index]
+                                                                      .views,
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      fontSize:
+                                                                          12,
+                                                                      color: Colors
+                                                                          .grey)),
+                                                              SizedBox(
+                                                                width: 2,
+                                                              ),
+                                                              Icon(
+                                                                Icons
+                                                                    .remove_red_eye_outlined,
+                                                                color:
+                                                                    Colors.grey,
+                                                                size: 12,
+                                                              ),
+                                                              SizedBox(
+                                                                width: 5,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          Icon(
+                                                            Feather
+                                                                .chevron_right,
+                                                            size: 18,
+                                                            color: Colors.grey,
+                                                          )
+                                                        ])
+                                                  ]),
                                             ],
                                           ))
                                       : Stack(children: [

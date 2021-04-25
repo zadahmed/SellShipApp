@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:SellShip/Navigation/routes.dart';
+import 'package:SellShip/screens/animatedonboarding.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:SellShip/screens/starterscreen.dart';
@@ -75,7 +76,7 @@ class _MyAppState extends State<MyApp> {
       return OnboardingScreen();
     } else {
       if (seen == false) {
-        return OnboardingScreen();
+        return AnimatedOnboardingScreen();
       } else {
         return RootScreen();
       }

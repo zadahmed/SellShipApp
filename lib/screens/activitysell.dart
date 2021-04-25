@@ -234,28 +234,23 @@ class _ActivitySellState extends State<ActivitySell>
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Container(
-            width: 120,
-            height: 27,
+            width: 155,
+            height: 25,
             padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             decoration: BoxDecoration(
                 color: Color.fromRGBO(69, 80, 163, 1),
-                borderRadius: BorderRadius.circular(20)),
+                borderRadius: BorderRadius.circular(5)),
             child: Center(
                 child: Text(
               'New Offer',
               textAlign: TextAlign.center,
               style: TextStyle(
-                  fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Helvetica',
+                  fontSize: 14.0,
+                  color: Colors.white),
             )),
           ),
-          SizedBox(
-            height: 10,
-          ),
-          Icon(
-            Icons.chevron_right,
-            size: 20,
-            color: Colors.blueGrey,
-          )
         ],
       );
     } else if (offerstage == -1) {
@@ -264,27 +259,22 @@ class _ActivitySellState extends State<ActivitySell>
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Container(
-            width: 125,
-            height: 35,
-            padding: EdgeInsets.all(8),
+            width: 155,
+            height: 25,
+            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             decoration: BoxDecoration(
-                color: Colors.red, borderRadius: BorderRadius.circular(20)),
+                color: Colors.red, borderRadius: BorderRadius.circular(5)),
             child: Center(
                 child: Text(
               'Offer Declined',
               textAlign: TextAlign.center,
               style: TextStyle(
-                  fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Helvetica',
+                  fontSize: 14.0,
+                  color: Colors.white),
             )),
           ),
-          SizedBox(
-            height: 10,
-          ),
-          Icon(
-            Icons.chevron_right,
-            size: 20,
-            color: Colors.blueGrey,
-          )
         ],
       );
     } else if (offerstage == 2) {
@@ -293,27 +283,22 @@ class _ActivitySellState extends State<ActivitySell>
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Container(
-            width: 120,
-            height: 45,
+            width: 155,
+            height: 25,
             padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             decoration: BoxDecoration(
-                color: Colors.amber, borderRadius: BorderRadius.circular(20)),
+                color: Colors.amber, borderRadius: BorderRadius.circular(5)),
             child: Center(
                 child: Text(
               'Payment Pending',
               textAlign: TextAlign.center,
               style: TextStyle(
-                  fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Helvetica',
+                  fontSize: 14.0,
+                  color: Colors.white),
             )),
           ),
-          SizedBox(
-            height: 10,
-          ),
-          Icon(
-            Icons.chevron_right,
-            size: 20,
-            color: Colors.blueGrey,
-          )
         ],
       );
     } else if (offerstage == 1) {
@@ -322,27 +307,22 @@ class _ActivitySellState extends State<ActivitySell>
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Container(
-            width: 120,
-            height: 47,
+            width: 165,
+            height: 25,
             padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             decoration: BoxDecoration(
                 color: Color.fromRGBO(239, 190, 125, 1),
-                borderRadius: BorderRadius.circular(20)),
+                borderRadius: BorderRadius.circular(5)),
             child: Text(
               'Counteroffer Pending',
               textAlign: TextAlign.center,
               style: TextStyle(
-                  fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Helvetica',
+                  fontSize: 14.0,
+                  color: Colors.white),
             ),
           ),
-          SizedBox(
-            height: 10,
-          ),
-          Icon(
-            Icons.chevron_right,
-            size: 20,
-            color: Colors.blueGrey,
-          )
         ],
       );
     } else if (offerstage == 3) {
@@ -351,29 +331,41 @@ class _ActivitySellState extends State<ActivitySell>
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Container(
-            width: 120,
-            height: 47,
+            width: 155,
+            height: 25,
             padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             decoration: BoxDecoration(
                 color: Colors.deepOrange,
-                borderRadius: BorderRadius.circular(20)),
+                borderRadius: BorderRadius.circular(5)),
             child: Text(
               'Payment Completed',
               textAlign: TextAlign.center,
               style: TextStyle(
-                  fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Helvetica',
+                  fontSize: 14.0,
+                  color: Colors.white),
             ),
           ),
-          SizedBox(
-            height: 10,
-          ),
-          Icon(
-            Icons.chevron_right,
-            size: 20,
-            color: Colors.blueGrey,
-          )
         ],
       );
+    } else if (offerstage == 5) {
+      return Container(
+          width: 155,
+          height: 25,
+          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+          decoration: BoxDecoration(
+              color: Colors.black, borderRadius: BorderRadius.circular(5)),
+          child: Center(
+              child: Text(
+            'Order Completed',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Helvetica',
+                fontSize: 14.0,
+                color: Colors.white),
+          )));
     } else {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -1028,13 +1020,12 @@ class _ActivitySellState extends State<ActivitySell>
                                                                   .start,
                                                           children: [
                                                             Container(
-                                                              height: 25,
+                                                              height: 20,
                                                               width: MediaQuery.of(
-                                                                              context)
-                                                                          .size
-                                                                          .width /
-                                                                      3 -
-                                                                  10,
+                                                                          context)
+                                                                      .size
+                                                                      .width /
+                                                                  2,
                                                               child: Text(
                                                                 sellingItem[
                                                                         index]
@@ -1065,12 +1056,12 @@ class _ActivitySellState extends State<ActivitySell>
                                                               style: TextStyle(
                                                                   fontFamily:
                                                                       'Helvetica',
-                                                                  fontSize: 14,
+                                                                  fontSize: 12,
                                                                   color: Colors
                                                                       .grey),
                                                             ),
                                                             SizedBox(
-                                                              height: 5,
+                                                              height: 2,
                                                             ),
                                                             Text(
                                                               'Offer ' +
@@ -1086,10 +1077,26 @@ class _ActivitySellState extends State<ActivitySell>
                                                                   fontFamily:
                                                                       'Helvetica',
                                                                   fontSize:
-                                                                      14.0,
+                                                                      12.0,
                                                                   color: Colors
                                                                       .black),
-                                                            )
+                                                            ),
+                                                            SizedBox(
+                                                              height: 2,
+                                                            ),
+                                                            offerstatusseller(
+                                                              context,
+                                                              sellingItem[index]
+                                                                  .offerstage,
+                                                              sellingItem[index]
+                                                                  .itemid,
+                                                              sellingItem[index]
+                                                                  .buyerid,
+                                                              sellingItem[index]
+                                                                  .sellerid,
+                                                              sellingItem[index]
+                                                                  .price,
+                                                            ),
                                                           ],
                                                         ),
                                                       ]),
@@ -1100,19 +1107,21 @@ class _ActivitySellState extends State<ActivitySell>
                                                       mainAxisAlignment:
                                                           MainAxisAlignment.end,
                                                       children: [
-                                                        offerstatusseller(
-                                                          context,
-                                                          sellingItem[index]
-                                                              .offerstage,
-                                                          sellingItem[index]
-                                                              .itemid,
-                                                          sellingItem[index]
-                                                              .buyerid,
-                                                          sellingItem[index]
-                                                              .sellerid,
-                                                          sellingItem[index]
-                                                              .price,
-                                                        ),
+                                                        Row(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .end,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .end,
+                                                            children: [
+                                                              Icon(
+                                                                Icons
+                                                                    .chevron_right,
+                                                                color:
+                                                                    Colors.grey,
+                                                              )
+                                                            ])
                                                       ])
                                                 ],
                                               ))))

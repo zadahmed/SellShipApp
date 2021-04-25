@@ -79,7 +79,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         Align(
                             alignment: Alignment.topCenter,
                             child: Container(
-                                height: 350,
+                                height: 250,
                                 width: MediaQuery.of(context).size.width,
                                 child: SvgPicture.asset(
                                   'assets/LoginBG.svg',
@@ -89,7 +89,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         Align(
                             alignment: Alignment.topLeft,
                             child: Padding(
-                                padding: EdgeInsets.only(left: 35, top: 150),
+                                padding: EdgeInsets.only(left: 35, top: 120),
                                 child: Text(
                                   'Sign Up',
                                   style: TextStyle(
@@ -105,15 +105,13 @@ class _SignUpPageState extends State<SignUpPage> {
               Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
-                    height: 600,
+                    height: MediaQuery.of(context).size.height / 1.3,
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(20),
                             topRight: Radius.circular(20))),
                     child: ListView(
-                      // mainAxisAlignment: MainAxisAlignment.start,
-                      // crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Padding(
                           padding: EdgeInsets.all(20),
@@ -122,8 +120,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 30, top: 20, right: 30),
+                                  padding: EdgeInsets.only(left: 30, right: 30),
                                   child: Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,

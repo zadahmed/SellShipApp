@@ -332,7 +332,7 @@ class _RootScreenState extends State<RootScreen> {
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white.withOpacity(0.85),
+        backgroundColor: Colors.white,
         selectedItemColor: Color.fromRGBO(28, 45, 65, 1),
         unselectedItemColor: Colors.grey[400],
         showSelectedLabels: false,

@@ -22,6 +22,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.41.2"
+  animated_onboarding:
+    dependency: "direct main"
+    description:
+      name: animated_onboarding
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2"
   app_settings:
     dependency: "direct main"
     description:

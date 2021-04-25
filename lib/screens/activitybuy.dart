@@ -223,87 +223,92 @@ class _ActivityBuyState extends State<ActivityBuy>
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Container(
-            width: 125,
-            height: 35,
-            padding: EdgeInsets.all(8),
+            width: 155,
+            height: 25,
+            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             decoration: BoxDecoration(
                 color: Color.fromRGBO(69, 80, 163, 1),
-                borderRadius: BorderRadius.circular(10)),
+                borderRadius: BorderRadius.circular(5)),
             child: Center(
                 child: Text(
               'Pending Offer',
               textAlign: TextAlign.center,
               style: TextStyle(
-                  fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Helvetica',
+                  fontSize: 14.0,
+                  color: Colors.white),
             )),
           ),
-          SizedBox(
-            height: 5,
-          ),
-          Icon(
-            Icons.chevron_right,
-            size: 20,
-            color: Colors.blueGrey,
-          )
         ],
       );
     } else if (offerstage == 2) {
       return Container(
-          width: 120,
-          height: 27,
+          width: 155,
+          height: 25,
           padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
           decoration: BoxDecoration(
-              color: Colors.green, borderRadius: BorderRadius.circular(10)),
+              color: Colors.green, borderRadius: BorderRadius.circular(5)),
           child: Center(
               child: Text(
             'Pay',
             textAlign: TextAlign.center,
             style: TextStyle(
-                fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Helvetica',
+                fontSize: 14.0,
+                color: Colors.white),
           )));
     } else if (offerstage == 3) {
       return Container(
-          width: 120,
-          height: 47,
+          width: 155,
+          height: 25,
           padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
           decoration: BoxDecoration(
-              color: Colors.deepOrange,
-              borderRadius: BorderRadius.circular(10)),
+              color: Colors.deepOrange, borderRadius: BorderRadius.circular(5)),
           child: Center(
               child: Text(
             'Payment Completed',
             textAlign: TextAlign.center,
             style: TextStyle(
-                fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Helvetica',
+                fontSize: 14.0,
+                color: Colors.white),
           )));
     } else if (offerstage == 4) {
       return Container(
-          width: 120,
-          height: 47,
+          width: 155,
+          height: 25,
           padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
           decoration: BoxDecoration(
-              color: Colors.deepOrange,
-              borderRadius: BorderRadius.circular(10)),
+              color: Colors.deepOrange, borderRadius: BorderRadius.circular(5)),
           child: Center(
               child: Text(
             'Item Delivered',
             textAlign: TextAlign.center,
             style: TextStyle(
-                fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Helvetica',
+                fontSize: 14.0,
+                color: Colors.white),
           )));
     } else if (offerstage == 5) {
       return Container(
-          width: 120,
-          height: 47,
+          width: 155,
+          height: 25,
           padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
           decoration: BoxDecoration(
-              color: Colors.green, borderRadius: BorderRadius.circular(10)),
+              color: Colors.black, borderRadius: BorderRadius.circular(5)),
           child: Center(
               child: Text(
             'Order Completed',
             textAlign: TextAlign.center,
             style: TextStyle(
-                fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Helvetica',
+                fontSize: 14.0,
+                color: Colors.white),
           )));
     } else if (offerstage == -1) {
       return Column(
@@ -311,27 +316,22 @@ class _ActivityBuyState extends State<ActivityBuy>
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Container(
-            width: 125,
-            height: 35,
-            padding: EdgeInsets.all(8),
+            width: 155,
+            height: 25,
+            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             decoration: BoxDecoration(
-                color: Colors.red, borderRadius: BorderRadius.circular(10)),
+                color: Colors.red, borderRadius: BorderRadius.circular(5)),
             child: Center(
                 child: Text(
               'Offer Declined',
               textAlign: TextAlign.center,
               style: TextStyle(
-                  fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Helvetica',
+                  fontSize: 14.0,
+                  color: Colors.white),
             )),
           ),
-          SizedBox(
-            height: 5,
-          ),
-          Icon(
-            Icons.chevron_right,
-            size: 20,
-            color: Colors.blueGrey,
-          )
         ],
       );
     } else if (offerstage == 1) {
@@ -340,28 +340,23 @@ class _ActivityBuyState extends State<ActivityBuy>
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Container(
-            width: 125,
-            height: 35,
-            padding: EdgeInsets.all(8),
+            width: 155,
+            height: 25,
+            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             decoration: BoxDecoration(
                 color: Color.fromRGBO(69, 80, 163, 1),
-                borderRadius: BorderRadius.circular(10)),
+                borderRadius: BorderRadius.circular(5)),
             child: Center(
                 child: Text(
               'Counter Offer',
               textAlign: TextAlign.center,
               style: TextStyle(
-                  fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Helvetica',
+                  fontSize: 14.0,
+                  color: Colors.white),
             )),
           ),
-          SizedBox(
-            height: 5,
-          ),
-          Icon(
-            Icons.chevron_right,
-            size: 20,
-            color: Colors.blueGrey,
-          )
         ],
       );
     }
@@ -994,13 +989,12 @@ class _ActivityBuyState extends State<ActivityBuy>
                                                                   .start,
                                                           children: [
                                                             Container(
-                                                              height: 25,
+                                                              height: 20,
                                                               width: MediaQuery.of(
-                                                                              context)
-                                                                          .size
-                                                                          .width /
-                                                                      3 -
-                                                                  10,
+                                                                          context)
+                                                                      .size
+                                                                      .width /
+                                                                  2,
                                                               child: Text(
                                                                 buyingItem[
                                                                         index]
@@ -1031,12 +1025,12 @@ class _ActivityBuyState extends State<ActivityBuy>
                                                               style: TextStyle(
                                                                   fontFamily:
                                                                       'Helvetica',
-                                                                  fontSize: 14,
+                                                                  fontSize: 12,
                                                                   color: Colors
                                                                       .grey),
                                                             ),
                                                             SizedBox(
-                                                              height: 5,
+                                                              height: 2,
                                                             ),
                                                             Text(
                                                               'Offer ' +
@@ -1052,10 +1046,26 @@ class _ActivityBuyState extends State<ActivityBuy>
                                                                   fontFamily:
                                                                       'Helvetica',
                                                                   fontSize:
-                                                                      14.0,
+                                                                      12.0,
                                                                   color: Colors
                                                                       .black),
-                                                            )
+                                                            ),
+                                                            SizedBox(
+                                                              height: 2,
+                                                            ),
+                                                            offerstatus(
+                                                              context,
+                                                              buyingItem[index]
+                                                                  .offerstage,
+                                                              buyingItem[index]
+                                                                  .itemid,
+                                                              buyingItem[index]
+                                                                  .buyerid,
+                                                              buyingItem[index]
+                                                                  .sellerid,
+                                                              buyingItem[index]
+                                                                  .price,
+                                                            ),
                                                           ],
                                                         ),
                                                       ]),
@@ -1066,19 +1076,10 @@ class _ActivityBuyState extends State<ActivityBuy>
                                                       mainAxisAlignment:
                                                           MainAxisAlignment.end,
                                                       children: [
-                                                        offerstatus(
-                                                          context,
-                                                          buyingItem[index]
-                                                              .offerstage,
-                                                          buyingItem[index]
-                                                              .itemid,
-                                                          buyingItem[index]
-                                                              .buyerid,
-                                                          buyingItem[index]
-                                                              .sellerid,
-                                                          buyingItem[index]
-                                                              .price,
-                                                        ),
+                                                        Icon(
+                                                          Icons.chevron_right,
+                                                          color: Colors.grey,
+                                                        )
                                                       ])
                                                 ],
                                               ))))

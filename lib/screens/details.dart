@@ -9,6 +9,7 @@ import 'package:SellShip/screens/chatpageview.dart';
 import 'package:SellShip/screens/checkout.dart';
 import 'package:SellShip/screens/comments.dart';
 import 'package:SellShip/screens/condition.dart';
+import 'package:SellShip/screens/hashtags.dart';
 import 'package:SellShip/screens/onboardingbottom.dart';
 import 'package:SellShip/screens/profile.dart';
 import 'package:SellShip/screens/rootscreen.dart';
@@ -716,6 +717,7 @@ class _DetailsState extends State<Details> {
         freedelivery: freedel,
         useremail: jsonbody[0]['useremail'],
         usernumber: jsonbody[0]['usernumber'],
+        tags: jsonbody[0]['tags'],
         userid: jsonbody[0]['userid'],
         latitude: jsonbody[0]['latitude'],
         comments: jsonbody[0]['comments'] == null
@@ -1320,19 +1322,6 @@ class _DetailsState extends State<Details> {
                                       ),
                                     ],
                                   )),
-                              // Padding(
-                              //   padding: EdgeInsets.only(
-                              //       left: 15, bottom: 5, top: 2),
-                              //   child: Text(
-                              //     '$dateuploaded',
-                              //     textAlign: TextAlign.left,
-                              //     style: TextStyle(
-                              //       fontFamily: 'Helvetica',
-                              //       fontSize: 14,
-                              //       color: Colors.grey,
-                              //     ),
-                              //   ),
-                              // ),
                               newItem.size.isNotEmpty
                                   ? Padding(
                                       padding:
@@ -1414,6 +1403,64 @@ class _DetailsState extends State<Details> {
                                             },
                                           )),
                                     )
+                                  : Container(),
+                              newItem.freedelivery == true
+                                  ? Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 15,
+                                          bottom: 5,
+                                          top: 10,
+                                          right: 15),
+                                      child: Container(
+                                          padding: EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(20)),
+                                          ),
+                                          child: Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: ListTile(
+                                                onTap: () {},
+                                                leading: Container(
+                                                  height: 120,
+                                                  width: 60,
+                                                  decoration: BoxDecoration(
+                                                      color: Color.fromRGBO(
+                                                          255, 115, 0, 0.1),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15)),
+                                                  child: Icon(
+                                                    FontAwesomeIcons
+                                                        .shippingFast,
+                                                    size: 30,
+                                                    color: Color.fromRGBO(
+                                                        255, 115, 0, 1),
+                                                  ),
+                                                ),
+                                                title: Padding(
+                                                  padding: EdgeInsets.only(
+                                                      bottom: 5),
+                                                  child: Text(
+                                                    'Free Delivery',
+                                                    style: TextStyle(
+                                                        fontFamily: 'Helvetica',
+                                                        fontSize: 16,
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                                subtitle: Text(
+                                                  'This item is delivered to your home for free.',
+                                                  style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 14,
+                                                    color: Colors.blueGrey,
+                                                  ),
+                                                ),
+                                              ))))
                                   : Container(),
                               Padding(
                                 padding: EdgeInsets.only(
@@ -2030,27 +2077,27 @@ class _DetailsState extends State<Details> {
                                                               borderColor:
                                                                   Colors.grey,
                                                               spacing: 0.0),
-                                                          SizedBox(
-                                                            width: 5,
-                                                          ),
-                                                          Text(
-                                                            reviewrating
-                                                                .toStringAsFixed(
-                                                                    1),
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    'Helvetica',
-                                                                fontSize: 16,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                color: Color
-                                                                    .fromRGBO(
-                                                                        27,
-                                                                        44,
-                                                                        64,
-                                                                        1)),
-                                                          ),
+                                                          // SizedBox(
+                                                          //   width: 5,
+                                                          // ),
+                                                          // Text(
+                                                          //   reviewrating
+                                                          //       .toStringAsFixed(
+                                                          //           1),
+                                                          //   style: TextStyle(
+                                                          //       fontFamily:
+                                                          //           'Helvetica',
+                                                          //       fontSize: 16,
+                                                          //       fontWeight:
+                                                          //           FontWeight
+                                                          //               .bold,
+                                                          //       color: Color
+                                                          //           .fromRGBO(
+                                                          //               27,
+                                                          //               44,
+                                                          //               64,
+                                                          //               1)),
+                                                          // ),
                                                         ],
                                                       ),
                                                       Text(
@@ -2083,7 +2130,71 @@ class _DetailsState extends State<Details> {
                                           ),
                                         ],
                                       ))),
-
+                              Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 15, bottom: 5, top: 10, right: 15),
+                                  child: Container(
+                                      height: 100,
+                                      width: MediaQuery.of(context).size.width,
+                                      padding: EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(20)),
+                                      ),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            height: 2,
+                                          ),
+                                          Text(
+                                            'Tags',
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w700),
+                                          ),
+                                          Expanded(
+                                            child: ListView.builder(
+                                              itemCount: newItem.tags.length,
+                                              scrollDirection: Axis.horizontal,
+                                              itemBuilder:
+                                                  (BuildContext context,
+                                                      int index) {
+                                                return Padding(
+                                                    padding: EdgeInsets.all(2),
+                                                    child: ChoiceChip(
+                                                      label: Text(
+                                                          newItem.tags[index]),
+                                                      selected: false,
+                                                      onSelected: (ind) {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                      Hashtags(
+                                                                        hashtag:
+                                                                            newItem.tags[index],
+                                                                      )),
+                                                        );
+                                                      },
+                                                      backgroundColor:
+                                                          Colors.grey.shade100,
+                                                      labelStyle: TextStyle(
+                                                          color: Colors.black
+                                                              .withOpacity(
+                                                                  0.4)),
+                                                    ));
+                                              },
+                                            ),
+                                          )
+                                        ],
+                                      ))),
                               Container(
                                 height: 320,
                                 child: DefaultTabController(
@@ -2102,11 +2213,11 @@ class _DetailsState extends State<Details> {
                                             fontWeight: FontWeight.bold,
                                             fontFamily: 'Helvetica'),
                                         tabs: <Widget>[
-                                          Tab(text: 'Description'),
                                           Tab(
                                               text:
                                                   newItem.comments.toString() +
                                                       ' Comments'),
+                                          Tab(text: 'Description'),
                                         ],
                                       ),
                                       body: Container(
@@ -2121,6 +2232,8 @@ class _DetailsState extends State<Details> {
                                                       Radius.circular(20))),
                                           child: TabBarView(
                                             children: [
+                                              CommentsDetail(
+                                                  itemid: newItem.itemid),
                                               Container(
                                                 height: 300,
                                                 width: MediaQuery.of(context)
@@ -2160,8 +2273,6 @@ class _DetailsState extends State<Details> {
                                                   ],
                                                 ),
                                               ),
-                                              CommentsDetail(
-                                                  itemid: newItem.itemid)
                                             ],
                                           )),
                                     )),

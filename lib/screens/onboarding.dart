@@ -50,19 +50,27 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             child: VideoPlayer(_controller)),
-        Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            color: Colors.black.withOpacity(0.2)),
         Align(
           alignment: Alignment.topCenter,
           child: Padding(
-            padding: EdgeInsets.only(top: 10),
-            child: Image.asset(
-              'assets/logo.png',
-              width: 300,
-            ),
-          ),
+              padding: EdgeInsets.only(top: 10),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    radius: 30,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(30),
+                      child: Image.asset('assets/logonew.png'),
+                    ),
+                  ),
+                  Image.asset(
+                    'assets/logo.png',
+                    width: 250,
+                  ),
+                ],
+              )),
         ),
         Align(
           alignment: Alignment.bottomCenter,
@@ -93,12 +101,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               borderRadius: const BorderRadius.all(
                                 Radius.circular(25.0),
                               ),
-                              boxShadow: <BoxShadow>[
-                                BoxShadow(
-                                    color: Colors.white.withOpacity(0.4),
-                                    offset: const Offset(1.1, 1.1),
-                                    blurRadius: 10.0),
-                              ],
                             ),
                             child: Center(
                               child: Text(
@@ -134,12 +136,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               borderRadius: const BorderRadius.all(
                                 Radius.circular(25.0),
                               ),
-                              boxShadow: <BoxShadow>[
-                                BoxShadow(
-                                    color: Colors.deepOrange.withOpacity(0.4),
-                                    offset: const Offset(1.1, 1.1),
-                                    blurRadius: 10.0),
-                              ],
                             ),
                             child: Center(
                               child: Text(
@@ -177,7 +173,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         'Just Exploring',
                         textAlign: TextAlign.left,
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
                           fontSize: 14,
                           letterSpacing: 0.0,
                           color: Colors.white,

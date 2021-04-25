@@ -91,6 +91,7 @@ dependencies:
   stripe_payment: ^1.0.11
   stripe_sdk: 3.2.0
   video_player: 1.0.1
+  animated_onboarding: ^0.0.2
 
 
 
@@ -163,6 +164,7 @@ flutter:
     - assets/error404.png
     - assets/chatbg.png
     - assets/onboardingvideo.MOV
+    - assets/onboarding/
 
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg

@@ -13,6 +13,7 @@ import 'package:auth_buttons/auth_buttons.dart';
 import 'package:firebase_auth_oauth/firebase_auth_oauth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -318,7 +319,7 @@ class _LoginPageState extends State<LoginPage> {
                         Align(
                             alignment: Alignment.topCenter,
                             child: Container(
-                                height: 350,
+                                height: 280,
                                 width: MediaQuery.of(context).size.width,
                                 child: SvgPicture.asset(
                                   'assets/LoginBG.svg',
@@ -328,7 +329,7 @@ class _LoginPageState extends State<LoginPage> {
                         Align(
                             alignment: Alignment.topLeft,
                             child: Padding(
-                                padding: EdgeInsets.only(left: 35, top: 150),
+                                padding: EdgeInsets.only(left: 35, top: 120),
                                 child: Text(
                                   'Welcome\nBack',
                                   style: TextStyle(
@@ -344,15 +345,15 @@ class _LoginPageState extends State<LoginPage> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                  height: MediaQuery.of(context).size.height / 2 + 50,
+                  height: MediaQuery.of(context).size.height / 1.4,
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(20),
                           topRight: Radius.circular(20))),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                  child: ListView(
+                    // mainAxisAlignment: MainAxisAlignment.start,
+                    // crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       SizedBox(
                         height: 20,
@@ -817,6 +818,22 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                 ),
+              ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: FadeAnimation(
+                    1,
+                    Padding(
+                      padding: EdgeInsets.only(top: 50, left: 20),
+                      child: InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Icon(
+                            Feather.arrow_left,
+                            color: Colors.white,
+                          )),
+                    )),
               ),
             ],
           )),
