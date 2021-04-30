@@ -335,9 +335,8 @@ class _RootScreenState extends State<RootScreen> {
         backgroundColor: Colors.white,
         selectedItemColor: Color.fromRGBO(28, 45, 65, 1),
         unselectedItemColor: Colors.grey[400],
-        showSelectedLabels: false,
-        selectedFontSize: 5,
-        unselectedFontSize: 5,
+        selectedFontSize: 13,
+        unselectedFontSize: 12,
         currentIndex: _currentPage,
         onTap: (i) async {
           if (i != 2) {
@@ -411,86 +410,68 @@ class _RootScreenState extends State<RootScreen> {
         },
         items: [
           BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                home,
-                height: 25,
-                width: 25,
-                allowDrawingOutsideViewBox: true,
-              ),
-              title: Text('',
-                  style: TextStyle(
-                      fontFamily: 'Helvetica',
-                      fontSize: 5,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black))),
+            icon: SvgPicture.asset(
+              home,
+              height: 25,
+              width: 25,
+              allowDrawingOutsideViewBox: true,
+            ),
+            label: 'Home',
+          ),
           BottomNavigationBarItem(
-              icon: Icon(
-                Feather.search,
-                color: selectedsearchColor,
-              ),
-              title: Text('',
-                  style: TextStyle(
-                      fontFamily: 'Helvetica',
-                      fontSize: 5,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black))),
+            icon: Icon(
+              Feather.search,
+              color: selectedsearchColor,
+              size: 25,
+            ),
+            label: 'Explore',
+          ),
           BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                'assets/bottomnavbar/plus.svg',
-                height: 40,
-                width: 40,
-                allowDrawingOutsideViewBox: true,
-              ),
-              title: Text('',
-                  style: TextStyle(
-                      fontFamily: 'Helvetica',
-                      fontSize: 5,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black))),
+            icon: SvgPicture.asset(
+              'assets/bottomnavbar/plus.svg',
+              height: 40,
+              width: 40,
+              fit: BoxFit.contain,
+              allowDrawingOutsideViewBox: true,
+            ),
+            label: '',
+          ),
           BottomNavigationBarItem(
-              icon: Icon(
-                FontAwesomeIcons.comments,
-                color: selectedActivityColor,
-              ),
-              title: Text('',
-                  style: TextStyle(
-                      fontFamily: 'Helvetica',
-                      fontSize: 5,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black))),
+            icon: Icon(
+              FontAwesomeIcons.comments,
+              color: selectedActivityColor,
+              size: 25,
+            ),
+            label: 'Activity',
+          ),
           BottomNavigationBarItem(
-              icon: profilepicture != null && profilepicture.isNotEmpty
-                  ? CircleAvatar(
-                      backgroundColor: Colors.grey.shade300,
-                      radius: 17,
-                      child: Container(
-                          height: 30,
-                          width: 30,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50)),
-                          child: ClipRRect(
-                              borderRadius: BorderRadius.circular(50),
-                              child: CachedNetworkImage(
-                                height: 200,
-                                width: 300,
-                                imageUrl: profilepicture,
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) =>
-                                    SpinKitDoubleBounce(
-                                        color: Colors.deepOrange),
-                                errorWidget: (context, url, error) =>
-                                    Icon(Icons.error),
-                              ))))
-                  : Icon(
-                      FontAwesome.user_circle,
-                      size: 25,
-                    ),
-              title: Text('',
-                  style: TextStyle(
-                      fontFamily: 'Helvetica',
-                      fontSize: 5,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black))),
+            icon: profilepicture != null && profilepicture.isNotEmpty
+                ? CircleAvatar(
+                    backgroundColor: Colors.grey.shade300,
+                    radius: 15,
+                    child: Container(
+                        height: 25,
+                        width: 25,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50)),
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: CachedNetworkImage(
+                              height: 200,
+                              width: 300,
+                              imageUrl: profilepicture,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) =>
+                                  SpinKitDoubleBounce(color: Colors.deepOrange),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error),
+                            ))))
+                : Icon(
+                    FontAwesome.user_circle,
+                    size: 25,
+                  ),
+            label: 'Profile',
+          ),
         ],
       ),
       body: PageView(

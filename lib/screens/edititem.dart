@@ -2969,105 +2969,6 @@ class EditItemState extends State<EditItem>
                               }),
                             ),
                           )),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: 15,
-                          top: 15,
-                          bottom: 10,
-                        ),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Location',
-                            style: TextStyle(
-                                fontFamily: 'Helvetica',
-                                fontSize: 20,
-                                fontWeight: FontWeight.w700),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            left: 15, bottom: 5, top: 10, right: 15),
-                        child: Container(
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15)),
-                            ),
-                            child: ListTile(
-                                onTap: () async {
-                                  final locationdetails = await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => AddLocation()),
-                                  );
-                                  print(locationdetails);
-
-                                  setState(() {
-                                    percentindictor = 1;
-                                    city = locationdetails['city'];
-                                    country = locationdetails['country'];
-                                    _lastMapPosition =
-                                        locationdetails['lastmapposition'];
-
-                                    locdetials = country + ' > ' + city;
-                                  });
-                                },
-                                title: locdetials == null
-                                    ? Container(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                2,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: <Widget>[
-                                            Text(
-                                              'Choose your Location',
-                                              textAlign: TextAlign.right,
-                                              style: TextStyle(
-                                                  fontFamily: 'Helvetica',
-                                                  fontSize: 16,
-                                                  color: Colors.deepPurple),
-                                            ),
-                                            Icon(Icons.keyboard_arrow_right,
-                                                color: Colors.deepPurple)
-                                          ],
-                                        ))
-                                    : Container(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                    2 +
-                                                50,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: <Widget>[
-                                            Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  2,
-                                              child: Text(
-                                                locdetials,
-                                                textAlign: TextAlign.left,
-                                                style: TextStyle(
-                                                    fontFamily: 'Helvetica',
-                                                    fontSize: 16,
-                                                    color: Colors.deepPurple),
-                                              ),
-                                            ),
-                                            Icon(Icons.keyboard_arrow_right,
-                                                color: Colors.deepPurple)
-                                          ],
-                                        )))),
-                      ),
                       SizedBox(
                         height: 10.0,
                       ),
@@ -4147,6 +4048,7 @@ class EditItemState extends State<EditItem>
             flex: 2,
           ),
         ],
+        crossAxisAlignment: CrossAxisAlignment.center,
       ),
     );
   }

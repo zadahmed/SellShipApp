@@ -1192,7 +1192,7 @@ class _ActivitySellState extends State<ActivitySell>
                                     Text('You have no offers yet ',
                                         style: TextStyle(
                                             fontFamily: 'Helvetica',
-                                            fontSize: 20.0,
+                                            fontSize: 18.0,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black),
                                         textAlign: TextAlign.center),
@@ -1203,7 +1203,7 @@ class _ActivitySellState extends State<ActivitySell>
                                       'The sell section is for all your activities regarding items you are selling. You can accept offers, send counter offers and even schedule pickups and track orders. What are you waiting for? Start listing your items',
                                       style: TextStyle(
                                           fontFamily: 'Helvetica',
-                                          fontSize: 18.0,
+                                          fontSize: 16.0,
                                           color: Colors.black),
                                       textAlign: TextAlign.justify,
                                     ),

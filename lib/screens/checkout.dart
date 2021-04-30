@@ -111,12 +111,7 @@ class _CheckoutState extends State<Checkout> {
   var phonenumber;
   getcurrency() async {
     var countr = await storage.read(key: 'country');
-    if (countr.toLowerCase() == 'united arab emirates') {
-      setState(() {
-        currency = 'AED';
-        stripecurrency = 'AED';
-      });
-    }
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List cartitems = prefs.getStringList('cartitems');
 
@@ -170,11 +165,15 @@ class _CheckoutState extends State<Checkout> {
       }
     }
 
-    setState(() {
-      subtotal = subtotal;
-      total = subtotal + deliverycharges;
-      listitems = listitems;
-    });
+    if (mounted) {
+      setState(() {
+        currency = 'AED';
+        stripecurrency = 'AED';
+        subtotal = subtotal;
+        total = subtotal + deliverycharges;
+        listitems = listitems;
+      });
+    }
   }
 
   var deliveryamount;

@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:SellShip/controllers/expandabletext.dart';
 import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/models/stores.dart';
+import 'package:SellShip/screens/followerspage.dart';
+import 'package:SellShip/screens/store/discounts.dart';
 import 'package:SellShip/screens/store/editstore.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
@@ -127,15 +129,18 @@ class _StorePageState extends State<StorePage> {
       if (follower != null) {
         if (follower.length == 0) {
           setState(() {
+            followerslist = follower;
             followers = 0;
           });
         } else {
           setState(() {
+            followerslist = follower;
             followers = follower.length;
           });
         }
       } else {
         setState(() {
+          followerslist = follower;
           followers = 0;
         });
       }
@@ -467,6 +472,8 @@ class _StorePageState extends State<StorePage> {
         ]);
   }
 
+  List followerslist = List();
+
   Future getImageCamera() async {
     var image = await ImagePicker.pickImage(
         source: ImageSource.camera, maxHeight: 400, maxWidth: 400);
@@ -475,6 +482,24 @@ class _StorePageState extends State<StorePage> {
     Dio dio = new Dio();
     FormData formData;
     String fileName = image.path.split('/').last;
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        useRootNavigator: false,
+        builder: (_) => new AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              content: Builder(
+                builder: (context) {
+                  return Container(
+                      height: 50,
+                      width: 50,
+                      child: SpinKitDoubleBounce(
+                        color: Colors.deepOrange,
+                      ));
+                },
+              ),
+            ));
     formData = FormData.fromMap({
       'profilepicture':
           await MultipartFile.fromFile(image.path, filename: fileName)
@@ -504,6 +529,24 @@ class _StorePageState extends State<StorePage> {
         'https://api.sellship.co/api/store/cover/imageupload/' + widget.storeid;
     Dio dio = new Dio();
     FormData formData;
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        useRootNavigator: false,
+        builder: (_) => new AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              content: Builder(
+                builder: (context) {
+                  return Container(
+                      height: 50,
+                      width: 50,
+                      child: SpinKitDoubleBounce(
+                        color: Colors.deepOrange,
+                      ));
+                },
+              ),
+            ));
     String fileName = image.path.split('/').last;
     formData = FormData.fromMap({
       'storecover': await MultipartFile.fromFile(image.path, filename: fileName)
@@ -533,6 +576,24 @@ class _StorePageState extends State<StorePage> {
         'https://api.sellship.co/api/store/cover/imageupload/' + widget.storeid;
     Dio dio = new Dio();
     FormData formData;
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        useRootNavigator: false,
+        builder: (_) => new AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              content: Builder(
+                builder: (context) {
+                  return Container(
+                      height: 50,
+                      width: 50,
+                      child: SpinKitDoubleBounce(
+                        color: Colors.deepOrange,
+                      ));
+                },
+              ),
+            ));
     String fileName = image.path.split('/').last;
     formData = FormData.fromMap({
       'storecover': await MultipartFile.fromFile(image.path, filename: fileName)
@@ -561,6 +622,24 @@ class _StorePageState extends State<StorePage> {
     var url = 'https://api.sellship.co/api/store/imageupload/' + widget.storeid;
     Dio dio = new Dio();
     FormData formData;
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        useRootNavigator: false,
+        builder: (_) => new AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              content: Builder(
+                builder: (context) {
+                  return Container(
+                      height: 50,
+                      width: 50,
+                      child: SpinKitDoubleBounce(
+                        color: Colors.deepOrange,
+                      ));
+                },
+              ),
+            ));
     String fileName = image.path.split('/').last;
     formData = FormData.fromMap({
       'profilepicture':
@@ -765,6 +844,69 @@ class _StorePageState extends State<StorePage> {
                             color: Colors.black,
                           ),
                         ),
+                        ListTile(
+                          onTap: () async {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      Discounts(storeid: widget.storeid)),
+                            );
+                          },
+                          title: Row(
+                            children: [
+                              Text('Discounts',
+                                  style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 18,
+                                  )),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Container(
+                                  width: 50,
+                                  height: 22,
+                                  decoration: BoxDecoration(
+                                      color: Colors.deepPurple,
+                                      borderRadius: BorderRadius.circular(5)),
+                                  child: Center(
+                                    child: Text('NEW',
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white)),
+                                  )),
+                            ],
+                          ),
+                          trailing: Icon(
+                            Icons.chevron_right,
+                            color: Colors.black,
+                          ),
+                        ),
+                        ListTile(
+                          onTap: () async {
+                            // final result = await Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //       builder: (context) =>
+                            //           EditStore(storeid: widget.storeid)),
+                            // );
+                            //
+                            // if (result == null) {
+                            //   getuser();
+                            // }
+                          },
+                          title: Text('Coming Soon - Promocodes 🤩',
+                              style: TextStyle(
+                                  fontFamily: 'Helvetica',
+                                  fontSize: 18,
+                                  color: Colors.grey)),
+                          trailing: Icon(
+                            Icons.chevron_right,
+                            color: Colors.black,
+                          ),
+                        ),
                         SizedBox(
                           height: 40,
                         ),
@@ -860,32 +1002,6 @@ class _StorePageState extends State<StorePage> {
                                                           FontWeight.normal)),
                                               isDefaultAction: true,
                                               onPressed: () {
-                                                showDialog(
-                                                    context: context,
-                                                    barrierDismissible: false,
-                                                    useRootNavigator: false,
-                                                    builder:
-                                                        (_) => new AlertDialog(
-                                                              shape: RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius.all(
-                                                                          Radius.circular(
-                                                                              10.0))),
-                                                              content: Builder(
-                                                                builder:
-                                                                    (context) {
-                                                                  return Container(
-                                                                      height:
-                                                                          50,
-                                                                      width: 50,
-                                                                      child:
-                                                                          SpinKitDoubleBounce(
-                                                                        color: Colors
-                                                                            .deepOrange,
-                                                                      ));
-                                                                },
-                                                              ),
-                                                            ));
                                                 getImageCameraCover();
                                               },
                                             ),
@@ -897,32 +1013,6 @@ class _StorePageState extends State<StorePage> {
                                                           FontWeight.normal)),
                                               isDefaultAction: true,
                                               onPressed: () {
-                                                showDialog(
-                                                    context: context,
-                                                    barrierDismissible: false,
-                                                    useRootNavigator: false,
-                                                    builder:
-                                                        (_) => new AlertDialog(
-                                                              shape: RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius.all(
-                                                                          Radius.circular(
-                                                                              10.0))),
-                                                              content: Builder(
-                                                                builder:
-                                                                    (context) {
-                                                                  return Container(
-                                                                      height:
-                                                                          50,
-                                                                      width: 50,
-                                                                      child:
-                                                                          SpinKitDoubleBounce(
-                                                                        color: Colors
-                                                                            .deepOrange,
-                                                                      ));
-                                                                },
-                                                              ),
-                                                            ));
                                                 getImageGalleryCover();
                                               },
                                             )
@@ -1075,28 +1165,6 @@ class _StorePageState extends State<StorePage> {
                                                                 isDefaultAction:
                                                                     true,
                                                                 onPressed: () {
-                                                                  showDialog(
-                                                                      context:
-                                                                          context,
-                                                                      barrierDismissible:
-                                                                          false,
-                                                                      useRootNavigator:
-                                                                          false,
-                                                                      builder:
-                                                                          (_) =>
-                                                                              new AlertDialog(
-                                                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                                                content: Builder(
-                                                                                  builder: (context) {
-                                                                                    return Container(
-                                                                                        height: 50,
-                                                                                        width: 50,
-                                                                                        child: SpinKitDoubleBounce(
-                                                                                          color: Colors.deepOrange,
-                                                                                        ));
-                                                                                  },
-                                                                                ),
-                                                                              ));
                                                                   getImageCamera();
                                                                 },
                                                               ),
@@ -1111,28 +1179,6 @@ class _StorePageState extends State<StorePage> {
                                                                 isDefaultAction:
                                                                     true,
                                                                 onPressed: () {
-                                                                  showDialog(
-                                                                      context:
-                                                                          context,
-                                                                      barrierDismissible:
-                                                                          false,
-                                                                      useRootNavigator:
-                                                                          false,
-                                                                      builder:
-                                                                          (_) =>
-                                                                              new AlertDialog(
-                                                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                                                content: Builder(
-                                                                                  builder: (context) {
-                                                                                    return Container(
-                                                                                        height: 50,
-                                                                                        width: 50,
-                                                                                        child: SpinKitDoubleBounce(
-                                                                                          color: Colors.deepOrange,
-                                                                                        ));
-                                                                                  },
-                                                                                ),
-                                                                              ));
                                                                   getImageGallery();
                                                                 },
                                                               )
@@ -1310,35 +1356,51 @@ class _StorePageState extends State<StorePage> {
                                               Padding(
                                                 padding:
                                                     EdgeInsets.only(right: 5),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: <Widget>[
-                                                    Text(
-                                                      followers == null
-                                                          ? '0'
-                                                          : followers
-                                                              .toString(),
-                                                      style: TextStyle(
-                                                          fontFamily:
-                                                              'Helvetica',
-                                                          fontSize: 19,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                    SizedBox(height: 5.0),
-                                                    Text(
-                                                      'Followers',
-                                                      style: TextStyle(
-                                                          fontSize: 14,
-                                                          fontFamily:
-                                                              'Helvetica',
-                                                          color:
-                                                              Colors.blueGrey),
-                                                    ),
-                                                  ],
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              FollowersPage(
+                                                                followers:
+                                                                    followerslist,
+                                                              )),
+                                                    );
+                                                  },
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: <Widget>[
+                                                      Text(
+                                                        followers == null
+                                                            ? '0'
+                                                            : followers
+                                                                .toString(),
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            fontSize: 19,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      SizedBox(height: 5.0),
+                                                      Text(
+                                                        'Followers',
+                                                        style: TextStyle(
+                                                            fontSize: 14,
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            color: Colors
+                                                                .blueGrey),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                               Padding(

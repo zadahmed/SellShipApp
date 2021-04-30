@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/controllers/FadeAnimations.dart';
@@ -152,7 +153,7 @@ class _OnboardingInterestsState extends State<OnboardingInterests> {
                       color: selectedinterests.length >= 2
                           ? Color.fromRGBO(255, 115, 0, 1)
                           : Colors.grey,
-                      borderRadius: BorderRadius.circular(5),
+                      borderRadius: BorderRadius.circular(30),
                     ),
                     child: Center(
                         child: Text(
@@ -214,15 +215,15 @@ class _OnboardingInterestsState extends State<OnboardingInterests> {
                       "Please select atleast two categories that you are interested in.",
                       textAlign: TextAlign.left,
                       style: TextStyle(
-                          fontSize: 18.0,
-                          color: Colors.black,
+                          fontSize: 16.0,
+                          color: Colors.blueGrey,
                           fontFamily: 'Helvetica'),
                     ),
                   ),
                 ])),
             SliverGrid(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, childAspectRatio: 1.5),
+                  crossAxisCount: 3, childAspectRatio: 0.7),
               delegate:
                   SliverChildBuilderDelegate((BuildContext context, int index) {
                 return new InkWell(
@@ -236,46 +237,120 @@ class _OnboardingInterestsState extends State<OnboardingInterests> {
                         selectedinterests = selectedinterests;
                       });
                     },
-                    child: Card(
-                        child: Stack(
+                    child: Column(
                       children: [
                         Container(
-                          height: MediaQuery.of(context).size.height,
-                          width: MediaQuery.of(context).size.width,
-                          child: Image.asset(
-                            categoryimages[index],
-                            fit: BoxFit.cover,
-                            height: 300,
-                            width: 300,
-                            cacheHeight: 300,
-                            cacheWidth: 300,
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            categories[index],
-                            style: TextStyle(
-                              fontFamily: 'Helvetica',
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                            height: 120,
+                            width: 120,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(
+                                    color: Color.fromRGBO(255, 115, 0, 0.7),
+                                    width: 5),
+                                borderRadius: BorderRadius.circular(60)),
+                            child: Stack(
+                              children: [
+                                ClipRRect(
+                                    borderRadius: BorderRadius.circular(60),
+                                    child: Image.asset(
+                                      categoryimages[index],
+                                      height: 120,
+                                      width: 120,
+                                      fit: BoxFit.cover,
+                                    )),
+                                selectedinterests.contains(categories[index])
+                                    ? Container(
+                                        height: 120,
+                                        width: 120,
+                                        decoration: BoxDecoration(
+                                            color:
+                                                Colors.black.withOpacity(0.6),
+                                            border: Border.all(
+                                                color: Colors.white, width: 5),
+                                            borderRadius:
+                                                BorderRadius.circular(60)),
+                                        child: Icon(
+                                          Icons.check,
+                                          color: Colors.white,
+                                          size: 28,
+                                        ))
+                                    : Container(),
+                              ],
+                            )),
+                        Container(
+                          width: 120,
+                          height: 50,
+                          padding: EdgeInsets.all(5),
+                          child: Center(
+                            child: Text(
+                              categories[index],
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontFamily: 'Helvetica',
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),
-                        selectedinterests.contains(categories[index])
-                            ? Container(
-                                height: MediaQuery.of(context).size.height,
-                                width: MediaQuery.of(context).size.width,
-                                color: Colors.black.withOpacity(0.6),
-                                child: Icon(
-                                  Icons.check,
-                                  color: Colors.white,
-                                  size: 28,
-                                ))
-                            : Container(),
                       ],
-                    )));
+                    ));
+
+                // InkWell(
+                //
+                //     child: Column(
+                //       children: [
+                //         Stack(
+                //           children: [
+                //             Container(
+                //               height: 100,
+                //               width: 100,
+                //               decoration: BoxDecoration(
+                //                   color: Colors.white,
+                //                   border: Border.all(
+                //                       color: Color.fromRGBO(255, 115, 0, 0.7),
+                //                       width: 5),
+                //                   borderRadius: BorderRadius.circular(60)),
+                //               child: ClipRRect(
+                //                   borderRadius: BorderRadius.circular(60),
+                //                   child: Image.asset(
+                //                     categoryimages[index],
+                //                     height: 120,
+                //                     width: 120,
+                //                     fit: BoxFit.cover,
+                //                   )),
+                //             ),
+                //             selectedinterests.contains(categories[index])
+                //                 ? Container(
+                //                     height: MediaQuery.of(context).size.height,
+                //                     width: MediaQuery.of(context).size.width,
+                //                     color: Colors.black.withOpacity(0.6),
+                //                     child: Icon(
+                //                       Icons.check,
+                //                       color: Colors.white,
+                //                       size: 28,
+                //                     ))
+                //                 : Container(),
+                //           ],
+                //         ),
+                //         Container(
+                //           height: 50,
+                //           width: 120,
+                //           padding: EdgeInsets.all(5),
+                //           child: Center(
+                //             child: Text(
+                //               categories[index],
+                //               textAlign: TextAlign.center,
+                //               style: TextStyle(
+                //                   fontFamily: 'Helvetica',
+                //                   fontSize: 14,
+                //                   color: Colors.black,
+                //                   fontWeight: FontWeight.w800),
+                //             ),
+                //           ),
+                //         ),
+                //       ],
+                //     ));
               }, childCount: categoryimages.length),
             )
           ],

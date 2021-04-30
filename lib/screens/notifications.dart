@@ -145,18 +145,22 @@ class _NotifcationPageState extends State<NotifcationPage>
         Iterable inReverse = notificationlist.reversed;
         List<Notifications> jsoninreverse = inReverse.toList();
 
-        setState(() {
-          loading = false;
-          notifs = jsoninreverse;
-          alive = true;
-        });
+        if (mounted) {
+          setState(() {
+            loading = false;
+            notifs = jsoninreverse;
+            alive = true;
+          });
+        }
       }
     } else {
-      setState(() {
-        loading = false;
-        alive = true;
-        notifs = [];
-      });
+      if (mounted) {
+        setState(() {
+          loading = false;
+          alive = true;
+          notifs = [];
+        });
+      }
     }
     return notifs;
   }

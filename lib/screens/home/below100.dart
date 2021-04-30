@@ -511,16 +511,20 @@ class Below100State extends State<Below100> {
                                       itemsgrid[index].name,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                          fontFamily: 'Helvetica',
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold),
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 14,
+                                      ),
                                     ),
                                     SizedBox(
-                                      height: 1,
+                                      height: 2,
                                     ),
                                     Text(
                                       currency + ' ' + itemsgrid[index].price,
-                                    )
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
                                   ],
                                 )),
                                 favourites != null

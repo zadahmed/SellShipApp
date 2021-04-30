@@ -6,8 +6,10 @@ import 'package:SellShip/screens/activitybuy.dart';
 import 'package:SellShip/screens/activitysell.dart';
 import 'package:SellShip/screens/chatpageviewseller.dart';
 import 'package:SellShip/screens/onboardingbottom.dart';
+import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -15,6 +17,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
 class Activity extends StatefulWidget {
@@ -87,6 +90,12 @@ class _ActivityState extends State<Activity>
     super.initState();
 
     checkuser();
+
+    if (mounted) {
+      setState(() {
+        notbadge = false;
+      });
+    }
 
     _tabController = new TabController(length: 2, vsync: this);
   }
@@ -919,17 +928,131 @@ class _ActivityState extends State<Activity>
             }));
   }
 
+  bool checkoutbadge = false;
+  int checkoutcount;
+
+  void getnotification() async {
+    var userid = await storage.read(key: 'userid');
+    if (userid != null) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      List cartitems = prefs.getStringList('cartitems');
+      if (cartitems != null) {
+        if (cartitems.length > 0) {
+          if (mounted) {
+            setState(() {
+              checkoutbadge = true;
+              checkoutcount = cartitems.length;
+            });
+          }
+        } else {
+          if (mounted) {
+            setState(() {
+              checkoutbadge = false;
+              checkoutcount = 0;
+            });
+          }
+        }
+      }
+      var url = 'https://api.sellship.co/api/getnotification/' + userid;
+
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        print(response.body);
+        var notificationinfo = json.decode(response.body);
+
+        var notcoun = notificationinfo['notcount'];
+
+        if (notcoun <= 0) {
+          if (mounted) {
+            setState(() {
+              notcount = 0;
+              notbadge = false;
+            });
+          }
+          FlutterAppBadger.removeBadge();
+        } else if (notcoun > 0) {
+          if (mounted) {
+            setState(() {
+              notcount = notcoun;
+              notbadge = true;
+            });
+          }
+        }
+
+        FlutterAppBadger.updateBadgeCount(notcount);
+      } else {
+        print(response.statusCode);
+      }
+    }
+  }
+
+  bool notbadge;
+  var notcount;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Colors.white,
+          leading: InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NotifcationPage()),
+              );
+            },
+            child: Padding(
+              padding: EdgeInsets.only(left: 5),
+              child: Badge(
+                showBadge: notbadge,
+                position: BadgePosition.topEnd(top: 5, end: 5),
+                animationType: BadgeAnimationType.slide,
+                badgeColor: Colors.deepOrange,
+                badgeContent: Text(
+                  notcount.toString(),
+                  style: TextStyle(color: Colors.white),
+                ),
+                child: Icon(
+                  Feather.bell,
+                  color: Color.fromRGBO(28, 45, 65, 1),
+                  size: 24,
+                ),
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Checkout()),
+                  );
+                },
+                child: Badge(
+                  showBadge: checkoutbadge,
+                  position: BadgePosition.topEnd(top: 5, end: 5),
+                  animationType: BadgeAnimationType.slide,
+                  badgeColor: Colors.deepOrange,
+                  badgeContent: Text(
+                    checkoutcount.toString(),
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 15),
+                    child: Icon(
+                      Feather.shopping_bag,
+                      size: 24,
+                      color: Color.fromRGBO(28, 45, 65, 1),
+                    ),
+                  ),
+                ))
+          ],
           title: Text(
             'Activity',
             style: TextStyle(
                 fontFamily: 'Helvetica',
-                fontSize: 18.0,
+                fontSize: 22.0,
                 color: Colors.black,
                 fontWeight: FontWeight.bold),
           ),

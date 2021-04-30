@@ -7,6 +7,8 @@ import 'package:SellShip/models/user.dart';
 import 'package:SellShip/screens/hashtags.dart';
 import 'package:SellShip/screens/storepage.dart';
 import 'package:SellShip/screens/storepagepublic.dart';
+import 'package:badges/badges.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:substring_highlight/substring_highlight.dart';
 import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
 //import 'package:dropdown_search/dropdown_search.dart';
@@ -117,10 +119,13 @@ class _SearchState extends State<Search>
     getCategories();
     readstorage();
     _getRecentSearches();
-    setState(() {
-      skip = 0;
-      limit = 20;
-    });
+    if (mounted) {
+      setState(() {
+        skip = 0;
+        limit = 20;
+        notbadge = false;
+      });
+    }
     discoverstores();
     discoverhashtags();
     discoverproducts();
@@ -220,14 +225,16 @@ class _SearchState extends State<Search>
         approved = jsondata['approved'];
       }
       if (approved == true) {
-        Stores store = Stores(
-            approved: approved,
-            storename: jsondata['storename'],
-            storeid: jsondata['_id']['\$oid'],
-            storetype: jsondata['storetype'],
-            storelogo: jsondata['storelogo'],
-            storecategory: jsondata['storecategory']);
-        storeList.add(store);
+        if (jsondata['storetype'] != 'Secondhand Seller') {
+          Stores store = Stores(
+              approved: approved,
+              storename: jsondata['storename'],
+              storeid: jsondata['_id']['\$oid'],
+              storetype: jsondata['storetype'],
+              storelogo: jsondata['storelogo'],
+              storecategory: jsondata['storecategory']);
+          storeList.add(store);
+        }
       }
     }
 
@@ -388,27 +395,11 @@ class _SearchState extends State<Search>
     var latitude = await storage.read(key: 'latitude');
     var longitude = await storage.read(key: 'longitude');
     var countr = await storage.read(key: 'country');
-    if (countr.trim().toLowerCase() == 'united arab emirates') {
-      setState(() {
-        currency = 'AED';
-      });
-    } else if (countr.trim().toLowerCase() == 'united states') {
-      setState(() {
-        currency = '\$';
-      });
-    } else if (countr.trim().toLowerCase() == 'canada') {
-      setState(() {
-        currency = '\$';
-      });
-    } else if (countr.trim().toLowerCase() == 'united kingdom') {
-      setState(() {
-        currency = '\£';
-      });
-    }
 
     if (mounted) {
       setState(() {
         country = countr;
+        currency = 'AED';
         position = LatLng(double.parse(latitude), double.parse(longitude));
       });
     }
@@ -416,7 +407,8 @@ class _SearchState extends State<Search>
 
   TextEditingController searchcontroller = new TextEditingController();
 
-  String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
+  String capitalize(String s) =>
+      s.isNotEmpty ? s[0].toUpperCase() + s.substring(1) : s;
 
   onSearch(textsearch) async {
     itemsgrid.clear();
@@ -989,6 +981,67 @@ class _SearchState extends State<Search>
   TabController _tabController;
   bool searched = false;
 
+  bool checkoutbadge = false;
+  int checkoutcount;
+
+  void getnotification() async {
+    var userid = await storage.read(key: 'userid');
+    if (userid != null) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      List cartitems = prefs.getStringList('cartitems');
+      if (cartitems != null) {
+        if (cartitems.length > 0) {
+          if (mounted) {
+            setState(() {
+              checkoutbadge = true;
+              checkoutcount = cartitems.length;
+            });
+          }
+        } else {
+          if (mounted) {
+            setState(() {
+              checkoutbadge = false;
+              checkoutcount = 0;
+            });
+          }
+        }
+      }
+      var url = 'https://api.sellship.co/api/getnotification/' + userid;
+
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        print(response.body);
+        var notificationinfo = json.decode(response.body);
+
+        var notcoun = notificationinfo['notcount'];
+
+        if (notcoun <= 0) {
+          if (mounted) {
+            setState(() {
+              notcount = 0;
+              notbadge = false;
+            });
+          }
+          FlutterAppBadger.removeBadge();
+        } else if (notcoun > 0) {
+          if (mounted) {
+            setState(() {
+              notcount = notcoun;
+              notbadge = true;
+            });
+          }
+        }
+
+        FlutterAppBadger.updateBadgeCount(notcount);
+      } else {
+        print(response.statusCode);
+      }
+    }
+  }
+
+  bool notbadge;
+  var notcount;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -997,13 +1050,73 @@ class _SearchState extends State<Search>
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
+          leading: InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NotifcationPage()),
+              );
+            },
+            child: Padding(
+              padding: EdgeInsets.only(left: 5),
+              child: Badge(
+                showBadge: notbadge,
+                position: BadgePosition.topEnd(top: 5, end: 5),
+                animationType: BadgeAnimationType.slide,
+                badgeColor: Colors.deepOrange,
+                badgeContent: Text(
+                  notcount.toString(),
+                  style: TextStyle(color: Colors.white),
+                ),
+                child: Icon(
+                  Feather.bell,
+                  color: Color.fromRGBO(28, 45, 65, 1),
+                  size: 24,
+                ),
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Checkout()),
+                  );
+                },
+                child: Badge(
+                  showBadge: checkoutbadge,
+                  position: BadgePosition.topEnd(top: 5, end: 5),
+                  animationType: BadgeAnimationType.slide,
+                  badgeColor: Colors.deepOrange,
+                  badgeContent: Text(
+                    checkoutcount.toString(),
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 15),
+                    child: Icon(
+                      Feather.shopping_bag,
+                      size: 24,
+                      color: Color.fromRGBO(28, 45, 65, 1),
+                    ),
+                  ),
+                ))
+          ],
           title: Container(
             margin: EdgeInsets.only(top: 10.0, right: 10, bottom: 10),
             child: Container(
               height: 50,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25.0),
-                color: const Color(0x80e5e9f2),
+                color: Colors.grey.shade200,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.shade100,
+                    offset: Offset(0.0, 1.0), //(x,y)
+                    blurRadius: 6.0,
+                  ),
+                ],
               ),
               child: Center(
                   child: Row(
@@ -1488,7 +1601,7 @@ class _SearchState extends State<Search>
                                             'Categories',
                                             style: TextStyle(
                                                 fontFamily: 'Helvetica',
-                                                fontSize: 18,
+                                                fontSize: 22.0,
                                                 fontWeight: FontWeight.bold),
                                           ),
                                         ),
@@ -2618,6 +2731,7 @@ class _SearchState extends State<Search>
                                                       ),
                                                       Container(
                                                         width: 120,
+                                                        height: 50,
                                                         padding:
                                                             EdgeInsets.all(5),
                                                         child: Center(

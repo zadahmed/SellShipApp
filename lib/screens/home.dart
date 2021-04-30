@@ -941,16 +941,20 @@ class _HomeScreenState extends State<HomeScreen>
         var notcoun = notificationinfo['notcount'];
 
         if (notcoun <= 0) {
-          setState(() {
-            notcount = 0;
-            notbadge = false;
-          });
+          if (mounted) {
+            setState(() {
+              notcount = 0;
+              notbadge = false;
+            });
+          }
           FlutterAppBadger.removeBadge();
         } else if (notcoun > 0) {
-          setState(() {
-            notcount = notcoun;
-            notbadge = true;
-          });
+          if (mounted) {
+            setState(() {
+              notcount = notcoun;
+              notbadge = true;
+            });
+          }
         }
 
         FlutterAppBadger.updateBadgeCount(notcount);
@@ -1024,25 +1028,24 @@ class _HomeScreenState extends State<HomeScreen>
                 fit: BoxFit.cover,
               ),
             ),
-            leading: Padding(
-              padding: EdgeInsets.only(left: 5),
-              child: Badge(
-                showBadge: notbadge,
-                position: BadgePosition.topEnd(top: 5, end: 5),
-                animationType: BadgeAnimationType.slide,
-                badgeColor: Colors.deepOrange,
-                badgeContent: Text(
-                  notcount.toString(),
-                  style: TextStyle(color: Colors.white),
-                ),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => NotifcationPage()),
-                    );
-                  },
+            leading: InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NotifcationPage()),
+                );
+              },
+              child: Padding(
+                padding: EdgeInsets.only(left: 5),
+                child: Badge(
+                  showBadge: notbadge,
+                  position: BadgePosition.topEnd(top: 5, end: 5),
+                  animationType: BadgeAnimationType.slide,
+                  badgeColor: Colors.deepOrange,
+                  badgeContent: Text(
+                    notcount.toString(),
+                    style: TextStyle(color: Colors.white),
+                  ),
                   child: Icon(
                     Feather.bell,
                     color: Color.fromRGBO(28, 45, 65, 1),
@@ -1052,22 +1055,22 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ),
             actions: <Widget>[
-              Badge(
-                  showBadge: checkoutbadge,
-                  position: BadgePosition.topEnd(top: 5, end: 5),
-                  animationType: BadgeAnimationType.slide,
-                  badgeColor: Colors.deepOrange,
-                  badgeContent: Text(
-                    checkoutcount.toString(),
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Checkout()),
-                      );
-                    },
+              InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Checkout()),
+                    );
+                  },
+                  child: Badge(
+                    showBadge: checkoutbadge,
+                    position: BadgePosition.topEnd(top: 5, end: 5),
+                    animationType: BadgeAnimationType.slide,
+                    badgeColor: Colors.deepOrange,
+                    badgeContent: Text(
+                      checkoutcount.toString(),
+                      style: TextStyle(color: Colors.white),
+                    ),
                     child: Padding(
                       padding: EdgeInsets.only(right: 15),
                       child: Icon(

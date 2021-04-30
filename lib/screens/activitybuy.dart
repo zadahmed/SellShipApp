@@ -1150,7 +1150,7 @@ class _ActivityBuyState extends State<ActivityBuy>
                                   Text('You have not made any offers yet ',
                                       style: TextStyle(
                                           fontFamily: 'Helvetica',
-                                          fontSize: 20.0,
+                                          fontSize: 18.0,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black),
                                       textAlign: TextAlign.center),
@@ -1161,7 +1161,7 @@ class _ActivityBuyState extends State<ActivityBuy>
                                     'The buy section is for all your activities regarding items you are buying. You can make offers, track your orders and even make purchases. What are you waiting for?',
                                     style: TextStyle(
                                         fontFamily: 'Helvetica',
-                                        fontSize: 18.0,
+                                        fontSize: 16.0,
                                         color: Colors.black),
                                     textAlign: TextAlign.justify,
                                   ),

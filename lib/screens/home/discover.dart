@@ -16,6 +16,7 @@ import 'package:SellShip/screens/filter.dart';
 import 'package:SellShip/screens/home/below100.dart';
 import 'package:SellShip/screens/home/foryou.dart';
 import 'package:SellShip/screens/home/nearme.dart';
+import 'package:SellShip/screens/home/recentlyadded.dart';
 import 'package:SellShip/screens/home/toppicks.dart';
 import 'package:SellShip/screens/messages.dart';
 import 'package:SellShip/screens/notavaialablecountry.dart';
@@ -147,12 +148,15 @@ class _DiscoverState extends State<Discover>
   List<Item> below100list = List<Item>();
 
   Future<List<Item>> fetchbelowhundred(int skip, int limit) async {
-    var url = 'https://api.sellship.co/api/belowhundred/' +
+    var userid = await storage.read(key: 'userid');
+    var url = 'https://api.sellship.co/api/dealsunderhundred/home/' +
         country +
         '/' +
-        0.toString() +
+        userid +
         '/' +
-        20.toString();
+        '0' +
+        '/' +
+        '20';
 
     final response = await http.get(url);
     if (response.statusCode == 200) {
@@ -985,16 +989,20 @@ class _DiscoverState extends State<Discover>
         print(notifcount);
 
         if (notcoun <= 0 || notcount == null) {
-          setState(() {
-            notcount = 0;
-            notbadge = false;
-          });
+          if (mounted) {
+            setState(() {
+              notcount = 0;
+              notbadge = false;
+            });
+          }
           FlutterAppBadger.removeBadge();
         } else if (notcoun > 0) {
-          setState(() {
-            notcount = notcoun;
-            notbadge = true;
-          });
+          if (mounted) {
+            setState(() {
+              notcount = notcoun;
+              notbadge = true;
+            });
+          }
         }
 
         print(notcount);
@@ -1112,11 +1120,17 @@ class _DiscoverState extends State<Discover>
     var userid = await storage.read(key: 'userid');
     List<Item> testforoyou = List<Item>();
     if (userid != null) {
-      var url = 'https://api.sellship.co/api/foryou/feed/' + userid + '/0/10';
+      var url = 'https://api.sellship.co/api/foryou/home/' +
+          userid +
+          '/' +
+          '0' +
+          '/' +
+          '20';
+
+      print(url);
 
       final response = await http.get(url);
       if (response.statusCode == 200) {
-        print(response.body);
         var jsonbody = json.decode(response.body);
         if (jsonbody.isEmpty) {
           if (mounted)
@@ -1279,1839 +1293,2029 @@ class _DiscoverState extends State<Discover>
               return getsubcategoriesinterested();
             },
             slivers: <Widget>[
-              subcategoryList.isNotEmpty
-                  ? SliverToBoxAdapter(
-                      child: Padding(
-                          padding: EdgeInsets.only(
-                              left: 16, top: 10, bottom: 10, right: 36),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Shop by Category',
-                                style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 22.0,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => RootScreen(
-                                              index: 1,
-                                            )),
-                                  );
-                                },
-                                child: Text(
-                                  'See All',
+                subcategoryList.isNotEmpty
+                    ? SliverToBoxAdapter(
+                        child: Padding(
+                            padding: EdgeInsets.only(
+                                left: 16, top: 10, bottom: 10, right: 16),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Shop by Category',
                                   style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 16.0,
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 22.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => RootScreen(
+                                                index: 1,
+                                              )),
+                                    );
+                                  },
+                                  enableFeedback: true,
+                                  child: Container(
+                                    padding: EdgeInsets.all(3),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.deepOrange),
+                                        borderRadius: BorderRadius.circular(5)),
+                                    child: Text('See All',
+                                        style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          color: Colors.deepOrange,
+                                          fontSize: 14.0,
+                                        )),
                                   ),
                                 ),
-                              ),
-                            ],
-                          )),
-                    )
-                  : SliverToBoxAdapter(),
-              SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 10,
+                              ],
+                            )),
+                      )
+                    : SliverToBoxAdapter(),
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 10,
+                  ),
                 ),
-              ),
-              subcategoryList.isNotEmpty
-                  ? SliverToBoxAdapter(
-                      child: Container(
-                          height: 160,
-                          width: MediaQuery.of(context).size.width,
-                          child: ListView.builder(
-                            itemCount: subcategoryList.length,
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (BuildContext context, int index) {
+                subcategoryList.isNotEmpty
+                    ? SliverToBoxAdapter(
+                        child: Container(
+                            height: 160,
+                            width: MediaQuery.of(context).size.width,
+                            child: ListView.builder(
+                              itemCount: subcategoryList.length,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (BuildContext context, int index) {
+                                return InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        CupertinoPageRoute(
+                                            builder: (context) => SubCategory(
+                                                  subcategory:
+                                                      subcategoryList[index]
+                                                          .name,
+                                                  categoryimage:
+                                                      subcategoryList[index]
+                                                          .image,
+                                                )),
+                                      );
+                                    },
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          height: 100,
+                                          width: 100,
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              border: Border.all(
+                                                  color: Color.fromRGBO(
+                                                      255, 115, 0, 0.7),
+                                                  width: 5),
+                                              borderRadius:
+                                                  BorderRadius.circular(60)),
+                                          child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(60),
+                                              child: CachedNetworkImage(
+                                                height: 120,
+                                                width: 120,
+                                                imageUrl: subcategoryList[index]
+                                                    .image,
+                                                fit: BoxFit.cover,
+                                              )),
+                                        ),
+                                        Container(
+                                          height: 50,
+                                          width: 120,
+                                          padding: EdgeInsets.all(5),
+                                          child: Center(
+                                            child: Text(
+                                              subcategoryList[index].name,
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 14,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w800),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ));
+                              },
+                            )))
+                    : SliverToBoxAdapter(),
+                topitems.isNotEmpty
+                    ? SliverToBoxAdapter(
+                        child: Padding(
+                            padding: EdgeInsets.only(
+                                left: 16, bottom: 10, right: 16),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                InkWell(
+                                  enableFeedback: true,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      CupertinoPageRoute(
+                                          builder: (context) => TopPicks()),
+                                    );
+                                  },
+                                  child: Text(
+                                    'Top Picks',
+                                    style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 22.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      CupertinoPageRoute(
+                                          builder: (context) => TopPicks()),
+                                    );
+                                  },
+                                  enableFeedback: true,
+                                  child: Container(
+                                    padding: EdgeInsets.all(3),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.deepOrange),
+                                        borderRadius: BorderRadius.circular(5)),
+                                    child: Text('See All',
+                                        style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          color: Colors.deepOrange,
+                                          fontSize: 14.0,
+                                        )),
+                                  ),
+                                ),
+                              ],
+                            )),
+                      )
+                    : SliverToBoxAdapter(),
+                topitems.isNotEmpty
+                    ? SliverToBoxAdapter(
+                        child: Container(
+                        height: 275,
+                        width: MediaQuery.of(context).size.width,
+                        child: ListView.builder(
+                          itemCount:
+                              topitems.length > 20 ? 20 : topitems.length,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (BuildContext context, int index) {
+                            return new Padding(
+                              padding: EdgeInsets.all(5),
+                              child: Container(
+                                height: 2,
+                                width:
+                                    MediaQuery.of(context).size.width / 2 - 20,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Column(
+                                  children: <Widget>[
+                                    new InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          CupertinoPageRoute(
+                                              builder: (context) => Details(
+                                                  itemid:
+                                                      topitems[index].itemid,
+                                                  image: topitems[index].image,
+                                                  name: topitems[index].name,
+                                                  sold: topitems[index].sold,
+                                                  source: 'top')),
+                                        );
+                                      },
+                                      child: Stack(children: <Widget>[
+                                        Container(
+                                          height: 220,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            child: Hero(
+                                              tag:
+                                                  'top${topitems[index].itemid}',
+                                              child: CachedNetworkImage(
+                                                height: 200,
+                                                width: 300,
+                                                fadeInDuration:
+                                                    Duration(microseconds: 5),
+                                                imageUrl: topitems[index]
+                                                        .image
+                                                        .isEmpty
+                                                    ? SpinKitDoubleBounce(
+                                                        color:
+                                                            Colors.deepOrange)
+                                                    : topitems[index].image,
+                                                fit: BoxFit.cover,
+                                                placeholder: (context, url) =>
+                                                    SpinKitDoubleBounce(
+                                                        color:
+                                                            Colors.deepOrange),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Icon(Icons.error),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        topitems[index].sold == true
+                                            ? Align(
+                                                alignment: Alignment.center,
+                                                child: Container(
+                                                  height: 50,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors
+                                                        .deepOrangeAccent
+                                                        .withOpacity(0.8),
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                            topLeft: Radius
+                                                                .circular(10),
+                                                            topRight:
+                                                                Radius.circular(
+                                                                    10)),
+                                                  ),
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  child: Center(
+                                                    child: Text(
+                                                      'Sold',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                  ),
+                                                ))
+                                            : Container(),
+                                      ]),
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                            child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              topitems[index].name,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 2,
+                                            ),
+                                            Text(
+                                              currency +
+                                                  ' ' +
+                                                  topitems[index].price,
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold),
+                                            )
+                                          ],
+                                        )),
+                                        favourites != null
+                                            ? favourites.contains(
+                                                    topitems[index].itemid)
+                                                ? InkWell(
+                                                    enableFeedback: true,
+                                                    onTap: () async {
+                                                      var userid = await storage
+                                                          .read(key: 'userid');
+
+                                                      if (userid != null) {
+                                                        var url =
+                                                            'https://api.sellship.co/api/favourite/' +
+                                                                userid;
+
+                                                        Map<String, String>
+                                                            body = {
+                                                          'itemid':
+                                                              topitems[index]
+                                                                  .itemid,
+                                                        };
+
+                                                        favourites.remove(
+                                                            topitems[index]
+                                                                .itemid);
+                                                        setState(() {
+                                                          favourites =
+                                                              favourites;
+                                                          topitems[index]
+                                                                  .likes =
+                                                              topitems[index]
+                                                                      .likes -
+                                                                  1;
+                                                        });
+                                                        final response =
+                                                            await http.post(url,
+                                                                body:
+                                                                    json.encode(
+                                                                        body));
+                                                        if (response
+                                                                .statusCode ==
+                                                            200) {
+                                                        } else {
+                                                          print(response
+                                                              .statusCode);
+                                                        }
+                                                      } else {
+                                                        showInSnackBar(
+                                                            'Please Login to use Favourites');
+                                                      }
+                                                    },
+                                                    child: CircleAvatar(
+                                                      radius: 16,
+                                                      backgroundColor:
+                                                          Colors.deepOrange,
+                                                      child: Icon(
+                                                        FontAwesome.heart,
+                                                        color: Colors.white,
+                                                        size: 15,
+                                                      ),
+                                                    ))
+                                                : InkWell(
+                                                    enableFeedback: true,
+                                                    onTap: () async {
+                                                      var userid = await storage
+                                                          .read(key: 'userid');
+
+                                                      if (userid != null) {
+                                                        var url =
+                                                            'https://api.sellship.co/api/favourite/' +
+                                                                userid;
+
+                                                        Map<String, String>
+                                                            body = {
+                                                          'itemid':
+                                                              topitems[index]
+                                                                  .itemid,
+                                                        };
+
+                                                        favourites.add(
+                                                            topitems[index]
+                                                                .itemid);
+                                                        setState(() {
+                                                          favourites =
+                                                              favourites;
+                                                          topitems[index]
+                                                                  .likes =
+                                                              topitems[index]
+                                                                      .likes +
+                                                                  1;
+                                                        });
+                                                        final response =
+                                                            await http.post(url,
+                                                                body:
+                                                                    json.encode(
+                                                                        body));
+
+                                                        if (response
+                                                                .statusCode ==
+                                                            200) {
+                                                        } else {
+                                                          print(response
+                                                              .statusCode);
+                                                        }
+                                                      } else {
+                                                        showInSnackBar(
+                                                            'Please Login to use Favourites');
+                                                      }
+                                                    },
+                                                    child: CircleAvatar(
+                                                        radius: 16,
+                                                        backgroundColor: Colors
+                                                            .blueGrey.shade50,
+                                                        child: CircleAvatar(
+                                                          radius: 15,
+                                                          backgroundColor:
+                                                              Colors.white,
+                                                          child: Icon(
+                                                            Feather.heart,
+                                                            color:
+                                                                Colors.blueGrey,
+                                                            size: 16,
+                                                          ),
+                                                        )))
+                                            : CircleAvatar(
+                                                radius: 16,
+                                                backgroundColor:
+                                                    Colors.blueGrey.shade50,
+                                                child: CircleAvatar(
+                                                  radius: 15,
+                                                  backgroundColor: Colors.white,
+                                                  child: Icon(
+                                                    Feather.heart,
+                                                    color: Colors.blueGrey,
+                                                    size: 16,
+                                                  ),
+                                                ))
+                                      ],
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                    ),
+                                  ],
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ))
+                    : SliverToBoxAdapter(),
+                userList.isNotEmpty
+                    ? SliverToBoxAdapter(
+                        child: Padding(
+                            padding: EdgeInsets.only(left: 5, right: 5),
+                            child: Container(
+                                height: 250,
+                                width: MediaQuery.of(context).size.width,
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.white,
+                                ),
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Stores you may like',
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 22.0,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w800),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      SizedBox(height: 10),
+                                      Container(
+                                          height: 190,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          child: ListView.builder(
+                                              itemCount: userList.length,
+                                              scrollDirection: Axis.horizontal,
+                                              itemBuilder:
+                                                  (BuildContext context,
+                                                      int index) {
+                                                return new Padding(
+                                                  padding: EdgeInsets.only(
+                                                    right: 5,
+                                                    top: 10,
+                                                  ),
+                                                  child: Container(
+                                                    height: 190,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                    .size
+                                                                    .width /
+                                                                2 -
+                                                            100,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                                    child: InkWell(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                      StorePublic(
+                                                                        storeid:
+                                                                            userList[index].storeid,
+                                                                        storename:
+                                                                            userList[index].storename,
+                                                                      )),
+                                                        );
+                                                      },
+                                                      child: Column(
+                                                        children: [
+                                                          userList[index].storelogo !=
+                                                                      null &&
+                                                                  userList[
+                                                                          index]
+                                                                      .storelogo
+                                                                      .isNotEmpty
+                                                              ? Container(
+                                                                  height: 80,
+                                                                  width: 80,
+                                                                  child: ClipRRect(
+                                                                      borderRadius: BorderRadius.circular(50),
+                                                                      child: CachedNetworkImage(
+                                                                        height:
+                                                                            200,
+                                                                        width:
+                                                                            300,
+                                                                        imageUrl:
+                                                                            userList[index].storelogo,
+                                                                        fit: BoxFit
+                                                                            .cover,
+                                                                      )),
+                                                                )
+                                                              : CircleAvatar(
+                                                                  radius: 40,
+                                                                  backgroundColor: Colors
+                                                                      .deepOrangeAccent
+                                                                      .withOpacity(
+                                                                          0.3),
+                                                                  child:
+                                                                      ClipRRect(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            50),
+                                                                    child: Image
+                                                                        .asset(
+                                                                      'assets/personplaceholder.png',
+                                                                      fit: BoxFit
+                                                                          .fitWidth,
+                                                                    ),
+                                                                  )),
+                                                          SizedBox(
+                                                            height: 5,
+                                                          ),
+                                                          Container(
+                                                            height: 25,
+                                                            child: Text(
+                                                              '@' +
+                                                                  userList[
+                                                                          index]
+                                                                      .storename,
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'Helvetica',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize: 16,
+                                                                  color: Colors
+                                                                      .black),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 5,
+                                                          ),
+                                                          Container(
+                                                            height: 15,
+                                                            child: Text(
+                                                              userList[index]
+                                                                  .storetype,
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'Helvetica',
+                                                                  fontSize: 14,
+                                                                  color: Colors
+                                                                      .black),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 5,
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    5),
+                                                            child: Container(
+                                                              height: 30,
+                                                              width: 100,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                border: followingusers.contains(
+                                                                        userList[
+                                                                            index])
+                                                                    ? Border.all(
+                                                                        color: Colors
+                                                                            .white)
+                                                                    : Border.all(
+                                                                        color: Colors
+                                                                            .black
+                                                                            .withOpacity(0.2)),
+                                                                color: followingusers.contains(
+                                                                        userList[
+                                                                            index])
+                                                                    ? Colors
+                                                                        .deepOrange
+                                                                    : Colors
+                                                                        .white,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            5),
+                                                              ),
+                                                              child: InkWell(
+                                                                onTap:
+                                                                    () async {
+                                                                  followuser(
+                                                                      userList[
+                                                                          index]);
+                                                                },
+                                                                child: Center(
+                                                                  child: Text(
+                                                                    followingusers
+                                                                            .contains(userList[index])
+                                                                        ? 'Following'
+                                                                        : 'Follow',
+                                                                    style: TextStyle(
+                                                                        fontFamily:
+                                                                            'Helvetica',
+                                                                        fontSize:
+                                                                            16,
+                                                                        color: followingusers.contains(userList[index])
+                                                                            ? Colors
+                                                                                .white
+                                                                            : Colors
+                                                                                .black,
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              }))
+                                    ]))))
+                    : SliverToBoxAdapter(),
+                below100list.isNotEmpty
+                    ? SliverToBoxAdapter(
+                        child: Padding(
+                            padding: EdgeInsets.only(
+                                left: 16, top: 10, bottom: 10, right: 16),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                InkWell(
+                                  enableFeedback: true,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      CupertinoPageRoute(
+                                          builder: (context) => Below100()),
+                                    );
+                                  },
+                                  child: Text(
+                                    'Deals under 100',
+                                    style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 22.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      CupertinoPageRoute(
+                                          builder: (context) => Below100()),
+                                    );
+                                  },
+                                  enableFeedback: true,
+                                  child: Container(
+                                    padding: EdgeInsets.all(3),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.deepOrange),
+                                        borderRadius: BorderRadius.circular(5)),
+                                    child: Text('See All',
+                                        style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          color: Colors.deepOrange,
+                                          fontSize: 14.0,
+                                        )),
+                                  ),
+                                ),
+                              ],
+                            )),
+                      )
+                    : SliverToBoxAdapter(),
+                below100list.isNotEmpty
+                    ? SliverToBoxAdapter(
+                        child: Container(
+                        height: 275,
+                        width: MediaQuery.of(context).size.width,
+                        child: ListView.builder(
+                          itemCount: below100list.length,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (BuildContext context, int index) {
+                            return new Padding(
+                              padding: EdgeInsets.all(5),
+                              child: Container(
+                                height: 275,
+                                width:
+                                    MediaQuery.of(context).size.width / 2 - 20,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Column(
+                                  children: <Widget>[
+                                    new InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          CupertinoPageRoute(
+                                              builder: (context) => Details(
+                                                  itemid: below100list[index]
+                                                      .itemid,
+                                                  image:
+                                                      below100list[index].image,
+                                                  name:
+                                                      below100list[index].name,
+                                                  sold:
+                                                      below100list[index].sold,
+                                                  source: 'below100')),
+                                        );
+                                      },
+                                      child: Stack(children: <Widget>[
+                                        Container(
+                                          height: 220,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            child: Hero(
+                                              tag:
+                                                  'below100${below100list[index].itemid}',
+                                              child: CachedNetworkImage(
+                                                height: 200,
+                                                width: 300,
+                                                fadeInDuration:
+                                                    Duration(microseconds: 5),
+                                                imageUrl: below100list[index]
+                                                        .image
+                                                        .isEmpty
+                                                    ? SpinKitDoubleBounce(
+                                                        color:
+                                                            Colors.deepOrange)
+                                                    : below100list[index].image,
+                                                fit: BoxFit.cover,
+                                                placeholder: (context, url) =>
+                                                    SpinKitDoubleBounce(
+                                                        color:
+                                                            Colors.deepOrange),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Icon(Icons.error),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        below100list[index].sold == true
+                                            ? Align(
+                                                alignment: Alignment.center,
+                                                child: Container(
+                                                  height: 50,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors
+                                                        .deepOrangeAccent
+                                                        .withOpacity(0.8),
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                            topLeft: Radius
+                                                                .circular(10),
+                                                            topRight:
+                                                                Radius.circular(
+                                                                    10)),
+                                                  ),
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  child: Center(
+                                                    child: Text(
+                                                      'Sold',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                  ),
+                                                ))
+                                            : Container(),
+                                      ]),
+                                    ),
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                            child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              below100list[index].name,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 1,
+                                            ),
+                                            Text(
+                                              currency +
+                                                  ' ' +
+                                                  below100list[index].price,
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold),
+                                            )
+                                          ],
+                                        )),
+                                        favourites != null
+                                            ? favourites.contains(
+                                                    below100list[index].itemid)
+                                                ? InkWell(
+                                                    enableFeedback: true,
+                                                    onTap: () async {
+                                                      var userid = await storage
+                                                          .read(key: 'userid');
+
+                                                      if (userid != null) {
+                                                        var url =
+                                                            'https://api.sellship.co/api/favourite/' +
+                                                                userid;
+
+                                                        Map<String, String>
+                                                            body = {
+                                                          'itemid':
+                                                              below100list[
+                                                                      index]
+                                                                  .itemid,
+                                                        };
+
+                                                        favourites.remove(
+                                                            below100list[index]
+                                                                .itemid);
+                                                        setState(() {
+                                                          favourites =
+                                                              favourites;
+                                                          below100list[index]
+                                                                  .likes =
+                                                              below100list[
+                                                                          index]
+                                                                      .likes -
+                                                                  1;
+                                                        });
+                                                        final response =
+                                                            await http.post(url,
+                                                                body:
+                                                                    json.encode(
+                                                                        body));
+
+                                                        if (response
+                                                                .statusCode ==
+                                                            200) {
+                                                        } else {
+                                                          print(response
+                                                              .statusCode);
+                                                        }
+                                                      } else {
+                                                        showInSnackBar(
+                                                            'Please Login to use Favourites');
+                                                      }
+                                                    },
+                                                    child: CircleAvatar(
+                                                      radius: 16,
+                                                      backgroundColor:
+                                                          Colors.deepOrange,
+                                                      child: Icon(
+                                                        FontAwesome.heart,
+                                                        color: Colors.white,
+                                                        size: 15,
+                                                      ),
+                                                    ))
+                                                : InkWell(
+                                                    enableFeedback: true,
+                                                    onTap: () async {
+                                                      var userid = await storage
+                                                          .read(key: 'userid');
+
+                                                      if (userid != null) {
+                                                        var url =
+                                                            'https://api.sellship.co/api/favourite/' +
+                                                                userid;
+
+                                                        Map<String, String>
+                                                            body = {
+                                                          'itemid':
+                                                              below100list[
+                                                                      index]
+                                                                  .itemid,
+                                                        };
+
+                                                        favourites.add(
+                                                            below100list[index]
+                                                                .itemid);
+                                                        setState(() {
+                                                          favourites =
+                                                              favourites;
+                                                          below100list[index]
+                                                                  .likes =
+                                                              below100list[
+                                                                          index]
+                                                                      .likes +
+                                                                  1;
+                                                        });
+                                                        final response =
+                                                            await http.post(url,
+                                                                body:
+                                                                    json.encode(
+                                                                        body));
+
+                                                        if (response
+                                                                .statusCode ==
+                                                            200) {
+                                                        } else {
+                                                          print(response
+                                                              .statusCode);
+                                                        }
+                                                      } else {
+                                                        showInSnackBar(
+                                                            'Please Login to use Favourites');
+                                                      }
+                                                    },
+                                                    child: CircleAvatar(
+                                                        radius: 16,
+                                                        backgroundColor: Colors
+                                                            .blueGrey.shade50,
+                                                        child: CircleAvatar(
+                                                          radius: 15,
+                                                          backgroundColor:
+                                                              Colors.white,
+                                                          child: Icon(
+                                                            Feather.heart,
+                                                            color:
+                                                                Colors.blueGrey,
+                                                            size: 16,
+                                                          ),
+                                                        )))
+                                            : CircleAvatar(
+                                                radius: 16,
+                                                backgroundColor:
+                                                    Colors.blueGrey.shade50,
+                                                child: CircleAvatar(
+                                                  radius: 15,
+                                                  backgroundColor: Colors.white,
+                                                  child: Icon(
+                                                    Feather.heart,
+                                                    color: Colors.blueGrey,
+                                                    size: 16,
+                                                  ),
+                                                ))
+                                      ],
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                    )
+                                  ],
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ))
+                    : SliverToBoxAdapter(),
+                foryoulist.isNotEmpty
+                    ? SliverToBoxAdapter(
+                        child: Padding(
+                            padding: EdgeInsets.only(
+                                left: 16, top: 10, bottom: 15, right: 16),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                InkWell(
+                                  enableFeedback: true,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      CupertinoPageRoute(
+                                          builder: (context) => NearMe()),
+                                    );
+                                  },
+                                  child: Text(
+                                    'For You',
+                                    style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 22.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      CupertinoPageRoute(
+                                          builder: (context) => ForYou()),
+                                    );
+                                  },
+                                  enableFeedback: true,
+                                  child: Container(
+                                    padding: EdgeInsets.all(3),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.deepOrange),
+                                        borderRadius: BorderRadius.circular(5)),
+                                    child: Text('See All',
+                                        style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          color: Colors.deepOrange,
+                                          fontSize: 14.0,
+                                        )),
+                                  ),
+                                ),
+                              ],
+                            )),
+                      )
+                    : SliverToBoxAdapter(),
+                foryoulist.isNotEmpty
+                    ? SliverToBoxAdapter(
+                        child: Container(
+                            height: 200,
+                            width: MediaQuery.of(context).size.width,
+                            child: ListView.builder(
+                                itemCount: foryoulist.length,
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        CupertinoPageRoute(
+                                            builder: (context) => Details(
+                                                item: foryoulist[index],
+                                                itemid:
+                                                    foryoulist[index].itemid,
+                                                image: foryoulist[index].image,
+                                                name: foryoulist[index].name,
+                                                sold: foryoulist[index].sold,
+                                                source: 'foryou')),
+                                      );
+                                    },
+                                    child: Stack(children: <Widget>[
+                                      Container(
+                                        height: 200,
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                2,
+                                        child: ClipRRect(
+                                          child: Hero(
+                                            tag:
+                                                'foryou${foryoulist[index].itemid}',
+                                            child: CachedNetworkImage(
+                                              height: 200,
+                                              width: 300,
+                                              fadeInDuration:
+                                                  Duration(microseconds: 5),
+                                              imageUrl: foryoulist[index]
+                                                      .image
+                                                      .isEmpty
+                                                  ? SpinKitDoubleBounce(
+                                                      color: Colors.deepOrange)
+                                                  : foryoulist[index].image,
+                                              fit: BoxFit.cover,
+                                              placeholder: (context, url) =>
+                                                  SpinKitDoubleBounce(
+                                                      color: Colors.deepOrange),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Icon(Icons.error),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      foryoulist[index].sold == true
+                                          ? Align(
+                                              alignment: Alignment.center,
+                                              child: Container(
+                                                height: 50,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.deepOrangeAccent
+                                                      .withOpacity(0.8),
+                                                ),
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    2,
+                                                child: Center(
+                                                  child: Text(
+                                                    'Sold',
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        fontFamily: 'Helvetica',
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                              ))
+                                          : Container(),
+                                    ]),
+                                  );
+                                })))
+                    : SliverToBoxAdapter(),
+                nearmeItems.isNotEmpty
+                    ? SliverToBoxAdapter(
+                        child: Padding(
+                            padding: EdgeInsets.only(
+                                left: 16, top: 20, bottom: 10, right: 16),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                InkWell(
+                                  enableFeedback: true,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      CupertinoPageRoute(
+                                          builder: (context) => NearMe()),
+                                    );
+                                  },
+                                  child: Text(
+                                    'Near You',
+                                    style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 22.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      CupertinoPageRoute(
+                                          builder: (context) => NearMe()),
+                                    );
+                                  },
+                                  enableFeedback: true,
+                                  child: Container(
+                                    padding: EdgeInsets.all(3),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.deepOrange),
+                                        borderRadius: BorderRadius.circular(5)),
+                                    child: Text('See All',
+                                        style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          color: Colors.deepOrange,
+                                          fontSize: 14.0,
+                                        )),
+                                  ),
+                                ),
+                              ],
+                            )),
+                      )
+                    : SliverToBoxAdapter(),
+                nearmeItems.isNotEmpty
+                    ? SliverToBoxAdapter(
+                        child: Container(
+                        height: 285,
+                        width: MediaQuery.of(context).size.width,
+                        child: ListView.builder(
+                          itemCount: nearmeItems.length,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (BuildContext context, int index) {
+                            return new Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Container(
+                                height: 285,
+                                width:
+                                    MediaQuery.of(context).size.width / 2 - 10,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Column(
+                                  children: <Widget>[
+                                    new InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          CupertinoPageRoute(
+                                              builder: (context) => Details(
+                                                  itemid:
+                                                      nearmeItems[index].itemid,
+                                                  image:
+                                                      nearmeItems[index].image,
+                                                  name: nearmeItems[index].name,
+                                                  sold: nearmeItems[index].sold,
+                                                  source: 'nearme')),
+                                        );
+                                      },
+                                      child: Stack(children: <Widget>[
+                                        Container(
+                                          height: 220,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey.shade300,
+                                                offset:
+                                                    Offset(0.0, 1.0), //(x,y)
+                                                blurRadius: 6.0,
+                                              ),
+                                            ],
+                                          ),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            child: Hero(
+                                              tag:
+                                                  'nearme${nearmeItems[index].itemid}',
+                                              child: CachedNetworkImage(
+                                                height: 200,
+                                                width: 300,
+                                                fadeInDuration:
+                                                    Duration(microseconds: 5),
+                                                imageUrl: nearmeItems[index]
+                                                        .image
+                                                        .isEmpty
+                                                    ? SpinKitDoubleBounce(
+                                                        color:
+                                                            Colors.deepOrange)
+                                                    : nearmeItems[index].image,
+                                                fit: BoxFit.cover,
+                                                placeholder: (context, url) =>
+                                                    SpinKitDoubleBounce(
+                                                        color:
+                                                            Colors.deepOrange),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Icon(Icons.error),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        nearmeItems[index].sold == true
+                                            ? Align(
+                                                alignment: Alignment.center,
+                                                child: Container(
+                                                  height: 50,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors
+                                                        .deepOrangeAccent
+                                                        .withOpacity(0.8),
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                            topLeft: Radius
+                                                                .circular(10),
+                                                            topRight:
+                                                                Radius.circular(
+                                                                    10)),
+                                                  ),
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  child: Center(
+                                                    child: Text(
+                                                      'Sold',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                  ),
+                                                ))
+                                            : Container(),
+                                      ]),
+                                    ),
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                            child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              nearmeItems[index].name,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 2,
+                                            ),
+                                            Text(
+                                              currency +
+                                                  ' ' +
+                                                  nearmeItems[index].price,
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold),
+                                            )
+                                          ],
+                                        )),
+                                        favourites != null
+                                            ? favourites.contains(
+                                                    nearmeItems[index].itemid)
+                                                ? InkWell(
+                                                    enableFeedback: true,
+                                                    onTap: () async {
+                                                      var userid = await storage
+                                                          .read(key: 'userid');
+
+                                                      if (userid != null) {
+                                                        var url =
+                                                            'https://api.sellship.co/api/favourite/' +
+                                                                userid;
+
+                                                        Map<String, String>
+                                                            body = {
+                                                          'itemid':
+                                                              nearmeItems[index]
+                                                                  .itemid,
+                                                        };
+
+                                                        favourites.remove(
+                                                            topitems[index]
+                                                                .itemid);
+                                                        setState(() {
+                                                          favourites =
+                                                              favourites;
+                                                          nearmeItems[index]
+                                                                  .likes =
+                                                              nearmeItems[index]
+                                                                      .likes -
+                                                                  1;
+                                                        });
+                                                        final response =
+                                                            await http.post(url,
+                                                                body:
+                                                                    json.encode(
+                                                                        body));
+
+                                                        if (response
+                                                                .statusCode ==
+                                                            200) {
+                                                        } else {
+                                                          print(response
+                                                              .statusCode);
+                                                        }
+                                                      } else {
+                                                        showInSnackBar(
+                                                            'Please Login to use Favourites');
+                                                      }
+                                                    },
+                                                    child: CircleAvatar(
+                                                      radius: 16,
+                                                      backgroundColor:
+                                                          Colors.deepOrange,
+                                                      child: Icon(
+                                                        FontAwesome.heart,
+                                                        color: Colors.white,
+                                                        size: 15,
+                                                      ),
+                                                    ))
+                                                : InkWell(
+                                                    enableFeedback: true,
+                                                    onTap: () async {
+                                                      var userid = await storage
+                                                          .read(key: 'userid');
+
+                                                      if (userid != null) {
+                                                        var url =
+                                                            'https://api.sellship.co/api/favourite/' +
+                                                                userid;
+
+                                                        Map<String, String>
+                                                            body = {
+                                                          'itemid':
+                                                              nearmeItems[index]
+                                                                  .itemid,
+                                                        };
+
+                                                        favourites.add(
+                                                            nearmeItems[index]
+                                                                .itemid);
+                                                        setState(() {
+                                                          favourites =
+                                                              favourites;
+                                                          nearmeItems[index]
+                                                                  .likes =
+                                                              nearmeItems[index]
+                                                                      .likes +
+                                                                  1;
+                                                        });
+                                                        final response =
+                                                            await http.post(url,
+                                                                body:
+                                                                    json.encode(
+                                                                        body));
+
+                                                        if (response
+                                                                .statusCode ==
+                                                            200) {
+                                                        } else {
+                                                          print(response
+                                                              .statusCode);
+                                                        }
+                                                      } else {
+                                                        showInSnackBar(
+                                                            'Please Login to use Favourites');
+                                                      }
+                                                    },
+                                                    child: CircleAvatar(
+                                                      radius: 18,
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      child: Icon(
+                                                        Feather.heart,
+                                                        color: Colors.blueGrey,
+                                                        size: 16,
+                                                      ),
+                                                    ))
+                                            : CircleAvatar(
+                                                radius: 16,
+                                                backgroundColor:
+                                                    Colors.blueGrey.shade50,
+                                                child: CircleAvatar(
+                                                  radius: 15,
+                                                  backgroundColor: Colors.white,
+                                                  child: Icon(
+                                                    Feather.heart,
+                                                    color: Colors.blueGrey,
+                                                    size: 16,
+                                                  ),
+                                                ))
+                                      ],
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                    )
+                                  ],
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ))
+                    : SliverToBoxAdapter(),
+                SliverToBoxAdapter(
+                  child: Padding(
+                      padding: EdgeInsets.only(
+                          left: 16, top: 20, bottom: 10, right: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            enableFeedback: true,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                    builder: (context) => RecentlyAdded()),
+                              );
+                            },
+                            child: Text(
+                              'New In',
+                              style: TextStyle(
+                                  fontFamily: 'Helvetica',
+                                  fontSize: 22.0,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                    builder: (context) => RecentlyAdded()),
+                              );
+                            },
+                            enableFeedback: true,
+                            child: Container(
+                              padding: EdgeInsets.all(3),
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.deepOrange),
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: Text('See All',
+                                  style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    color: Colors.deepOrange,
+                                    fontSize: 14.0,
+                                  )),
+                            ),
+                          ),
+                        ],
+                      )),
+                ),
+                itemsgrid.isNotEmpty
+                    ? SliverToBoxAdapter(
+                        child: Container(
+                        height: 285,
+                        width: MediaQuery.of(context).size.width,
+                        child: ListView.builder(
+                          itemCount: itemsgrid.length,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (BuildContext context, int index) {
+                            return new Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Container(
+                                height: 285,
+                                width:
+                                    MediaQuery.of(context).size.width / 2 - 20,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Column(
+                                  children: <Widget>[
+                                    new InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          CupertinoPageRoute(
+                                              builder: (context) => Details(
+                                                  itemid:
+                                                      itemsgrid[index].itemid,
+                                                  image: itemsgrid[index].image,
+                                                  name: itemsgrid[index].name,
+                                                  sold: itemsgrid[index].sold,
+                                                  source: 'newin')),
+                                        );
+                                      },
+                                      child: Stack(children: <Widget>[
+                                        Container(
+                                          height: 220,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey.shade300,
+                                                offset:
+                                                    Offset(0.0, 1.0), //(x,y)
+                                                blurRadius: 6.0,
+                                              ),
+                                            ],
+                                          ),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            child: Hero(
+                                              tag:
+                                                  'newin${itemsgrid[index].itemid}',
+                                              child: CachedNetworkImage(
+                                                height: 200,
+                                                width: 300,
+                                                fadeInDuration:
+                                                    Duration(microseconds: 5),
+                                                imageUrl: itemsgrid[index]
+                                                        .image
+                                                        .isEmpty
+                                                    ? SpinKitDoubleBounce(
+                                                        color:
+                                                            Colors.deepOrange)
+                                                    : itemsgrid[index].image,
+                                                fit: BoxFit.cover,
+                                                placeholder: (context, url) =>
+                                                    SpinKitDoubleBounce(
+                                                        color:
+                                                            Colors.deepOrange),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Icon(Icons.error),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        itemsgrid[index].sold == true
+                                            ? Align(
+                                                alignment: Alignment.center,
+                                                child: Container(
+                                                  height: 50,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors
+                                                        .deepOrangeAccent
+                                                        .withOpacity(0.8),
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                            topLeft: Radius
+                                                                .circular(10),
+                                                            topRight:
+                                                                Radius.circular(
+                                                                    10)),
+                                                  ),
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  child: Center(
+                                                    child: Text(
+                                                      'Sold',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                  ),
+                                                ))
+                                            : Container(),
+                                      ]),
+                                    ),
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                            child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              itemsgrid[index].name,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 2,
+                                            ),
+                                            Text(
+                                              currency +
+                                                  ' ' +
+                                                  itemsgrid[index].price,
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold),
+                                            )
+                                          ],
+                                        )),
+                                        favourites != null
+                                            ? favourites.contains(
+                                                    itemsgrid[index].itemid)
+                                                ? InkWell(
+                                                    enableFeedback: true,
+                                                    onTap: () async {
+                                                      var userid = await storage
+                                                          .read(key: 'userid');
+
+                                                      if (userid != null) {
+                                                        var url =
+                                                            'https://api.sellship.co/api/favourite/' +
+                                                                userid;
+
+                                                        Map<String, String>
+                                                            body = {
+                                                          'itemid':
+                                                              itemsgrid[index]
+                                                                  .itemid,
+                                                        };
+
+                                                        favourites.remove(
+                                                            itemsgrid[index]
+                                                                .itemid);
+                                                        setState(() {
+                                                          favourites =
+                                                              favourites;
+                                                          itemsgrid[index]
+                                                                  .likes =
+                                                              itemsgrid[index]
+                                                                      .likes -
+                                                                  1;
+                                                        });
+                                                        final response =
+                                                            await http.post(url,
+                                                                body:
+                                                                    json.encode(
+                                                                        body));
+
+                                                        if (response
+                                                                .statusCode ==
+                                                            200) {
+                                                        } else {
+                                                          print(response
+                                                              .statusCode);
+                                                        }
+                                                      } else {
+                                                        showInSnackBar(
+                                                            'Please Login to use Favourites');
+                                                      }
+                                                    },
+                                                    child: CircleAvatar(
+                                                      radius: 16,
+                                                      backgroundColor:
+                                                          Colors.deepOrange,
+                                                      child: Icon(
+                                                        FontAwesome.heart,
+                                                        color: Colors.white,
+                                                        size: 15,
+                                                      ),
+                                                    ))
+                                                : InkWell(
+                                                    enableFeedback: true,
+                                                    onTap: () async {
+                                                      var userid = await storage
+                                                          .read(key: 'userid');
+
+                                                      if (userid != null) {
+                                                        var url =
+                                                            'https://api.sellship.co/api/favourite/' +
+                                                                userid;
+
+                                                        Map<String, String>
+                                                            body = {
+                                                          'itemid':
+                                                              itemsgrid[index]
+                                                                  .itemid,
+                                                        };
+
+                                                        favourites.add(
+                                                            itemsgrid[index]
+                                                                .itemid);
+                                                        setState(() {
+                                                          favourites =
+                                                              favourites;
+                                                          itemsgrid[index]
+                                                                  .likes =
+                                                              itemsgrid[index]
+                                                                      .likes +
+                                                                  1;
+                                                        });
+                                                        final response =
+                                                            await http.post(url,
+                                                                body:
+                                                                    json.encode(
+                                                                        body));
+
+                                                        if (response
+                                                                .statusCode ==
+                                                            200) {
+                                                        } else {
+                                                          print(response
+                                                              .statusCode);
+                                                        }
+                                                      } else {
+                                                        showInSnackBar(
+                                                            'Please Login to use Favourites');
+                                                      }
+                                                    },
+                                                    child: CircleAvatar(
+                                                        radius: 16,
+                                                        backgroundColor: Colors
+                                                            .blueGrey.shade50,
+                                                        child: CircleAvatar(
+                                                          radius: 15,
+                                                          backgroundColor:
+                                                              Colors.white,
+                                                          child: Icon(
+                                                            Feather.heart,
+                                                            color:
+                                                                Colors.blueGrey,
+                                                            size: 16,
+                                                          ),
+                                                        )))
+                                            : CircleAvatar(
+                                                radius: 16,
+                                                backgroundColor:
+                                                    Colors.blueGrey.shade50,
+                                                child: CircleAvatar(
+                                                  radius: 15,
+                                                  backgroundColor: Colors.white,
+                                                  child: Icon(
+                                                    Feather.heart,
+                                                    color: Colors.blueGrey,
+                                                    size: 16,
+                                                  ),
+                                                ))
+                                      ],
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                    )
+                                  ],
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ))
+                    : SliverToBoxAdapter(),
+                blogsList.isNotEmpty
+                    ? SliverToBoxAdapter(
+                        child: Padding(
+                        padding: EdgeInsets.only(
+                            left: 16, bottom: 10, right: 36, top: 5),
+                        child: Text(
+                          'Latest Articles',
+                          style: TextStyle(
+                              fontFamily: 'Helvetica',
+                              fontSize: 22.0,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ))
+                    : SliverToBoxAdapter(),
+                blogsList.isNotEmpty
+                    ? SliverToBoxAdapter(
+                        child: CarouselSlider(
+                        options: CarouselOptions(
+                          height: 200.0,
+                          aspectRatio: 16 / 9,
+                          viewportFraction: 1,
+                          initialPage: 0,
+                          enableInfiniteScroll: true,
+                          reverse: false,
+                          autoPlay: true,
+                          autoPlayInterval: Duration(seconds: 3),
+                          autoPlayAnimationDuration:
+                              Duration(milliseconds: 800),
+                          autoPlayCurve: Curves.fastOutSlowIn,
+                          enlargeCenterPage: true,
+                        ),
+                        items: blogsList.map((blog) {
+                          return Builder(
+                            builder: (BuildContext context) {
                               return InkWell(
                                   onTap: () {
                                     Navigator.push(
                                       context,
                                       CupertinoPageRoute(
-                                          builder: (context) => SubCategory(
-                                                subcategory:
-                                                    subcategoryList[index].name,
-                                                categoryimage:
-                                                    subcategoryList[index]
-                                                        .image,
+                                          builder: (context) => BlogPage(
+                                                title: blog.blogname,
+                                                content: blog.blogcontent,
+                                                related: blog.relatedposts,
+                                                image: blog.blogimage,
+                                                blogid: blog.blogid,
                                               )),
                                     );
                                   },
-                                  child: Column(
+                                  enableFeedback: true,
+                                  child: Stack(
                                     children: [
                                       Container(
-                                        height: 100,
-                                        width: 100,
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            border: Border.all(
-                                                color: Color.fromRGBO(
-                                                    255, 115, 0, 0.7),
-                                                width: 5),
+                                          height: 200,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          margin: EdgeInsets.symmetric(
+                                              horizontal: 5.0),
+                                          decoration: BoxDecoration(
+                                              color: Colors.deepOrange,
+                                              borderRadius:
+                                                  BorderRadius.circular(5)),
+                                          child: ClipRRect(
                                             borderRadius:
-                                                BorderRadius.circular(60)),
-                                        child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(60),
-                                            child: CachedNetworkImage(
-                                              height: 120,
-                                              width: 120,
-                                              imageUrl:
-                                                  subcategoryList[index].image,
-                                              fit: BoxFit.cover,
-                                            )),
-                                      ),
-                                      Container(
-                                        height: 50,
-                                        width: 120,
-                                        padding: EdgeInsets.all(5),
-                                        child: Center(
+                                                BorderRadius.circular(5),
+                                            child: Hero(
+                                              tag: 'Blog${blog.blogid}',
+                                              child: CachedNetworkImage(
+                                                imageUrl: blog.blogimage,
+                                                fit: BoxFit.cover,
+                                                fadeInDuration:
+                                                    Duration(microseconds: 5),
+                                                placeholder: (context, url) =>
+                                                    SpinKitDoubleBounce(
+                                                        color:
+                                                            Colors.deepOrange),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Icon(Icons.error),
+                                              ),
+                                            ),
+                                          )),
+                                      Align(
+                                        alignment: Alignment.bottomLeft,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                              bottom: 10, left: 20, right: 10),
                                           child: Text(
-                                            subcategoryList[index].name,
-                                            textAlign: TextAlign.center,
+                                            blog.blogname,
                                             style: TextStyle(
                                                 fontFamily: 'Helvetica',
-                                                fontSize: 14,
-                                                color: Colors.black,
+                                                fontSize: 20.0,
+                                                color: Colors.white,
                                                 fontWeight: FontWeight.w800),
                                           ),
                                         ),
-                                      ),
+                                      )
                                     ],
                                   ));
                             },
-                          )))
-                  : SliverToBoxAdapter(),
-              topitems.isNotEmpty
-                  ? SliverToBoxAdapter(
-                      child: Padding(
-                          padding:
-                              EdgeInsets.only(left: 16, bottom: 10, right: 36),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              InkWell(
-                                enableFeedback: true,
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                        builder: (context) => TopPicks()),
-                                  );
-                                },
-                                child: Text(
-                                  'Top Picks',
-                                  style: TextStyle(
-                                      fontFamily: 'Helvetica',
-                                      fontSize: 22.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                        builder: (context) => TopPicks()),
-                                  );
-                                },
-                                enableFeedback: true,
-                                child: Text(
-                                  'See All',
-                                  style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 16.0,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )),
-                    )
-                  : SliverToBoxAdapter(),
-              topitems.isNotEmpty
-                  ? SliverToBoxAdapter(
-                      child: Container(
-                      height: 285,
-                      width: MediaQuery.of(context).size.width,
-                      child: ListView.builder(
-                        itemCount: topitems.length > 20 ? 20 : topitems.length,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (BuildContext context, int index) {
-                          return new Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Container(
-                              height: 270,
-                              width: MediaQuery.of(context).size.width / 2 - 20,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Column(
-                                children: <Widget>[
-                                  new InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        CupertinoPageRoute(
-                                            builder: (context) => Details(
-                                                itemid: topitems[index].itemid,
-                                                image: topitems[index].image,
-                                                name: topitems[index].name,
-                                                sold: topitems[index].sold,
-                                                source: 'top')),
-                                      );
-                                    },
-                                    child: Stack(children: <Widget>[
-                                      Container(
-                                        height: 215,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          child: Hero(
-                                            tag: 'top${topitems[index].itemid}',
-                                            child: CachedNetworkImage(
-                                              height: 200,
-                                              width: 300,
-                                              fadeInDuration:
-                                                  Duration(microseconds: 5),
-                                              imageUrl: topitems[index]
-                                                      .image
-                                                      .isEmpty
-                                                  ? SpinKitDoubleBounce(
-                                                      color: Colors.deepOrange)
-                                                  : topitems[index].image,
-                                              fit: BoxFit.cover,
-                                              placeholder: (context, url) =>
-                                                  SpinKitDoubleBounce(
-                                                      color: Colors.deepOrange),
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      Icon(Icons.error),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      topitems[index].sold == true
-                                          ? Align(
-                                              alignment: Alignment.center,
-                                              child: Container(
-                                                height: 50,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.deepOrangeAccent
-                                                      .withOpacity(0.8),
-                                                  borderRadius:
-                                                      BorderRadius.only(
-                                                          topLeft:
-                                                              Radius.circular(
-                                                                  10),
-                                                          topRight:
-                                                              Radius.circular(
-                                                                  10)),
-                                                ),
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                child: Center(
-                                                  child: Text(
-                                                    'Sold',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        fontFamily: 'Helvetica',
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                ),
-                                              ))
-                                          : Container(),
-                                    ]),
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                          child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            topitems[index].name,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          SizedBox(
-                                            height: 1,
-                                          ),
-                                          Text(
-                                            currency +
-                                                ' ' +
-                                                topitems[index].price,
-                                          )
-                                        ],
-                                      )),
-                                      favourites != null
-                                          ? favourites.contains(
-                                                  topitems[index].itemid)
-                                              ? InkWell(
-                                                  enableFeedback: true,
-                                                  onTap: () async {
-                                                    var userid = await storage
-                                                        .read(key: 'userid');
-
-                                                    if (userid != null) {
-                                                      var url =
-                                                          'https://api.sellship.co/api/favourite/' +
-                                                              userid;
-
-                                                      Map<String, String> body =
-                                                          {
-                                                        'itemid':
-                                                            topitems[index]
-                                                                .itemid,
-                                                      };
-
-                                                      favourites.remove(
-                                                          topitems[index]
-                                                              .itemid);
-                                                      setState(() {
-                                                        favourites = favourites;
-                                                        topitems[index].likes =
-                                                            topitems[index]
-                                                                    .likes -
-                                                                1;
-                                                      });
-                                                      final response =
-                                                          await http.post(url,
-                                                              body: json.encode(
-                                                                  body));
-                                                      if (response.statusCode ==
-                                                          200) {
-                                                      } else {
-                                                        print(response
-                                                            .statusCode);
-                                                      }
-                                                    } else {
-                                                      showInSnackBar(
-                                                          'Please Login to use Favourites');
-                                                    }
-                                                  },
-                                                  child: CircleAvatar(
-                                                    radius: 16,
-                                                    backgroundColor:
-                                                        Colors.deepOrange,
-                                                    child: Icon(
-                                                      FontAwesome.heart,
-                                                      color: Colors.white,
-                                                      size: 15,
-                                                    ),
-                                                  ))
-                                              : InkWell(
-                                                  enableFeedback: true,
-                                                  onTap: () async {
-                                                    var userid = await storage
-                                                        .read(key: 'userid');
-
-                                                    if (userid != null) {
-                                                      var url =
-                                                          'https://api.sellship.co/api/favourite/' +
-                                                              userid;
-
-                                                      Map<String, String> body =
-                                                          {
-                                                        'itemid':
-                                                            topitems[index]
-                                                                .itemid,
-                                                      };
-
-                                                      favourites.add(
-                                                          topitems[index]
-                                                              .itemid);
-                                                      setState(() {
-                                                        favourites = favourites;
-                                                        topitems[index].likes =
-                                                            topitems[index]
-                                                                    .likes +
-                                                                1;
-                                                      });
-                                                      final response =
-                                                          await http.post(url,
-                                                              body: json.encode(
-                                                                  body));
-
-                                                      if (response.statusCode ==
-                                                          200) {
-                                                      } else {
-                                                        print(response
-                                                            .statusCode);
-                                                      }
-                                                    } else {
-                                                      showInSnackBar(
-                                                          'Please Login to use Favourites');
-                                                    }
-                                                  },
-                                                  child: CircleAvatar(
-                                                      radius: 16,
-                                                      backgroundColor: Colors
-                                                          .blueGrey.shade50,
-                                                      child: CircleAvatar(
-                                                        radius: 15,
-                                                        backgroundColor:
-                                                            Colors.white,
-                                                        child: Icon(
-                                                          Feather.heart,
-                                                          color:
-                                                              Colors.blueGrey,
-                                                          size: 16,
-                                                        ),
-                                                      )))
-                                          : CircleAvatar(
-                                              radius: 16,
-                                              backgroundColor:
-                                                  Colors.blueGrey.shade50,
-                                              child: CircleAvatar(
-                                                radius: 15,
-                                                backgroundColor: Colors.white,
-                                                child: Icon(
-                                                  Feather.heart,
-                                                  color: Colors.blueGrey,
-                                                  size: 16,
-                                                ),
-                                              ))
-                                    ],
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                  ),
-                                ],
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                              ),
-                            ),
                           );
-                        },
-                      ),
-                    ))
-                  : SliverToBoxAdapter(),
-              userList.isNotEmpty
-                  ? SliverToBoxAdapter(
-                      child: Padding(
-                          padding: EdgeInsets.only(left: 5, right: 5),
-                          child: Container(
-                              height: 250,
-                              width: MediaQuery.of(context).size.width,
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.white,
-                              ),
-                              child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Stores you may like',
-                                      style: TextStyle(
-                                          fontFamily: 'Helvetica',
-                                          fontSize: 22.0,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w800),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    SizedBox(height: 10),
-                                    Container(
-                                        height: 190,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        child: ListView.builder(
-                                            itemCount: userList.length,
-                                            scrollDirection: Axis.horizontal,
-                                            itemBuilder: (BuildContext context,
-                                                int index) {
-                                              return new Padding(
-                                                padding: EdgeInsets.only(
-                                                  right: 5,
-                                                  top: 10,
-                                                ),
-                                                child: Container(
-                                                  height: 190,
-                                                  width: MediaQuery.of(context)
-                                                              .size
-                                                              .width /
-                                                          2 -
-                                                      100,
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                  ),
-                                                  child: InkWell(
-                                                    onTap: () {
-                                                      Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder:
-                                                                (context) =>
-                                                                    StorePublic(
-                                                                      storeid: userList[
-                                                                              index]
-                                                                          .storeid,
-                                                                      storename:
-                                                                          userList[index]
-                                                                              .storename,
-                                                                    )),
-                                                      );
-                                                    },
-                                                    child: Column(
-                                                      children: [
-                                                        userList[index].storelogo !=
-                                                                    null &&
-                                                                userList[index]
-                                                                    .storelogo
-                                                                    .isNotEmpty
-                                                            ? Container(
-                                                                height: 80,
-                                                                width: 80,
-                                                                child:
-                                                                    ClipRRect(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(
-                                                                                50),
-                                                                        child:
-                                                                            CachedNetworkImage(
-                                                                          height:
-                                                                              200,
-                                                                          width:
-                                                                              300,
-                                                                          imageUrl:
-                                                                              userList[index].storelogo,
-                                                                          fit: BoxFit
-                                                                              .cover,
-                                                                        )),
-                                                              )
-                                                            : CircleAvatar(
-                                                                radius: 40,
-                                                                backgroundColor: Colors
-                                                                    .deepOrangeAccent
-                                                                    .withOpacity(
-                                                                        0.3),
-                                                                child:
-                                                                    ClipRRect(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              50),
-                                                                  child: Image
-                                                                      .asset(
-                                                                    'assets/personplaceholder.png',
-                                                                    fit: BoxFit
-                                                                        .fitWidth,
-                                                                  ),
-                                                                )),
-                                                        SizedBox(
-                                                          height: 5,
-                                                        ),
-                                                        Container(
-                                                          height: 25,
-                                                          child: Text(
-                                                            '@' +
-                                                                userList[index]
-                                                                    .storename,
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    'Helvetica',
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                fontSize: 16,
-                                                                color: Colors
-                                                                    .black),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 5,
-                                                        ),
-                                                        Container(
-                                                          height: 15,
-                                                          child: Text(
-                                                            userList[index]
-                                                                .storetype,
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    'Helvetica',
-                                                                fontSize: 14,
-                                                                color: Colors
-                                                                    .black),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 5,
-                                                        ),
-                                                        Padding(
-                                                          padding:
-                                                              EdgeInsets.all(5),
-                                                          child: Container(
-                                                            height: 30,
-                                                            width: 100,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              border: followingusers
-                                                                      .contains(
-                                                                          userList[
-                                                                              index])
-                                                                  ? Border.all(
-                                                                      color: Colors
-                                                                          .white)
-                                                                  : Border.all(
-                                                                      color: Colors
-                                                                          .black
-                                                                          .withOpacity(
-                                                                              0.2)),
-                                                              color: followingusers
-                                                                      .contains(
-                                                                          userList[
-                                                                              index])
-                                                                  ? Colors
-                                                                      .deepOrange
-                                                                  : Colors
-                                                                      .white,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          5),
-                                                            ),
-                                                            child: InkWell(
-                                                              onTap: () async {
-                                                                followuser(
-                                                                    userList[
-                                                                        index]);
-                                                              },
-                                                              child: Center(
-                                                                child: Text(
-                                                                  followingusers
-                                                                          .contains(
-                                                                              userList[index])
-                                                                      ? 'Following'
-                                                                      : 'Follow',
-                                                                  style: TextStyle(
-                                                                      fontFamily:
-                                                                          'Helvetica',
-                                                                      fontSize:
-                                                                          16,
-                                                                      color: followingusers.contains(userList[
-                                                                              index])
-                                                                          ? Colors
-                                                                              .white
-                                                                          : Colors
-                                                                              .black,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              );
-                                            }))
-                                  ]))))
-                  : SliverToBoxAdapter(),
-              below100list.isNotEmpty
-                  ? SliverToBoxAdapter(
-                      child: Padding(
-                          padding: EdgeInsets.only(
-                              left: 16, top: 10, bottom: 10, right: 36),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              InkWell(
-                                enableFeedback: true,
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                        builder: (context) => Below100()),
-                                  );
-                                },
-                                child: Text(
-                                  'Deals under 100',
-                                  style: TextStyle(
-                                      fontFamily: 'Helvetica',
-                                      fontSize: 22.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                        builder: (context) => Below100()),
-                                  );
-                                },
-                                enableFeedback: true,
-                                child: Text(
-                                  'See All',
-                                  style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 16.0,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )),
-                    )
-                  : SliverToBoxAdapter(),
-              below100list.isNotEmpty
-                  ? SliverToBoxAdapter(
-                      child: Container(
-                      height: 285,
-                      width: MediaQuery.of(context).size.width,
-                      child: ListView.builder(
-                        itemCount: below100list.length,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (BuildContext context, int index) {
-                          return new Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Container(
-                              height: 285,
-                              width: MediaQuery.of(context).size.width / 2 - 20,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Column(
-                                children: <Widget>[
-                                  new InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        CupertinoPageRoute(
-                                            builder: (context) => Details(
-                                                itemid:
-                                                    below100list[index].itemid,
-                                                image:
-                                                    below100list[index].image,
-                                                name: below100list[index].name,
-                                                sold: below100list[index].sold,
-                                                source: 'below100')),
-                                      );
-                                    },
-                                    child: Stack(children: <Widget>[
-                                      Container(
-                                        height: 220,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.grey.shade300,
-                                              offset: Offset(0.0, 1.0), //(x,y)
-                                              blurRadius: 6.0,
-                                            ),
-                                          ],
-                                        ),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          child: Hero(
-                                            tag:
-                                                'below100${below100list[index].itemid}',
-                                            child: CachedNetworkImage(
-                                              height: 200,
-                                              width: 300,
-                                              fadeInDuration:
-                                                  Duration(microseconds: 5),
-                                              imageUrl: below100list[index]
-                                                      .image
-                                                      .isEmpty
-                                                  ? SpinKitDoubleBounce(
-                                                      color: Colors.deepOrange)
-                                                  : below100list[index].image,
-                                              fit: BoxFit.cover,
-                                              placeholder: (context, url) =>
-                                                  SpinKitDoubleBounce(
-                                                      color: Colors.deepOrange),
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      Icon(Icons.error),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      below100list[index].sold == true
-                                          ? Align(
-                                              alignment: Alignment.center,
-                                              child: Container(
-                                                height: 50,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.deepOrangeAccent
-                                                      .withOpacity(0.8),
-                                                  borderRadius:
-                                                      BorderRadius.only(
-                                                          topLeft:
-                                                              Radius.circular(
-                                                                  10),
-                                                          topRight:
-                                                              Radius.circular(
-                                                                  10)),
-                                                ),
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                child: Center(
-                                                  child: Text(
-                                                    'Sold',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        fontFamily: 'Helvetica',
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                ),
-                                              ))
-                                          : Container(),
-                                    ]),
-                                  ),
-                                  SizedBox(
-                                    height: 4,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                          child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            below100list[index].name,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          SizedBox(
-                                            height: 1,
-                                          ),
-                                          Text(
-                                            currency +
-                                                ' ' +
-                                                below100list[index].price,
-                                          )
-                                        ],
-                                      )),
-                                      favourites != null
-                                          ? favourites.contains(
-                                                  below100list[index].itemid)
-                                              ? InkWell(
-                                                  enableFeedback: true,
-                                                  onTap: () async {
-                                                    var userid = await storage
-                                                        .read(key: 'userid');
-
-                                                    if (userid != null) {
-                                                      var url =
-                                                          'https://api.sellship.co/api/favourite/' +
-                                                              userid;
-
-                                                      Map<String, String> body =
-                                                          {
-                                                        'itemid':
-                                                            below100list[index]
-                                                                .itemid,
-                                                      };
-
-                                                      favourites.remove(
-                                                          below100list[index]
-                                                              .itemid);
-                                                      setState(() {
-                                                        favourites = favourites;
-                                                        below100list[index]
-                                                                .likes =
-                                                            below100list[index]
-                                                                    .likes -
-                                                                1;
-                                                      });
-                                                      final response =
-                                                          await http.post(url,
-                                                              body: json.encode(
-                                                                  body));
-
-                                                      if (response.statusCode ==
-                                                          200) {
-                                                      } else {
-                                                        print(response
-                                                            .statusCode);
-                                                      }
-                                                    } else {
-                                                      showInSnackBar(
-                                                          'Please Login to use Favourites');
-                                                    }
-                                                  },
-                                                  child: CircleAvatar(
-                                                    radius: 16,
-                                                    backgroundColor:
-                                                        Colors.deepOrange,
-                                                    child: Icon(
-                                                      FontAwesome.heart,
-                                                      color: Colors.white,
-                                                      size: 15,
-                                                    ),
-                                                  ))
-                                              : InkWell(
-                                                  enableFeedback: true,
-                                                  onTap: () async {
-                                                    var userid = await storage
-                                                        .read(key: 'userid');
-
-                                                    if (userid != null) {
-                                                      var url =
-                                                          'https://api.sellship.co/api/favourite/' +
-                                                              userid;
-
-                                                      Map<String, String> body =
-                                                          {
-                                                        'itemid':
-                                                            below100list[index]
-                                                                .itemid,
-                                                      };
-
-                                                      favourites.add(
-                                                          below100list[index]
-                                                              .itemid);
-                                                      setState(() {
-                                                        favourites = favourites;
-                                                        below100list[index]
-                                                                .likes =
-                                                            below100list[index]
-                                                                    .likes +
-                                                                1;
-                                                      });
-                                                      final response =
-                                                          await http.post(url,
-                                                              body: json.encode(
-                                                                  body));
-
-                                                      if (response.statusCode ==
-                                                          200) {
-                                                      } else {
-                                                        print(response
-                                                            .statusCode);
-                                                      }
-                                                    } else {
-                                                      showInSnackBar(
-                                                          'Please Login to use Favourites');
-                                                    }
-                                                  },
-                                                  child: CircleAvatar(
-                                                      radius: 16,
-                                                      backgroundColor: Colors
-                                                          .blueGrey.shade50,
-                                                      child: CircleAvatar(
-                                                        radius: 15,
-                                                        backgroundColor:
-                                                            Colors.white,
-                                                        child: Icon(
-                                                          Feather.heart,
-                                                          color:
-                                                              Colors.blueGrey,
-                                                          size: 16,
-                                                        ),
-                                                      )))
-                                          : CircleAvatar(
-                                              radius: 16,
-                                              backgroundColor:
-                                                  Colors.blueGrey.shade50,
-                                              child: CircleAvatar(
-                                                radius: 15,
-                                                backgroundColor: Colors.white,
-                                                child: Icon(
-                                                  Feather.heart,
-                                                  color: Colors.blueGrey,
-                                                  size: 16,
-                                                ),
-                                              ))
-                                    ],
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                  )
-                                ],
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ))
-                  : SliverToBoxAdapter(),
-              foryoulist.isNotEmpty
-                  ? SliverToBoxAdapter(
-                      child: Padding(
-                          padding: EdgeInsets.only(
-                              left: 16, top: 10, bottom: 15, right: 36),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              InkWell(
-                                enableFeedback: true,
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                        builder: (context) => NearMe()),
-                                  );
-                                },
-                                child: Text(
-                                  'For You',
-                                  style: TextStyle(
-                                      fontFamily: 'Helvetica',
-                                      fontSize: 22.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                        builder: (context) => ForYou()),
-                                  );
-                                },
-                                enableFeedback: true,
-                                child: Text(
-                                  'See All',
-                                  style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 16.0,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )),
-                    )
-                  : SliverToBoxAdapter(),
-              foryoulist.isNotEmpty
-                  ? SliverToBoxAdapter(
-                      child: Container(
-                          height: 200,
-                          width: MediaQuery.of(context).size.width,
-                          child: ListView.builder(
-                              itemCount: foryoulist.length,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (BuildContext context, int index) {
-                                return InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      CupertinoPageRoute(
-                                          builder: (context) => Details(
-                                              item: foryoulist[index],
-                                              itemid: foryoulist[index].itemid,
-                                              image: foryoulist[index].image,
-                                              name: foryoulist[index].name,
-                                              sold: foryoulist[index].sold,
-                                              source: 'foryou')),
-                                    );
-                                  },
-                                  child: Stack(children: <Widget>[
-                                    Container(
-                                      height: 200,
-                                      width:
-                                          MediaQuery.of(context).size.width / 2,
-                                      child: ClipRRect(
-                                        child: Hero(
-                                          tag:
-                                              'foryou${foryoulist[index].itemid}',
-                                          child: CachedNetworkImage(
-                                            height: 200,
-                                            width: 300,
-                                            fadeInDuration:
-                                                Duration(microseconds: 5),
-                                            imageUrl: foryoulist[index]
-                                                    .image
-                                                    .isEmpty
-                                                ? SpinKitDoubleBounce(
-                                                    color: Colors.deepOrange)
-                                                : foryoulist[index].image,
-                                            fit: BoxFit.cover,
-                                            placeholder: (context, url) =>
-                                                SpinKitDoubleBounce(
-                                                    color: Colors.deepOrange),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    Icon(Icons.error),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    foryoulist[index].sold == true
-                                        ? Align(
-                                            alignment: Alignment.center,
-                                            child: Container(
-                                              height: 50,
-                                              decoration: BoxDecoration(
-                                                color: Colors.deepOrangeAccent
-                                                    .withOpacity(0.8),
-                                              ),
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  2,
-                                              child: Center(
-                                                child: Text(
-                                                  'Sold',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      fontFamily: 'Helvetica',
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                              ),
-                                            ))
-                                        : Container(),
-                                  ]),
-                                );
-                              })))
-                  : SliverToBoxAdapter(),
-              nearmeItems.isNotEmpty
-                  ? SliverToBoxAdapter(
-                      child: Padding(
-                          padding: EdgeInsets.only(
-                              left: 16, top: 20, bottom: 10, right: 36),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              InkWell(
-                                enableFeedback: true,
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                        builder: (context) => NearMe()),
-                                  );
-                                },
-                                child: Text(
-                                  'Near You',
-                                  style: TextStyle(
-                                      fontFamily: 'Helvetica',
-                                      fontSize: 22.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                        builder: (context) => NearMe()),
-                                  );
-                                },
-                                enableFeedback: true,
-                                child: Text(
-                                  'See All',
-                                  style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 16.0,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )),
-                    )
-                  : SliverToBoxAdapter(),
-              nearmeItems.isNotEmpty
-                  ? SliverToBoxAdapter(
-                      child: Container(
-                      height: 285,
-                      width: MediaQuery.of(context).size.width,
-                      child: ListView.builder(
-                        itemCount: nearmeItems.length,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (BuildContext context, int index) {
-                          return new Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Container(
-                              height: 285,
-                              width: MediaQuery.of(context).size.width / 2 - 10,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Column(
-                                children: <Widget>[
-                                  new InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        CupertinoPageRoute(
-                                            builder: (context) => Details(
-                                                itemid:
-                                                    nearmeItems[index].itemid,
-                                                image: nearmeItems[index].image,
-                                                name: nearmeItems[index].name,
-                                                sold: nearmeItems[index].sold,
-                                                source: 'nearme')),
-                                      );
-                                    },
-                                    child: Stack(children: <Widget>[
-                                      Container(
-                                        height: 220,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.grey.shade300,
-                                              offset: Offset(0.0, 1.0), //(x,y)
-                                              blurRadius: 6.0,
-                                            ),
-                                          ],
-                                        ),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          child: Hero(
-                                            tag:
-                                                'nearme${nearmeItems[index].itemid}',
-                                            child: CachedNetworkImage(
-                                              height: 200,
-                                              width: 300,
-                                              fadeInDuration:
-                                                  Duration(microseconds: 5),
-                                              imageUrl: nearmeItems[index]
-                                                      .image
-                                                      .isEmpty
-                                                  ? SpinKitDoubleBounce(
-                                                      color: Colors.deepOrange)
-                                                  : nearmeItems[index].image,
-                                              fit: BoxFit.cover,
-                                              placeholder: (context, url) =>
-                                                  SpinKitDoubleBounce(
-                                                      color: Colors.deepOrange),
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      Icon(Icons.error),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      nearmeItems[index].sold == true
-                                          ? Align(
-                                              alignment: Alignment.center,
-                                              child: Container(
-                                                height: 50,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.deepOrangeAccent
-                                                      .withOpacity(0.8),
-                                                  borderRadius:
-                                                      BorderRadius.only(
-                                                          topLeft:
-                                                              Radius.circular(
-                                                                  10),
-                                                          topRight:
-                                                              Radius.circular(
-                                                                  10)),
-                                                ),
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                child: Center(
-                                                  child: Text(
-                                                    'Sold',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        fontFamily: 'Helvetica',
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                ),
-                                              ))
-                                          : Container(),
-                                    ]),
-                                  ),
-                                  SizedBox(
-                                    height: 4,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                          child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            nearmeItems[index].name,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          SizedBox(
-                                            height: 1,
-                                          ),
-                                          Text(
-                                            currency +
-                                                ' ' +
-                                                nearmeItems[index].price,
-                                          )
-                                        ],
-                                      )),
-                                      favourites != null
-                                          ? favourites.contains(
-                                                  nearmeItems[index].itemid)
-                                              ? InkWell(
-                                                  enableFeedback: true,
-                                                  onTap: () async {
-                                                    var userid = await storage
-                                                        .read(key: 'userid');
-
-                                                    if (userid != null) {
-                                                      var url =
-                                                          'https://api.sellship.co/api/favourite/' +
-                                                              userid;
-
-                                                      Map<String, String> body =
-                                                          {
-                                                        'itemid':
-                                                            nearmeItems[index]
-                                                                .itemid,
-                                                      };
-
-                                                      favourites.remove(
-                                                          topitems[index]
-                                                              .itemid);
-                                                      setState(() {
-                                                        favourites = favourites;
-                                                        nearmeItems[index]
-                                                                .likes =
-                                                            nearmeItems[index]
-                                                                    .likes -
-                                                                1;
-                                                      });
-                                                      final response =
-                                                          await http.post(url,
-                                                              body: json.encode(
-                                                                  body));
-
-                                                      if (response.statusCode ==
-                                                          200) {
-                                                      } else {
-                                                        print(response
-                                                            .statusCode);
-                                                      }
-                                                    } else {
-                                                      showInSnackBar(
-                                                          'Please Login to use Favourites');
-                                                    }
-                                                  },
-                                                  child: CircleAvatar(
-                                                    radius: 16,
-                                                    backgroundColor:
-                                                        Colors.deepOrange,
-                                                    child: Icon(
-                                                      FontAwesome.heart,
-                                                      color: Colors.white,
-                                                      size: 15,
-                                                    ),
-                                                  ))
-                                              : InkWell(
-                                                  enableFeedback: true,
-                                                  onTap: () async {
-                                                    var userid = await storage
-                                                        .read(key: 'userid');
-
-                                                    if (userid != null) {
-                                                      var url =
-                                                          'https://api.sellship.co/api/favourite/' +
-                                                              userid;
-
-                                                      Map<String, String> body =
-                                                          {
-                                                        'itemid':
-                                                            nearmeItems[index]
-                                                                .itemid,
-                                                      };
-
-                                                      favourites.add(
-                                                          nearmeItems[index]
-                                                              .itemid);
-                                                      setState(() {
-                                                        favourites = favourites;
-                                                        nearmeItems[index]
-                                                                .likes =
-                                                            nearmeItems[index]
-                                                                    .likes +
-                                                                1;
-                                                      });
-                                                      final response =
-                                                          await http.post(url,
-                                                              body: json.encode(
-                                                                  body));
-
-                                                      if (response.statusCode ==
-                                                          200) {
-                                                      } else {
-                                                        print(response
-                                                            .statusCode);
-                                                      }
-                                                    } else {
-                                                      showInSnackBar(
-                                                          'Please Login to use Favourites');
-                                                    }
-                                                  },
-                                                  child: CircleAvatar(
-                                                    radius: 18,
-                                                    backgroundColor:
-                                                        Colors.white,
-                                                    child: Icon(
-                                                      Feather.heart,
-                                                      color: Colors.blueGrey,
-                                                      size: 16,
-                                                    ),
-                                                  ))
-                                          : CircleAvatar(
-                                              radius: 16,
-                                              backgroundColor:
-                                                  Colors.blueGrey.shade50,
-                                              child: CircleAvatar(
-                                                radius: 15,
-                                                backgroundColor: Colors.white,
-                                                child: Icon(
-                                                  Feather.heart,
-                                                  color: Colors.blueGrey,
-                                                  size: 16,
-                                                ),
-                                              ))
-                                    ],
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                  )
-                                ],
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ))
-                  : SliverToBoxAdapter(),
-              blogsList.isNotEmpty
-                  ? SliverToBoxAdapter(
-                      child: Padding(
-                      padding: EdgeInsets.only(
-                          left: 16, bottom: 10, right: 36, top: 15),
-                      child: Text(
-                        'Latest Articles',
-                        style: TextStyle(
-                            fontFamily: 'Helvetica',
-                            fontSize: 22.0,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ))
-                  : SliverToBoxAdapter(),
-              blogsList.isNotEmpty
-                  ? SliverToBoxAdapter(
-                      child: CarouselSlider(
-                      options: CarouselOptions(
-                        height: 200.0,
-                        aspectRatio: 16 / 9,
-                        viewportFraction: 1,
-                        initialPage: 0,
-                        enableInfiniteScroll: true,
-                        reverse: false,
-                        autoPlay: true,
-                        autoPlayInterval: Duration(seconds: 3),
-                        autoPlayAnimationDuration: Duration(milliseconds: 800),
-                        autoPlayCurve: Curves.fastOutSlowIn,
-                        enlargeCenterPage: true,
-                      ),
-                      items: blogsList.map((blog) {
-                        return Builder(
-                          builder: (BuildContext context) {
-                            return InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                        builder: (context) => BlogPage(
-                                              title: blog.blogname,
-                                              content: blog.blogcontent,
-                                              related: blog.relatedposts,
-                                              image: blog.blogimage,
-                                              blogid: blog.blogid,
-                                            )),
-                                  );
-                                },
-                                enableFeedback: true,
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                        height: 200,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        margin: EdgeInsets.symmetric(
-                                            horizontal: 5.0),
-                                        decoration: BoxDecoration(
-                                            color: Colors.deepOrange,
-                                            borderRadius:
-                                                BorderRadius.circular(5)),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                          child: Hero(
-                                            tag: 'Blog${blog.blogid}',
-                                            child: CachedNetworkImage(
-                                              imageUrl: blog.blogimage,
-                                              fit: BoxFit.cover,
-                                              fadeInDuration:
-                                                  Duration(microseconds: 5),
-                                              placeholder: (context, url) =>
-                                                  SpinKitDoubleBounce(
-                                                      color: Colors.deepOrange),
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      Icon(Icons.error),
-                                            ),
-                                          ),
-                                        )),
-                                    Align(
-                                      alignment: Alignment.bottomLeft,
-                                      child: Padding(
-                                        padding: EdgeInsets.only(
-                                            bottom: 10, left: 20, right: 10),
-                                        child: Text(
-                                          blog.blogname,
-                                          style: TextStyle(
-                                              fontFamily: 'Helvetica',
-                                              fontSize: 20.0,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w800),
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ));
-                          },
-                        );
-                      }).toList(),
-                    ))
-                  : SliverToBoxAdapter(),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding:
-                      EdgeInsets.only(left: 16, top: 10, bottom: 10, right: 36),
-                  child: Text(
-                    'New In',
-                    style: TextStyle(
-                        fontFamily: 'Helvetica',
-                        fontSize: 22.0,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-              SliverStaggeredGrid.countBuilder(
-                crossAxisCount: 2,
-                itemCount: itemsgrid.length,
-                staggeredTileBuilder: (int index) => new StaggeredTile.fit(1),
-                mainAxisSpacing: 4.0,
-                crossAxisSpacing: 4.0,
-                itemBuilder: (BuildContext context, index) {
-                  return new Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Column(
-                        children: <Widget>[
-                          new InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                    builder: (context) => Details(
-                                        itemid: itemsgrid[index].itemid,
-                                        image: itemsgrid[index].image,
-                                        name: itemsgrid[index].name,
-                                        sold: itemsgrid[index].sold,
-                                        source: 'newin')),
-                              );
-                            },
-                            child: Stack(children: <Widget>[
-                              Container(
-                                height: 195,
-                                width: MediaQuery.of(context).size.width,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.shade300,
-                                      offset: Offset(0.0, 1.0), //(x,y)
-                                      blurRadius: 6.0,
-                                    ),
-                                  ],
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Hero(
-                                    tag: 'newin${itemsgrid[index].itemid}',
-                                    child: CachedNetworkImage(
-                                      height: 200,
-                                      width: 300,
-                                      fadeInDuration: Duration(microseconds: 5),
-                                      imageUrl: itemsgrid[index].image.isEmpty
-                                          ? SpinKitDoubleBounce(
-                                              color: Colors.deepOrange)
-                                          : itemsgrid[index].image,
-                                      fit: BoxFit.cover,
-                                      placeholder: (context, url) =>
-                                          SpinKitDoubleBounce(
-                                              color: Colors.deepOrange),
-                                      errorWidget: (context, url, error) =>
-                                          Icon(Icons.error),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              itemsgrid[index].sold == true
-                                  ? Align(
-                                      alignment: Alignment.center,
-                                      child: Container(
-                                        height: 50,
-                                        decoration: BoxDecoration(
-                                          color: Colors.deepOrangeAccent
-                                              .withOpacity(0.8),
-                                          borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(10),
-                                              topRight: Radius.circular(10)),
-                                        ),
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        child: Center(
-                                          child: Text(
-                                            'Sold',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ))
-                                  : Container(),
-                            ]),
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                  child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    itemsgrid[index].name,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        fontFamily: 'Helvetica',
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  SizedBox(
-                                    height: 1,
-                                  ),
-                                  Text(
-                                    currency + ' ' + itemsgrid[index].price,
-                                  )
-                                ],
-                              )),
-                              favourites != null
-                                  ? favourites.contains(itemsgrid[index].itemid)
-                                      ? InkWell(
-                                          enableFeedback: true,
-                                          onTap: () async {
-                                            var userid = await storage.read(
-                                                key: 'userid');
-
-                                            if (userid != null) {
-                                              var url =
-                                                  'https://api.sellship.co/api/favourite/' +
-                                                      userid;
-
-                                              Map<String, String> body = {
-                                                'itemid':
-                                                    itemsgrid[index].itemid,
-                                              };
-
-                                              favourites.remove(
-                                                  itemsgrid[index].itemid);
-                                              setState(() {
-                                                favourites = favourites;
-                                                itemsgrid[index].likes =
-                                                    itemsgrid[index].likes - 1;
-                                              });
-                                              final response = await http.post(
-                                                  url,
-                                                  body: json.encode(body));
-
-                                              if (response.statusCode == 200) {
-                                              } else {
-                                                print(response.statusCode);
-                                              }
-                                            } else {
-                                              showInSnackBar(
-                                                  'Please Login to use Favourites');
-                                            }
-                                          },
-                                          child: CircleAvatar(
-                                            radius: 16,
-                                            backgroundColor: Colors.deepOrange,
-                                            child: Icon(
-                                              FontAwesome.heart,
-                                              color: Colors.white,
-                                              size: 15,
-                                            ),
-                                          ))
-                                      : InkWell(
-                                          enableFeedback: true,
-                                          onTap: () async {
-                                            var userid = await storage.read(
-                                                key: 'userid');
-
-                                            if (userid != null) {
-                                              var url =
-                                                  'https://api.sellship.co/api/favourite/' +
-                                                      userid;
-
-                                              Map<String, String> body = {
-                                                'itemid':
-                                                    itemsgrid[index].itemid,
-                                              };
-
-                                              favourites
-                                                  .add(itemsgrid[index].itemid);
-                                              setState(() {
-                                                favourites = favourites;
-                                                itemsgrid[index].likes =
-                                                    itemsgrid[index].likes + 1;
-                                              });
-                                              final response = await http.post(
-                                                  url,
-                                                  body: json.encode(body));
-
-                                              if (response.statusCode == 200) {
-                                              } else {
-                                                print(response.statusCode);
-                                              }
-                                            } else {
-                                              showInSnackBar(
-                                                  'Please Login to use Favourites');
-                                            }
-                                          },
-                                          child: CircleAvatar(
-                                              radius: 16,
-                                              backgroundColor:
-                                                  Colors.blueGrey.shade50,
-                                              child: CircleAvatar(
-                                                radius: 15,
-                                                backgroundColor: Colors.white,
-                                                child: Icon(
-                                                  Feather.heart,
-                                                  color: Colors.blueGrey,
-                                                  size: 16,
-                                                ),
-                                              )))
-                                  : CircleAvatar(
-                                      radius: 16,
-                                      backgroundColor: Colors.blueGrey.shade50,
-                                      child: CircleAvatar(
-                                        radius: 15,
-                                        backgroundColor: Colors.white,
-                                        child: Icon(
-                                          Feather.heart,
-                                          color: Colors.blueGrey,
-                                          size: 16,
-                                        ),
-                                      ))
-                            ],
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                          )
-                        ],
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                      ),
-                    ),
-                  );
-                },
-              )
-            ],
-            onLoad: () async {
-              _getmoreRecentData();
-            },
-          )
+                        }).toList(),
+                      ))
+                    : SliverToBoxAdapter(),
+                blogsList.isNotEmpty
+                    ? SliverToBoxAdapter(
+                        child: Container(
+                        height: 20,
+                      ))
+                    : SliverToBoxAdapter(),
+              ])
         : Container(
             height: MediaQuery.of(context).size.height,
             child: Container(
@@ -3252,79 +3456,12 @@ class _DiscoverState extends State<Discover>
     }
   }
 
-  _getmoreRecentData() async {
-    setState(() {
-      limit = limit + 50;
-      skip = skip + 50;
-    });
-
-    var country = await storage.read(key: 'country');
-
-    var url = 'https://api.sellship.co/api/recentitems/' +
-        country +
-        '/' +
-        skip.toString() +
-        '/' +
-        limit.toString();
-
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      var jsonbody = json.decode(response.body);
-
-      for (var i = 0; i < jsonbody.length; i++) {
-        var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
-
-        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
-        var dateuploaded = timeago.format(dateuploade);
-        Item item = Item(
-          itemid: jsonbody[i]['_id']['\$oid'],
-          date: dateuploaded,
-          name: jsonbody[i]['name'],
-          condition: jsonbody[i]['condition'] == null
-              ? 'Like New'
-              : jsonbody[i]['condition'],
-          username: jsonbody[i]['username'],
-          image: jsonbody[i]['image'],
-          userid: jsonbody[i]['userid'],
-          likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
-          comments: jsonbody[i]['comments'] == null
-              ? 0
-              : jsonbody[i]['comments'].length,
-          price: jsonbody[i]['price'].toString(),
-          category: jsonbody[i]['category'],
-          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
-        );
-        itemsgrid.add(item);
-      }
-
-      if (itemsgrid != null) {
-        setState(() {
-          itemsgrid = itemsgrid;
-          loading = false;
-        });
-      } else {
-        setState(() {
-          itemsgrid = [];
-          loading = false;
-        });
-      }
-    } else {
-      print(response.statusCode);
-    }
-  }
-
-  String _FilterLoad = "Recently Added";
-  String _selectedFilter = "Recently Added";
-
-  String _filter = 'Sort';
-
   Future<List<Item>> fetchRecentlyAdded(int skip, int limit) async {
     var url = 'https://api.sellship.co/api/recentitems/' +
         country +
         '/' +
         skip.toString() +
-        '/' +
-        limit.toString();
+        '/20';
 
     final response = await http.get(url);
     if (response.statusCode == 200) {
@@ -3433,85 +3570,4 @@ class _DiscoverState extends State<Discover>
   List<String> brands = List<String>();
 
   TextEditingController searchcontrollerr = TextEditingController();
-
-  loadbrands() async {
-    brands.clear();
-    var categoryurl = 'https://api.sellship.co/api/getallbrands';
-    final categoryresponse = await http.get(categoryurl);
-    if (categoryresponse.statusCode == 200) {
-      var categoryrespons = json.decode(categoryresponse.body);
-      print(categoryrespons);
-      for (int i = 0; i < categoryrespons.length; i++) {
-        brands.add(categoryrespons[i]);
-      }
-      if (mounted) {
-        setState(() {
-          brands = brands;
-        });
-      }
-    } else {
-      print(categoryresponse.statusCode);
-    }
-
-    scaffoldState.currentState.showBottomSheet((context) {
-      return Container(
-        height: 550,
-        width: MediaQuery.of(context).size.width,
-        child: Padding(
-          padding: const EdgeInsets.all(1.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Icon(Feather.chevron_down),
-              SizedBox(
-                height: 2,
-              ),
-              Center(
-                child: Text(
-                  'Brand',
-                  style: TextStyle(
-                      fontFamily: 'Helvetica',
-                      fontSize: 16,
-                      color: Colors.deepOrange),
-                ),
-              ),
-              Flexible(
-//                  height: 600,
-                  child: AlphabetListScrollView(
-                showPreview: true,
-                strList: brands,
-                indexedHeight: (i) {
-                  return 40;
-                },
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () async {
-                      setState(() {
-                        _selectedFilter = 'Brand';
-                        _FilterLoad = "Brand";
-                        brand = brands[index];
-                        skip = 0;
-                        limit = 20;
-                        loading = true;
-                      });
-                      itemsgrid.clear();
-                      Navigator.of(context).pop();
-
-                      fetchbrands(brands[index]);
-                    },
-                    child: ListTile(
-                      title: brands[index] != null
-                          ? Text(brands[index])
-                          : Text('sd'),
-                    ),
-                  );
-                },
-              ))
-            ],
-          ),
-        ),
-      );
-    });
-  }
 }

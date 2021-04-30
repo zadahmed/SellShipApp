@@ -32,7 +32,7 @@ import 'package:permission_handler/permission_handler.dart' as Permission;
 import 'package:random_string/random_string.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-
+import 'dart:math' as Math;
 import 'package:shimmer/shimmer.dart';
 
 class AddItem extends StatefulWidget {
@@ -1892,7 +1892,6 @@ class _AddItemState extends State<AddItem> {
                                                             '44',
                                                             '46',
                                                             '48',
-
                                                           ];
 
                                                           List<String>
@@ -1923,7 +1922,6 @@ class _AddItemState extends State<AddItem> {
                                                             '14',
                                                             '15',
                                                             '16',
-
                                                           ];
 
                                                           List<String>
@@ -3673,7 +3671,7 @@ class _AddItemState extends State<AddItem> {
                                                     await FlutterImageCompress
                                                         .compressWithList(
                                                             _image,
-                                                            quality: 15);
+                                                            quality: 30);
                                               } else if (images.length == 2) {
                                                 ByteData byteData =
                                                     await images[0]
@@ -3685,7 +3683,7 @@ class _AddItemState extends State<AddItem> {
                                                     await FlutterImageCompress
                                                         .compressWithList(
                                                             _image,
-                                                            quality: 15);
+                                                            quality: 30);
                                                 ByteData byteData2 =
                                                     await images[1]
                                                         .getByteData();
@@ -3695,7 +3693,7 @@ class _AddItemState extends State<AddItem> {
                                                     await FlutterImageCompress
                                                         .compressWithList(
                                                             _image2,
-                                                            quality: 15);
+                                                            quality: 30);
                                               } else if (images.length == 3) {
                                                 ByteData byteData =
                                                     await images[0]
@@ -3706,7 +3704,7 @@ class _AddItemState extends State<AddItem> {
                                                     await FlutterImageCompress
                                                         .compressWithList(
                                                             _image,
-                                                            quality: 15);
+                                                            quality: 30);
                                                 ByteData byteData2 =
                                                     await images[1]
                                                         .getByteData();
@@ -3716,7 +3714,7 @@ class _AddItemState extends State<AddItem> {
                                                     await FlutterImageCompress
                                                         .compressWithList(
                                                             _image2,
-                                                            quality: 15);
+                                                            quality: 30);
                                                 ByteData byteData3 =
                                                     await images[2]
                                                         .getByteData();
@@ -3726,7 +3724,7 @@ class _AddItemState extends State<AddItem> {
                                                     await FlutterImageCompress
                                                         .compressWithList(
                                                             _image3,
-                                                            quality: 15);
+                                                            quality: 30);
                                               } else if (images.length == 4) {
                                                 ByteData byteData =
                                                     await images[0]
@@ -3737,7 +3735,7 @@ class _AddItemState extends State<AddItem> {
                                                     await FlutterImageCompress
                                                         .compressWithList(
                                                             _image,
-                                                            quality: 15);
+                                                            quality: 30);
                                                 ByteData byteData2 =
                                                     await images[1]
                                                         .getByteData();
@@ -3747,7 +3745,7 @@ class _AddItemState extends State<AddItem> {
                                                     await FlutterImageCompress
                                                         .compressWithList(
                                                             _image2,
-                                                            quality: 15);
+                                                            quality: 30);
                                                 ByteData byteData3 =
                                                     await images[2]
                                                         .getByteData();
@@ -3757,7 +3755,7 @@ class _AddItemState extends State<AddItem> {
                                                     await FlutterImageCompress
                                                         .compressWithList(
                                                             _image3,
-                                                            quality: 15);
+                                                            quality: 30);
                                                 ByteData byteData4 =
                                                     await images[3]
                                                         .getByteData();
@@ -3767,7 +3765,7 @@ class _AddItemState extends State<AddItem> {
                                                     await FlutterImageCompress
                                                         .compressWithList(
                                                             _image4,
-                                                            quality: 15);
+                                                            quality: 30);
                                               } else if (images.length == 5) {
                                                 ByteData byteData =
                                                     await images[0]
@@ -3778,7 +3776,7 @@ class _AddItemState extends State<AddItem> {
                                                     await FlutterImageCompress
                                                         .compressWithList(
                                                             _image,
-                                                            quality: 15);
+                                                            quality: 30);
                                                 ByteData byteData2 =
                                                     await images[1]
                                                         .getByteData();
@@ -3788,7 +3786,7 @@ class _AddItemState extends State<AddItem> {
                                                     await FlutterImageCompress
                                                         .compressWithList(
                                                             _image2,
-                                                            quality: 15);
+                                                            quality: 30);
                                                 ByteData byteData3 =
                                                     await images[2]
                                                         .getByteData();
@@ -3798,7 +3796,7 @@ class _AddItemState extends State<AddItem> {
                                                     await FlutterImageCompress
                                                         .compressWithList(
                                                             _image3,
-                                                            quality: 15);
+                                                            quality: 30);
                                                 ByteData byteData4 =
                                                     await images[3]
                                                         .getByteData();
@@ -3808,7 +3806,7 @@ class _AddItemState extends State<AddItem> {
                                                     await FlutterImageCompress
                                                         .compressWithList(
                                                             _image4,
-                                                            quality: 15);
+                                                            quality: 30);
                                                 ByteData byteData5 =
                                                     await images[4]
                                                         .getByteData();
@@ -3818,7 +3816,7 @@ class _AddItemState extends State<AddItem> {
                                                     await FlutterImageCompress
                                                         .compressWithList(
                                                             _image5,
-                                                            quality: 15);
+                                                            quality: 30);
                                               } else if (images.length == 6) {
                                                 ByteData byteData =
                                                     await images[0]
@@ -3829,7 +3827,7 @@ class _AddItemState extends State<AddItem> {
                                                     await FlutterImageCompress
                                                         .compressWithList(
                                                             _image,
-                                                            quality: 15);
+                                                            quality: 30);
                                                 ByteData byteData2 =
                                                     await images[1]
                                                         .getByteData();
@@ -3839,7 +3837,7 @@ class _AddItemState extends State<AddItem> {
                                                     await FlutterImageCompress
                                                         .compressWithList(
                                                             _image2,
-                                                            quality: 15);
+                                                            quality: 30);
                                                 ByteData byteData3 =
                                                     await images[2]
                                                         .getByteData();
@@ -3849,7 +3847,7 @@ class _AddItemState extends State<AddItem> {
                                                     await FlutterImageCompress
                                                         .compressWithList(
                                                             _image3,
-                                                            quality: 15);
+                                                            quality: 30);
                                                 ByteData byteData4 =
                                                     await images[3]
                                                         .getByteData();
@@ -3859,7 +3857,7 @@ class _AddItemState extends State<AddItem> {
                                                     await FlutterImageCompress
                                                         .compressWithList(
                                                             _image4,
-                                                            quality: 15);
+                                                            quality: 30);
                                                 ByteData byteData5 =
                                                     await images[4]
                                                         .getByteData();
@@ -3869,7 +3867,7 @@ class _AddItemState extends State<AddItem> {
                                                     await FlutterImageCompress
                                                         .compressWithList(
                                                             _image5,
-                                                            quality: 15);
+                                                            quality: 30);
                                                 ByteData byteData6 =
                                                     await images[5]
                                                         .getByteData();
@@ -3879,7 +3877,7 @@ class _AddItemState extends State<AddItem> {
                                                     await FlutterImageCompress
                                                         .compressWithList(
                                                             _image6,
-                                                            quality: 15);
+                                                            quality: 30);
                                               }
 
                                               Dio dio = new Dio();
@@ -4423,30 +4421,41 @@ class _AddItemState extends State<AddItem> {
                                               var response = await dio
                                                   .post(addurl, data: formData);
 
-                                            var reviewcount = await storage.read(key: 'reviewcount');
-                                             if(reviewcount == null){
-                                               await storage.write(key: 'reviewcount', value: '1');
-                                             }
-                                             else{
-                                               int count = int.parse(reviewcount);
-                                               count = count + 1;
-                                               await storage.write(key: 'reviewcount', value: count.toString());
+                                              var reviewcount = await storage
+                                                  .read(key: 'reviewcount');
+                                              if (reviewcount == null) {
+                                                await storage.write(
+                                                    key: 'reviewcount',
+                                                    value: '1');
+                                              } else {
+                                                int count =
+                                                    int.parse(reviewcount);
+                                                count = count + 1;
+                                                await storage.write(
+                                                    key: 'reviewcount',
+                                                    value: count.toString());
 
-                                               if(count == 2){
-                                                 final InAppReview inAppReview = InAppReview.instance;
+                                                if (count == 2) {
+                                                  final InAppReview
+                                                      inAppReview =
+                                                      InAppReview.instance;
 
-                                                 if (await inAppReview.isAvailable()) {
-                                                   inAppReview.requestReview();
-                                                 }
-                                               }
-                                               if(count == 10){
-                                                 final InAppReview inAppReview = InAppReview.instance;
+                                                  if (await inAppReview
+                                                      .isAvailable()) {
+                                                    inAppReview.requestReview();
+                                                  }
+                                                }
+                                                if (count == 10) {
+                                                  final InAppReview
+                                                      inAppReview =
+                                                      InAppReview.instance;
 
-                                                 if (await inAppReview.isAvailable()) {
-                                                   inAppReview.requestReview();
-                                                 }
-                                               }
-                                             }
+                                                  if (await inAppReview
+                                                      .isAvailable()) {
+                                                    inAppReview.requestReview();
+                                                  }
+                                                }
+                                              }
 
                                               if (response.statusCode == 200) {
                                                 showDialog(
@@ -4634,7 +4643,7 @@ class _AddItemState extends State<AddItem> {
 
     if (freedelivery == true) {
       if (_selectedweight == 0) {
-        weightfees = 20;
+        weightfees = 10;
       } else if (_selectedweight == 1) {
         weightfees = 30;
       } else if (_selectedweight == 2) {
@@ -4679,6 +4688,10 @@ class _AddItemState extends State<AddItem> {
         });
       }
     }
+  }
+
+  double roundUp(int n) {
+    return (n + 4) / 5 * 5;
   }
 
   String userid;

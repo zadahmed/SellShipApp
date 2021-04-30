@@ -182,10 +182,12 @@ class _DetailsState extends State<Details> {
     var jsonbody = json.decode(response.body);
 
     if (jsonbody != null) {
-      setState(() {
-        categoryimage = jsonbody[0]['categoryimage'];
-        subcategory = jsonbody[0]['subcategories'].toList();
-      });
+      if (mounted) {
+        setState(() {
+          categoryimage = jsonbody[0]['categoryimage'];
+          subcategory = jsonbody[0]['subcategories'].toList();
+        });
+      }
     }
   }
 
@@ -734,44 +736,46 @@ class _DetailsState extends State<Details> {
     DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
     dateuploaded = timeago.format(dateuploade);
 
-    setState(() {
-      dateuploaded = dateuploaded;
+    if (mounted) {
+      setState(() {
+        dateuploaded = dateuploaded;
 
-      position = LatLng(
-          double.parse(newItem.latitude), double.parse(newItem.longitude));
-      _circles.add(Circle(
-          circleId: CircleId(itemid),
-          center: LatLng(
-              double.parse(newItem.latitude), double.parse(newItem.longitude)),
-          radius: 250,
-          fillColor: Colors.lightBlueAccent.withOpacity(0.5),
-          strokeWidth: 3,
-          strokeColor: Colors.lightBlueAccent));
-      loading = false;
-    });
+        position = LatLng(
+            double.parse(newItem.latitude), double.parse(newItem.longitude));
+        _circles.add(Circle(
+            circleId: CircleId(itemid),
+            center: LatLng(double.parse(newItem.latitude),
+                double.parse(newItem.longitude)),
+            radius: 250,
+            fillColor: Colors.lightBlueAccent.withOpacity(0.5),
+            strokeWidth: 3,
+            strokeColor: Colors.lightBlueAccent));
+        loading = false;
+      });
 
-    if (newItem.image != null) {
-      images.add(newItem.image);
-    }
-    if (newItem.image1 != null) {
-      images.add(newItem.image1);
-    }
-    if (newItem.image2 != null) {
-      images.add(newItem.image2);
-    }
-    if (newItem.image3 != null) {
-      images.add(newItem.image3);
-    }
-    if (newItem.image4 != null) {
-      images.add(newItem.image4);
-    }
-    if (newItem.image5 != null) {
-      images.add(newItem.image5);
-    }
+      if (newItem.image != null) {
+        images.add(newItem.image);
+      }
+      if (newItem.image1 != null) {
+        images.add(newItem.image1);
+      }
+      if (newItem.image2 != null) {
+        images.add(newItem.image2);
+      }
+      if (newItem.image3 != null) {
+        images.add(newItem.image3);
+      }
+      if (newItem.image4 != null) {
+        images.add(newItem.image4);
+      }
+      if (newItem.image5 != null) {
+        images.add(newItem.image5);
+      }
 
-    getuserDetails(jsonbody[0]['userid']);
-    getcategory();
-    return newItem;
+      getuserDetails(jsonbody[0]['userid']);
+      getcategory();
+      return newItem;
+    }
   }
 
   getuserDetails(user) async {

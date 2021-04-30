@@ -155,7 +155,7 @@ class _PayState extends State<Pay> {
         if (newItem.freedelivery == false) {
           var weightfees;
           if (newItem.weight == '5') {
-            weightfees = 20;
+            weightfees = 10;
           } else if (newItem.weight == '10') {
             weightfees = 30;
           } else if (newItem.weight == '20') {
