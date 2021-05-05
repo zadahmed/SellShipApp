@@ -1330,6 +1330,76 @@ class _DiscoverState extends State<Discover>
               return getsubcategoriesinterested();
             },
             slivers: <Widget>[
+                SliverToBoxAdapter(
+                    child: CarouselSlider(
+                        options: CarouselOptions(
+                          height: 200.0,
+                          aspectRatio: 16 / 9,
+                          viewportFraction: 1,
+                          initialPage: 0,
+                          enableInfiniteScroll: false,
+                          // enableInfiniteScroll: true,
+                          reverse: false,
+                          // autoPlay: true,
+                          // autoPlayInterval: Duration(seconds: 3),
+                          // autoPlayAnimationDuration:
+                          //     Duration(milliseconds: 800),
+                          // autoPlayCurve: Curves.fastOutSlowIn,
+                          enlargeCenterPage: true,
+                        ),
+                        items: [
+                      Builder(
+                        builder: (BuildContext context) {
+                          return InkWell(
+                              onTap: () {
+                                // Navigator.push(
+                                //   context,
+                                //   CupertinoPageRoute(
+                                //       builder: (context) => BlogPage(
+                                //             title: blog.blogname,
+                                //             content: blog.blogcontent,
+                                //             related: blog.relatedposts,
+                                //             image: blog.blogimage,
+                                //             blogid: blog.blogid,
+                                //           )),
+                                // );
+                              },
+                              enableFeedback: true,
+                              child: Stack(
+                                children: [
+                                  Container(
+                                      height: 200,
+                                      width: MediaQuery.of(context).size.width,
+                                      margin:
+                                          EdgeInsets.symmetric(horizontal: 5.0),
+                                      decoration: BoxDecoration(
+                                          color: Colors.black,
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(5),
+                                        child: Hero(
+                                          tag: 'Offer1eid2021}',
+                                          child: CachedNetworkImage(
+                                            imageUrl:
+                                                'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/discounts/discount30-6may2021.jpg',
+                                            fit: BoxFit.contain,
+                                            fadeInDuration:
+                                                Duration(microseconds: 5),
+                                            placeholder: (context, url) =>
+                                                SpinKitDoubleBounce(
+                                                    color: Colors.deepOrange),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    Icon(Icons.error),
+                                          ),
+                                        ),
+                                      )),
+                                ],
+                              ));
+                        },
+                      )
+                    ])),
                 subcategoryList.isNotEmpty
                     ? SliverToBoxAdapter(
                         child: Padding(

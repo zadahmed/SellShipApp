@@ -871,6 +871,11 @@ class _PayState extends State<Pay> {
                                     final response =
                                         await http.get(Uri.parse(returnurl));
 
+                                    SharedPreferences prefs =
+                                        await SharedPreferences.getInstance();
+
+                                    prefs.setBool('welcomeuser', true);
+
                                     if (response.statusCode == 200) {
                                       SharedPreferences prefs =
                                           await SharedPreferences.getInstance();

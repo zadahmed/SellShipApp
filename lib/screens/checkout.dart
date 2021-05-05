@@ -1055,8 +1055,8 @@ class _CheckoutState extends State<Checkout> {
 
                                               discount = total * 0.10;
 
-                                              if (discount > 30) {
-                                                discount = 30;
+                                              if (discount > 20) {
+                                                discount = 20;
                                                 total = total - discount;
                                               } else {
                                                 discount = total * 0.10;
