@@ -11,6 +11,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 
 class MyItems extends StatefulWidget {
@@ -356,7 +357,7 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
                                                                           print(
                                                                               url);
                                                                           final response =
-                                                                              await http.get(url);
+                                                                              await http.get(Uri.parse(url));
                                                                           if (response.statusCode ==
                                                                               200) {
                                                                             print(response.body);
@@ -372,7 +373,7 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
                                                                           print(
                                                                               url);
                                                                           final response =
-                                                                              await http.get(url);
+                                                                              await http.get(Uri.parse(url));
                                                                           if (response.statusCode ==
                                                                               200) {
                                                                             print(response.body);
@@ -542,7 +543,7 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
     if (userid != null) {
       var url = 'https://api.sellship.co/api/user/' + userid;
       print(url);
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         var respons = json.decode(response.body);
         Map<String, dynamic> profilemap = respons;
@@ -579,7 +580,7 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
         if (profilemap != null) {
           var itemurl = 'https://api.sellship.co/api/useritems/' + userid;
           print(itemurl);
-          final itemresponse = await http.get(itemurl);
+          final itemresponse = await http.get(Uri.parse(itemurl));
           if (itemresponse.statusCode == 200) {
             var itemrespons = json.decode(itemresponse.body);
             Map<String, dynamic> itemmap = itemrespons;

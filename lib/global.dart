@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 Color bgColor = Colors.amber;
@@ -26,7 +26,7 @@ List<Categories> categories = [
   Categories(
     title: 'Electronics',
     id: 0,
-    icon: Feather.tv,
+    icon: FeatherIcons.tv,
     image: 'assets/category/Electronics@3x.png',
     subCat: [
       SubCategories(
@@ -66,7 +66,7 @@ List<Categories> categories = [
   Categories(
     title: 'Women',
     id: 1,
-    icon: Feather.shopping_bag,
+    icon: FeatherIcons.shoppingBag,
     image: 'assets/category/Women@3x.png',
     subCat: [
       SubCategories(
@@ -105,7 +105,7 @@ List<Categories> categories = [
   Categories(
     title: 'Men',
     id: 2,
-    icon: Feather.shopping_bag,
+    icon: FeatherIcons.shoppingBag,
     image: 'assets/category/Man@3x.png',
     subCat: [
       SubCategories(
@@ -135,7 +135,7 @@ List<Categories> categories = [
   Categories(
     title: 'Toys',
     id: 3,
-    icon: Feather.shopping_bag,
+    icon: FeatherIcons.shoppingBag,
     image: 'assets/category/Toys@3x.png',
     subCat: [
       SubCategories(
@@ -175,7 +175,7 @@ List<Categories> categories = [
   Categories(
     title: 'Beauty',
     id: 4,
-    icon: Feather.eye,
+    icon: FeatherIcons.eye,
     image: 'assets/category/Beauty@3x.png',
     subCat: [
       SubCategories(
@@ -198,7 +198,7 @@ List<Categories> categories = [
   Categories(
     title: 'Home',
     id: 5,
-    icon: Feather.home,
+    icon: FeatherIcons.home,
     image: 'assets/category/Home@3x.png',
     subCat: [
       SubCategories(id: 0, title: "Bath", image: 'assets/home/bath.jpeg'),
@@ -277,7 +277,7 @@ List<Categories> categories = [
     title: 'Books',
     id: 8,
     image: 'assets/category/Book@3x.png',
-    icon: Feather.book_open,
+    icon: FeatherIcons.bookOpen,
     subCat: [
       SubCategories(
           id: 0, title: "Childrens books", image: 'assets/books/kids.jpeg'),

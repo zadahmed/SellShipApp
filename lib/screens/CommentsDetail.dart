@@ -7,11 +7,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
+
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -82,7 +83,7 @@ class _CommentsDetaileState extends State<CommentsDetail> {
     var url = 'https://api.sellship.co/api/comment/' + itemid;
 
     List<Comments> commentslis = List<Comments>();
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
       for (int i = 0; i < jsonbody.length; i++) {
@@ -119,12 +120,12 @@ class _CommentsDetaileState extends State<CommentsDetail> {
         value,
         textAlign: TextAlign.center,
         style: TextStyle(
-          fontFamily: 'Helvetica',
-          fontSize: 16,
-          color: Colors.white,
-        ),
+            fontFamily: 'Helvetica',
+            fontSize: 16,
+            color: Colors.white,
+            fontWeight: FontWeight.bold),
       ),
-      backgroundColor: Colors.blue,
+      backgroundColor: Colors.deepOrange,
       duration: Duration(seconds: 3),
     ));
   }
@@ -161,7 +162,7 @@ class _CommentsDetaileState extends State<CommentsDetail> {
         //               child: InkWell(
         //                   child: CircleAvatar(
         //                     child: Icon(
-        //                       Feather.message_circle,
+        //                       FeatherIcons.message_circle,
         //                       size: 20,
         //                       color: Colors.white,
         //                     ),
@@ -173,7 +174,7 @@ class _CommentsDetaileState extends State<CommentsDetail> {
         //                           itemid;
         //                       var userid = await storage.read(key: 'userid');
         //                       if (userid != null) {
-        //                         final response = await http.post(url, body: {
+        //                         final response = await http.post(Uri.parse(url), body: {
         //                           'userid': userid,
         //                           'comment': commentcontroller.text
         //                         });
@@ -220,7 +221,7 @@ class _CommentsDetaileState extends State<CommentsDetail> {
                                 width: 5,
                               ),
                               Icon(
-                                Feather.message_circle,
+                                FeatherIcons.messageCircle,
                                 color: Colors.deepOrange,
                               ),
                               SizedBox(
@@ -393,7 +394,7 @@ class _CommentsDetaileState extends State<CommentsDetail> {
                                         ),
                                         Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.start,
+                                              MainAxisAlignment.spaceEvenly,
                                           children: [
                                             InkWell(
                                               onTap: () async {
@@ -403,8 +404,8 @@ class _CommentsDetaileState extends State<CommentsDetail> {
                                                         '/' +
                                                         itemid;
 
-                                                final response =
-                                                    await http.get(url);
+                                                final response = await http
+                                                    .get(Uri.parse(url));
                                                 if (response.statusCode ==
                                                     200) {
                                                   showInSnackBar(
@@ -419,6 +420,40 @@ class _CommentsDetaileState extends State<CommentsDetail> {
                                                     color: Colors.grey),
                                               ),
                                             ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            commentslist[index].userid == userid
+                                                ? InkWell(
+                                                    onTap: () async {
+                                                      var url =
+                                                          'https://api.sellship.co/api/delete/comment/' +
+                                                              commentslist[
+                                                                      index]
+                                                                  .id +
+                                                              '/' +
+                                                              itemid;
+
+                                                      final response =
+                                                          await http.get(
+                                                              Uri.parse(url));
+                                                      if (response.statusCode ==
+                                                          200) {
+                                                        loadcomments();
+                                                        showInSnackBar(
+                                                            'The comment has been deleted.');
+                                                      }
+                                                    },
+                                                    child: Text(
+                                                      'Delete',
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 10,
+                                                          color: Colors.grey),
+                                                    ),
+                                                  )
+                                                : Container(),
                                           ],
                                         )
                                       ],
@@ -448,7 +483,7 @@ class _CommentsDetaileState extends State<CommentsDetail> {
                                     width: 5,
                                   ),
                                   Icon(
-                                    Feather.message_circle,
+                                    FeatherIcons.messageCircle,
                                     color: Colors.deepOrange,
                                   ),
                                   SizedBox(

@@ -10,12 +10,12 @@ import 'package:SellShip/screens/notifications.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:numeral/numeral.dart';
+
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:SellShip/screens/comments.dart';
 import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -25,6 +25,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:SellShip/screens/details.dart';
 import 'package:shimmer/shimmer.dart';
@@ -74,7 +75,7 @@ class _CategoryDetailState extends State<CategoryDetail>
         '/' +
         limit.toString();
     print(url);
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
 
@@ -92,6 +93,9 @@ class _CategoryDetailState extends State<CategoryDetail>
               jsondata['comments'] == null ? 0 : jsondata['comments'].length,
           image: jsondata['image'],
           price: jsondata['price'].toString(),
+          saleprice: jsondata.containsKey('saleprice')
+              ? jsondata['saleprice'].toString()
+              : null,
           category: jsondata['category'],
           sold: jsondata['sold'] == null ? false : jsondata['sold'],
         );
@@ -145,7 +149,7 @@ class _CategoryDetailState extends State<CategoryDetail>
 
     print(url);
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
       itemsgrid.clear();
@@ -164,6 +168,9 @@ class _CategoryDetailState extends State<CategoryDetail>
               jsondata['comments'] == null ? 0 : jsondata['comments'].length,
           image: jsondata['image'],
           price: jsondata['price'].toString(),
+          saleprice: jsondata.containsKey('saleprice')
+              ? jsondata['saleprice'].toString()
+              : null,
           category: jsondata['category'],
           sold: jsondata['sold'] == null ? false : jsondata['sold'],
         );
@@ -193,7 +200,7 @@ class _CategoryDetailState extends State<CategoryDetail>
         '/' +
         limit.toString();
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
       itemsgrid.clear();
@@ -212,6 +219,9 @@ class _CategoryDetailState extends State<CategoryDetail>
               jsondata['comments'] == null ? 0 : jsondata['comments'].length,
           image: jsondata['image'],
           price: jsondata['price'].toString(),
+          saleprice: jsondata.containsKey('saleprice')
+              ? jsondata['saleprice'].toString()
+              : null,
           category: jsondata['category'],
           sold: jsondata['sold'] == null ? false : jsondata['sold'],
         );
@@ -245,7 +255,7 @@ class _CategoryDetailState extends State<CategoryDetail>
         '/' +
         limit.toString();
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
       itemsgrid.clear();
@@ -264,6 +274,9 @@ class _CategoryDetailState extends State<CategoryDetail>
               jsondata['comments'] == null ? 0 : jsondata['comments'].length,
           image: jsondata['image'],
           price: jsondata['price'].toString(),
+          saleprice: jsondata.containsKey('saleprice')
+              ? jsondata['saleprice'].toString()
+              : null,
           category: jsondata['category'],
           sold: jsondata['sold'] == null ? false : jsondata['sold'],
         );
@@ -295,7 +308,7 @@ class _CategoryDetailState extends State<CategoryDetail>
         '/' +
         limit.toString();
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
       itemsgrid.clear();
@@ -314,6 +327,9 @@ class _CategoryDetailState extends State<CategoryDetail>
               jsondata['comments'] == null ? 0 : jsondata['comments'].length,
           image: jsondata['image'],
           price: jsondata['price'].toString(),
+          saleprice: jsondata.containsKey('saleprice')
+              ? jsondata['saleprice'].toString()
+              : null,
           category: jsondata['category'],
           sold: jsondata['sold'] == null ? false : jsondata['sold'],
         );
@@ -347,7 +363,7 @@ class _CategoryDetailState extends State<CategoryDetail>
         '/' +
         limit.toString();
     print(categoryurl);
-    final categoryresponse = await http.get(categoryurl);
+    final categoryresponse = await http.get(Uri.parse(categoryurl));
     if (categoryresponse.statusCode == 200) {
       var jsonbody = json.decode(categoryresponse.body);
 
@@ -366,6 +382,9 @@ class _CategoryDetailState extends State<CategoryDetail>
               : jsonbody[i]['comments'].length,
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
+          saleprice: jsonbody[i].containsKey('saleprice')
+              ? jsonbody[i]['saleprice'].toString()
+              : null,
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
@@ -394,7 +413,7 @@ class _CategoryDetailState extends State<CategoryDetail>
         '/' +
         limit.toString();
     print(categoryurl);
-    final categoryresponse = await http.get(categoryurl);
+    final categoryresponse = await http.get(Uri.parse(categoryurl));
     if (categoryresponse.statusCode == 200) {
       var jsonbody = json.decode(categoryresponse.body);
 
@@ -413,6 +432,9 @@ class _CategoryDetailState extends State<CategoryDetail>
               : jsonbody[i]['comments'].length,
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
+          saleprice: jsonbody[i].containsKey('saleprice')
+              ? jsonbody[i]['saleprice'].toString()
+              : null,
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
@@ -443,7 +465,7 @@ class _CategoryDetailState extends State<CategoryDetail>
         '/' +
         limit.toString();
     print(categoryurl);
-    final categoryresponse = await http.get(categoryurl);
+    final categoryresponse = await http.get(Uri.parse(categoryurl));
     if (categoryresponse.statusCode == 200) {
       var jsonbody = json.decode(categoryresponse.body);
 
@@ -462,6 +484,9 @@ class _CategoryDetailState extends State<CategoryDetail>
               : jsonbody[i]['comments'].length,
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
+          saleprice: jsonbody[i].containsKey('saleprice')
+              ? jsonbody[i]['saleprice'].toString()
+              : null,
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
@@ -494,7 +519,7 @@ class _CategoryDetailState extends State<CategoryDetail>
         '/' +
         limit.toString();
     print(categoryurl);
-    final categoryresponse = await http.get(categoryurl);
+    final categoryresponse = await http.get(Uri.parse(categoryurl));
     if (categoryresponse.statusCode == 200) {
       var jsonbody = json.decode(categoryresponse.body);
 
@@ -513,6 +538,9 @@ class _CategoryDetailState extends State<CategoryDetail>
               : jsonbody[i]['comments'].length,
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
+          saleprice: jsonbody[i].containsKey('saleprice')
+              ? jsonbody[i]['saleprice'].toString()
+              : null,
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
@@ -547,7 +575,7 @@ class _CategoryDetailState extends State<CategoryDetail>
         '/' +
         limit.toString();
     print(categoryurl);
-    final categoryresponse = await http.get(categoryurl);
+    final categoryresponse = await http.get(Uri.parse(categoryurl));
     if (categoryresponse.statusCode == 200) {
       var jsonbody = json.decode(categoryresponse.body);
 
@@ -566,6 +594,9 @@ class _CategoryDetailState extends State<CategoryDetail>
               : jsonbody[i]['comments'].length,
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
+          saleprice: jsonbody[i].containsKey('saleprice')
+              ? jsonbody[i]['saleprice'].toString()
+              : null,
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
@@ -598,7 +629,7 @@ class _CategoryDetailState extends State<CategoryDetail>
         '/' +
         limit.toString();
     print(categoryurl);
-    final categoryresponse = await http.get(categoryurl);
+    final categoryresponse = await http.get(Uri.parse(categoryurl));
     if (categoryresponse.statusCode == 200) {
       var jsonbody = json.decode(categoryresponse.body);
 
@@ -617,6 +648,9 @@ class _CategoryDetailState extends State<CategoryDetail>
               : jsonbody[i]['comments'].length,
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
+          saleprice: jsonbody[i].containsKey('saleprice')
+              ? jsonbody[i]['saleprice'].toString()
+              : null,
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
@@ -645,7 +679,7 @@ class _CategoryDetailState extends State<CategoryDetail>
         '/' +
         limit.toString();
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
       itemsgrid.clear();
@@ -664,6 +698,9 @@ class _CategoryDetailState extends State<CategoryDetail>
               jsondata['comments'] == null ? 0 : jsondata['comments'].length,
           image: jsondata['image'],
           price: jsondata['price'].toString(),
+          saleprice: jsondata.containsKey('saleprice')
+              ? jsondata['saleprice'].toString()
+              : null,
           category: jsondata['category'],
           sold: jsondata['sold'] == null ? false : jsondata['sold'],
         );
@@ -686,7 +723,7 @@ class _CategoryDetailState extends State<CategoryDetail>
   loadbrands() async {
     brands.clear();
     var categoryurl = 'https://api.sellship.co/api/getbrands/' + category;
-    final categoryresponse = await http.get(categoryurl);
+    final categoryresponse = await http.get(Uri.parse(categoryurl));
     if (categoryresponse.statusCode == 200) {
       var categoryrespons = json.decode(categoryresponse.body);
       print(categoryrespons);
@@ -710,7 +747,7 @@ class _CategoryDetailState extends State<CategoryDetail>
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Icon(Feather.chevron_down),
+              Icon(FeatherIcons.chevronDown),
               SizedBox(
                 height: 2,
               ),
@@ -790,7 +827,7 @@ class _CategoryDetailState extends State<CategoryDetail>
         '/' +
         limit.toString();
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
 
@@ -808,6 +845,9 @@ class _CategoryDetailState extends State<CategoryDetail>
               jsondata['comments'] == null ? 0 : jsondata['comments'].length,
           image: jsondata['image'],
           price: jsondata['price'].toString(),
+          saleprice: jsondata.containsKey('saleprice')
+              ? jsondata['saleprice'].toString()
+              : null,
           category: jsondata['category'],
           sold: jsondata['sold'] == null ? false : jsondata['sold'],
         );
@@ -827,7 +867,7 @@ class _CategoryDetailState extends State<CategoryDetail>
     if (userid != null) {
       var url = 'https://api.sellship.co/api/getnotification/' + userid;
       print(url);
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         var notificationinfo = json.decode(response.body);
         var notif = notificationinfo['notification'];
@@ -869,7 +909,7 @@ class _CategoryDetailState extends State<CategoryDetail>
         '/' +
         limit.toString();
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
 
@@ -887,6 +927,9 @@ class _CategoryDetailState extends State<CategoryDetail>
               jsondata['comments'] == null ? 0 : jsondata['comments'].length,
           image: jsondata['image'],
           price: jsondata['price'].toString(),
+          saleprice: jsondata.containsKey('saleprice')
+              ? jsondata['saleprice'].toString()
+              : null,
           category: jsondata['category'],
           sold: jsondata['sold'] == null ? false : jsondata['sold'],
         );
@@ -918,7 +961,7 @@ class _CategoryDetailState extends State<CategoryDetail>
         '/' +
         limit.toString();
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
 
@@ -936,6 +979,9 @@ class _CategoryDetailState extends State<CategoryDetail>
               jsondata['comments'] == null ? 0 : jsondata['comments'].length,
           image: jsondata['image'],
           price: jsondata['price'].toString(),
+          saleprice: jsondata.containsKey('saleprice')
+              ? jsondata['saleprice'].toString()
+              : null,
           category: jsondata['category'],
           sold: jsondata['sold'] == null ? false : jsondata['sold'],
         );
@@ -954,7 +1000,7 @@ class _CategoryDetailState extends State<CategoryDetail>
     var userid = await storage.read(key: 'userid');
     if (userid != null) {
       var url = 'https://api.sellship.co/api/favourites/' + userid;
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         if (response.body != 'Empty') {
           var respons = json.decode(response.body);
@@ -1005,7 +1051,7 @@ class _CategoryDetailState extends State<CategoryDetail>
         '/' +
         limit.toString();
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
 
@@ -1023,6 +1069,9 @@ class _CategoryDetailState extends State<CategoryDetail>
               jsondata['comments'] == null ? 0 : jsondata['comments'].length,
           image: jsondata['image'],
           price: jsondata['price'].toString(),
+          saleprice: jsondata.containsKey('saleprice')
+              ? jsondata['saleprice'].toString()
+              : null,
           category: jsondata['category'],
           sold: jsondata['sold'] == null ? false : jsondata['sold'],
         );
@@ -1054,7 +1103,7 @@ class _CategoryDetailState extends State<CategoryDetail>
         '/' +
         limit.toString();
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
 
@@ -1072,6 +1121,9 @@ class _CategoryDetailState extends State<CategoryDetail>
               jsondata['comments'] == null ? 0 : jsondata['comments'].length,
           image: jsondata['image'],
           price: jsondata['price'].toString(),
+          saleprice: jsondata.containsKey('saleprice')
+              ? jsondata['saleprice'].toString()
+              : null,
           category: jsondata['category'],
           sold: jsondata['sold'] == null ? false : jsondata['sold'],
         );
@@ -1174,7 +1226,7 @@ class _CategoryDetailState extends State<CategoryDetail>
 
     print(url);
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
       print(response.body);
@@ -1195,6 +1247,9 @@ class _CategoryDetailState extends State<CategoryDetail>
               jsondata['comments'] == null ? 0 : jsondata['comments'].length,
           image: jsondata['image'],
           price: jsondata['price'].toString(),
+          saleprice: jsondata.containsKey('saleprice')
+              ? jsondata['saleprice'].toString()
+              : null,
           category: jsondata['category'],
           sold: jsondata['sold'] == null ? false : jsondata['sold'],
         );
@@ -1294,7 +1349,7 @@ class _CategoryDetailState extends State<CategoryDetail>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    Feather.sliders,
+                    FeatherIcons.sliders,
                     size: 18,
                     color: Colors.black,
                   ),
@@ -1581,11 +1636,68 @@ class _CategoryDetailState extends State<CategoryDetail>
                                               SizedBox(
                                                 height: 1,
                                               ),
-                                              Text(
-                                                currency +
-                                                    ' ' +
-                                                    itemsgrid[index].price,
-                                              )
+                                              itemsgrid[index].saleprice != null
+                                                  ? Text.rich(
+                                                      TextSpan(
+                                                        children: <TextSpan>[
+                                                          new TextSpan(
+                                                            text: 'AED ' +
+                                                                itemsgrid[index]
+                                                                    .saleprice,
+                                                            style: new TextStyle(
+                                                                color: Colors
+                                                                    .redAccent,
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                          new TextSpan(
+                                                            text: '\nAED ' +
+                                                                itemsgrid[index]
+                                                                    .price
+                                                                    .toString(),
+                                                            style:
+                                                                new TextStyle(
+                                                              color:
+                                                                  Colors.grey,
+                                                              fontSize: 10,
+                                                              decoration:
+                                                                  TextDecoration
+                                                                      .lineThrough,
+                                                            ),
+                                                          ),
+                                                          new TextSpan(
+                                                            text: ' -' +
+                                                                (((double.parse(itemsgrid[index].price.toString()) - double.parse(itemsgrid[index].saleprice.toString())) /
+                                                                            double.parse(itemsgrid[index]
+                                                                                .price
+                                                                                .toString())) *
+                                                                        100)
+                                                                    .toStringAsFixed(
+                                                                        0) +
+                                                                '%',
+                                                            style:
+                                                                new TextStyle(
+                                                              color: Colors.red,
+                                                              fontSize: 12,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    )
+                                                  : Text(
+                                                      currency +
+                                                          ' ' +
+                                                          itemsgrid[index]
+                                                              .price,
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
                                             ],
                                           )),
                                           favourites != null
@@ -1624,7 +1736,8 @@ class _CategoryDetailState extends State<CategoryDetail>
                                                           });
                                                           final response =
                                                               await http.post(
-                                                                  url,
+                                                                  Uri.parse(
+                                                                      url),
                                                                   body: json
                                                                       .encode(
                                                                           body));
@@ -1645,7 +1758,8 @@ class _CategoryDetailState extends State<CategoryDetail>
                                                         backgroundColor:
                                                             Colors.deepOrange,
                                                         child: Icon(
-                                                          FontAwesome.heart,
+                                                          FontAwesomeIcons
+                                                              .heart,
                                                           color: Colors.white,
                                                           size: 15,
                                                         ),
@@ -1683,7 +1797,8 @@ class _CategoryDetailState extends State<CategoryDetail>
                                                           });
                                                           final response =
                                                               await http.post(
-                                                                  url,
+                                                                  Uri.parse(
+                                                                      url),
                                                                   body: json
                                                                       .encode(
                                                                           body));
@@ -1704,7 +1819,7 @@ class _CategoryDetailState extends State<CategoryDetail>
                                                         backgroundColor:
                                                             Colors.white,
                                                         child: Icon(
-                                                          Feather.heart,
+                                                          FeatherIcons.heart,
                                                           color:
                                                               Colors.blueGrey,
                                                           size: 16,
@@ -1719,7 +1834,7 @@ class _CategoryDetailState extends State<CategoryDetail>
                                                     backgroundColor:
                                                         Colors.white,
                                                     child: Icon(
-                                                      Feather.heart,
+                                                      FeatherIcons.heart,
                                                       color: Colors.blueGrey,
                                                       size: 16,
                                                     ),

@@ -14,15 +14,16 @@ import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
+
 import 'package:url_launcher/url_launcher.dart';
 
 class OrderBuyerPage extends StatefulWidget {
@@ -42,7 +43,7 @@ class _OrderBuyerPageState extends State<OrderBuyerPage> {
 
   getuserDetails() async {
     var userurl = 'https://api.sellship.co/api/store/' + user;
-    final userresponse = await http.get(userurl);
+    final userresponse = await http.get(Uri.parse(userurl));
 
     print(userresponse.body);
 
@@ -52,7 +53,7 @@ class _OrderBuyerPageState extends State<OrderBuyerPage> {
       profilepicture = userjsonbody['storelogo'];
     });
     var url = 'https://api.sellship.co/api/user/' + user;
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
 
     var jsonbody = json.decode(response.body);
   }
@@ -86,7 +87,7 @@ class _OrderBuyerPageState extends State<OrderBuyerPage> {
     }
 
     var url = 'https://api.sellship.co/api/getitem/' + widget.itemid;
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
 
     var jsonbody = json.decode(response.body);
 
@@ -185,7 +186,7 @@ class _OrderBuyerPageState extends State<OrderBuyerPage> {
 
     var url = 'https://api.sellship.co/api/transactionhistory/' + messageid;
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode != 200) {
       showDialog(
           context: context,
@@ -316,7 +317,7 @@ class _OrderBuyerPageState extends State<OrderBuyerPage> {
   checktransactioncompletedloop() async {
     var url = 'https://api.sellship.co/api/transactionhistory/' + messageid;
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
 
     if (response.statusCode != 200) {
       time = time + 2;
@@ -1066,7 +1067,7 @@ class _OrderBuyerPageState extends State<OrderBuyerPage> {
               );
             },
             child: Icon(
-              Icons.chevron_left,
+              FeatherIcons.chevronLeft,
               color: Colors.black,
             ),
           ),
@@ -1493,7 +1494,7 @@ class _OrderBuyerPageState extends State<OrderBuyerPage> {
                                               fontWeight: FontWeight.bold),
                                         ),
                                         trailing: Icon(
-                                          Icons.chevron_right,
+                                          FeatherIcons.chevronRight,
                                           color: Colors.black,
                                         ),
                                         contentPadding: EdgeInsets.zero),
@@ -1691,7 +1692,7 @@ class _OrderBuyerPageState extends State<OrderBuyerPage> {
                                             fontWeight: FontWeight.bold),
                                       ),
                                       trailing: Icon(
-                                        Icons.chevron_right,
+                                        FeatherIcons.chevronRight,
                                         color: Colors.black,
                                       ),
                                     ),
@@ -1730,7 +1731,7 @@ class _OrderBuyerPageState extends State<OrderBuyerPage> {
                 //                                   'https://api.sellship.co/api/cancelbuyer/' +
                 //                                       messageid;
                 //
-                //                               final response = await http.get(url);
+                //                               final response = await http.get(Uri.parse(url));
                 //
                 //                               if (response.statusCode == 200) {
                 //                                 Navigator.of(context).pop();

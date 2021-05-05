@@ -7,7 +7,6 @@ import 'package:SellShip/screens/signUpPage.dart';
 import 'package:SellShip/username.dart';
 import 'package:SellShip/verification/verifyphone.dart';
 import 'package:SellShip/verification/verifyphonesignup.dart';
-import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:auth_buttons/auth_buttons.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_oauth/firebase_auth_oauth.dart';

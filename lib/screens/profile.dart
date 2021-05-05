@@ -8,6 +8,8 @@ import 'package:SellShip/screens/onboardingbottom.dart';
 import 'package:SellShip/screens/store/mystorepage.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:flutter_login_facebook/flutter_login_facebook.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:SellShip/screens/comments.dart';
@@ -39,25 +41,26 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/screens/editprofile.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import 'package:numeral/numeral.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
+
 import 'package:SellShip/username.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -122,7 +125,7 @@ class _ProfilePageState extends State<ProfilePage>
     if (userid != null) {
       var url = 'https://api.sellship.co/api/getnotification/' + userid;
       print(url);
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         var notificationinfo = json.decode(response.body);
         var notif = notificationinfo['notification'];
@@ -230,8 +233,8 @@ class _ProfilePageState extends State<ProfilePage>
 
   var notbadge;
   Future getImageCamera() async {
-    var image = await ImagePicker.pickImage(
-        source: ImageSource.camera, maxHeight: 400, maxWidth: 400);
+    var image = await ImagePicker.platform
+        .pickImage(source: ImageSource.camera, maxHeight: 400, maxWidth: 400);
 
     var url = 'https://api.sellship.co/api/imageupload/' + userid;
     Dio dio = new Dio();
@@ -265,7 +268,7 @@ class _ProfilePageState extends State<ProfilePage>
   //   var userid = await storage.read(key: 'userid');
   //   if (userid != null) {
   //     var url = 'https://api.sellship.co/api/favourites/' + userid;
-  //     final response = await http.get(url);
+  //     final response = await http.get(Uri.parse(url));
   //     if (response.statusCode == 200) {
   //       if (response.body != 'Empty') {
   //         var respons = json.decode(response.body);
@@ -297,8 +300,8 @@ class _ProfilePageState extends State<ProfilePage>
   // }
 
   Future getImageGallery() async {
-    var image = await ImagePicker.pickImage(
-        source: ImageSource.gallery, maxHeight: 400, maxWidth: 400);
+    var image = await ImagePicker.platform
+        .pickImage(source: ImageSource.gallery, maxHeight: 400, maxWidth: 400);
 
     var url = 'https://api.sellship.co/api/imageupload/' + userid;
     Dio dio = new Dio();
@@ -343,32 +346,34 @@ class _ProfilePageState extends State<ProfilePage>
   final facebookLogin = FacebookLogin();
 
   _loginWithFB() async {
-    final result = await facebookLogin.logIn(['email']);
+    final result = await facebookLogin.logIn(permissions: [
+      FacebookPermission.publicProfile,
+      FacebookPermission.email,
+    ]);
 
     switch (result.status) {
-      case FacebookLoginStatus.loggedIn:
-        final token = result.accessToken.token;
-        final graphResponse = await http.get(
-            'https://graph.facebook.com/v2.12/me?fields=name,picture,email&access_token=$token');
+      case FacebookLoginStatus.success:
+        final FacebookAccessToken token = result.accessToken;
+        final graphResponse = await http.get(Uri.parse(
+            'https://graph.facebook.com/v2.12/me?fields=name,picture,email&access_token=$token'));
 
-        final profile = json.decode(graphResponse.body);
+        final profile = await facebookLogin.getUserProfile();
 
+        final imageUrl = await facebookLogin.getProfileImageUrl(width: 100);
+
+        final email = await facebookLogin.getUserEmail();
         var url = 'https://api.sellship.co/api/signup';
 
-        print(profile);
-
-        var name = profile['name'].split(" ");
-
         Map<String, String> body = {
-          'first_name': name[0],
-          'last_name': name[1],
-          'email': profile['email'],
+          'first_name': profile.firstName,
+          'last_name': profile.lastName,
+          'email': email,
           'phonenumber': '00',
-          'profilepicture': profile['picture']['data']['url'],
+          'profilepicture': imageUrl,
           'password': 'password',
         };
 
-        final response = await http.post(url, body: body);
+        final response = await http.post(Uri.parse(url), body: body);
 
         if (response.statusCode == 200) {
           var jsondata = json.decode(response.body);
@@ -380,7 +385,7 @@ class _ProfilePageState extends State<ProfilePage>
             await storage.write(key: 'userid', value: jsondata['status']['id']);
             var userid = await storage.read(key: 'userid');
             var storeurl = 'https://api.sellship.co/api/userstores/' + userid;
-            final storeresponse = await http.get(storeurl);
+            final storeresponse = await http.get(Uri.parse(storeurl));
             var storejsonbody = json.decode(storeresponse.body);
 
             if (storejsonbody.isNotEmpty) {
@@ -399,7 +404,7 @@ class _ProfilePageState extends State<ProfilePage>
             await storage.write(key: 'userid', value: jsondata['id']);
             var userid = await storage.read(key: 'userid');
             var storeurl = 'https://api.sellship.co/api/userstores/' + userid;
-            final storeresponse = await http.get(storeurl);
+            final storeresponse = await http.get(Uri.parse(storeurl));
             var storejsonbody = json.decode(storeresponse.body);
 
             if (storejsonbody.isNotEmpty) {
@@ -428,7 +433,7 @@ class _ProfilePageState extends State<ProfilePage>
           });
         break;
 
-      case FacebookLoginStatus.cancelledByUser:
+      case FacebookLoginStatus.cancel:
         setState(() => loggedin = false);
         Navigator.of(context).pop();
         break;
@@ -453,7 +458,7 @@ class _ProfilePageState extends State<ProfilePage>
             padding: EdgeInsets.all(10),
             child: InkWell(
                 child: Icon(
-                  Feather.settings,
+                  FeatherIcons.settings,
                   color: Color.fromRGBO(28, 45, 65, 1),
                 ),
                 onTap: () {
@@ -739,7 +744,8 @@ class _ProfilePageState extends State<ProfilePage>
                                                                     65,
                                                                     1),
                                                             child: Icon(
-                                                              Feather.camera,
+                                                              FeatherIcons
+                                                                  .camera,
                                                               color:
                                                                   Colors.white,
                                                               size: 16,
@@ -1183,7 +1189,8 @@ class _ProfilePageState extends State<ProfilePage>
                                                           });
                                                           final response =
                                                               await http.post(
-                                                                  url,
+                                                                  Uri.parse(
+                                                                      url),
                                                                   body: json
                                                                       .encode(
                                                                           body));
@@ -1249,7 +1256,8 @@ class _ProfilePageState extends State<ProfilePage>
                                                         backgroundColor:
                                                             Colors.deepOrange,
                                                         child: Icon(
-                                                          FontAwesome.heart,
+                                                          FontAwesomeIcons
+                                                              .heart,
                                                           color: Colors.white,
                                                           size: 15,
                                                         ),
@@ -1394,7 +1402,7 @@ class _ProfilePageState extends State<ProfilePage>
     if (userid != null) {
       var url = 'https://api.sellship.co/api/favourites/' + userid;
       print(url);
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         if (response.body != 'Empty') {
           var respons = json.decode(response.body);
@@ -1499,7 +1507,7 @@ class _ProfilePageState extends State<ProfilePage>
 
     if (userid != null) {
       var url = 'https://api.sellship.co/api/getorders/' + userid;
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         if (response.body != 'Empty') {
           var respons = json.decode(response.body);
@@ -1849,7 +1857,7 @@ class _ProfilePageState extends State<ProfilePage>
       'password': PasswordController.text,
     };
 
-    final response = await http.post(url, body: body);
+    final response = await http.post(Uri.parse(url), body: body);
 
     if (response.statusCode == 200) {
       var jsondata = json.decode(response.body);
@@ -1874,54 +1882,150 @@ class _ProfilePageState extends State<ProfilePage>
         Navigator.of(context).pop();
         showDialog(
             context: context,
+            barrierDismissible: false,
             useRootNavigator: false,
-            builder: (_) => AssetGiffyDialog(
-                  image: Image.asset(
-                    'assets/oops.gif',
-                    fit: BoxFit.cover,
+            builder: (_) => new AlertDialog(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                  content: Builder(
+                    builder: (context) {
+                      return Container(
+                          height: 380,
+                          child: Column(
+                            children: [
+                              Container(
+                                height: 250,
+                                width: MediaQuery.of(context).size.width,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(15),
+                                  child: Image.asset(
+                                    'assets/oops.gif',
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                'Oops!',
+                                style: TextStyle(
+                                  fontFamily: 'Helvetica',
+                                  fontSize: 16,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              InkWell(
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width - 30,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                      color: Color.fromRGBO(255, 115, 0, 1),
+                                      borderRadius: BorderRadius.circular(10),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color: Color(0xFF9DA3B4)
+                                                .withOpacity(0.1),
+                                            blurRadius: 65.0,
+                                            offset: Offset(0.0, 15.0))
+                                      ]),
+                                  child: Center(
+                                    child: Text(
+                                      "Close",
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 18,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          ));
+                    },
                   ),
-                  title: Text(
-                    'Oops!',
-                    style:
-                        TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600),
-                  ),
-                  description: Text(
-                    'Looks like you don\'t have an account with us!',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(),
-                  ),
-                  onlyOkButton: true,
-                  entryAnimation: EntryAnimation.DEFAULT,
-                  onOkButtonPressed: () {
-                    Navigator.of(context).pop();
-                  },
                 ));
       } else if (jsondata['status']['message'].toString().trim() ==
           'Invalid password, try again') {
         showDialog(
             context: context,
+            barrierDismissible: false,
             useRootNavigator: false,
-            builder: (_) => AssetGiffyDialog(
-                  image: Image.asset(
-                    'assets/oops.gif',
-                    fit: BoxFit.cover,
+            builder: (_) => new AlertDialog(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                  content: Builder(
+                    builder: (context) {
+                      return Container(
+                          height: 380,
+                          child: Column(
+                            children: [
+                              Container(
+                                height: 250,
+                                width: MediaQuery.of(context).size.width,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(15),
+                                  child: Image.asset(
+                                    'assets/oops.gif',
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                'Oops!',
+                                style: TextStyle(
+                                  fontFamily: 'Helvetica',
+                                  fontSize: 16,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              InkWell(
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width - 30,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                      color: Color.fromRGBO(255, 115, 0, 1),
+                                      borderRadius: BorderRadius.circular(10),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color: Color(0xFF9DA3B4)
+                                                .withOpacity(0.1),
+                                            blurRadius: 65.0,
+                                            offset: Offset(0.0, 15.0))
+                                      ]),
+                                  child: Center(
+                                    child: Text(
+                                      "Close",
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 18,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          ));
+                    },
                   ),
-                  title: Text(
-                    'Oops!',
-                    style:
-                        TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600),
-                  ),
-                  description: Text(
-                    'Looks like thats the wrong password!',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(),
-                  ),
-                  onlyOkButton: true,
-                  entryAnimation: EntryAnimation.DEFAULT,
-                  onOkButtonPressed: () {
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop();
-                  },
                 ));
       }
     } else {
@@ -1929,26 +2033,75 @@ class _ProfilePageState extends State<ProfilePage>
       Navigator.of(context).pop();
       showDialog(
           context: context,
+          barrierDismissible: false,
           useRootNavigator: false,
-          builder: (_) => AssetGiffyDialog(
-                image: Image.asset(
-                  'assets/oops.gif',
-                  fit: BoxFit.cover,
+          builder: (_) => new AlertDialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                content: Builder(
+                  builder: (context) {
+                    return Container(
+                        height: 380,
+                        child: Column(
+                          children: [
+                            Container(
+                              height: 250,
+                              width: MediaQuery.of(context).size.width,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(15),
+                                child: Image.asset(
+                                  'assets/oops.gif',
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              'Oops!',
+                              style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            InkWell(
+                              child: Container(
+                                width: MediaQuery.of(context).size.width - 30,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                    color: Color.fromRGBO(255, 115, 0, 1),
+                                    borderRadius: BorderRadius.circular(10),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Color(0xFF9DA3B4)
+                                              .withOpacity(0.1),
+                                          blurRadius: 65.0,
+                                          offset: Offset(0.0, 15.0))
+                                    ]),
+                                child: Center(
+                                  child: Text(
+                                    "Close",
+                                    style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                              onTap: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        ));
+                  },
                 ),
-                title: Text(
-                  'Oops!',
-                  style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600),
-                ),
-                description: Text(
-                  'Looks like something went wrong!\nPlease try again!',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(),
-                ),
-                onlyOkButton: true,
-                entryAnimation: EntryAnimation.DEFAULT,
-                onOkButtonPressed: () {
-                  Navigator.of(context).pop();
-                },
               ));
     }
   }
@@ -1968,36 +2121,33 @@ class _ProfilePageState extends State<ProfilePage>
           child: Stack(
             children: [
               Align(
-                alignment: Alignment.topCenter,
-                child: FadeAnimation(
-                    1,
-                    Stack(
-                      children: [
-                        Align(
-                            alignment: Alignment.topCenter,
-                            child: Container(
-                                height: 350,
-                                width: MediaQuery.of(context).size.width,
-                                child: SvgPicture.asset(
-                                  'assets/LoginBG.svg',
-                                  semanticsLabel: 'SellShip BG',
-                                  fit: BoxFit.cover,
-                                ))),
-                        Align(
-                            alignment: Alignment.topLeft,
-                            child: Padding(
-                                padding: EdgeInsets.only(left: 20, top: 150),
-                                child: Text(
-                                  'Welcome\nBack',
-                                  style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 40,
-                                    color: Colors.white,
-                                  ),
-                                ))),
-                      ],
-                    )),
-              ),
+                  alignment: Alignment.topCenter,
+                  child: Stack(
+                    children: [
+                      Align(
+                          alignment: Alignment.topCenter,
+                          child: Container(
+                              height: 350,
+                              width: MediaQuery.of(context).size.width,
+                              child: SvgPicture.asset(
+                                'assets/LoginBG.svg',
+                                semanticsLabel: 'SellShip BG',
+                                fit: BoxFit.cover,
+                              ))),
+                      Align(
+                          alignment: Alignment.topLeft,
+                          child: Padding(
+                              padding: EdgeInsets.only(left: 20, top: 150),
+                              child: Text(
+                                'Welcome\nBack',
+                                style: TextStyle(
+                                  fontFamily: 'Helvetica',
+                                  fontSize: 40,
+                                  color: Colors.white,
+                                ),
+                              ))),
+                    ],
+                  )),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
@@ -2234,8 +2384,8 @@ class _ProfilePageState extends State<ProfilePage>
                                             'password': user.uid,
                                           };
 
-                                          final response =
-                                              await http.post(url, body: body);
+                                          final response = await http
+                                              .post(Uri.parse(url), body: body);
 
                                           if (response.statusCode == 200) {
                                             var jsondata =
@@ -2252,8 +2402,8 @@ class _ProfilePageState extends State<ProfilePage>
                                               var storeurl =
                                                   'https://api.sellship.co/api/userstores/' +
                                                       userid;
-                                              final storeresponse =
-                                                  await http.get(storeurl);
+                                              final storeresponse = await http
+                                                  .get(Uri.parse(storeurl));
                                               var storejsonbody = json
                                                   .decode(storeresponse.body);
 
@@ -2285,8 +2435,8 @@ class _ProfilePageState extends State<ProfilePage>
                                               var storeurl =
                                                   'https://api.sellship.co/api/userstores/' +
                                                       userid;
-                                              final storeresponse =
-                                                  await http.get(storeurl);
+                                              final storeresponse = await http
+                                                  .get(Uri.parse(storeurl));
                                               var storejsonbody = json
                                                   .decode(storeresponse.body);
 
@@ -2313,41 +2463,108 @@ class _ProfilePageState extends State<ProfilePage>
                                           } else {
                                             showDialog(
                                                 context: context,
+                                                barrierDismissible: false,
                                                 useRootNavigator: false,
-                                                builder: (_) =>
-                                                    AssetGiffyDialog(
-                                                      image: Image.asset(
-                                                        'assets/oops.gif',
-                                                        fit: BoxFit.cover,
+                                                builder: (_) => new AlertDialog(
+                                                      shape: RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius.circular(
+                                                                      10.0))),
+                                                      content: Builder(
+                                                        builder: (context) {
+                                                          return Container(
+                                                              height: 380,
+                                                              child: Column(
+                                                                children: [
+                                                                  Container(
+                                                                    height: 250,
+                                                                    width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width,
+                                                                    child:
+                                                                        ClipRRect(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              15),
+                                                                      child: Image
+                                                                          .asset(
+                                                                        'assets/oops.gif',
+                                                                        fit: BoxFit
+                                                                            .cover,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    height: 10,
+                                                                  ),
+                                                                  Text(
+                                                                    'Oops!',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      fontSize:
+                                                                          16,
+                                                                      color: Colors
+                                                                          .grey,
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    height: 10,
+                                                                  ),
+                                                                  InkWell(
+                                                                    child:
+                                                                        Container(
+                                                                      width: MediaQuery.of(context)
+                                                                              .size
+                                                                              .width -
+                                                                          30,
+                                                                      height:
+                                                                          50,
+                                                                      decoration: BoxDecoration(
+                                                                          color: Color.fromRGBO(
+                                                                              255,
+                                                                              115,
+                                                                              0,
+                                                                              1),
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(10),
+                                                                          boxShadow: [
+                                                                            BoxShadow(
+                                                                                color: Color(0xFF9DA3B4).withOpacity(0.1),
+                                                                                blurRadius: 65.0,
+                                                                                offset: Offset(0.0, 15.0))
+                                                                          ]),
+                                                                      child:
+                                                                          Center(
+                                                                        child:
+                                                                            Text(
+                                                                          "Close",
+                                                                          style: TextStyle(
+                                                                              fontFamily: 'Helvetica',
+                                                                              fontSize: 18,
+                                                                              color: Colors.white,
+                                                                              fontWeight: FontWeight.bold),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    onTap: () {
+                                                                      Navigator.of(
+                                                                              context)
+                                                                          .pop();
+                                                                    },
+                                                                  ),
+                                                                ],
+                                                              ));
+                                                        },
                                                       ),
-                                                      title: Text(
-                                                        'Oops!',
-                                                        style: TextStyle(
-                                                            fontSize: 22.0,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w600),
-                                                      ),
-                                                      description: Text(
-                                                        'Looks like something went wrong!',
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: TextStyle(),
-                                                      ),
-                                                      onlyOkButton: true,
-                                                      entryAnimation:
-                                                          EntryAnimation
-                                                              .DEFAULT,
-                                                      onOkButtonPressed: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
                                                     ));
                                           }
                                           return user;
                                         });
                                       },
-                                      style: AuthButtonStyle.icon,
                                     )
                                   : Container(),
                               FacebookAuthButton(
@@ -2399,7 +2616,6 @@ class _ProfilePageState extends State<ProfilePage>
 
                                   _loginWithFB();
                                 },
-                                style: AuthButtonStyle.icon,
                               )
                             ],
                           )),
@@ -2414,51 +2630,46 @@ class _ProfilePageState extends State<ProfilePage>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      FadeAnimation(
-                          1.5,
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ForgotPassword()));
-                                },
-                                child: Text(
-                                  "Forgot Password?",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 16,
-                                  ),
-                                ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ForgotPassword()));
+                            },
+                            child: Text(
+                              "Forgot Password?",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w300,
+                                fontSize: 16,
                               ),
-                            ],
-                          )),
-                      FadeAnimation(
-                          1.5,
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => SignUpPage()));
-                                },
-                                child: Text(
-                                  "Create an Account",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 16,
-                                  ),
-                                ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => SignUpPage()));
+                            },
+                            child: Text(
+                              "Create an Account",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
                               ),
-                            ],
-                          )),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -2473,7 +2684,7 @@ class _ProfilePageState extends State<ProfilePage>
     userid = await storage.read(key: 'userid');
     if (userid != null) {
       var messageurl = 'https://api.sellship.co/api/getreviews/' + userid;
-      final response = await http.get(messageurl);
+      final response = await http.get(Uri.parse(messageurl));
 
       if (response.statusCode == 200) {
         List jsonResponse = json.decode(response.body);
@@ -2605,16 +2816,27 @@ class _ProfilePageState extends State<ProfilePage>
                                           ),
                                           Row(
                                             children: [
-                                              SmoothStarRating(
-                                                  allowHalfRating: true,
-                                                  starCount: 5,
-                                                  isReadOnly: true,
-                                                  rating: reviews[index].rating,
-                                                  size: 16.0,
-                                                  color: Color.fromRGBO(
-                                                      255, 115, 0, 1),
-                                                  borderColor: Colors.blueGrey,
-                                                  spacing: 0.0),
+                                              RatingBar.builder(
+                                                initialRating:
+                                                    reviews[index].rating,
+                                                minRating: 1,
+                                                direction: Axis.horizontal,
+                                                allowHalfRating: true,
+                                                itemCount: 5,
+                                                itemPadding:
+                                                    EdgeInsets.symmetric(
+                                                        horizontal: 4.0),
+                                                itemBuilder: (context, _) =>
+                                                    Icon(
+                                                  Icons.star,
+                                                  color: Colors.deepOrange,
+                                                ),
+                                                itemSize: 20,
+                                                ignoreGestures: true,
+                                                onRatingUpdate: (rating) {
+                                                  print(rating);
+                                                },
+                                              ),
                                               SizedBox(
                                                 width: 4,
                                               ),
@@ -2951,8 +3173,8 @@ class _ProfilePageState extends State<ProfilePage>
                                                             ],
                                                           ),
                                                           Icon(
-                                                            Feather
-                                                                .chevron_right,
+                                                            FeatherIcons
+                                                                .chevronRight,
                                                             size: 18,
                                                             color: Colors.grey,
                                                           )
@@ -3160,7 +3382,8 @@ class _ProfilePageState extends State<ProfilePage>
                                                           ],
                                                         ),
                                                         Icon(
-                                                          Feather.chevron_right,
+                                                          FeatherIcons
+                                                              .chevronRight,
                                                           color: Colors.grey,
                                                         )
                                                       ])
@@ -3287,7 +3510,7 @@ class _ProfilePageState extends State<ProfilePage>
 
     if (userid != null) {
       var url = 'https://api.sellship.co/api/user/' + userid;
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         var respons = json.decode(response.body);
         Map<String, dynamic> profilemap = respons;
@@ -3391,7 +3614,7 @@ class _ProfilePageState extends State<ProfilePage>
     if (userid != null) {
       var storeurl = 'https://api.sellship.co/api/userstores/' + userid;
 
-      final storeresponse = await http.get(storeurl);
+      final storeresponse = await http.get(Uri.parse(storeurl));
 
       if (storeresponse.statusCode == 200) {
         var jsonbody = json.decode(storeresponse.body);

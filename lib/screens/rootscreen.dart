@@ -17,7 +17,7 @@ import 'package:SellShip/screens/storepagepublic.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:SellShip/screens/additem.dart';
 import 'package:flutter/material.dart';
 import 'package:SellShip/global.dart';
@@ -32,6 +32,7 @@ import 'package:SellShip/screens/favourites.dart';
 import 'package:SellShip/screens/home.dart';
 import 'package:SellShip/screens/profile.dart';
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 class RootScreen extends StatefulWidget {
@@ -111,16 +112,17 @@ class _RootScreenState extends State<RootScreen> {
     if (userid != null) {
       await OneSignal.shared.setExternalUserId(userid);
 
-      var status = await OneSignal.shared.getPermissionSubscriptionState();
+      OneSignal.shared.getDeviceState().then((deviceState) async {
+        var playerId = deviceState.userId;
+        var url = 'https://api.sellship.co/api/save/onesignalid/' +
+            userid +
+            '/' +
+            playerId;
+        await http.get(Uri.parse(url));
+      });
 
-      var playerId = status.subscriptionStatus.userId;
-      var url = 'https://api.sellship.co/api/save/onesignalid/' +
-          userid +
-          '/' +
-          playerId;
-      await http.get(url);
       var userurl = 'https://api.sellship.co/api/user/' + userid;
-      final userres = await http.get(userurl);
+      final userres = await http.get(Uri.parse(userurl));
       var respons = json.decode(userres.body);
       Map<String, dynamic> profilemap = respons;
       var profilepic = profilemap['profilepicture'];
@@ -185,7 +187,7 @@ class _RootScreenState extends State<RootScreen> {
   initnotifs() async {
     OneSignal.shared
         .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
-      var jsonrep = result.notification.payload.additionalData;
+      var jsonrep = result.notification.additionalData;
 
       if (jsonrep['navroute'] == 'activitysell') {
         Navigator.push(
@@ -420,7 +422,7 @@ class _RootScreenState extends State<RootScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Feather.search,
+              FeatherIcons.search,
               color: selectedsearchColor,
               size: 25,
             ),
@@ -467,7 +469,7 @@ class _RootScreenState extends State<RootScreen> {
                                   Icon(Icons.error),
                             ))))
                 : Icon(
-                    FontAwesome.user_circle,
+                    FontAwesomeIcons.userCircle,
                     size: 25,
                   ),
             label: 'Profile',

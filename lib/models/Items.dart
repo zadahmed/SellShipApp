@@ -46,10 +46,12 @@ class Item {
   final bool freedelivery;
   String selectedsize;
   final String storetype;
+  final String saleprice;
 
   Item(
       {this.itemid,
       this.name,
+      this.saleprice,
       this.makeoffers,
       this.approved,
       this.buyerprotection,
@@ -107,6 +109,7 @@ class Item {
       category: json['category'],
       weight: json['weight'],
       quantity: json['quantity'],
+      saleprice: json['saleprice'],
       selectedsize: json['selectedsize'],
     );
   }
@@ -122,6 +125,7 @@ class Item {
         'freedelivery': freedelivery,
         'sellername': sellername,
         'quantity': quantity,
+        'saleprice': saleprice,
         'weight': weight,
         'selectedsize': selectedsize,
       };

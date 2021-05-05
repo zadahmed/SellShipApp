@@ -25,21 +25,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
+
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:jiffy/jiffy.dart';
-import 'package:numeral/numeral.dart';
+
 import 'package:SellShip/models/Items.dart';
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:SellShip/screens/useritems.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
 
@@ -77,7 +78,7 @@ class _DetailsState extends State<Details> {
     var userid = await storage.read(key: 'userid');
     if (userid != null) {
       var url = 'https://api.sellship.co/api/favourites/' + userid;
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
         var respons = json.decode(response.body);
@@ -177,7 +178,7 @@ class _DetailsState extends State<Details> {
 
   getcategory() async {
     var url = "https://api.sellship.co/api/category/" + newItem.category;
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
 
     var jsonbody = json.decode(response.body);
 
@@ -201,7 +202,7 @@ class _DetailsState extends State<Details> {
   getsimilaritems() async {
     var url = 'https://api.sellship.co/api/similar/products/' + widget.itemid;
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
 
@@ -226,6 +227,9 @@ class _DetailsState extends State<Details> {
               ? 0
               : jsonbody[i]['comments'].length,
           price: jsonbody[i]['price'].toString(),
+          saleprice: jsonbody[i].containsKey('saleprice')
+              ? jsonbody[i]['saleprice'].toString()
+              : null,
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
@@ -440,7 +444,8 @@ class _DetailsState extends State<Details> {
                                       '/' +
                                       offercontroller.text.trim();
 
-                              final response = await http.get(itemurl);
+                              final response =
+                                  await http.get(Uri.parse(itemurl));
 
                               if (response.statusCode == 200) {
                                 showInSnackBar(
@@ -459,31 +464,105 @@ class _DetailsState extends State<Details> {
                             } else {
                               showDialog(
                                   context: context,
+                                  barrierDismissible: false,
                                   useRootNavigator: false,
-                                  builder: (_) => AssetGiffyDialog(
-                                        image: Image.asset(
-                                          'assets/oops.gif',
-                                          fit: BoxFit.cover,
+                                  builder: (_) => new AlertDialog(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10.0))),
+                                        content: Builder(
+                                          builder: (context) {
+                                            return Container(
+                                                height: 380,
+                                                child: Column(
+                                                  children: [
+                                                    Container(
+                                                      height: 250,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .width,
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15),
+                                                        child: Image.asset(
+                                                          'assets/oops.gif',
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Text(
+                                                      'Oops. You can\'t send an offer to yourself!',
+                                                      style: TextStyle(
+                                                        fontFamily: 'Helvetica',
+                                                        fontSize: 16,
+                                                        color: Colors.grey,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    InkWell(
+                                                      child: Container(
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width -
+                                                            30,
+                                                        height: 50,
+                                                        decoration: BoxDecoration(
+                                                            color:
+                                                                Color.fromRGBO(
+                                                                    255,
+                                                                    115,
+                                                                    0,
+                                                                    1),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                  color: Color(
+                                                                          0xFF9DA3B4)
+                                                                      .withOpacity(
+                                                                          0.1),
+                                                                  blurRadius:
+                                                                      65.0,
+                                                                  offset:
+                                                                      Offset(
+                                                                          0.0,
+                                                                          15.0))
+                                                            ]),
+                                                        child: Center(
+                                                          child: Text(
+                                                            "Close",
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Helvetica',
+                                                                fontSize: 18,
+                                                                color: Colors
+                                                                    .white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      onTap: () {
+                                                        Navigator.pop(context);
+                                                        Navigator.pop(context);
+                                                        Navigator.pop(context);
+                                                      },
+                                                    ),
+                                                  ],
+                                                ));
+                                          },
                                         ),
-                                        title: Text(
-                                          'Oops!',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontSize: 22.0,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                        description: Text(
-                                          'You can\'t send an offer to yourself!',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(),
-                                        ),
-                                        onlyOkButton: true,
-                                        entryAnimation: EntryAnimation.DEFAULT,
-                                        onOkButtonPressed: () {
-                                          Navigator.pop(context);
-                                          Navigator.pop(context);
-                                          Navigator.pop(context);
-                                        },
                                       ));
                             }
                           }
@@ -553,7 +632,7 @@ class _DetailsState extends State<Details> {
                     onTap: () async {
                       var itemurl =
                           'https://api.sellship.co/api/report/' + itemid;
-                      final response = await http.get(itemurl);
+                      final response = await http.get(Uri.parse(itemurl));
                       if (response.statusCode == 200) {
                         Navigator.of(context).pop();
                         showInSnackBar(
@@ -651,7 +730,7 @@ class _DetailsState extends State<Details> {
     }
 
     var url = 'https://api.sellship.co/api/getitem/' + itemid;
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
 
     var jsonbody = json.decode(response.body);
 
@@ -693,6 +772,9 @@ class _DetailsState extends State<Details> {
         buyerprotection: protection,
         itemid: jsonbody[0]['_id']['\$oid'].toString(),
         price: jsonbody[0]['price'].toString(),
+        saleprice: jsonbody[0].containsKey('saleprice')
+            ? jsonbody[0]['saleprice'].toString()
+            : null,
         description: jsonbody[0]['description'],
         weight: jsonbody[0]['weight'],
         category: jsonbody[0]['category'],
@@ -780,7 +862,7 @@ class _DetailsState extends State<Details> {
 
   getuserDetails(user) async {
     var userurl = 'https://api.sellship.co/api/store/' + user;
-    final userresponse = await http.get(userurl);
+    final userresponse = await http.get(Uri.parse(userurl));
 
     var userjsonbody = json.decode(userresponse.body);
 
@@ -822,7 +904,7 @@ class _DetailsState extends State<Details> {
         'itemid': newItem.itemid,
       };
 
-      final response = await http.post(url, body: body);
+      final response = await http.post(Uri.parse(url), body: body);
 
       if (response.statusCode == 200) {
         var jsondata = json.decode(response.body);
@@ -969,7 +1051,7 @@ class _DetailsState extends State<Details> {
                     }
                   },
                   child: Icon(
-                    Feather.share,
+                    FeatherIcons.share,
                     color: Color.fromRGBO(28, 45, 65, 1),
                   )),
             ),
@@ -1095,7 +1177,7 @@ class _DetailsState extends State<Details> {
                                                         newItem.likes - 1;
                                                   });
                                                   final response = await http
-                                                      .post(url,
+                                                      .post(Uri.parse(url),
                                                           body: json
                                                               .encode(body));
 
@@ -1115,7 +1197,7 @@ class _DetailsState extends State<Details> {
                                                 backgroundColor:
                                                     Colors.deepOrangeAccent,
                                                 child: Icon(
-                                                  FontAwesome.heart,
+                                                  FontAwesomeIcons.heart,
                                                   color: Colors.white,
                                                   size: 20,
                                                 ),
@@ -1143,7 +1225,7 @@ class _DetailsState extends State<Details> {
                                                         newItem.likes + 1;
                                                   });
                                                   final response = await http
-                                                      .post(url,
+                                                      .post(Uri.parse(url),
                                                           body: json
                                                               .encode(body));
 
@@ -1162,7 +1244,7 @@ class _DetailsState extends State<Details> {
                                                 radius: 24,
                                                 backgroundColor: Colors.white,
                                                 child: Icon(
-                                                  Feather.heart,
+                                                  FeatherIcons.heart,
                                                   color: Colors.blueGrey,
                                                   size: 20,
                                                 ),
@@ -1171,7 +1253,7 @@ class _DetailsState extends State<Details> {
                                           radius: 24,
                                           backgroundColor: Colors.white,
                                           child: Icon(
-                                            Feather.heart,
+                                            FeatherIcons.heart,
                                             color: Colors.blueGrey,
                                             size: 20,
                                           ),
@@ -1192,14 +1274,59 @@ class _DetailsState extends State<Details> {
                               Padding(
                                 padding: EdgeInsets.only(
                                     left: 15, bottom: 5, top: 2),
-                                child: Text(
-                                  currency + ' ' + newItem.price.toString(),
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                      fontFamily: 'Helvetica',
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.w800),
-                                ),
+                                child: newItem.saleprice != null
+                                    ? Text.rich(
+                                        TextSpan(
+                                          children: <TextSpan>[
+                                            new TextSpan(
+                                              text: 'AED ' + newItem.saleprice,
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 24,
+                                                  color: Colors.redAccent,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            new TextSpan(
+                                              text: '\nAED ' +
+                                                  newItem.price.toString(),
+                                              style: new TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 10,
+                                                decoration:
+                                                    TextDecoration.lineThrough,
+                                              ),
+                                            ),
+                                            new TextSpan(
+                                              text: ' -' +
+                                                  (((double.parse(newItem.price
+                                                                      .toString()) -
+                                                                  double.parse(newItem
+                                                                      .saleprice
+                                                                      .toString())) /
+                                                              double.parse(newItem
+                                                                  .price
+                                                                  .toString())) *
+                                                          100)
+                                                      .toStringAsFixed(0) +
+                                                  '%',
+                                              style: new TextStyle(
+                                                color: Colors.red,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    : Text(
+                                        currency +
+                                            ' ' +
+                                            newItem.price.toString(),
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.w800),
+                                      ),
                               ),
                               Padding(
                                 padding: EdgeInsets.only(
@@ -1571,8 +1698,8 @@ class _DetailsState extends State<Details> {
                                                     Row(
                                                       children: [
                                                         Icon(
-                                                          FontAwesome5
-                                                              .smile_beam,
+                                                          FontAwesomeIcons
+                                                              .smileBeam,
                                                           color: Color.fromRGBO(
                                                               60, 72, 88, 1),
                                                           size: 18,
@@ -1651,7 +1778,7 @@ class _DetailsState extends State<Details> {
                                               Row(
                                                 children: [
                                                   Icon(
-                                                    FontAwesome.tag,
+                                                    FontAwesomeIcons.tag,
                                                     color: Color.fromRGBO(
                                                         60, 72, 88, 1),
                                                     size: 18,
@@ -1843,7 +1970,7 @@ class _DetailsState extends State<Details> {
                                                                           ),
                                                                           leading:
                                                                               Icon(
-                                                                            FontAwesome.money,
+                                                                            FontAwesomeIcons.dollarSign,
                                                                             color: Color.fromRGBO(
                                                                                 255,
                                                                                 115,
@@ -1951,7 +2078,7 @@ class _DetailsState extends State<Details> {
                                                           BorderRadius.circular(
                                                               15)),
                                                   child: Icon(
-                                                    FontAwesome.lock,
+                                                    FontAwesomeIcons.lock,
                                                     size: 30,
                                                     color: Color.fromRGBO(
                                                         255, 115, 0, 1),
@@ -1979,7 +2106,7 @@ class _DetailsState extends State<Details> {
                                                   ),
                                                 ),
                                                 trailing: Icon(
-                                                  Feather.info,
+                                                  FeatherIcons.info,
                                                   size: 16,
                                                 ))),
                                       ))
@@ -2068,19 +2195,35 @@ class _DetailsState extends State<Details> {
                                                             MainAxisAlignment
                                                                 .start,
                                                         children: <Widget>[
-                                                          SmoothStarRating(
-                                                              allowHalfRating:
-                                                                  true,
-                                                              starCount: 5,
-                                                              isReadOnly: true,
-                                                              rating:
-                                                                  reviewrating,
-                                                              size: 20.0,
+                                                          RatingBar.builder(
+                                                            initialRating:
+                                                                reviewrating,
+                                                            minRating: 1,
+                                                            direction:
+                                                                Axis.horizontal,
+                                                            allowHalfRating:
+                                                                true,
+                                                            itemCount: 5,
+                                                            itemPadding: EdgeInsets
+                                                                .symmetric(
+                                                                    horizontal:
+                                                                        4.0),
+                                                            itemBuilder:
+                                                                (context, _) =>
+                                                                    Icon(
+                                                              Icons.star,
                                                               color: Colors
                                                                   .deepOrange,
-                                                              borderColor:
-                                                                  Colors.grey,
-                                                              spacing: 0.0),
+                                                            ),
+                                                            itemSize: 20,
+                                                            ignoreGestures:
+                                                                true,
+                                                            onRatingUpdate:
+                                                                (rating) {
+                                                              print(rating);
+                                                            },
+                                                          )
+
                                                           // SizedBox(
                                                           //   width: 5,
                                                           // ),
@@ -2504,7 +2647,8 @@ class _DetailsState extends State<Details> {
                                                               });
                                                               final response =
                                                                   await http.post(
-                                                                      url,
+                                                                      Uri.parse(
+                                                                          url),
                                                                       body: json
                                                                           .encode(
                                                                               body));
@@ -2527,7 +2671,8 @@ class _DetailsState extends State<Details> {
                                                             backgroundColor: Colors
                                                                 .deepOrangeAccent,
                                                             child: Icon(
-                                                              FontAwesome.heart,
+                                                              FontAwesomeIcons
+                                                                  .heart,
                                                               color:
                                                                   Colors.white,
                                                               size: 16,
@@ -2572,7 +2717,8 @@ class _DetailsState extends State<Details> {
                                                               });
                                                               final response =
                                                                   await http.post(
-                                                                      url,
+                                                                      Uri.parse(
+                                                                          url),
                                                                       body: json
                                                                           .encode(
                                                                               body));
@@ -2594,7 +2740,8 @@ class _DetailsState extends State<Details> {
                                                             backgroundColor:
                                                                 Colors.white,
                                                             child: Icon(
-                                                              Feather.heart,
+                                                              FeatherIcons
+                                                                  .heart,
                                                               color: Colors
                                                                   .blueGrey,
                                                               size: 16,
@@ -2605,7 +2752,7 @@ class _DetailsState extends State<Details> {
                                                       backgroundColor:
                                                           Colors.white,
                                                       child: Icon(
-                                                        Feather.heart,
+                                                        FeatherIcons.heart,
                                                         color: Colors.blueGrey,
                                                         size: 16,
                                                       ),
@@ -2778,33 +2925,114 @@ class _DetailsState extends State<Details> {
                                       } else {
                                         showDialog(
                                             context: context,
-                                            builder: (_) => AssetGiffyDialog(
-                                                  image: Image.asset(
-                                                    'assets/oops.gif',
-                                                    fit: BoxFit.cover,
+                                            barrierDismissible: false,
+                                            useRootNavigator: false,
+                                            builder: (_) => new AlertDialog(
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  10.0))),
+                                                  content: Builder(
+                                                    builder: (context) {
+                                                      return Container(
+                                                          height: 380,
+                                                          child: Column(
+                                                            children: [
+                                                              Container(
+                                                                height: 250,
+                                                                width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                                child:
+                                                                    ClipRRect(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              15),
+                                                                  child: Image
+                                                                      .asset(
+                                                                    'assets/oops.gif',
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 10,
+                                                              ),
+                                                              Text(
+                                                                'Oops! You need to login to create an offer!',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'Helvetica',
+                                                                  fontSize: 16,
+                                                                  color: Colors
+                                                                      .grey,
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 10,
+                                                              ),
+                                                              InkWell(
+                                                                child:
+                                                                    Container(
+                                                                  width: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width -
+                                                                      30,
+                                                                  height: 50,
+                                                                  decoration: BoxDecoration(
+                                                                      color: Color
+                                                                          .fromRGBO(
+                                                                              255,
+                                                                              115,
+                                                                              0,
+                                                                              1),
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              10),
+                                                                      boxShadow: [
+                                                                        BoxShadow(
+                                                                            color: Color(0xFF9DA3B4).withOpacity(
+                                                                                0.1),
+                                                                            blurRadius:
+                                                                                65.0,
+                                                                            offset:
+                                                                                Offset(0.0, 15.0))
+                                                                      ]),
+                                                                  child: Center(
+                                                                    child: Text(
+                                                                      "Close",
+                                                                      style: TextStyle(
+                                                                          fontFamily:
+                                                                              'Helvetica',
+                                                                          fontSize:
+                                                                              18,
+                                                                          color: Colors
+                                                                              .white,
+                                                                          fontWeight:
+                                                                              FontWeight.bold),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                onTap: () {
+                                                                  Navigator.of(
+                                                                          context,
+                                                                          rootNavigator:
+                                                                              true)
+                                                                      .pop(
+                                                                          'dialog');
+                                                                  checkuser();
+                                                                },
+                                                              ),
+                                                            ],
+                                                          ));
+                                                    },
                                                   ),
-                                                  title: Text(
-                                                    'Oops!',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        fontSize: 22.0,
-                                                        fontWeight:
-                                                            FontWeight.w600),
-                                                  ),
-                                                  description: Text(
-                                                    'You need to login to create an offer!',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(),
-                                                  ),
-                                                  onlyOkButton: true,
-                                                  entryAnimation:
-                                                      EntryAnimation.DEFAULT,
-                                                  onOkButtonPressed: () {
-                                                    Navigator.of(context,
-                                                            rootNavigator: true)
-                                                        .pop('dialog');
-                                                    checkuser();
-                                                  },
                                                 ));
                                       }
                                     },
@@ -2961,33 +3189,114 @@ class _DetailsState extends State<Details> {
                                       } else {
                                         showDialog(
                                             context: context,
-                                            builder: (_) => AssetGiffyDialog(
-                                                  image: Image.asset(
-                                                    'assets/oops.gif',
-                                                    fit: BoxFit.cover,
+                                            barrierDismissible: false,
+                                            useRootNavigator: false,
+                                            builder: (_) => new AlertDialog(
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  10.0))),
+                                                  content: Builder(
+                                                    builder: (context) {
+                                                      return Container(
+                                                          height: 380,
+                                                          child: Column(
+                                                            children: [
+                                                              Container(
+                                                                height: 250,
+                                                                width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                                child:
+                                                                    ClipRRect(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              15),
+                                                                  child: Image
+                                                                      .asset(
+                                                                    'assets/oops.gif',
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 10,
+                                                              ),
+                                                              Text(
+                                                                'Oops! You need to login to add to cart!',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'Helvetica',
+                                                                  fontSize: 16,
+                                                                  color: Colors
+                                                                      .grey,
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 10,
+                                                              ),
+                                                              InkWell(
+                                                                child:
+                                                                    Container(
+                                                                  width: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width -
+                                                                      30,
+                                                                  height: 50,
+                                                                  decoration: BoxDecoration(
+                                                                      color: Color
+                                                                          .fromRGBO(
+                                                                              255,
+                                                                              115,
+                                                                              0,
+                                                                              1),
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              10),
+                                                                      boxShadow: [
+                                                                        BoxShadow(
+                                                                            color: Color(0xFF9DA3B4).withOpacity(
+                                                                                0.1),
+                                                                            blurRadius:
+                                                                                65.0,
+                                                                            offset:
+                                                                                Offset(0.0, 15.0))
+                                                                      ]),
+                                                                  child: Center(
+                                                                    child: Text(
+                                                                      "Close",
+                                                                      style: TextStyle(
+                                                                          fontFamily:
+                                                                              'Helvetica',
+                                                                          fontSize:
+                                                                              18,
+                                                                          color: Colors
+                                                                              .white,
+                                                                          fontWeight:
+                                                                              FontWeight.bold),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                onTap: () {
+                                                                  Navigator.of(
+                                                                          context,
+                                                                          rootNavigator:
+                                                                              true)
+                                                                      .pop(
+                                                                          'dialog');
+                                                                  checkuser();
+                                                                },
+                                                              ),
+                                                            ],
+                                                          ));
+                                                    },
                                                   ),
-                                                  title: Text(
-                                                    'Oops!',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        fontSize: 22.0,
-                                                        fontWeight:
-                                                            FontWeight.w600),
-                                                  ),
-                                                  description: Text(
-                                                    'You need to login to add to cart!',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(),
-                                                  ),
-                                                  onlyOkButton: true,
-                                                  entryAnimation:
-                                                      EntryAnimation.DEFAULT,
-                                                  onOkButtonPressed: () {
-                                                    Navigator.of(context,
-                                                            rootNavigator: true)
-                                                        .pop('dialog');
-                                                    checkuser();
-                                                  },
                                                 ));
                                       }
                                     },
@@ -3135,32 +3444,108 @@ class _DetailsState extends State<Details> {
                               } else {
                                 showDialog(
                                     context: context,
-                                    builder: (_) => AssetGiffyDialog(
-                                          image: Image.asset(
-                                            'assets/oops.gif',
-                                            fit: BoxFit.cover,
+                                    barrierDismissible: false,
+                                    useRootNavigator: false,
+                                    builder: (_) => new AlertDialog(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10.0))),
+                                          content: Builder(
+                                            builder: (context) {
+                                              return Container(
+                                                  height: 380,
+                                                  child: Column(
+                                                    children: [
+                                                      Container(
+                                                        height: 250,
+                                                        width: MediaQuery.of(
+                                                                context)
+                                                            .size
+                                                            .width,
+                                                        child: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(15),
+                                                          child: Image.asset(
+                                                            'assets/oops.gif',
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 10,
+                                                      ),
+                                                      Text(
+                                                        'Oops! You need to login to add to cart!',
+                                                        style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 16,
+                                                          color: Colors.grey,
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 10,
+                                                      ),
+                                                      InkWell(
+                                                        child: Container(
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width -
+                                                              30,
+                                                          height: 50,
+                                                          decoration: BoxDecoration(
+                                                              color: Color
+                                                                  .fromRGBO(
+                                                                      255,
+                                                                      115,
+                                                                      0,
+                                                                      1),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10),
+                                                              boxShadow: [
+                                                                BoxShadow(
+                                                                    color: Color(
+                                                                            0xFF9DA3B4)
+                                                                        .withOpacity(
+                                                                            0.1),
+                                                                    blurRadius:
+                                                                        65.0,
+                                                                    offset:
+                                                                        Offset(
+                                                                            0.0,
+                                                                            15.0))
+                                                              ]),
+                                                          child: Center(
+                                                            child: Text(
+                                                              "Close",
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'Helvetica',
+                                                                  fontSize: 18,
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        onTap: () {
+                                                          Navigator.of(context,
+                                                                  rootNavigator:
+                                                                      true)
+                                                              .pop('dialog');
+                                                          checkuser();
+                                                        },
+                                                      ),
+                                                    ],
+                                                  ));
+                                            },
                                           ),
-                                          title: Text(
-                                            'Oops!',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontSize: 22.0,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                          description: Text(
-                                            'You need to login to add to cart!',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(),
-                                          ),
-                                          onlyOkButton: true,
-                                          entryAnimation:
-                                              EntryAnimation.DEFAULT,
-                                          onOkButtonPressed: () {
-                                            Navigator.of(context,
-                                                    rootNavigator: true)
-                                                .pop('dialog');
-                                            checkuser();
-                                          },
                                         ));
                               }
                             },

@@ -6,12 +6,13 @@ import 'package:SellShip/screens/chatpageviewseller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
+
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ActivityBuy extends StatefulWidget {
@@ -69,7 +70,7 @@ class _ActivityBuyState extends State<ActivityBuy>
     var userid = await storage.read(key: 'userid');
     if (userid != null) {
       var itemurl = 'https://api.sellship.co/api/activity/buying/' + userid;
-      final response = await http.get(itemurl);
+      final response = await http.get(Uri.parse(itemurl));
       if (response.statusCode == 200) {
         var itemrespons = json.decode(response.body);
         List itemmap = itemrespons;
@@ -178,7 +179,7 @@ class _ActivityBuyState extends State<ActivityBuy>
     }
     var userid = await storage.read(key: 'userid');
     var itemurl = 'https://api.sellship.co/api/activity/selling/' + userid;
-    final response = await http.get(itemurl);
+    final response = await http.get(Uri.parse(itemurl));
     if (response.statusCode == 200) {
       var itemrespons = json.decode(response.body);
       List itemmap = itemrespons;
@@ -557,7 +558,7 @@ class _ActivityBuyState extends State<ActivityBuy>
                                     '/' +
                                     offercontroller.text.trim();
 
-                            final response = await http.get(itemurl);
+                            final response = await http.get(Uri.parse(itemurl));
 
                             if (response.statusCode == 200) {
                               loadbuyingactivity();
@@ -749,7 +750,7 @@ class _ActivityBuyState extends State<ActivityBuy>
                                   '/' +
                                   offercontroller.text.trim();
 
-                          final response = await http.get(itemurl);
+                          final response = await http.get(Uri.parse(itemurl));
 
                           if (response.statusCode == 200) {
                             loadsellingactivity();
@@ -1077,7 +1078,8 @@ class _ActivityBuyState extends State<ActivityBuy>
                                                           MainAxisAlignment.end,
                                                       children: [
                                                         Icon(
-                                                          Icons.chevron_right,
+                                                          FeatherIcons
+                                                              .chevronRight,
                                                           color: Colors.grey,
                                                         )
                                                       ])

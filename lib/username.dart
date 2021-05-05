@@ -7,10 +7,10 @@ import 'package:SellShip/screens/rootscreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Username extends StatefulWidget {
   final String userid;
@@ -42,7 +42,7 @@ class _UsernameState extends State<Username> {
 
     print(url);
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       var respons = json.decode(response.body);
       Map<String, dynamic> profilemap = respons;
@@ -78,7 +78,7 @@ class _UsernameState extends State<Username> {
             onTap: () {
               Navigator.pop(context);
             },
-            child: Icon(Feather.arrow_left)),
+            child: Icon(FeatherIcons.arrowLeft)),
         iconTheme: IconThemeData(color: Colors.black),
         elevation: 0,
         title: Text(
@@ -221,7 +221,7 @@ class _UsernameState extends State<Username> {
                           '/' +
                           usernamecontroller.text;
 
-                      final response = await http.get(url);
+                      final response = await http.get(Uri.parse(url));
                       if (response.statusCode == 200) {
                         var jsondeco = json.decode(response.body);
                         if (jsondeco['Status'] == 'Success') {
@@ -242,31 +242,93 @@ class _UsernameState extends State<Username> {
                                 builder: (context) => OnboardingInterests()));
                       } else {
                         Navigator.of(context).pop();
+
                         showDialog(
                             context: context,
                             barrierDismissible: false,
                             useRootNavigator: false,
-                            builder: (_) => AssetGiffyDialog(
-                                  image: Image.asset(
-                                    'assets/oops.gif',
-                                    fit: BoxFit.cover,
+                            builder: (_) => new AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0))),
+                                  content: Builder(
+                                    builder: (context) {
+                                      return Container(
+                                          height: 380,
+                                          child: Column(
+                                            children: [
+                                              Container(
+                                                height: 250,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  child: Image.asset(
+                                                    'assets/oops.gif',
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Text(
+                                                'Looks like that Username is not available.',
+                                                style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 16,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              InkWell(
+                                                child: Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width -
+                                                      30,
+                                                  height: 50,
+                                                  decoration: BoxDecoration(
+                                                      color: Color.fromRGBO(
+                                                          255, 115, 0, 1),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                            color: Color(
+                                                                    0xFF9DA3B4)
+                                                                .withOpacity(
+                                                                    0.1),
+                                                            blurRadius: 65.0,
+                                                            offset: Offset(
+                                                                0.0, 15.0))
+                                                      ]),
+                                                  child: Center(
+                                                    child: Text(
+                                                      "Close",
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 18,
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                  ),
+                                                ),
+                                                onTap: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          ));
+                                    },
                                   ),
-                                  title: Text(
-                                    'Oops!',
-                                    style: TextStyle(
-                                        fontSize: 22.0,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  description: Text(
-                                    'Looks like that username is not available',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(fontFamily: 'Helvetica'),
-                                  ),
-                                  onlyOkButton: true,
-                                  entryAnimation: EntryAnimation.DEFAULT,
-                                  onOkButtonPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
                                 ));
                       }
                     },

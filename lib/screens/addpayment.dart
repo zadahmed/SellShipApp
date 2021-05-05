@@ -14,13 +14,13 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_credit_card/credit_card_form.dart';
 import 'package:flutter_credit_card/credit_card_model.dart';
 import 'package:flutter_credit_card/credit_card_widget.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
-import 'package:progress_dialog/progress_dialog.dart';
+
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 
 class Payments {
@@ -72,7 +72,7 @@ class _AddPaymentState extends State<AddPayment> {
 
     var url = "https://api.sellship.co/api/stripe/listmethods/" + user;
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
 
     var jsonbody = json.decode(response.body);
 
@@ -286,7 +286,7 @@ class _AddPaymentState extends State<AddPayment> {
 
                                                                                 var url = 'https://api.sellship.co/api/addpaymentintent/' + userid + '/' + paymentMethod.id;
 
-                                                                                final response = await http.get(url);
+                                                                                final response = await http.get(Uri.parse(url));
                                                                                 print(response.statusCode);
                                                                                 Navigator.pop(context);
 
@@ -333,7 +333,7 @@ class _AddPaymentState extends State<AddPayment> {
                                         fontWeight: FontWeight.w700),
                                   ),
                                   trailing: Icon(
-                                    Icons.chevron_right,
+                                    FeatherIcons.chevronRight,
                                     color: Colors.grey,
                                     size: 15,
                                   )),
@@ -373,22 +373,22 @@ class _AddPaymentState extends State<AddPayment> {
                                     var icon;
                                     if (paymentslist[index].cardtype ==
                                         'visa') {
-                                      icon = FontAwesome.cc_visa;
+                                      icon = FontAwesomeIcons.ccVisa;
                                     } else if (paymentslist[index].cardtype ==
                                         'mastercard') {
-                                      icon = FontAwesome.cc_mastercard;
+                                      icon = FontAwesomeIcons.ccMastercard;
                                     } else if (paymentslist[index].cardtype ==
                                         'amex') {
-                                      icon = FontAwesome.cc_amex;
+                                      icon = FontAwesomeIcons.ccAmex;
                                     } else if (paymentslist[index].cardtype ==
                                         'discover') {
-                                      icon = FontAwesome.cc_discover;
+                                      icon = FontAwesomeIcons.ccDiscover;
                                     } else if (paymentslist[index].cardtype ==
                                         'jcb') {
-                                      icon = FontAwesome.cc_jcb;
+                                      icon = FontAwesomeIcons.ccJcb;
                                     } else if (paymentslist[index].cardtype ==
                                         'diners') {
-                                      icon = FontAwesome.cc_diners_club;
+                                      icon = FontAwesomeIcons.ccDinersClub;
                                     }
                                     return ListTile(
                                       contentPadding: EdgeInsets.zero,

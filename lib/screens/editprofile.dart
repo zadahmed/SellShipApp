@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class EditProfile extends StatefulWidget {
   @override
@@ -36,7 +37,7 @@ class EditProfileState extends State<EditProfile>
     print(userid);
     if (userid != null) {
       var url = 'https://api.sellship.co/api/user/' + userid;
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         var respons = json.decode(response.body);
         var profilemap = respons;

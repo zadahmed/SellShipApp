@@ -12,15 +12,16 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:SellShip/screens/details.dart';
-import 'package:numeral/numeral.dart';
+
 import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -44,7 +45,7 @@ class FilteredState extends State<Filtered> {
   Future<List<Item>> fetchData() async {
     var addurl = 'https://api.sellship.co/api/filter/all/${skip}/${limit}';
     var response = await http.post(
-      addurl,
+      Uri.parse(addurl),
       body: json.encode(widget.formdata),
     );
     print(response.body);
@@ -72,6 +73,9 @@ class FilteredState extends State<Filtered> {
               ? 0
               : jsonbody[i]['comments'].length,
           price: jsonbody[i]['price'].toString(),
+          saleprice: jsonbody[i].containsKey('saleprice')
+              ? jsonbody[i]['saleprice'].toString()
+              : null,
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
@@ -113,7 +117,7 @@ class FilteredState extends State<Filtered> {
     var userid = await storage.read(key: 'userid');
     if (userid != null) {
       var url = 'https://api.sellship.co/api/favourites/' + userid;
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         if (response.body != 'Empty') {
           var respons = json.decode(response.body);
@@ -195,7 +199,7 @@ class FilteredState extends State<Filtered> {
               ),
             ], color: Colors.white, borderRadius: BorderRadius.circular(25)),
             child: Icon(
-              Feather.sliders,
+              FeatherIcons.sliders,
               size: 18,
               color: Colors.deepOrange,
             ),
@@ -415,7 +419,7 @@ class FilteredState extends State<Filtered> {
                                                   itemsgrid[index].likes - 1;
                                             });
                                             final response = await http.post(
-                                                url,
+                                                Uri.parse(url),
                                                 body: json.encode(body));
 
                                             if (response.statusCode == 200) {
@@ -431,7 +435,7 @@ class FilteredState extends State<Filtered> {
                                           radius: 16,
                                           backgroundColor: Colors.deepOrange,
                                           child: Icon(
-                                            FontAwesome.heart,
+                                            FontAwesomeIcons.heart,
                                             color: Colors.white,
                                             size: 15,
                                           ),
@@ -459,7 +463,7 @@ class FilteredState extends State<Filtered> {
                                                   itemsgrid[index].likes + 1;
                                             });
                                             final response = await http.post(
-                                                url,
+                                                Uri.parse(url),
                                                 body: json.encode(body));
 
                                             if (response.statusCode == 200) {
@@ -479,7 +483,7 @@ class FilteredState extends State<Filtered> {
                                               radius: 15,
                                               backgroundColor: Colors.white,
                                               child: Icon(
-                                                Feather.heart,
+                                                FeatherIcons.heart,
                                                 color: Colors.blueGrey,
                                                 size: 16,
                                               ),
@@ -491,7 +495,7 @@ class FilteredState extends State<Filtered> {
                                       radius: 15,
                                       backgroundColor: Colors.white,
                                       child: Icon(
-                                        Feather.heart,
+                                        FeatherIcons.heart,
                                         color: Colors.blueGrey,
                                         size: 16,
                                       ),

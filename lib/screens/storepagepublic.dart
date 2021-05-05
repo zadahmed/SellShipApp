@@ -20,10 +20,11 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
+
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:share/share.dart';
 import 'package:shimmer/shimmer.dart';
@@ -71,7 +72,7 @@ class _StorePublicState extends State<StorePublic> {
   getItemData() async {
     var itemurl = 'https://api.sellship.co/store/products/' + widget.storeid;
 
-    final itemresponse = await http.get(itemurl);
+    final itemresponse = await http.get(Uri.parse(itemurl));
     if (itemresponse.statusCode == 200) {
       var itemrespons = json.decode(itemresponse.body);
 
@@ -99,17 +100,20 @@ class _StorePublicState extends State<StorePublic> {
             ites.add(ite);
           }
         }
-        if (mounted)
+        if (mounted) {
           setState(() {
-            item = ites;
+            item = new List.from(ites.reversed);
+
             profileloading = false;
           });
+        }
       } else {
-        if (mounted)
+        if (mounted) {
           setState(() {
             item = [];
             profileloading = false;
           });
+        }
       }
     } else {
       print(itemresponse.statusCode);
@@ -120,7 +124,7 @@ class _StorePublicState extends State<StorePublic> {
 
   getuser() async {
     var url = 'https://api.sellship.co/api/store/' + widget.storeid;
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
 
@@ -128,33 +132,41 @@ class _StorePublicState extends State<StorePublic> {
 
       if (follower != null) {
         if (follower.length == 0) {
-          setState(() {
-            followerslist = follower;
-            followers = 0;
-            follow = false;
-          });
+          if (mounted) {
+            setState(() {
+              followerslist = follower;
+              followers = 0;
+              follow = false;
+            });
+          }
         } else {
           for (int i = 0; i < follower.length; i++) {
             var meuser = await storage.read(key: 'userid');
             if (meuser == follower[i]['\$oid']) {
-              setState(() {
-                follow = true;
+              if (mounted) {
+                setState(() {
+                  follow = true;
 
-                followcolor = Colors.deepOrange;
-              });
+                  followcolor = Colors.deepOrange;
+                });
+              }
             }
           }
-          setState(() {
-            followers = follower.length;
-            followerslist = follower;
-          });
+          if (mounted) {
+            setState(() {
+              followers = follower.length;
+              followerslist = follower;
+            });
+          }
         }
       } else {
-        setState(() {
-          followerslist = [];
-          followers = 0;
-          follow = false;
-        });
+        if (mounted) {
+          setState(() {
+            followerslist = [];
+            followers = 0;
+            follow = false;
+          });
+        }
       }
 
       var reviewratin;
@@ -189,11 +201,13 @@ class _StorePublicState extends State<StorePublic> {
           storebio: jsonbody['storebio'],
           storename: jsonbody['storename']);
 
-      setState(() {
-        mystore = mystore;
-        loading = false;
-        reviewrating = reviewratin;
-      });
+      if (mounted) {
+        setState(() {
+          mystore = mystore;
+          loading = false;
+          reviewrating = reviewratin;
+        });
+      }
     }
   }
 
@@ -353,7 +367,7 @@ class _StorePublicState extends State<StorePublic> {
           padding: EdgeInsets.all(10),
           child: InkWell(
               child: Icon(
-                Feather.chevron_left,
+                FeatherIcons.chevronLeft,
                 color: Color.fromRGBO(28, 45, 65, 1),
               ),
               onTap: () {
@@ -461,7 +475,7 @@ class _StorePublicState extends State<StorePublic> {
                     var url =
                         "https://api.sellship.co/api/share/store/${mystore.storeid}";
                     print(url);
-                    var respo = await http.get(url);
+                    var respo = await http.get(Uri.parse(url));
                     print(respo.body);
 
                     var jsonbody = json.decode(respo.body);
@@ -474,7 +488,7 @@ class _StorePublicState extends State<StorePublic> {
                   }
                 },
                 child: Icon(
-                  Feather.share,
+                  FeatherIcons.share,
                   color: Color.fromRGBO(28, 45, 65, 1),
                 )),
           ),
@@ -798,7 +812,7 @@ class _StorePublicState extends State<StorePublic> {
                                                               .center,
                                                       children: <Widget>[
                                                         Icon(
-                                                          Feather.star,
+                                                          FeatherIcons.star,
                                                           color: Colors.black,
                                                           size: 18,
                                                         ),
@@ -873,7 +887,8 @@ class _StorePublicState extends State<StorePublic> {
                                   '/' +
                                   widget.storeid;
 
-                          final followresponse = await http.get(followurl);
+                          final followresponse =
+                              await http.get(Uri.parse(followurl));
                           if (followresponse.statusCode == 200) {
                             print('UnFollowed');
                           }
@@ -889,7 +904,8 @@ class _StorePublicState extends State<StorePublic> {
                             followers = followers + 1;
                           });
 
-                          final followresponse = await http.get(followurl);
+                          final followresponse =
+                              await http.get(Uri.parse(followurl));
                           if (followresponse.statusCode == 200) {
                             print('Followed');
                           }

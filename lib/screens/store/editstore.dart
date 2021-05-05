@@ -15,10 +15,11 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
+
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class EditStore extends StatefulWidget {
@@ -76,7 +77,7 @@ class _EditStoreState extends State<EditStore> {
 
   getstoreinfo() async {
     var url = 'https://api.sellship.co/api/store/' + storeid;
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
 
@@ -200,7 +201,7 @@ class _EditStoreState extends State<EditStore> {
                                   backgroundColor:
                                       Color.fromRGBO(28, 45, 65, 1),
                                   child: Icon(
-                                    Feather.camera,
+                                    FeatherIcons.camera,
                                     color: Colors.white,
                                     size: 25,
                                   ),
@@ -244,67 +245,64 @@ class _EditStoreState extends State<EditStore> {
                                 ),
                               ])),
                     ),
-                    FadeAnimation(
-                      1,
-                      Padding(
-                          padding: EdgeInsets.only(
-                            top: 20,
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Container(
-                                height: 70,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 10),
-                                width: MediaQuery.of(context).size.width - 80,
-                                decoration: BoxDecoration(
-                                  color: Color.fromRGBO(131, 146, 165, 0.1),
-                                  borderRadius: BorderRadius.circular(25),
-                                ),
-                                child: TextField(
-                                  onChanged: (text) async {
-                                    var url =
-                                        'https://api.sellship.co/check/store/name/' +
-                                            text;
+                    Padding(
+                        padding: EdgeInsets.only(
+                          top: 20,
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Container(
+                              height: 70,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 10),
+                              width: MediaQuery.of(context).size.width - 80,
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(131, 146, 165, 0.1),
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                              child: TextField(
+                                onChanged: (text) async {
+                                  var url =
+                                      'https://api.sellship.co/check/store/name/' +
+                                          text;
 
-                                    final response = await http.get(url);
-                                    print(response.statusCode);
-                                    if (response.statusCode == 200) {
-                                      var jsondeco = json.decode(response.body);
-                                      if (jsondeco['Status'] == 'Success') {
-                                        setState(() {
-                                          available = true;
-                                        });
-                                      } else {
-                                        setState(() {
-                                          available = false;
-                                        });
-                                      }
+                                  final response =
+                                      await http.get(Uri.parse(url));
+                                  print(response.statusCode);
+                                  if (response.statusCode == 200) {
+                                    var jsondeco = json.decode(response.body);
+                                    if (jsondeco['Status'] == 'Success') {
+                                      setState(() {
+                                        available = true;
+                                      });
+                                    } else {
+                                      setState(() {
+                                        available = false;
+                                      });
                                     }
-                                  },
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.allow(
-                                        RegExp(r'[^-\s]'))
-                                  ],
-                                  controller: storenamecontroller,
-                                  cursorColor: Colors.black,
-                                  decoration: InputDecoration(
-                                    hintText: "Edit Store Name",
-                                    hintStyle:
-                                        TextStyle(fontFamily: 'Helvetica'),
-                                    icon: Icon(
-                                      Icons.alternate_email,
-                                      color: Colors.blueGrey,
-                                    ),
-                                    border: InputBorder.none,
+                                  }
+                                },
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'[^-\s]'))
+                                ],
+                                controller: storenamecontroller,
+                                cursorColor: Colors.black,
+                                decoration: InputDecoration(
+                                  hintText: "Edit Store Name",
+                                  hintStyle: TextStyle(fontFamily: 'Helvetica'),
+                                  icon: Icon(
+                                    Icons.alternate_email,
+                                    color: Colors.blueGrey,
                                   ),
+                                  border: InputBorder.none,
                                 ),
                               ),
-                            ],
-                          )),
-                    ),
+                            ),
+                          ],
+                        )),
                     Padding(
                       padding: EdgeInsets.only(
                           left: 36, top: 5, bottom: 5, right: 36),
@@ -333,11 +331,48 @@ class _EditStoreState extends State<EditStore> {
                                     : Container()
                           ]),
                     ),
-                    FadeAnimation(
-                      1,
-                      Padding(
-                          padding: EdgeInsets.only(top: 10, bottom: 10),
-                          child: Row(
+                    Padding(
+                        padding: EdgeInsets.only(top: 10, bottom: 10),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Container(
+                              height: 140,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 10),
+                              width: MediaQuery.of(context).size.width - 80,
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(131, 146, 165, 0.1),
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                              child: TextField(
+                                maxLines: 10,
+                                onChanged: (text) {},
+                                controller: biocontroller,
+                                cursorColor: Colors.black,
+                                decoration: InputDecoration(
+                                  hintText: "Store bio",
+                                  hintStyle: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 16,
+                                    color: Colors.blueGrey,
+                                  ),
+                                  icon: Icon(
+                                    Icons.store,
+                                    color: Colors.blueGrey,
+                                  ),
+                                  border: InputBorder.none,
+                                ),
+                              ),
+                            ),
+                          ],
+                        )),
+                    Padding(
+                        padding: EdgeInsets.only(
+                          top: 10,
+                        ),
+                        child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -350,270 +385,210 @@ class _EditStoreState extends State<EditStore> {
                                   color: Color.fromRGBO(131, 146, 165, 0.1),
                                   borderRadius: BorderRadius.circular(25),
                                 ),
-                                child: TextField(
-                                  maxLines: 10,
-                                  onChanged: (text) {},
-                                  controller: biocontroller,
-                                  cursorColor: Colors.black,
-                                  decoration: InputDecoration(
-                                    hintText: "Store bio",
-                                    hintStyle: TextStyle(
-                                      fontFamily: 'Helvetica',
-                                      fontSize: 16,
-                                      color: Colors.blueGrey,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      width: MediaQuery.of(context).size.width /
+                                          2.5,
+                                      child: Text(
+                                        'Delivery Pick-Up Address',
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 18,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w800),
+                                      ),
                                     ),
-                                    icon: Icon(
-                                      Icons.store,
-                                      color: Colors.blueGrey,
-                                    ),
-                                    border: InputBorder.none,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )),
-                    ),
-                    FadeAnimation(
-                        1,
-                        Padding(
-                            padding: EdgeInsets.only(
-                              top: 10,
-                            ),
-                            child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Container(
-                                    height: 140,
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 20, vertical: 10),
-                                    width:
-                                        MediaQuery.of(context).size.width - 80,
-                                    decoration: BoxDecoration(
-                                      color: Color.fromRGBO(131, 146, 165, 0.1),
-                                      borderRadius: BorderRadius.circular(25),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              2.5,
-                                          child: Text(
-                                            'Delivery Pick-Up Address',
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 18,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w800),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: InkWell(
-                                              onTap: () async {
-                                                final addressresult =
-                                                    await Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          Address()),
-                                                );
-                                                if (addressresult != null) {
-                                                  setState(() {
-                                                    selectedaddress =
-                                                        addressresult[
-                                                            'address'];
-                                                    phonenumber = addressresult[
-                                                        'phonenumber'];
-                                                  });
-                                                } else {
-                                                  setState(() {
-                                                    selectedaddress =
-                                                        AddressModel(
-                                                            address: mystore
-                                                                .address);
-                                                    phonenumber = null;
-                                                  });
-                                                }
-                                              },
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
-                                                children: [
-                                                  Expanded(
-                                                    child: Text(
-                                                      selectedaddress == null
-                                                          ? 'Choose Address'
-                                                          : selectedaddress
-                                                              .address,
-                                                      textAlign:
-                                                          TextAlign.right,
-                                                      style: TextStyle(
-                                                        fontFamily: 'Helvetica',
-                                                        fontSize: 16,
-                                                        color: Colors.blueGrey,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Icon(
-                                                    Icons.chevron_right,
-                                                    size: 16,
+                                    Expanded(
+                                      child: InkWell(
+                                          onTap: () async {
+                                            final addressresult =
+                                                await Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      Address()),
+                                            );
+                                            if (addressresult != null) {
+                                              setState(() {
+                                                selectedaddress =
+                                                    addressresult['address'];
+                                                phonenumber = addressresult[
+                                                    'phonenumber'];
+                                              });
+                                            } else {
+                                              setState(() {
+                                                selectedaddress = AddressModel(
+                                                    address: mystore.address);
+                                                phonenumber = null;
+                                              });
+                                            }
+                                          },
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              Expanded(
+                                                child: Text(
+                                                  selectedaddress == null
+                                                      ? 'Choose Address'
+                                                      : selectedaddress.address,
+                                                  textAlign: TextAlign.right,
+                                                  style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 16,
                                                     color: Colors.blueGrey,
-                                                  )
-                                                ],
-                                              )),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                ]))),
-                    FadeAnimation(
-                      1,
-                      Padding(
-                        padding: EdgeInsets.only(left: 36, top: 20, right: 36),
-                        child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              InkWell(
-                                onTap: () async {
-                                  if (selectedaddress == null) {
-                                    showInSnackBar(
-                                        'Please choose a valid delivery pick-up address');
-                                  }
-                                  if (storenamecontroller.text.isEmpty) {
-                                    showInSnackBar(
-                                        'Please enter a valid store name.');
-                                  } else {
-                                    showDialog(
-                                        context: context,
-                                        useRootNavigator: true,
-                                        barrierDismissible: false,
-                                        builder: (_) => new AlertDialog(
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(
-                                                              10.0))),
-                                              content: Builder(
-                                                builder: (context) {
-                                                  return Container(
-                                                      height: 100,
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Text(
-                                                            'Editing your Store..',
-                                                            style: TextStyle(
-                                                              fontFamily:
-                                                                  'Helvetica',
-                                                              fontSize: 18,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color:
-                                                                  Colors.black,
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            height: 15,
-                                                          ),
-                                                          Container(
-                                                              height: 50,
-                                                              width: 50,
-                                                              child:
-                                                                  SpinKitDoubleBounce(
-                                                                color: Colors
-                                                                    .deepOrange,
-                                                              )),
-                                                        ],
-                                                      ));
-                                                },
+                                                  ),
+                                                ),
                                               ),
-                                            ));
-                                    if (_image == null) {
-                                      Dio dio = new Dio();
-                                      FormData formData;
-                                      var addurl =
-                                          'https://api.sellship.co/edit/store/' +
-                                              widget.storeid;
+                                              Icon(
+                                                FeatherIcons.chevronRight,
+                                                size: 16,
+                                                color: Colors.blueGrey,
+                                              )
+                                            ],
+                                          )),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ])),
+                    Padding(
+                      padding: EdgeInsets.only(left: 36, top: 20, right: 36),
+                      child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            InkWell(
+                              onTap: () async {
+                                if (selectedaddress == null) {
+                                  showInSnackBar(
+                                      'Please choose a valid delivery pick-up address');
+                                }
+                                if (storenamecontroller.text.isEmpty) {
+                                  showInSnackBar(
+                                      'Please enter a valid store name.');
+                                } else {
+                                  showDialog(
+                                      context: context,
+                                      useRootNavigator: true,
+                                      barrierDismissible: false,
+                                      builder: (_) => new AlertDialog(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(10.0))),
+                                            content: Builder(
+                                              builder: (context) {
+                                                return Container(
+                                                    height: 100,
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                          'Editing your Store..',
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 15,
+                                                        ),
+                                                        Container(
+                                                            height: 50,
+                                                            width: 50,
+                                                            child:
+                                                                SpinKitDoubleBounce(
+                                                              color: Colors
+                                                                  .deepOrange,
+                                                            )),
+                                                      ],
+                                                    ));
+                                              },
+                                            ),
+                                          ));
+                                  if (_image == null) {
+                                    Dio dio = new Dio();
+                                    FormData formData;
+                                    var addurl =
+                                        'https://api.sellship.co/edit/store/' +
+                                            widget.storeid;
 
-                                      formData = FormData.fromMap({
-                                        'storename':
-                                            storenamecontroller.text.trim(),
-                                        'storeaddress': selectedaddress.address,
-                                        'storebio': biocontroller.text.trim(),
-                                      });
+                                    formData = FormData.fromMap({
+                                      'storename':
+                                          storenamecontroller.text.trim(),
+                                      'storeaddress': selectedaddress.address,
+                                      'storebio': biocontroller.text.trim(),
+                                    });
 
-                                      var response = await dio.post(addurl,
-                                          data: formData);
+                                    var response =
+                                        await dio.post(addurl, data: formData);
 
-                                      if (response.statusCode == 200) {
-                                        showInSnackBar('Store Updated');
-                                        Navigator.pop(context);
-                                      }
-                                    } else {
-                                      Dio dio = new Dio();
-                                      FormData formData;
-                                      var addurl =
-                                          'https://api.sellship.co/edit/store/' +
-                                              widget.storeid;
-                                      String fileName =
-                                          _image.path.split('/').last;
+                                    if (response.statusCode == 200) {
+                                      showInSnackBar('Store Updated');
+                                      Navigator.pop(context);
+                                    }
+                                  } else {
+                                    Dio dio = new Dio();
+                                    FormData formData;
+                                    var addurl =
+                                        'https://api.sellship.co/edit/store/' +
+                                            widget.storeid;
+                                    String fileName =
+                                        _image.path.split('/').last;
 
-                                      formData = FormData.fromMap({
-                                        'storename':
-                                            storenamecontroller.text.trim(),
-                                        'storeaddress': selectedaddress.address,
-                                        'storebio': biocontroller.text.trim(),
-                                        'storelogo':
-                                            await MultipartFile.fromFile(
-                                                _image.path,
-                                                filename: fileName)
-                                      });
+                                    formData = FormData.fromMap({
+                                      'storename':
+                                          storenamecontroller.text.trim(),
+                                      'storeaddress': selectedaddress.address,
+                                      'storebio': biocontroller.text.trim(),
+                                      'storelogo': await MultipartFile.fromFile(
+                                          _image.path,
+                                          filename: fileName)
+                                    });
 
-                                      var response = await dio.post(addurl,
-                                          data: formData);
+                                    var response =
+                                        await dio.post(addurl, data: formData);
 
-                                      if (response.statusCode == 200) {
-                                        showInSnackBar('Store Updated');
-                                        Navigator.pop(context);
-                                      }
+                                    if (response.statusCode == 200) {
+                                      showInSnackBar('Store Updated');
+                                      Navigator.pop(context);
                                     }
                                   }
-                                },
-                                child: Container(
-                                  height: 60,
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 5),
-                                  width: MediaQuery.of(context).size.width - 80,
-                                  decoration: BoxDecoration(
-                                    color: Color.fromRGBO(255, 115, 0, 1),
-                                    borderRadius: BorderRadius.circular(25),
-                                  ),
-                                  child: Center(
-                                      child: Text(
-                                    'Save',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontFamily: 'Helvetica',
-                                      fontSize: 18,
-                                      color: Colors.white,
-                                    ),
-                                  )),
+                                }
+                              },
+                              child: Container(
+                                height: 60,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 5),
+                                width: MediaQuery.of(context).size.width - 80,
+                                decoration: BoxDecoration(
+                                  color: Color.fromRGBO(255, 115, 0, 1),
+                                  borderRadius: BorderRadius.circular(25),
                                 ),
+                                child: Center(
+                                    child: Text(
+                                  'Save',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                  ),
+                                )),
                               ),
-                            ]),
-                      ),
-                    )
+                            ),
+                          ]),
+                    ),
                   ],
                 ),
               )

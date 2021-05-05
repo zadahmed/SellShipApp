@@ -4,6 +4,7 @@ import 'package:SellShip/screens/home.dart';
 import 'package:SellShip/screens/messages.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:locally/locally.dart';

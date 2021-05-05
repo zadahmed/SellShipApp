@@ -9,6 +9,7 @@ import 'package:SellShip/screens/filterpagesort.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class FilterPage extends StatefulWidget {
@@ -202,7 +203,7 @@ class FilterPageState extends State<FilterPage> {
                                   size: 16,
                                   color: Colors.deepOrange,
                                 )
-                              : Icon(Icons.chevron_right),
+                              : Icon(FeatherIcons.chevronRight),
                         )))),
             Divider(),
             Padding(
@@ -266,7 +267,7 @@ class FilterPageState extends State<FilterPage> {
                                     size: 16,
                                     color: Colors.deepOrange,
                                   )
-                                : Icon(Icons.chevron_right))))),
+                                : Icon(FeatherIcons.chevronRight))))),
             Divider(),
             Padding(
                 padding:
@@ -318,7 +319,7 @@ class FilterPageState extends State<FilterPage> {
                                 size: 16,
                                 color: Colors.deepOrange,
                               )
-                            : Icon(Icons.chevron_right)))),
+                            : Icon(FeatherIcons.chevronRight)))),
             Divider(),
 //            Padding(
 //                padding:
@@ -826,7 +827,7 @@ class FilterPageState extends State<FilterPage> {
 //                                    size: 16,
 //                                    color: Colors.deepOrange,
 //                                  )
-//                                : Icon(Icons.chevron_right))))),
+//                                : Icon(Icons.chevronRight))))),
 //            Divider(),
 //            Padding(
 //                padding:
@@ -1037,7 +1038,7 @@ class FilterPageState extends State<FilterPage> {
 //                                    size: 16,
 //                                    color: Colors.deepOrange,
 //                                  )
-//                                : Icon(Icons.chevron_right))))),
+//                                : Icon(Icons.chevronRight))))),
 //            Divider(),
             Padding(
                 padding:
@@ -1097,7 +1098,7 @@ class FilterPageState extends State<FilterPage> {
                                     size: 16,
                                     color: Colors.deepOrange,
                                   )
-                                : Icon(Icons.chevron_right))))),
+                                : Icon(FeatherIcons.chevronRight))))),
             Divider(),
             Padding(
                 padding:
@@ -1157,7 +1158,7 @@ class FilterPageState extends State<FilterPage> {
                                     size: 16,
                                     color: Colors.deepOrange,
                                   )
-                                : Icon(Icons.chevron_right))))),
+                                : Icon(FeatherIcons.chevronRight))))),
           ]))
         ],
       ),

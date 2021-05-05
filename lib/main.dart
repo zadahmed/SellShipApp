@@ -8,6 +8,7 @@ import 'package:SellShip/screens/rootscreen.dart';
 import 'package:SellShip/screens/starterscreen.dart';
 import 'package:SellShip/screens/subcategory.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -24,12 +25,8 @@ import 'providers/userProvider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Firebase.initializeApp();
-  OneSignal.shared.init("3df1c23c-12b8-4282-b6ac-a7d34d063a55", iOSSettings: {
-    OSiOSSettings.autoPrompt: false,
-    OSiOSSettings.inAppLaunchUrl: false
-  });
-  OneSignal.shared
-      .setInFocusDisplayType(OSNotificationDisplayType.notification);
+
+  OneSignal.shared.setAppId("3df1c23c-12b8-4282-b6ac-a7d34d063a55");
 
   await SentryFlutter.init(
     (options) {
@@ -94,6 +91,9 @@ class _MyAppState extends State<MyApp> {
           Provider<ItemProvider>(create: (context) => ItemProvider())
         ],
         child: MaterialApp(
+          navigatorObservers: [
+            FirebaseAnalyticsObserver(analytics: analytics),
+          ],
           theme: ThemeData(fontFamily: 'Helvetica'),
           routes: {
             Routes.addBrands: (context) => Brands(),

@@ -11,12 +11,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
+
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -128,7 +129,7 @@ class _ActivityState extends State<Activity>
 
     var userid = await storage.read(key: 'userid');
     var itemurl = 'https://api.sellship.co/api/activity/buying/' + userid;
-    final response = await http.get(itemurl);
+    final response = await http.get(Uri.parse(itemurl));
     if (response.statusCode == 200) {
       var itemrespons = json.decode(response.body);
       List itemmap = itemrespons;
@@ -186,7 +187,7 @@ class _ActivityState extends State<Activity>
     }
     var userid = await storage.read(key: 'userid');
     var itemurl = 'https://api.sellship.co/api/activity/selling/' + userid;
-    final response = await http.get(itemurl);
+    final response = await http.get(Uri.parse(itemurl));
     if (response.statusCode == 200) {
       var itemrespons = json.decode(response.body);
       List itemmap = itemrespons;
@@ -249,7 +250,7 @@ class _ActivityState extends State<Activity>
             height: 5,
           ),
           Icon(
-            Icons.chevron_right,
+            FeatherIcons.chevronRight,
             size: 20,
             color: Colors.blueGrey,
           )
@@ -293,7 +294,7 @@ class _ActivityState extends State<Activity>
             height: 5,
           ),
           Icon(
-            Icons.chevron_right,
+            FeatherIcons.chevronRight,
             size: 20,
             color: Colors.blueGrey,
           )
@@ -323,7 +324,7 @@ class _ActivityState extends State<Activity>
             height: 5,
           ),
           Icon(
-            Icons.chevron_right,
+            FeatherIcons.chevronRight,
             size: 20,
             color: Colors.blueGrey,
           )
@@ -358,7 +359,7 @@ class _ActivityState extends State<Activity>
             height: 10,
           ),
           Icon(
-            Icons.chevron_right,
+            FeatherIcons.chevronRight,
             size: 20,
             color: Colors.blueGrey,
           )
@@ -388,7 +389,7 @@ class _ActivityState extends State<Activity>
             height: 10,
           ),
           Icon(
-            Icons.chevron_right,
+            FeatherIcons.chevronRight,
             size: 20,
             color: Colors.blueGrey,
           )
@@ -418,7 +419,7 @@ class _ActivityState extends State<Activity>
             height: 10,
           ),
           Icon(
-            Icons.chevron_right,
+            FeatherIcons.chevronRight,
             size: 20,
             color: Colors.blueGrey,
           )
@@ -447,7 +448,7 @@ class _ActivityState extends State<Activity>
             height: 10,
           ),
           Icon(
-            Icons.chevron_right,
+            FeatherIcons.chevronRight,
             size: 20,
             color: Colors.blueGrey,
           )
@@ -486,7 +487,7 @@ class _ActivityState extends State<Activity>
             height: 10,
           ),
           Icon(
-            Icons.chevron_right,
+            FeatherIcons.chevronRight,
             size: 20,
             color: Colors.blueGrey,
           )
@@ -690,7 +691,7 @@ class _ActivityState extends State<Activity>
                                     '/' +
                                     offercontroller.text.trim();
 
-                            final response = await http.get(itemurl);
+                            final response = await http.get(Uri.parse(itemurl));
 
                             if (response.statusCode == 200) {
                               loadbuyingactivity();
@@ -882,7 +883,7 @@ class _ActivityState extends State<Activity>
                                   '/' +
                                   offercontroller.text.trim();
 
-                          final response = await http.get(itemurl);
+                          final response = await http.get(Uri.parse(itemurl));
 
                           if (response.statusCode == 200) {
                             loadsellingactivity();
@@ -955,7 +956,7 @@ class _ActivityState extends State<Activity>
       }
       var url = 'https://api.sellship.co/api/getnotification/' + userid;
 
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         print(response.body);
         var notificationinfo = json.decode(response.body);
@@ -1014,7 +1015,7 @@ class _ActivityState extends State<Activity>
                   style: TextStyle(color: Colors.white),
                 ),
                 child: Icon(
-                  Feather.bell,
+                  FeatherIcons.bell,
                   color: Color.fromRGBO(28, 45, 65, 1),
                   size: 24,
                 ),
@@ -1041,7 +1042,7 @@ class _ActivityState extends State<Activity>
                   child: Padding(
                     padding: EdgeInsets.only(right: 15),
                     child: Icon(
-                      Feather.shopping_bag,
+                      FeatherIcons.shoppingBag,
                       size: 24,
                       color: Color.fromRGBO(28, 45, 65, 1),
                     ),

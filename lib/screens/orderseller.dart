@@ -15,12 +15,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
+
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -52,7 +53,7 @@ class _OrderSellerState extends State<OrderSeller> {
 
   getuserDetails() async {
     var url = 'https://api.sellship.co/api/user/' + buyerid;
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
 
     var jsonbody = json.decode(response.body);
 
@@ -98,7 +99,7 @@ class _OrderSellerState extends State<OrderSeller> {
     }
 
     var url = 'https://api.sellship.co/api/getitem/' + widget.itemid;
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
 
     var jsonbody = json.decode(response.body);
 
@@ -225,7 +226,7 @@ class _OrderSellerState extends State<OrderSeller> {
     if (messageid != null) {
       var url = 'https://api.sellship.co/api/transactionhistory/' + messageid;
 
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
 
       var qt;
       var sz;
@@ -326,7 +327,7 @@ class _OrderSellerState extends State<OrderSeller> {
   var completed;
   getstore(storeid) async {
     var url = 'https://api.sellship.co/api/store/' + storeid;
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     print(response.statusCode);
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
@@ -430,7 +431,7 @@ class _OrderSellerState extends State<OrderSeller> {
                   Padding(
                     padding: EdgeInsets.only(top: 20),
                     child: Icon(
-                      Feather.box,
+                      FeatherIcons.box,
                       color: Colors.deepPurpleAccent,
                     ),
                   ),
@@ -515,7 +516,7 @@ class _OrderSellerState extends State<OrderSeller> {
                   Padding(
                     padding: EdgeInsets.only(top: 20),
                     child: Icon(
-                      Feather.clock,
+                      FeatherIcons.clock,
                       color: Colors.deepPurpleAccent,
                     ),
                   ),
@@ -580,7 +581,7 @@ class _OrderSellerState extends State<OrderSeller> {
                   Padding(
                     padding: EdgeInsets.only(top: 20),
                     child: Icon(
-                      Feather.clock,
+                      FeatherIcons.clock,
                       color: Colors.deepPurpleAccent,
                     ),
                   ),
@@ -1237,7 +1238,8 @@ class _OrderSellerState extends State<OrderSeller> {
                                                             'https://api.sellship.co/api/sendlabel/$messageid';
                                                         print(url);
                                                         final response =
-                                                            await http.get(url);
+                                                            await http.get(
+                                                                Uri.parse(url));
                                                         showDialog(
                                                             context: context,
                                                             barrierDismissible:
@@ -1858,7 +1860,7 @@ class _OrderSellerState extends State<OrderSeller> {
                                           fontWeight: FontWeight.bold),
                                     ),
                                     trailing: Icon(
-                                      Icons.chevron_right,
+                                      FeatherIcons.chevronRight,
                                       color: Colors.black,
                                     ),
                                     contentPadding: EdgeInsets.zero),
@@ -1947,7 +1949,7 @@ class _OrderSellerState extends State<OrderSeller> {
                                             fontWeight: FontWeight.bold),
                                       ),
                                       trailing: Icon(
-                                        Icons.chevron_right,
+                                        FeatherIcons.chevronRight,
                                         color: Colors.black,
                                       ),
                                     ),
@@ -1987,7 +1989,7 @@ class _OrderSellerState extends State<OrderSeller> {
                 //                                   messageid;
                 //
                 //                           final response =
-                //                               await http.get(url);
+                //                               await http.get(Uri.parse(url));
                 //
                 //                           if (response.statusCode == 200) {
                 //                             Navigator.of(context).pop();

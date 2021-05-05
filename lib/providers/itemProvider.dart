@@ -17,7 +17,7 @@ class ItemProvider {
 //         '/' +
 //         20.toString();
 //
-//     final response = await http.post(url, body: {
+//     final response = await http.post(Uri.parse(url), body: {
 //       'latitude': position.latitude.toString(),
 //       'longitude': position.longitude.toString()
 //     });
@@ -44,7 +44,10 @@ class ItemProvider {
 //               ? 0
 //               : jsonbody[i]['comments'].length,
 //           userid: jsonbody[i]['userid'],
-//           price: jsonbody[i]['price'].toString(),
+//            price: jsonbody[i]['price'].toString(),
+//   saleprice: jsonbody[i].containsKey('saleprice')
+//                 ? jsonbody[i]['saleprice'].toString()
+//                 : null,
 //           category: jsonbody[i]['category'],
 //           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
 //         );

@@ -18,10 +18,11 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
+
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class ChooseSaleProducts extends StatefulWidget {
@@ -40,7 +41,7 @@ class _ChooseSaleProductsState extends State<ChooseSaleProducts> {
   getItemData() async {
     var itemurl = 'https://api.sellship.co/store/products/' + widget.storeid;
 
-    final itemresponse = await http.get(itemurl);
+    final itemresponse = await http.get(Uri.parse(itemurl));
     if (itemresponse.statusCode == 200) {
       var itemrespons = json.decode(itemresponse.body);
       print(itemrespons);

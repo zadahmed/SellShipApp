@@ -5,6 +5,7 @@ import 'package:SellShip/models/user.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class UserProvider {
   UserProvider() {
@@ -36,7 +37,8 @@ class UserProvider {
 
     currentUser = newUser;
     print("userMap: ${newUser.toMap()}");
-    Response response = await http.post(_signUpURL, body: newUser.toMap());
+    Response response =
+        await http.post(Uri.parse(_signUpURL), body: newUser.toMap());
     print("status code: ${response.statusCode}");
 
     if (response.statusCode == 200) {

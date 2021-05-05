@@ -12,15 +12,16 @@ import 'package:SellShip/screens/onboardingbottom.dart';
 import 'package:SellShip/screens/paymentweb.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
+
 import 'package:http/http.dart' as http;
-import 'package:progress_dialog/progress_dialog.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stripe_sdk/stripe_sdk.dart';
+import 'package:uuid/uuid.dart';
 
 class Pay extends StatefulWidget {
   String itemid;
@@ -301,7 +302,7 @@ class _PayState extends State<Pay> {
                                   child: Row(
                                     children: [
                                       Icon(
-                                        Icons.chevron_right,
+                                        FeatherIcons.chevronRight,
                                         size: 16,
                                         color: Colors.blueGrey,
                                       )
@@ -710,7 +711,7 @@ class _PayState extends State<Pay> {
                                     ),
                                   ),
                                   Icon(
-                                    Icons.chevron_right,
+                                    FeatherIcons.chevronRight,
                                     size: 16,
                                     color: Colors.blueGrey,
                                   )
@@ -849,19 +850,24 @@ class _PayState extends State<Pay> {
                                           total.toString() +
                                           '/' +
                                           'AED';
-                                  final response = await http.get(messageurl);
+                                  final response =
+                                      await http.get(Uri.parse(messageurl));
 
                                   var paymentresponse =
                                       json.decode(response.body);
 
                                   if (paymentresponse.containsKey('done')) {
                                     print('success');
-                                    var uuid = uuidGenerator.v1();
+
+                                    var uui = Uuid();
+                                    var uuid = uui.v4();
+
                                     var trref = ('SS' + uuid);
                                     var returnurl =
                                         'https://api.sellship.co/api/payment/NEW/${orderid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${total.toStringAsFixed(2)}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}/${listitems[0].quantity}/${listitems[0].selectedsize}';
 
-                                    final response = await http.get(returnurl);
+                                    final response =
+                                        await http.get(Uri.parse(returnurl));
 
                                     if (response.statusCode == 200) {
                                       SharedPreferences prefs =
@@ -886,31 +892,114 @@ class _PayState extends State<Pay> {
                                     Navigator.of(context).pop('dialog');
                                     showDialog(
                                         context: context,
-                                        builder: (_) => AssetGiffyDialog(
-                                              image: Image.asset(
-                                                'assets/oops.gif',
-                                                fit: BoxFit.cover,
+                                        barrierDismissible: false,
+                                        useRootNavigator: false,
+                                        builder: (_) => new AlertDialog(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(
+                                                              10.0))),
+                                              content: Builder(
+                                                builder: (context) {
+                                                  return Container(
+                                                      height: 380,
+                                                      child: Column(
+                                                        children: [
+                                                          Container(
+                                                            height: 250,
+                                                            width:
+                                                                MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                            child: ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          15),
+                                                              child:
+                                                                  Image.asset(
+                                                                'assets/oops.gif',
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          Text(
+                                                            'Oops!',
+                                                            style: TextStyle(
+                                                              fontFamily:
+                                                                  'Helvetica',
+                                                              fontSize: 16,
+                                                              color:
+                                                                  Colors.grey,
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          InkWell(
+                                                            child: Container(
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width -
+                                                                  30,
+                                                              height: 50,
+                                                              decoration: BoxDecoration(
+                                                                  color: Color
+                                                                      .fromRGBO(
+                                                                          255,
+                                                                          115,
+                                                                          0,
+                                                                          1),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10),
+                                                                  boxShadow: [
+                                                                    BoxShadow(
+                                                                        color: Color(0xFF9DA3B4).withOpacity(
+                                                                            0.1),
+                                                                        blurRadius:
+                                                                            65.0,
+                                                                        offset: Offset(
+                                                                            0.0,
+                                                                            15.0))
+                                                                  ]),
+                                                              child: Center(
+                                                                child: Text(
+                                                                  "Close",
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      fontSize:
+                                                                          18,
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            onTap: () {
+                                                              Navigator.of(
+                                                                      context,
+                                                                      rootNavigator:
+                                                                          true)
+                                                                  .pop(
+                                                                      'dialog');
+                                                            },
+                                                          ),
+                                                        ],
+                                                      ));
+                                                },
                                               ),
-                                              title: Text(
-                                                'Oops!',
-                                                style: TextStyle(
-                                                    fontSize: 22.0,
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                              ),
-                                              description: Text(
-                                                'Looks like your card has been declined! Please try another payment method',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(),
-                                              ),
-                                              onlyOkButton: true,
-                                              entryAnimation:
-                                                  EntryAnimation.DEFAULT,
-                                              onOkButtonPressed: () {
-                                                Navigator.of(context,
-                                                        rootNavigator: true)
-                                                    .pop('dialog');
-                                              },
                                             ));
                                   } else if (paymentresponse['error']['code'] ==
                                       'authentication_required') {
@@ -932,13 +1021,14 @@ class _PayState extends State<Pay> {
                                     if (paymentIntent['status'] ==
                                         'succeeded') {
                                       print('Success');
-                                      var uuid = uuidGenerator.v1();
+                                      var uui = Uuid();
+                                      var uuid = uui.v4();
                                       var trref = ('SS' + uuid);
                                       var returnurl =
                                           'https://api.sellship.co/api/payment/NEW/${orderid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${total.toStringAsFixed(2)}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}/${listitems[0].quantity}/${listitems[0].selectedsize}';
 
                                       final response =
-                                          await http.get(returnurl);
+                                          await http.get(Uri.parse(returnurl));
                                       Navigator.of(context, rootNavigator: true)
                                           .pop('dialog');
                                       if (response.statusCode == 200) {
@@ -968,145 +1058,228 @@ class _PayState extends State<Pay> {
                                       Navigator.of(context).pop('dialog');
                                       showDialog(
                                           context: context,
-                                          builder: (_) => AssetGiffyDialog(
-                                                image: Image.asset(
-                                                  'assets/oops.gif',
-                                                  fit: BoxFit.cover,
+                                          barrierDismissible: false,
+                                          useRootNavigator: false,
+                                          builder: (_) => new AlertDialog(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                10.0))),
+                                                content: Builder(
+                                                  builder: (context) {
+                                                    return Container(
+                                                        height: 380,
+                                                        child: Column(
+                                                          children: [
+                                                            Container(
+                                                              height: 250,
+                                                              width:
+                                                                  MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width,
+                                                              child: ClipRRect(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            15),
+                                                                child:
+                                                                    Image.asset(
+                                                                  'assets/oops.gif',
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 10,
+                                                            ),
+                                                            Text(
+                                                              'Oops!',
+                                                              style: TextStyle(
+                                                                fontFamily:
+                                                                    'Helvetica',
+                                                                fontSize: 16,
+                                                                color:
+                                                                    Colors.grey,
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 10,
+                                                            ),
+                                                            InkWell(
+                                                              child: Container(
+                                                                width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width -
+                                                                    30,
+                                                                height: 50,
+                                                                decoration: BoxDecoration(
+                                                                    color: Color
+                                                                        .fromRGBO(
+                                                                            255,
+                                                                            115,
+                                                                            0,
+                                                                            1),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10),
+                                                                    boxShadow: [
+                                                                      BoxShadow(
+                                                                          color: Color(0xFF9DA3B4).withOpacity(
+                                                                              0.1),
+                                                                          blurRadius:
+                                                                              65.0,
+                                                                          offset: Offset(
+                                                                              0.0,
+                                                                              15.0))
+                                                                    ]),
+                                                                child: Center(
+                                                                  child: Text(
+                                                                    "Close",
+                                                                    style: TextStyle(
+                                                                        fontFamily:
+                                                                            'Helvetica',
+                                                                        fontSize:
+                                                                            18,
+                                                                        color: Colors
+                                                                            .white,
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              onTap: () {
+                                                                Navigator.of(
+                                                                        context,
+                                                                        rootNavigator:
+                                                                            true)
+                                                                    .pop(
+                                                                        'dialog');
+                                                              },
+                                                            ),
+                                                          ],
+                                                        ));
+                                                  },
                                                 ),
-                                                title: Text(
-                                                  'Oops!',
-                                                  style: TextStyle(
-                                                      fontSize: 22.0,
-                                                      fontWeight:
-                                                          FontWeight.w600),
-                                                ),
-                                                description: Text(
-                                                  'Looks like your payment has failed! Please try another payment method',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(),
-                                                ),
-                                                onlyOkButton: true,
-                                                entryAnimation:
-                                                    EntryAnimation.DEFAULT,
-                                                onOkButtonPressed: () {
-                                                  Navigator.of(context,
-                                                          rootNavigator: true)
-                                                      .pop('dialog');
-                                                },
                                               ));
                                     }
                                   } else {
                                     Navigator.of(context).pop('dialog');
                                     showDialog(
                                         context: context,
-                                        builder: (_) => AssetGiffyDialog(
-                                              image: Image.asset(
-                                                'assets/oops.gif',
-                                                fit: BoxFit.cover,
+                                        barrierDismissible: false,
+                                        useRootNavigator: false,
+                                        builder: (_) => new AlertDialog(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(
+                                                              10.0))),
+                                              content: Builder(
+                                                builder: (context) {
+                                                  return Container(
+                                                      height: 380,
+                                                      child: Column(
+                                                        children: [
+                                                          Container(
+                                                            height: 250,
+                                                            width:
+                                                                MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                            child: ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          15),
+                                                              child:
+                                                                  Image.asset(
+                                                                'assets/oops.gif',
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          Text(
+                                                            'Oops!',
+                                                            style: TextStyle(
+                                                              fontFamily:
+                                                                  'Helvetica',
+                                                              fontSize: 16,
+                                                              color:
+                                                                  Colors.grey,
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          InkWell(
+                                                            child: Container(
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width -
+                                                                  30,
+                                                              height: 50,
+                                                              decoration: BoxDecoration(
+                                                                  color: Color
+                                                                      .fromRGBO(
+                                                                          255,
+                                                                          115,
+                                                                          0,
+                                                                          1),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10),
+                                                                  boxShadow: [
+                                                                    BoxShadow(
+                                                                        color: Color(0xFF9DA3B4).withOpacity(
+                                                                            0.1),
+                                                                        blurRadius:
+                                                                            65.0,
+                                                                        offset: Offset(
+                                                                            0.0,
+                                                                            15.0))
+                                                                  ]),
+                                                              child: Center(
+                                                                child: Text(
+                                                                  "Close",
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      fontSize:
+                                                                          18,
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            onTap: () {
+                                                              Navigator.of(
+                                                                      context,
+                                                                      rootNavigator:
+                                                                          true)
+                                                                  .pop(
+                                                                      'dialog');
+                                                            },
+                                                          ),
+                                                        ],
+                                                      ));
+                                                },
                                               ),
-                                              title: Text(
-                                                'Oops!',
-                                                style: TextStyle(
-                                                    fontSize: 22.0,
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                              ),
-                                              description: Text(
-                                                'Looks like your payment did not go through. Please try again',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(),
-                                              ),
-                                              onlyOkButton: true,
-                                              entryAnimation:
-                                                  EntryAnimation.DEFAULT,
-                                              onOkButtonPressed: () {
-                                                Navigator.of(context,
-                                                        rootNavigator: true)
-                                                    .pop('dialog');
-                                              },
                                             ));
                                   }
-
-                                  // Map<String, Object> body = {
-                                  //   "apiOperation": "INITIATE",
-                                  //   "order": {
-                                  //     "name": 'SellShip Order',
-                                  //     "channel": "web",
-                                  //     "reference": trref,
-                                  //     "amount": total.toStringAsFixed(2),
-                                  //     "currency": "AED",
-                                  //     "category": "pay",
-                                  //   },
-                                  //   "configuration": {
-                                  //     "tokenizeCC": true,
-                                  //     "locale": "en",
-                                  //     "paymentAction": "Sale",
-                                  //     "returnUrl":
-                                  //         'https://api.sellship.co/api/payment/NEW/${messageid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${total.toStringAsFixed(2)}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}/${listitems[0].quantity}/${listitems[0].selectedsize}'
-                                  //   },
-                                  // };
-                                  // var returnurl =
-                                  //     'https://api.sellship.co/api/payment/NEW/${messageid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${total.toStringAsFixed(2)}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}/${listitems[0].quantity}/${listitems[0].selectedsize}';
-
-                                  // var url =
-                                  //     "https://api-stg.noonpayments.com/payment/v1/order";
-                                  //
-                                  // var key =
-                                  //     "SellShip.SellShipApp:7d016fdd70a64b68bc99d2cece27b48d";
-                                  // List encodedText = utf8.encode(key);
-                                  // String base64Str = base64Encode(encodedText);
-                                  // print('Key_Test $base64Str');
-                                  // var heade = 'Key_Test $base64Str';
-
-                                  // var url =
-                                  //     "https://api.noonpayments.com/payment/v1/order";
-                                  //
-                                  // var key =
-                                  //     "SellShip.SellShipApp:a42e7bc936354e9c807c0ff02670ab37";
-                                  // List encodedText = utf8.encode(key);
-                                  // String base64Str = base64Encode(encodedText);
-                                  //
-                                  // var heade = 'Key_Live $base64Str';
-                                  //
-                                  // Map<String, String> headers = {
-                                  //   'Authorization': heade,
-                                  //   'Content-type': 'application/json',
-                                  //   'Accept': 'application/json',
-                                  // };
-                                  //
-                                  // final response = await http.post(
-                                  //   url,
-                                  //   body: json.encode(body),
-                                  //   headers: headers,
-                                  // );
-                                  //
-                                  // print(response.body);
-                                  //
-                                  // if (response.statusCode == 200) {
-                                  //   var jsonmessage =
-                                  //       json.decode(response.body);
-                                  //
-                                  //   var url = jsonmessage['result']
-                                  //       ['checkoutData']['postUrl'];
-                                  //
-                                  //   var orderid =
-                                  //       jsonmessage['result']['order']['id'];
-                                  //
-                                  //   Navigator.of(context, rootNavigator: true)
-                                  //       .pop();
-                                  //
-                                  //   Navigator.push(
-                                  //     context,
-                                  //     MaterialPageRoute(
-                                  //         builder: (BuildContext context) =>
-                                  //             PaymentWeb(
-                                  //               returnurl: returnurl,
-                                  //               url: url,
-                                  //               itemid: listitems[0].itemid,
-                                  //               messageid: messageid,
-                                  //             )),
-                                  //   );
-                                  // }
                                 }
                               },
                               child: Container(

@@ -8,11 +8,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -36,7 +37,7 @@ class MessagesState extends State<Messages> {
     if (userid != null) {
       var messageurl =
           'https://api.sellship.co/api/messagedetail/' + userid.toString();
-      final responsemessage = await http.get(messageurl);
+      final responsemessage = await http.get(Uri.parse(messageurl));
 
       var messageinfo = json.decode(responsemessage.body);
 
@@ -183,7 +184,7 @@ class MessagesState extends State<Messages> {
                   var messageurl =
                       'https://api.sellship.co/api/clearnotification/' +
                           userid.toString();
-                  final responsemessage = await http.get(messageurl);
+                  final responsemessage = await http.get(Uri.parse(messageurl));
                   print(responsemessage.statusCode);
                 },
                 child: Text(
@@ -417,7 +418,7 @@ class MessagesState extends State<Messages> {
                             IconSlideAction(
                               caption: 'Delete',
                               color: Colors.red,
-                              icon: Feather.trash,
+                              icon: FeatherIcons.trash,
                               onTap: () async {
                                 var messageurl =
                                     'https://api.sellship.co/api/delete/message/' +
@@ -425,7 +426,7 @@ class MessagesState extends State<Messages> {
                                         '/' +
                                         messagesd[index].messageid;
                                 final responsemessage =
-                                    await http.get(messageurl);
+                                    await http.get(Uri.parse(messageurl));
                                 if (responsemessage.statusCode == 200) {
                                   getMessages();
                                 }

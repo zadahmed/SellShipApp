@@ -3,8 +3,9 @@ import 'dart:convert';
 import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 
 class Brands extends StatefulWidget {
@@ -70,7 +71,7 @@ class _BrandsState extends State<Brands> {
                   Padding(
                     padding: EdgeInsets.only(left: 15, right: 10),
                     child: Icon(
-                      Feather.search,
+                      FeatherIcons.search,
                       size: 24,
                       color: Color.fromRGBO(115, 115, 125, 1),
                     ),

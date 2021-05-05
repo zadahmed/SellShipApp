@@ -38,29 +38,16 @@ class TermsandConditionsState extends State<TermsandConditions> {
           ),
         ),
         body: InAppWebView(
-          initialUrl: 'https://sellship.co/terms',
-          initialHeaders: {
-            'Access-Control-Allow-Headers': '*',
-            'Access-Control-Allow-Origin': '*',
-            "Access-Control-Allow-Methods": "*"
-          },
+          initialUrlRequest: URLRequest(
+            url: Uri.parse('https://sellship.co/terms'),
+          ),
           onWebViewCreated: (InAppWebViewController controller) {
             webView = controller;
           },
-          initialOptions: InAppWebViewGroupOptions(
-            crossPlatform: InAppWebViewOptions(
-                debuggingEnabled: true, useShouldOverrideUrlLoading: true),
-          ),
           onConsoleMessage: (controller, consoleMessage) {
             print(consoleMessage.toJson());
             print(consoleMessage.message);
           },
-          onLoadStart: (InAppWebViewController controller, String url) {
-            if (url == "return_url") {
-              Navigator.pop(context, 'Done');
-            }
-          },
-          onLoadStop: (InAppWebViewController controller, String url) {},
           androidOnPermissionRequest: (InAppWebViewController controller,
               String origin, List<String> resources) async {
             return PermissionRequestResponse(
@@ -71,11 +58,6 @@ class TermsandConditionsState extends State<TermsandConditions> {
             setState(() {
               this.progress = progress / 100;
             });
-          },
-          onReceivedServerTrustAuthRequest: (InAppWebViewController controller,
-              ServerTrustChallenge challenge) async {
-            return ServerTrustAuthResponse(
-                action: ServerTrustAuthResponseAction.PROCEED);
           },
         ));
   }

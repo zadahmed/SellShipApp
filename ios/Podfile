@@ -29,14 +29,14 @@ flutter_ios_podfile_setup
 target 'Runner' do
   use_frameworks!
   use_modular_headers!
-
+  pod 'OneSignal', '>= 3.0.0', '< 4.0'
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 end
 
 
 target 'OneSignalNotificationServiceExtension' do
   use_frameworks!
-  pod 'OneSignal', '>= 2.9.3', '< 3.0'
+  pod 'OneSignal', '>= 3.0.0', '< 4.0'
 end
 
 post_install do |installer|

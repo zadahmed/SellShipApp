@@ -32,7 +32,7 @@ import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_easyrefresh/ball_pulse_footer.dart';
 import 'package:flutter_easyrefresh/bezier_circle_header.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -42,10 +42,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:location/location.dart' as Location;
-import 'package:numeral/numeral.dart';
+
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-import 'package:search_map_place/search_map_place.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -92,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen>
     var userid = await storage.read(key: 'userid');
     if (userid != null) {
       var url = 'https://api.sellship.co/api/favourites/' + userid;
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
         if (response.body != 'Empty') {
@@ -137,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen>
         '/' +
         20.toString();
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     var jsonbody = json.decode(response.body);
 
     for (var i = 0; i < jsonbody.length; i++) {
@@ -159,6 +160,9 @@ class _HomeScreenState extends State<HomeScreen>
             ? 0
             : jsonbody[i]['comments'].length,
         price: jsonbody[i]['price'].toString(),
+        saleprice: jsonbody[i].containsKey('saleprice')
+            ? jsonbody[i]['saleprice'].toString()
+            : null,
         category: jsonbody[i]['category'],
         sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
       );
@@ -187,7 +191,7 @@ class _HomeScreenState extends State<HomeScreen>
           skip.toString() +
           '/' +
           limit.toString();
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
 
       var jsonbody = json.decode(response.body);
 
@@ -210,6 +214,9 @@ class _HomeScreenState extends State<HomeScreen>
               : jsonbody[i]['comments'].length,
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
+          saleprice: jsonbody[i].containsKey('saleprice')
+              ? jsonbody[i]['saleprice'].toString()
+              : null,
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
@@ -242,7 +249,7 @@ class _HomeScreenState extends State<HomeScreen>
           '/' +
           limit.toString();
 
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
 
       var jsonbody = json.decode(response.body);
 
@@ -265,6 +272,9 @@ class _HomeScreenState extends State<HomeScreen>
           username: jsonbody[i]['username'],
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
+          saleprice: jsonbody[i].containsKey('saleprice')
+              ? jsonbody[i]['saleprice'].toString()
+              : null,
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
@@ -296,7 +306,7 @@ class _HomeScreenState extends State<HomeScreen>
         '/' +
         limit.toString();
     print(categoryurl);
-    final categoryresponse = await http.get(categoryurl);
+    final categoryresponse = await http.get(Uri.parse(categoryurl));
     if (categoryresponse.statusCode == 200) {
       var jsonbody = json.decode(categoryresponse.body);
 
@@ -319,6 +329,9 @@ class _HomeScreenState extends State<HomeScreen>
               ? 0
               : jsonbody[i]['comments'].length,
           price: jsonbody[i]['price'].toString(),
+          saleprice: jsonbody[i].containsKey('saleprice')
+              ? jsonbody[i]['saleprice'].toString()
+              : null,
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
@@ -352,7 +365,7 @@ class _HomeScreenState extends State<HomeScreen>
         '/' +
         limit.toString();
     print(categoryurl);
-    final categoryresponse = await http.get(categoryurl);
+    final categoryresponse = await http.get(Uri.parse(categoryurl));
     if (categoryresponse.statusCode == 200) {
       var jsonbody = json.decode(categoryresponse.body);
 
@@ -375,6 +388,9 @@ class _HomeScreenState extends State<HomeScreen>
               ? 0
               : jsonbody[i]['comments'].length,
           price: jsonbody[i]['price'].toString(),
+          saleprice: jsonbody[i].containsKey('saleprice')
+              ? jsonbody[i]['saleprice'].toString()
+              : null,
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
@@ -410,7 +426,7 @@ class _HomeScreenState extends State<HomeScreen>
         '/' +
         limit.toString();
     print(categoryurl);
-    final categoryresponse = await http.get(categoryurl);
+    final categoryresponse = await http.get(Uri.parse(categoryurl));
     if (categoryresponse.statusCode == 200) {
       var jsonbody = json.decode(categoryresponse.body);
 
@@ -433,6 +449,9 @@ class _HomeScreenState extends State<HomeScreen>
               ? 0
               : jsonbody[i]['comments'].length,
           price: jsonbody[i]['price'].toString(),
+          saleprice: jsonbody[i].containsKey('saleprice')
+              ? jsonbody[i]['saleprice'].toString()
+              : null,
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
@@ -470,7 +489,7 @@ class _HomeScreenState extends State<HomeScreen>
         '/' +
         limit.toString();
     print(categoryurl);
-    final categoryresponse = await http.get(categoryurl);
+    final categoryresponse = await http.get(Uri.parse(categoryurl));
     if (categoryresponse.statusCode == 200) {
       var jsonbody = json.decode(categoryresponse.body);
 
@@ -493,6 +512,9 @@ class _HomeScreenState extends State<HomeScreen>
           username: jsonbody[i]['username'],
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
+          saleprice: jsonbody[i].containsKey('saleprice')
+              ? jsonbody[i]['saleprice'].toString()
+              : null,
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
@@ -532,7 +554,7 @@ class _HomeScreenState extends State<HomeScreen>
         '/' +
         limit.toString();
     print(categoryurl);
-    final categoryresponse = await http.get(categoryurl);
+    final categoryresponse = await http.get(Uri.parse(categoryurl));
     if (categoryresponse.statusCode == 200) {
       var jsonbody = json.decode(categoryresponse.body);
 
@@ -555,6 +577,9 @@ class _HomeScreenState extends State<HomeScreen>
               ? 0
               : jsonbody[i]['comments'].length,
           price: jsonbody[i]['price'].toString(),
+          saleprice: jsonbody[i].containsKey('saleprice')
+              ? jsonbody[i]['saleprice'].toString()
+              : null,
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
@@ -592,7 +617,7 @@ class _HomeScreenState extends State<HomeScreen>
         '/' +
         limit.toString();
     print(categoryurl);
-    final categoryresponse = await http.get(categoryurl);
+    final categoryresponse = await http.get(Uri.parse(categoryurl));
     if (categoryresponse.statusCode == 200) {
       var jsonbody = json.decode(categoryresponse.body);
 
@@ -615,6 +640,9 @@ class _HomeScreenState extends State<HomeScreen>
               ? 0
               : jsonbody[i]['comments'].length,
           price: jsonbody[i]['price'].toString(),
+          saleprice: jsonbody[i].containsKey('saleprice')
+              ? jsonbody[i]['saleprice'].toString()
+              : null,
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
@@ -661,7 +689,7 @@ class _HomeScreenState extends State<HomeScreen>
         '/' +
         limit.toString();
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
 
     var jsonbody = json.decode(response.body);
 
@@ -684,6 +712,9 @@ class _HomeScreenState extends State<HomeScreen>
             ? 0
             : jsonbody[i]['comments'].length,
         price: jsonbody[i]['price'].toString(),
+        saleprice: jsonbody[i].containsKey('saleprice')
+            ? jsonbody[i]['saleprice'].toString()
+            : null,
         category: jsonbody[i]['category'],
         sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
       );
@@ -706,7 +737,7 @@ class _HomeScreenState extends State<HomeScreen>
         '/' +
         limit.toString();
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
 
     var jsonbody = json.decode(response.body);
 
@@ -729,6 +760,9 @@ class _HomeScreenState extends State<HomeScreen>
             ? 0
             : jsonbody[i]['comments'].length,
         price: jsonbody[i]['price'].toString(),
+        saleprice: jsonbody[i].containsKey('saleprice')
+            ? jsonbody[i]['saleprice'].toString()
+            : null,
         category: jsonbody[i]['category'],
         sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
       );
@@ -751,7 +785,7 @@ class _HomeScreenState extends State<HomeScreen>
         '/' +
         limit.toString();
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
 
     var jsonbody = json.decode(response.body);
 
@@ -774,6 +808,9 @@ class _HomeScreenState extends State<HomeScreen>
             ? 0
             : jsonbody[i]['comments'].length,
         price: jsonbody[i]['price'].toString(),
+        saleprice: jsonbody[i].containsKey('saleprice')
+            ? jsonbody[i]['saleprice'].toString()
+            : null,
         category: jsonbody[i]['category'],
         sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
       );
@@ -933,7 +970,7 @@ class _HomeScreenState extends State<HomeScreen>
       }
       var url = 'https://api.sellship.co/api/getnotification/' + userid;
 
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         print(response.body);
         var notificationinfo = json.decode(response.body);
@@ -1047,7 +1084,7 @@ class _HomeScreenState extends State<HomeScreen>
                     style: TextStyle(color: Colors.white),
                   ),
                   child: Icon(
-                    Feather.bell,
+                    FeatherIcons.bell,
                     color: Color.fromRGBO(28, 45, 65, 1),
                     size: 24,
                   ),
@@ -1074,7 +1111,7 @@ class _HomeScreenState extends State<HomeScreen>
                     child: Padding(
                       padding: EdgeInsets.only(right: 15),
                       child: Icon(
-                        Feather.shopping_bag,
+                        FeatherIcons.shoppingBag,
                         size: 24,
                         color: Color.fromRGBO(28, 45, 65, 1),
                       ),
@@ -1167,7 +1204,7 @@ class _HomeScreenState extends State<HomeScreen>
       var followurl =
           'https://api.sellship.co/api/follow/' + userid + '/' + foluser.userid;
 
-      final followresponse = await http.get(followurl);
+      final followresponse = await http.get(Uri.parse(followurl));
       if (followresponse.statusCode == 200) {
         print('UnFollowed');
       }
@@ -1178,7 +1215,7 @@ class _HomeScreenState extends State<HomeScreen>
       var followurl =
           'https://api.sellship.co/api/follow/' + userid + '/' + foluser.userid;
 
-      final followresponse = await http.get(followurl);
+      final followresponse = await http.get(Uri.parse(followurl));
       if (followresponse.statusCode == 200) {
         print('Followed');
       }
@@ -1199,7 +1236,7 @@ class _HomeScreenState extends State<HomeScreen>
         '/' +
         '20';
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
 
@@ -1223,6 +1260,9 @@ class _HomeScreenState extends State<HomeScreen>
               ? 0
               : jsonbody[i]['comments'].length,
           price: jsonbody[i]['price'].toString(),
+          saleprice: jsonbody[i].containsKey('saleprice')
+              ? jsonbody[i]['saleprice'].toString()
+              : null,
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
@@ -1253,7 +1293,7 @@ class _HomeScreenState extends State<HomeScreen>
     var userid = await storage.read(key: 'userid');
     var url = 'https://api.sellship.co/api/top/subcategories/' + userid;
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
       for (int i = 0; i < jsonbody.length; i++) {
@@ -1287,7 +1327,7 @@ class _HomeScreenState extends State<HomeScreen>
         '/' +
         limit.toString();
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
 
@@ -1311,6 +1351,9 @@ class _HomeScreenState extends State<HomeScreen>
               ? 0
               : jsonbody[i]['comments'].length,
           price: jsonbody[i]['price'].toString(),
+          saleprice: jsonbody[i].containsKey('saleprice')
+              ? jsonbody[i]['saleprice'].toString()
+              : null,
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
@@ -1341,7 +1384,7 @@ class _HomeScreenState extends State<HomeScreen>
         '/' +
         limit.toString();
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
 
     var jsonbody = json.decode(response.body);
 
@@ -1365,6 +1408,9 @@ class _HomeScreenState extends State<HomeScreen>
             ? 0
             : jsonbody[i]['comments'].length,
         price: jsonbody[i]['price'].toString(),
+        saleprice: jsonbody[i].containsKey('saleprice')
+            ? jsonbody[i]['saleprice'].toString()
+            : null,
         category: jsonbody[i]['category'],
         sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
       );
@@ -1392,7 +1438,7 @@ class _HomeScreenState extends State<HomeScreen>
         '/' +
         position.latitude.toString();
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     print(url);
 
     var jsonbody = json.decode(response.body);
@@ -1418,6 +1464,9 @@ class _HomeScreenState extends State<HomeScreen>
             ? 0
             : jsonbody[i]['comments'].length,
         price: jsonbody[i]['price'].toString(),
+        saleprice: jsonbody[i].containsKey('saleprice')
+            ? jsonbody[i]['saleprice'].toString()
+            : null,
         category: jsonbody[i]['category'],
         sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
       );
@@ -1440,7 +1489,7 @@ class _HomeScreenState extends State<HomeScreen>
   loadbrands() async {
     brands.clear();
     var categoryurl = 'https://api.sellship.co/api/getallbrands';
-    final categoryresponse = await http.get(categoryurl);
+    final categoryresponse = await http.get(Uri.parse(categoryurl));
     if (categoryresponse.statusCode == 200) {
       var categoryrespons = json.decode(categoryresponse.body);
       print(categoryrespons);
@@ -1464,7 +1513,7 @@ class _HomeScreenState extends State<HomeScreen>
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Icon(Feather.chevron_down),
+              Icon(FeatherIcons.chevronDown),
               SizedBox(
                 height: 2,
               ),

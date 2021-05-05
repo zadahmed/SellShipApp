@@ -10,10 +10,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -84,7 +85,7 @@ class _OrderSellerUAEState extends State<OrderSellerUAE> {
 
     var url = 'https://api.sellship.co/api/transactionhistory/' + messageid;
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
 
     var jsonbody = json.decode(response.body);
 
@@ -188,7 +189,7 @@ class _OrderSellerUAEState extends State<OrderSellerUAE> {
                   Padding(
                     padding: EdgeInsets.only(top: 20),
                     child: Icon(
-                      Feather.box,
+                      FeatherIcons.box,
                       color: Colors.deepPurpleAccent,
                     ),
                   ),
@@ -263,7 +264,7 @@ class _OrderSellerUAEState extends State<OrderSellerUAE> {
                   Padding(
                     padding: EdgeInsets.only(top: 20),
                     child: Icon(
-                      Feather.box,
+                      FeatherIcons.box,
                       color: Colors.deepPurpleAccent,
                     ),
                   ),
@@ -348,7 +349,7 @@ class _OrderSellerUAEState extends State<OrderSellerUAE> {
                   Padding(
                     padding: EdgeInsets.only(top: 20),
                     child: Icon(
-                      Feather.clock,
+                      FeatherIcons.clock,
                       color: Colors.deepPurpleAccent,
                     ),
                   ),
@@ -413,7 +414,7 @@ class _OrderSellerUAEState extends State<OrderSellerUAE> {
                   Padding(
                     padding: EdgeInsets.only(top: 20),
                     child: Icon(
-                      Feather.clock,
+                      FeatherIcons.clock,
                       color: Colors.deepPurpleAccent,
                     ),
                   ),
@@ -979,7 +980,7 @@ class _OrderSellerUAEState extends State<OrderSellerUAE> {
                                     'https://api.sellship.co/api/shipitem/uae/' +
                                         messageid;
 
-                                final response = await http.get(url);
+                                final response = await http.get(Uri.parse(url));
 
                                 var jsonbody = json.decode(response.body);
 
@@ -1014,7 +1015,7 @@ class _OrderSellerUAEState extends State<OrderSellerUAE> {
                                     'https://api.sellship.co/api/shipped/uae/' +
                                         messageid;
 
-                                final response = await http.get(url);
+                                final response = await http.get(Uri.parse(url));
 
                                 var jsonbody = json.decode(response.body);
 
@@ -1111,7 +1112,7 @@ class _OrderSellerUAEState extends State<OrderSellerUAE> {
                                 );
                               },
                               dense: true,
-                              leading: Icon(FontAwesome.user_circle),
+                              leading: Icon(FontAwesomeIcons.userCircle),
                               title: Text(
                                 buyername,
                                 style: TextStyle(
@@ -1157,8 +1158,8 @@ class _OrderSellerUAEState extends State<OrderSellerUAE> {
                                                   'https://api.sellship.co/api/cancelseller/' +
                                                       messageid;
 
-                                              final response =
-                                                  await http.get(url);
+                                              final response = await http
+                                                  .get(Uri.parse(url));
 
                                               if (response.statusCode == 200) {
                                                 Navigator.of(context).pop();

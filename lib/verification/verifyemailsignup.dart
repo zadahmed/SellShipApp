@@ -6,9 +6,10 @@ import 'package:SellShip/screens/rootscreen.dart';
 import 'package:SellShip/username.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class VerifyEmailSignUp extends StatefulWidget {
   final String userid;
@@ -47,7 +48,7 @@ class _VerifyEmailSignUpState extends State<VerifyEmailSignUp> {
   Future<bool> checkemailverified() async {
     var url = 'https://api.sellship.co/api/user/' + userid.toString();
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       var respons = json.decode(response.body);
       Map<String, dynamic> profilemap = respons;
@@ -78,7 +79,7 @@ class _VerifyEmailSignUpState extends State<VerifyEmailSignUp> {
             onTap: () {
               Navigator.pop(context);
             },
-            child: Icon(Feather.arrow_left)),
+            child: Icon(FeatherIcons.arrowLeft)),
         iconTheme: IconThemeData(color: Colors.black),
         elevation: 0,
         title: Text(
@@ -355,8 +356,9 @@ class _VerifyEmailSignUpState extends State<VerifyEmailSignUp> {
 
                                                               print(url);
                                                               final response =
-                                                                  await http
-                                                                      .get(url);
+                                                                  await http.get(
+                                                                      Uri.parse(
+                                                                          url));
                                                               if (response
                                                                       .statusCode ==
                                                                   200) {
@@ -389,7 +391,7 @@ class _VerifyEmailSignUpState extends State<VerifyEmailSignUp> {
                                                                             children: <Widget>[
                                                                               Center(
                                                                                 child: Icon(
-                                                                                  Feather.mail,
+                                                                                  FeatherIcons.mail,
                                                                                   color: Colors.deepOrange,
                                                                                 ),
                                                                               ),

@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:SellShip/screens/paymentsubs.dart';
+
 import 'package:SellShip/screens/store/createstorepage.dart';
 import 'package:SellShip/screens/store/mystorepage.dart';
 import 'package:dio/dio.dart';
@@ -15,10 +15,11 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
+
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class StoreCompletion extends StatefulWidget {
@@ -46,7 +47,7 @@ class _StoreCompletionState extends State<StoreCompletion> {
     var url = 'https://api.sellship.co/api/store/transactionhistory/' +
         widget.orderid;
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode != 200) {
       showDialog(
           context: context,
@@ -95,7 +96,7 @@ class _StoreCompletionState extends State<StoreCompletion> {
     var url = 'https://api.sellship.co/api/store/transactionhistory/' +
         widget.orderid;
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
 
     if (response.statusCode != 200) {
       time = time + 2;
@@ -196,7 +197,7 @@ class _StoreCompletionState extends State<StoreCompletion> {
             padding: EdgeInsets.all(10),
             child: InkWell(
                 child: Icon(
-                  Feather.chevron_left,
+                  FeatherIcons.chevronLeft,
                   color: Color.fromRGBO(28, 45, 65, 1),
                 ),
                 onTap: () {

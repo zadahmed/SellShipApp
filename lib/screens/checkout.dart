@@ -13,13 +13,13 @@ import 'package:SellShip/screens/pay.dart';
 import 'package:SellShip/screens/paymentweb.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
+
 import 'package:http/http.dart' as http;
-import 'package:progress_dialog/progress_dialog.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Checkout extends StatefulWidget {
@@ -67,6 +67,8 @@ class _CheckoutState extends State<Checkout> {
           });
     }
   }
+
+  TextEditingController promocodecontroller = TextEditingController();
 
   @override
   void initState() {
@@ -128,6 +130,9 @@ class _CheckoutState extends State<Checkout> {
             weight: decodeditem['weight'],
             freedelivery: decodeditem['freedelivery'],
             price: decodeditem['price'].toString(),
+            saleprice: decodeditem.containsKey('saleprice')
+                ? decodeditem['saleprice'].toString()
+                : null,
             image: decodeditem['image'],
             userid: decodeditem['sellerid'] == null
                 ? decodeditem['userid']
@@ -159,7 +164,12 @@ class _CheckoutState extends State<Checkout> {
           });
         }
 
-        subtotal = subtotal + double.parse(newItem.price);
+        orderprice = double.parse(newItem.price);
+        if (newItem.saleprice != null) {
+          subtotal = double.parse(newItem.saleprice);
+        } else {
+          subtotal = double.parse(newItem.price);
+        }
 
         listitems.add(newItem);
       }
@@ -176,6 +186,7 @@ class _CheckoutState extends State<Checkout> {
     }
   }
 
+  var orderprice;
   var deliveryamount;
   Item newItem;
   var addressline1;
@@ -363,20 +374,75 @@ class _CheckoutState extends State<Checkout> {
                                                       SizedBox(
                                                         height: 5,
                                                       ),
-                                                      Text(
-                                                        currency +
-                                                            ' ' +
-                                                            listitems[index]
-                                                                .price,
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                'Helvetica',
-                                                            fontSize: 14.0,
-                                                            color:
-                                                                Colors.black),
-                                                      ),
+                                                      listitems[index]
+                                                                  .saleprice !=
+                                                              null
+                                                          ? Text.rich(
+                                                              TextSpan(
+                                                                children: <
+                                                                    TextSpan>[
+                                                                  new TextSpan(
+                                                                    text: 'AED ' +
+                                                                        listitems[index]
+                                                                            .saleprice,
+                                                                    style: new TextStyle(
+                                                                        color: Colors
+                                                                            .redAccent,
+                                                                        fontSize:
+                                                                            16,
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
+                                                                  ),
+                                                                  new TextSpan(
+                                                                    text: '\nAED ' +
+                                                                        listitems[index]
+                                                                            .price
+                                                                            .toString(),
+                                                                    style:
+                                                                        new TextStyle(
+                                                                      color: Colors
+                                                                          .grey,
+                                                                      fontSize:
+                                                                          10,
+                                                                      decoration:
+                                                                          TextDecoration
+                                                                              .lineThrough,
+                                                                    ),
+                                                                  ),
+                                                                  new TextSpan(
+                                                                    text: ' -' +
+                                                                        (((double.parse(listitems[index].price.toString()) - double.parse(listitems[index].saleprice.toString())) / double.parse(listitems[index].price.toString())) *
+                                                                                100)
+                                                                            .toStringAsFixed(0) +
+                                                                        '%',
+                                                                    style:
+                                                                        new TextStyle(
+                                                                      color: Colors
+                                                                          .red,
+                                                                      fontSize:
+                                                                          12,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            )
+                                                          : Text(
+                                                              currency +
+                                                                  ' ' +
+                                                                  listitems[
+                                                                          index]
+                                                                      .price,
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'Helvetica',
+                                                                  fontSize:
+                                                                      14.0,
+                                                                  color: Colors
+                                                                      .black),
+                                                            ),
                                                     ],
                                                   ),
                                                   Row(
@@ -442,7 +508,7 @@ class _CheckoutState extends State<Checkout> {
                                                                             };
 
                                                                             final response =
-                                                                                await http.post(url, body: json.encode(body));
+                                                                                await http.post(Uri.parse(url), body: json.encode(body));
 
                                                                             if (response.statusCode ==
                                                                                 200) {
@@ -488,7 +554,7 @@ class _CheckoutState extends State<Checkout> {
                                                                               .white,
                                                                       child:
                                                                           Icon(
-                                                                        Feather
+                                                                        FeatherIcons
                                                                             .heart,
                                                                         size:
                                                                             16,
@@ -563,8 +629,8 @@ class _CheckoutState extends State<Checkout> {
                                                                                 .white,
                                                                         child:
                                                                             Icon(
-                                                                          Feather
-                                                                              .trash_2,
+                                                                          FeatherIcons
+                                                                              .trash2,
                                                                           size:
                                                                               16,
                                                                           color:
@@ -758,40 +824,12 @@ class _CheckoutState extends State<Checkout> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Subtotal',
-                                style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w800),
-                              ),
-                              Text(
-                                subtotal != 0.0
-                                    ? currency +
-                                        ' ' +
-                                        subtotal.toStringAsFixed(2)
-                                    : 'AED 0',
+                                'Delivery Address',
                                 style: TextStyle(
                                   fontFamily: 'Helvetica',
                                   fontSize: 16,
-                                  color: Colors.black,
+                                  color: Colors.blueGrey,
                                 ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Deliver To',
-                                style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w800),
                               ),
                               InkWell(
                                   onTap: () async {
@@ -829,20 +867,204 @@ class _CheckoutState extends State<Checkout> {
                                           textAlign: TextAlign.right,
                                           style: TextStyle(
                                             fontFamily: 'Helvetica',
-                                            fontSize: 16,
+                                            fontSize: 14,
                                             color: Colors.blueGrey,
                                           ),
                                         ),
                                       ),
-                                      Icon(
-                                        Icons.chevron_right,
-                                        size: 16,
-                                        color: Colors.blueGrey,
-                                      )
+                                      selectedaddress == null
+                                          ? Icon(
+                                              FeatherIcons.chevronRight,
+                                              size: 14,
+                                              color: Colors.blueGrey,
+                                            )
+                                          : Container()
                                     ],
                                   )),
                             ],
-                          )
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Padding(
+                              padding: EdgeInsets.only(top: 10, bottom: 20),
+                              child: Container(
+                                  height: 60,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 5),
+                                  width: MediaQuery.of(context).size.width,
+                                  decoration: BoxDecoration(
+                                    color: Color.fromRGBO(131, 146, 165, 0.1),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextFormField(
+                                          cursorColor: Color(0xFF979797),
+                                          controller: promocodecontroller,
+                                          enableSuggestions: true,
+                                          textCapitalization:
+                                              TextCapitalization.sentences,
+                                          decoration: InputDecoration(
+                                            hintText: "Enter Promo Code",
+                                            suffixIcon: IconButton(
+                                              onPressed: () {},
+                                              icon: Icon(
+                                                Icons.clear,
+                                                color: Colors.grey,
+                                                size: 16,
+                                              ),
+                                            ),
+                                            labelStyle: TextStyle(
+                                              fontFamily: 'Helvetica',
+                                              fontSize: 16,
+                                              color: Colors.grey.shade300,
+                                            ),
+                                            border: InputBorder.none,
+                                            focusedBorder: InputBorder.none,
+                                            enabledBorder: InputBorder.none,
+                                            errorBorder: InputBorder.none,
+                                            disabledBorder: InputBorder.none,
+                                            hintStyle: TextStyle(
+                                              color: Colors.grey.shade300,
+                                              fontSize: 16,
+                                            ),
+                                            focusColor: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                            left: 10,
+                                          ),
+                                          child: Container(
+                                            height: 50,
+                                            width: 60,
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                color: Colors.deepOrange),
+                                          )),
+                                    ],
+                                  ))),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Subtotal',
+                                style: TextStyle(
+                                  fontFamily: 'Helvetica',
+                                  fontSize: 16,
+                                  color: Colors.blueGrey,
+                                ),
+                              ),
+                              Text(
+                                subtotal != 0.0
+                                    ? currency +
+                                        ' ' +
+                                        orderprice.toStringAsFixed(2)
+                                    : 'AED 0',
+                                style: TextStyle(
+                                  fontFamily: 'Helvetica',
+                                  fontSize: 14,
+                                  color: Colors.blueGrey,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          listitems[0].saleprice != null
+                              ? Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          'Discount',
+                                          style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 16,
+                                            color: Colors.blueGrey,
+                                          ),
+                                        ),
+                                        Text(
+                                          '  -' +
+                                              (((double.parse(listitems[0]
+                                                                  .price
+                                                                  .toString()) -
+                                                              double.parse(
+                                                                  listitems[0]
+                                                                      .saleprice
+                                                                      .toString())) /
+                                                          double.parse(
+                                                              listitems[0]
+                                                                  .price
+                                                                  .toString())) *
+                                                      100)
+                                                  .toStringAsFixed(0) +
+                                              '%',
+                                          style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 14,
+                                            color: Colors.blueGrey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Text(
+                                      subtotal != 0.0
+                                          ? ' -' +
+                                              currency +
+                                              (double.parse(
+                                                          listitems[0].price) -
+                                                      double.parse(listitems[0]
+                                                          .saleprice))
+                                                  .toString()
+                                          : 'AED 0',
+                                      style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 14,
+                                        color: Colors.blueGrey,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : Container(),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          listitems[0].saleprice != null
+                              ? Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          'Total',
+                                          style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 16,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Text(
+                                      currency + total.toString(),
+                                      style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 14,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : Container(),
                         ],
                       )))
               : Container(),
@@ -951,14 +1173,14 @@ class _CheckoutState extends State<Checkout> {
                               child: Container(
                                 height: 52,
                                 decoration: BoxDecoration(
-                                  color: Colors.deepOrange,
+                                  color: Color.fromRGBO(65, 105, 225, 1),
                                   borderRadius: const BorderRadius.all(
                                     Radius.circular(25.0),
                                   ),
                                   boxShadow: <BoxShadow>[
                                     BoxShadow(
                                         color:
-                                            Colors.deepOrange.withOpacity(0.4),
+                                            Color.fromRGBO(65, 105, 225, 0.4),
                                         offset: const Offset(1.1, 1.1),
                                         blurRadius: 10.0),
                                   ],

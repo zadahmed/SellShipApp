@@ -9,18 +9,20 @@ import 'package:dio/dio.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
+
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:random_string/random_string.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:location/location.dart' as Location;
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -56,11 +58,11 @@ class EditItemState extends State<EditItem>
   ];
 
   List<IconData> conditionicons = [
-    Feather.tag,
-    Feather.box,
-    Feather.award,
+    FeatherIcons.tag,
+    FeatherIcons.box,
+    FeatherIcons.award,
     Icons.new_releases,
-    Feather.eye,
+    FeatherIcons.eye,
   ];
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -143,7 +145,7 @@ class EditItemState extends State<EditItem>
 
   loadbrands(category) async {
     var categoryurl = 'https://api.sellship.co/api/getbrands/' + category;
-    final categoryresponse = await http.get(categoryurl);
+    final categoryresponse = await http.get(Uri.parse(categoryurl));
     if (categoryresponse.statusCode == 200) {
       brands.clear();
       var categoryrespons = json.decode(categoryresponse.body);
@@ -175,8 +177,8 @@ class EditItemState extends State<EditItem>
   }
 
   Future getImage() async {
-    var images = await ImagePicker.pickImage(
-        source: ImageSource.gallery, maxHeight: 400, maxWidth: 400);
+    var images = await ImagePicker.platform
+        .pickImage(source: ImageSource.gallery, maxHeight: 400, maxWidth: 400);
 
     setState(() {
       image = images;
@@ -212,7 +214,7 @@ class EditItemState extends State<EditItem>
   List<String> selectedSizes = List<String>();
 
   var userid;
-  File image;
+  PickedFile image;
 
   void getProfileData() async {
     var countr = await storage.read(key: 'country');
@@ -240,7 +242,7 @@ class EditItemState extends State<EditItem>
     });
 
     var url = 'https://api.sellship.co/api/getitem/' + itemid;
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       imagesList.clear();
       var jsonbody = json.decode(response.body);
@@ -554,7 +556,7 @@ class EditItemState extends State<EditItem>
             Navigator.pop(context);
           },
           child: Icon(
-            Feather.arrow_left,
+            FeatherIcons.chevronLeft,
             color: Colors.black,
           ),
         ),
@@ -2861,7 +2863,8 @@ class EditItemState extends State<EditItem>
                                                         ),
                                                       ),
                                                       leading: Icon(
-                                                        FontAwesome.money,
+                                                        FontAwesomeIcons
+                                                            .dollarSign,
                                                         color: Color.fromRGBO(
                                                             255, 115, 0, 1),
                                                       ),
@@ -3641,42 +3644,128 @@ class EditItemState extends State<EditItem>
                                       if (response.statusCode == 200) {
                                         showDialog(
                                             context: context,
-                                            builder: (_) => AssetGiffyDialog(
-                                                  image: Image.asset(
-                                                    'assets/yay.gif',
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                  title: Text(
-                                                    'Hooray!',
-                                                    style: TextStyle(
-                                                        fontSize: 22.0,
-                                                        fontWeight:
-                                                            FontWeight.w600),
-                                                  ),
-                                                  description: Text(
-                                                    'Your Item has been Updated!',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(),
-                                                  ),
-                                                  onlyOkButton: true,
-                                                  entryAnimation:
-                                                      EntryAnimation.DEFAULT,
-                                                  onOkButtonPressed: () {
-                                                    Navigator.of(context,
-                                                            rootNavigator: true)
-                                                        .pop('dialog');
-                                                    Navigator.of(context,
-                                                            rootNavigator: true)
-                                                        .pop('dialog');
+                                            barrierDismissible: false,
+                                            useRootNavigator: false,
+                                            builder: (_) => new AlertDialog(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                10.0))),
+                                                content:
+                                                    Builder(builder: (context) {
+                                                  return Container(
+                                                      height: 380,
+                                                      child: Column(
+                                                        children: [
+                                                          Container(
+                                                            height: 250,
+                                                            width:
+                                                                MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                            child: ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          15),
+                                                              child:
+                                                                  Image.asset(
+                                                                'assets/yay.gif',
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          Text(
+                                                            'Hooray! Your Item has been Updated!',
+                                                            style: TextStyle(
+                                                              fontFamily:
+                                                                  'Helvetica',
+                                                              fontSize: 16,
+                                                              color:
+                                                                  Colors.grey,
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          InkWell(
+                                                            child: Container(
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width -
+                                                                  30,
+                                                              height: 50,
+                                                              decoration: BoxDecoration(
+                                                                  color: Color
+                                                                      .fromRGBO(
+                                                                          255,
+                                                                          115,
+                                                                          0,
+                                                                          1),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10),
+                                                                  boxShadow: [
+                                                                    BoxShadow(
+                                                                        color: Color(0xFF9DA3B4).withOpacity(
+                                                                            0.1),
+                                                                        blurRadius:
+                                                                            65.0,
+                                                                        offset: Offset(
+                                                                            0.0,
+                                                                            15.0))
+                                                                  ]),
+                                                              child: Center(
+                                                                child: Text(
+                                                                  "Close",
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      fontSize:
+                                                                          18,
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            onTap: () {
+                                                              Navigator.of(
+                                                                      context,
+                                                                      rootNavigator:
+                                                                          true)
+                                                                  .pop(
+                                                                      'dialog');
+                                                              Navigator.of(
+                                                                      context,
+                                                                      rootNavigator:
+                                                                          true)
+                                                                  .pop(
+                                                                      'dialog');
 
-                                                    Navigator.pushReplacement(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              RootScreen()),
-                                                    );
-                                                  },
-                                                ));
+                                                              Navigator
+                                                                  .pushReplacement(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            RootScreen()),
+                                                              );
+                                                            },
+                                                          ),
+                                                        ],
+                                                      ));
+                                                })));
                                       } else {
                                         Navigator.of(context,
                                                 rootNavigator: true)
@@ -3737,41 +3826,127 @@ class EditItemState extends State<EditItem>
                                     if (response.statusCode == 200) {
                                       showDialog(
                                           context: context,
-                                          builder: (_) => AssetGiffyDialog(
-                                                image: Image.asset(
-                                                  'assets/yay.gif',
-                                                  fit: BoxFit.cover,
-                                                ),
-                                                title: Text(
-                                                  'Hooray!',
-                                                  style: TextStyle(
-                                                      fontSize: 22.0,
-                                                      fontWeight:
-                                                          FontWeight.w600),
-                                                ),
-                                                description: Text(
-                                                  'Your Item\'s Updated',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(),
-                                                ),
-                                                onlyOkButton: true,
-                                                entryAnimation:
-                                                    EntryAnimation.DEFAULT,
-                                                onOkButtonPressed: () {
-                                                  Navigator.of(context,
-                                                          rootNavigator: true)
-                                                      .pop('dialog');
-                                                  Navigator.of(context,
-                                                          rootNavigator: true)
-                                                      .pop('dialog');
+                                          barrierDismissible: false,
+                                          useRootNavigator: false,
+                                          builder: (_) => new AlertDialog(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                10.0))),
+                                                content: Builder(
+                                                  builder: (context) {
+                                                    return Container(
+                                                        height: 380,
+                                                        child: Column(
+                                                          children: [
+                                                            Container(
+                                                              height: 250,
+                                                              width:
+                                                                  MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width,
+                                                              child: ClipRRect(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            15),
+                                                                child:
+                                                                    Image.asset(
+                                                                  'assets/yay.gif',
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 10,
+                                                            ),
+                                                            Text(
+                                                              'Hooray! Your Item\'s Updated',
+                                                              style: TextStyle(
+                                                                fontFamily:
+                                                                    'Helvetica',
+                                                                fontSize: 16,
+                                                                color:
+                                                                    Colors.grey,
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 10,
+                                                            ),
+                                                            InkWell(
+                                                              child: Container(
+                                                                width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width -
+                                                                    30,
+                                                                height: 50,
+                                                                decoration: BoxDecoration(
+                                                                    color: Color
+                                                                        .fromRGBO(
+                                                                            255,
+                                                                            115,
+                                                                            0,
+                                                                            1),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10),
+                                                                    boxShadow: [
+                                                                      BoxShadow(
+                                                                          color: Color(0xFF9DA3B4).withOpacity(
+                                                                              0.1),
+                                                                          blurRadius:
+                                                                              65.0,
+                                                                          offset: Offset(
+                                                                              0.0,
+                                                                              15.0))
+                                                                    ]),
+                                                                child: Center(
+                                                                  child: Text(
+                                                                    "Close",
+                                                                    style: TextStyle(
+                                                                        fontFamily:
+                                                                            'Helvetica',
+                                                                        fontSize:
+                                                                            18,
+                                                                        color: Colors
+                                                                            .white,
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              onTap: () {
+                                                                Navigator.of(
+                                                                        context,
+                                                                        rootNavigator:
+                                                                            true)
+                                                                    .pop(
+                                                                        'dialog');
+                                                                Navigator.of(
+                                                                        context,
+                                                                        rootNavigator:
+                                                                            true)
+                                                                    .pop(
+                                                                        'dialog');
 
-                                                  Navigator.pushReplacement(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            RootScreen()),
-                                                  );
-                                                },
+                                                                Navigator
+                                                                    .pushReplacement(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder:
+                                                                          (context) =>
+                                                                              RootScreen()),
+                                                                );
+                                                              },
+                                                            ),
+                                                          ],
+                                                        ));
+                                                  },
+                                                ),
                                               ));
                                     } else {
                                       Navigator.of(context, rootNavigator: true)
@@ -3818,7 +3993,7 @@ class EditItemState extends State<EditItem>
                                           "/" +
                                           userid;
 
-                                  var response = await http.get(url);
+                                  var response = await http.get(Uri.parse(url));
 
                                   if (response.statusCode == 200) {
                                     print(response.body);
@@ -4024,7 +4199,7 @@ class EditItemState extends State<EditItem>
                       "/" +
                       userid;
 
-                  var response = await http.get(url);
+                  var response = await http.get(Uri.parse(url));
 
                   if (response.statusCode == 200) {
                     print(response.body);

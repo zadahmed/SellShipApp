@@ -20,10 +20,11 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
+
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:share/share.dart';
 import 'package:shimmer/shimmer.dart';
@@ -67,7 +68,7 @@ class _CreateStorePageState extends State<CreateStorePage> {
   getItemData() async {
     var itemurl = 'https://api.sellship.co/store/products/' + widget.storeid;
 
-    final itemresponse = await http.get(itemurl);
+    final itemresponse = await http.get(Uri.parse(itemurl));
     if (itemresponse.statusCode == 200) {
       var itemrespons = json.decode(itemresponse.body);
       print(itemrespons);
@@ -113,7 +114,7 @@ class _CreateStorePageState extends State<CreateStorePage> {
   Stores mystore;
   getuser() async {
     var url = 'https://api.sellship.co/api/store/' + widget.storeid;
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
       Stores store = Stores(
@@ -237,7 +238,7 @@ class _CreateStorePageState extends State<CreateStorePage> {
                                                 radius: 18,
                                                 backgroundColor: Colors.white,
                                                 child: Icon(
-                                                  Feather.edit_2,
+                                                  FeatherIcons.edit2,
                                                   color: Colors.blueGrey,
                                                   size: 16,
                                                 ),
@@ -345,8 +346,8 @@ class _CreateStorePageState extends State<CreateStorePage> {
   }
 
   Future getImageCamera() async {
-    var image = await ImagePicker.pickImage(
-        source: ImageSource.camera, maxHeight: 400, maxWidth: 400);
+    var image = await ImagePicker.platform
+        .pickImage(source: ImageSource.camera, maxHeight: 400, maxWidth: 400);
 
     var url = 'https://api.sellship.co/api/store/imageupload/' + widget.storeid;
     Dio dio = new Dio();
@@ -374,8 +375,8 @@ class _CreateStorePageState extends State<CreateStorePage> {
   }
 
   Future getImageGallery() async {
-    var image = await ImagePicker.pickImage(
-        source: ImageSource.gallery, maxHeight: 400, maxWidth: 400);
+    var image = await ImagePicker.platform
+        .pickImage(source: ImageSource.gallery, maxHeight: 400, maxWidth: 400);
 
     var url = 'https://api.sellship.co/api/imageupload/' + widget.storeid;
     Dio dio = new Dio();
@@ -453,7 +454,7 @@ class _CreateStorePageState extends State<CreateStorePage> {
                                 fontSize: 18,
                               )),
                           trailing: Icon(
-                            Icons.chevron_right,
+                            FeatherIcons.chevronRight,
                             color: Colors.black,
                           ),
                         ),
@@ -555,7 +556,7 @@ class _CreateStorePageState extends State<CreateStorePage> {
                                 fontSize: 18,
                               )),
                           trailing: Icon(
-                            Icons.chevron_right,
+                            FeatherIcons.chevronRight,
                             color: Colors.black,
                           ),
                         ),
@@ -575,7 +576,7 @@ class _CreateStorePageState extends State<CreateStorePage> {
           padding: EdgeInsets.all(10),
           child: InkWell(
               child: Icon(
-                Feather.chevron_left,
+                FeatherIcons.chevronLeft,
                 color: Color.fromRGBO(28, 45, 65, 1),
               ),
               onTap: () {
@@ -603,7 +604,7 @@ class _CreateStorePageState extends State<CreateStorePage> {
                   showMe(context);
                 },
                 child: Icon(
-                  Feather.share,
+                  FeatherIcons.share,
                   color: Color.fromRGBO(28, 45, 65, 1),
                 )),
           ),
@@ -835,7 +836,7 @@ class _CreateStorePageState extends State<CreateStorePage> {
                                                               Color.fromRGBO(28,
                                                                   45, 65, 1),
                                                           child: Icon(
-                                                            Feather.camera,
+                                                            FeatherIcons.camera,
                                                             color: Colors.white,
                                                             size: 16,
                                                           ),
@@ -1017,7 +1018,7 @@ class _CreateStorePageState extends State<CreateStorePage> {
                                                               .center,
                                                       children: <Widget>[
                                                         Icon(
-                                                          Feather.star,
+                                                          FeatherIcons.star,
                                                           color: Colors.black,
                                                           size: 18,
                                                         ),

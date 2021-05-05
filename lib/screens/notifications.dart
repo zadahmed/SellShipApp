@@ -13,11 +13,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
+
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:dio/dio.dart';
@@ -106,7 +107,7 @@ class _NotifcationPageState extends State<NotifcationPage>
     userid = await storage.read(key: 'userid');
     if (userid != null) {
       var messageurl = 'https://api.sellship.co/api/getnotifications/' + userid;
-      final response = await http.get(messageurl);
+      final response = await http.get(Uri.parse(messageurl));
 
       if (response.statusCode == 200) {
         List jsonResponse = json.decode(response.body);
@@ -172,7 +173,7 @@ class _NotifcationPageState extends State<NotifcationPage>
     if (userid != null) {
       var messageurl =
           'https://api.sellship.co/api/getnotificationsrefresh/' + userid;
-      final response = await http.get(messageurl);
+      final response = await http.get(Uri.parse(messageurl));
 
       if (response.statusCode == 200) {
         List jsonResponse = json.decode(response.body);
@@ -432,8 +433,8 @@ class _NotifcationPageState extends State<NotifcationPage>
                                                                         .error),
                                                           )
                                                         : Icon(
-                                                            FontAwesome
-                                                                .user_circle,
+                                                            FontAwesomeIcons
+                                                                .userCircle,
                                                             color: Colors.white,
                                                             size: 40,
                                                           ),
@@ -528,7 +529,7 @@ class _NotifcationPageState extends State<NotifcationPage>
                                                   MainAxisAlignment.end,
                                               children: [
                                                 Icon(
-                                                  Icons.chevron_right,
+                                                  FeatherIcons.chevronRight,
                                                   size: 20,
                                                   color: Colors.blueGrey,
                                                 ),

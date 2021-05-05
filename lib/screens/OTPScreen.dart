@@ -5,10 +5,11 @@ import 'package:SellShip/username.dart';
 import 'package:SellShip/verification/verifyphone.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OTPScreen extends StatefulWidget {
@@ -53,7 +54,7 @@ class _OTPScreenState extends State<OTPScreen> {
               onTap: () {
                 Navigator.pop(context);
               },
-              child: Icon(Feather.arrow_left)),
+              child: Icon(FeatherIcons.chevronLeft)),
           iconTheme: IconThemeData(color: Colors.black),
           elevation: 0,
           title: Text(
@@ -318,7 +319,7 @@ class _OTPScreenState extends State<OTPScreen> {
   }
 
   void _onFormSubmitted() async {
-    AuthCredential _authCredential = PhoneAuthProvider.getCredential(
+    AuthCredential _authCredential = PhoneAuthProvider.credential(
         verificationId: _verificationId, smsCode: _pinEditingController.text);
 
     _firebaseAuth
@@ -332,7 +333,7 @@ class _OTPScreenState extends State<OTPScreen> {
             '/' +
             value.user.phoneNumber;
 
-        final response = await http.get(url);
+        final response = await http.get(Uri.parse(url));
         if (response.statusCode == 200) {
           Navigator.of(context).pop();
           showDialog(
@@ -351,7 +352,7 @@ class _OTPScreenState extends State<OTPScreen> {
                       children: <Widget>[
                         Center(
                           child: Icon(
-                            Feather.check,
+                            FeatherIcons.check,
                             color: Colors.deepOrange,
                           ),
                         ),

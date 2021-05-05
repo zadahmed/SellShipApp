@@ -11,13 +11,13 @@ import 'package:SellShip/screens/pay.dart';
 import 'package:SellShip/screens/paymentweb.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
+
 import 'package:http/http.dart' as http;
-import 'package:progress_dialog/progress_dialog.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CheckoutOffer extends StatefulWidget {
@@ -434,7 +434,7 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
                                     ),
                                   ),
                                   Icon(
-                                    Icons.chevron_right,
+                                    FeatherIcons.chevronRight,
                                     size: 16,
                                     color: Colors.blueGrey,
                                   )
@@ -467,7 +467,7 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
 //                                ),
 //                              ),
 //                              Icon(
-//                                Icons.chevron_right,
+//                                FeatherIcons.chevronRight,
 //                                size: 16,
 //                                color: Colors.blueGrey,
 //                              )

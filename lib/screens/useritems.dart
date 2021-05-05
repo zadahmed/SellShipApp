@@ -10,6 +10,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class UserItems extends StatefulWidget {
   final String userid;
@@ -83,7 +84,7 @@ class _UserItemsState extends State<UserItems> {
     if (userid != null) {
       var url = 'https://api.sellship.co/api/user/' + userid;
       print(url);
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         var respons = json.decode(response.body);
         Map<String, dynamic> profilemap = respons;
@@ -159,7 +160,7 @@ class _UserItemsState extends State<UserItems> {
     if (slist.isNotEmpty) {
       for (int i = 0; i < slist.length; i++) {
         var url = 'https://api.sellship.co/api/user/store/' + slist[i]['\$oid'];
-        final response = await http.get(url);
+        final response = await http.get(Uri.parse(url));
         if (response.statusCode == 200) {
           var jsonbody = json.decode(response.body);
           Stores store = Stores(
@@ -303,7 +304,8 @@ class _UserItemsState extends State<UserItems> {
                                         'https://api.sellship.co/api/report/user/' +
                                             userid;
 
-                                    final response = await http.get(url);
+                                    final response =
+                                        await http.get(Uri.parse(url));
                                     if (response.statusCode == 200) {
                                       Navigator.of(context).pop();
                                       showInSnackBar(
@@ -547,8 +549,8 @@ class _UserItemsState extends State<UserItems> {
                                                     '/' +
                                                     userid;
 
-                                            final followresponse =
-                                                await http.get(followurl);
+                                            final followresponse = await http
+                                                .get(Uri.parse(followurl));
                                             if (followresponse.statusCode ==
                                                 200) {
                                               print('UnFollowed');
@@ -567,8 +569,8 @@ class _UserItemsState extends State<UserItems> {
                                                     '/' +
                                                     userid;
 
-                                            final followresponse =
-                                                await http.get(followurl);
+                                            final followresponse = await http
+                                                .get(Uri.parse(followurl));
                                             if (followresponse.statusCode ==
                                                 200) {
                                               print('Followed');

@@ -38,29 +38,17 @@ class HelpCentreState extends State<HelpCentre> {
           ),
         ),
         body: InAppWebView(
-          initialUrl: 'https://help.sellship.co',
-          initialHeaders: {
-            'Access-Control-Allow-Headers': '*',
-            'Access-Control-Allow-Origin': '*',
-            "Access-Control-Allow-Methods": "*"
-          },
+          initialUrlRequest: URLRequest(
+              url: Uri.parse(
+            'https://help.sellship.co',
+          )),
           onWebViewCreated: (InAppWebViewController controller) {
             webView = controller;
           },
-          initialOptions: InAppWebViewGroupOptions(
-            crossPlatform: InAppWebViewOptions(
-                debuggingEnabled: true, useShouldOverrideUrlLoading: true),
-          ),
           onConsoleMessage: (controller, consoleMessage) {
             print(consoleMessage.toJson());
             print(consoleMessage.message);
           },
-          onLoadStart: (InAppWebViewController controller, String url) {
-            if (url == "return_url") {
-              Navigator.pop(context, 'Done');
-            }
-          },
-          onLoadStop: (InAppWebViewController controller, String url) {},
           androidOnPermissionRequest: (InAppWebViewController controller,
               String origin, List<String> resources) async {
             return PermissionRequestResponse(
@@ -71,11 +59,6 @@ class HelpCentreState extends State<HelpCentre> {
             setState(() {
               this.progress = progress / 100;
             });
-          },
-          onReceivedServerTrustAuthRequest: (InAppWebViewController controller,
-              ServerTrustChallenge challenge) async {
-            return ServerTrustAuthResponse(
-                action: ServerTrustAuthResponseAction.PROCEED);
           },
         ));
   }

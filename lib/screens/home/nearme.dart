@@ -12,17 +12,19 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as Location;
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:SellShip/screens/details.dart';
-import 'package:numeral/numeral.dart';
+
 import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -139,7 +141,7 @@ class NearMeState extends State<NearMe> {
           '/' +
           position.latitude.toString();
 
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         var jsonbody = json.decode(response.body);
         itemsgrid.clear();
@@ -164,6 +166,9 @@ class NearMeState extends State<NearMe> {
                 : jsonbody[i]['comments'].length,
             userid: jsonbody[i]['userid'],
             price: jsonbody[i]['price'].toString(),
+            saleprice: jsonbody[i].containsKey('saleprice')
+                ? jsonbody[i]['saleprice'].toString()
+                : null,
             category: jsonbody[i]['category'],
             sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
           );
@@ -218,7 +223,7 @@ class NearMeState extends State<NearMe> {
     var userid = await storage.read(key: 'userid');
     if (userid != null) {
       var url = 'https://api.sellship.co/api/favourites/' + userid;
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         if (response.body != 'Empty') {
           var respons = json.decode(response.body);
@@ -319,7 +324,7 @@ class NearMeState extends State<NearMe> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                  Feather.sliders,
+                  FeatherIcons.sliders,
                   size: 18,
                   color: Colors.black,
                 ),
@@ -529,13 +534,67 @@ class NearMeState extends State<NearMe> {
                                     SizedBox(
                                       height: 2,
                                     ),
-                                    Text(
-                                      currency + ' ' + itemsgrid[index].price,
-                                      style: TextStyle(
-                                          fontFamily: 'Helvetica',
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold),
-                                    ),
+                                    itemsgrid[index].saleprice != null
+                                        ? Text.rich(
+                                            TextSpan(
+                                              children: <TextSpan>[
+                                                new TextSpan(
+                                                  text: 'AED ' +
+                                                      itemsgrid[index]
+                                                          .saleprice,
+                                                  style: new TextStyle(
+                                                      color: Colors.redAccent,
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                new TextSpan(
+                                                  text: '\nAED ' +
+                                                      itemsgrid[index]
+                                                          .price
+                                                          .toString(),
+                                                  style: new TextStyle(
+                                                    color: Colors.grey,
+                                                    fontSize: 10,
+                                                    decoration: TextDecoration
+                                                        .lineThrough,
+                                                  ),
+                                                ),
+                                                new TextSpan(
+                                                  text: ' -' +
+                                                      (((double.parse(itemsgrid[
+                                                                              index]
+                                                                          .price
+                                                                          .toString()) -
+                                                                      double.parse(itemsgrid[
+                                                                              index]
+                                                                          .saleprice
+                                                                          .toString())) /
+                                                                  double.parse(
+                                                                      itemsgrid[
+                                                                              index]
+                                                                          .price
+                                                                          .toString())) *
+                                                              100)
+                                                          .toStringAsFixed(0) +
+                                                      '%',
+                                                  style: new TextStyle(
+                                                    color: Colors.red,
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                        : Text(
+                                            currency +
+                                                ' ' +
+                                                itemsgrid[index].price,
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold),
+                                          ),
                                   ],
                                 )),
                                 favourites != null
@@ -566,7 +625,7 @@ class NearMeState extends State<NearMe> {
                                                           1;
                                                 });
                                                 final response = await http
-                                                    .post(url,
+                                                    .post(Uri.parse(url),
                                                         body:
                                                             json.encode(body));
 
@@ -585,7 +644,7 @@ class NearMeState extends State<NearMe> {
                                               backgroundColor:
                                                   Colors.deepOrange,
                                               child: Icon(
-                                                FontAwesome.heart,
+                                                FontAwesomeIcons.heart,
                                                 color: Colors.white,
                                                 size: 15,
                                               ),
@@ -615,7 +674,7 @@ class NearMeState extends State<NearMe> {
                                                           1;
                                                 });
                                                 final response = await http
-                                                    .post(url,
+                                                    .post(Uri.parse(url),
                                                         body:
                                                             json.encode(body));
 
@@ -637,7 +696,7 @@ class NearMeState extends State<NearMe> {
                                                   radius: 15,
                                                   backgroundColor: Colors.white,
                                                   child: Icon(
-                                                    Feather.heart,
+                                                    FeatherIcons.heart,
                                                     color: Colors.blueGrey,
                                                     size: 16,
                                                   ),
@@ -650,7 +709,7 @@ class NearMeState extends State<NearMe> {
                                           radius: 15,
                                           backgroundColor: Colors.white,
                                           child: Icon(
-                                            Feather.heart,
+                                            FeatherIcons.heart,
                                             color: Colors.blueGrey,
                                             size: 16,
                                           ),
@@ -817,7 +876,7 @@ class NearMeState extends State<NearMe> {
                                               child: Row(
                                                 children: [
                                                   Icon(
-                                                    Feather.heart,
+                                                    FeatherIcons.heart,
                                                     size: 14,
                                                     color: Colors.white,
                                                   ),
@@ -825,9 +884,8 @@ class NearMeState extends State<NearMe> {
                                                     width: 5,
                                                   ),
                                                   Text(
-                                                    Numeral(itemsgrid[index]
-                                                            .likes)
-                                                        .value(),
+                                                    (itemsgrid[index].likes)
+                                                        .toString(),
                                                     style: TextStyle(
                                                       fontFamily: 'Helvetica',
                                                       color: Colors.white,
@@ -866,7 +924,7 @@ class NearMeState extends State<NearMe> {
                                                             1;
                                                   });
                                                   final response = await http
-                                                      .post(url,
+                                                      .post(Uri.parse(url),
                                                           body: json
                                                               .encode(body));
 
@@ -902,7 +960,8 @@ class NearMeState extends State<NearMe> {
                                                             1;
                                                   });
                                                   final response = await http
-                                                      .post(url, body: body);
+                                                      .post(Uri.parse(url),
+                                                          body: body);
 
                                                   if (response.statusCode ==
                                                       200) {
@@ -930,7 +989,7 @@ class NearMeState extends State<NearMe> {
                                               child: Row(
                                                 children: [
                                                   Icon(
-                                                    Feather.message_circle,
+                                                    FeatherIcons.messageCircle,
                                                     size: 14,
                                                     color: Colors.white,
                                                   ),
@@ -938,9 +997,8 @@ class NearMeState extends State<NearMe> {
                                                     width: 5,
                                                   ),
                                                   Text(
-                                                    Numeral(itemsgrid[index]
-                                                            .comments)
-                                                        .value(),
+                                                    (itemsgrid[index].comments)
+                                                        .toString(),
                                                     style: TextStyle(
                                                       fontFamily: 'Helvetica',
                                                       color: Colors.white,
@@ -1030,7 +1088,7 @@ class NearMeState extends State<NearMe> {
                                                           1;
                                                 });
                                                 final response = await http
-                                                    .post(url,
+                                                    .post(Uri.parse(url),
                                                         body:
                                                             json.encode(body));
 
@@ -1053,7 +1111,7 @@ class NearMeState extends State<NearMe> {
                                                       backgroundColor:
                                                           Colors.deepOrange,
                                                       child: Icon(
-                                                        FontAwesome.heart,
+                                                        FontAwesomeIcons.heart,
                                                         color: Colors.white,
                                                         size: 15,
                                                       ),
@@ -1083,7 +1141,7 @@ class NearMeState extends State<NearMe> {
                                                           1;
                                                 });
                                                 final response = await http
-                                                    .post(url,
+                                                    .post(Uri.parse(url),
                                                         body:
                                                             json.encode(body));
 
@@ -1106,7 +1164,7 @@ class NearMeState extends State<NearMe> {
                                                       backgroundColor:
                                                           Colors.white,
                                                       child: Icon(
-                                                        Feather.heart,
+                                                        FeatherIcons.heart,
                                                         color: Colors.blueGrey,
                                                         size: 16,
                                                       ),
@@ -1123,7 +1181,7 @@ class NearMeState extends State<NearMe> {
                                                   radius: 15,
                                                   backgroundColor: Colors.white,
                                                   child: Icon(
-                                                    Feather.heart,
+                                                    FeatherIcons.heart,
                                                     color: Colors.blueGrey,
                                                     size: 16,
                                                   ),
@@ -1198,8 +1256,8 @@ class NearMeState extends State<NearMe> {
                           'itemid': itemsgrid[index].itemid,
                         };
 
-                        final response =
-                            await http.post(url, body: json.encode(body));
+                        final response = await http.post(Uri.parse(url),
+                            body: json.encode(body));
 
                         if (response.statusCode == 200) {
                           var jsondata = json.decode(response.body);
@@ -1229,8 +1287,8 @@ class NearMeState extends State<NearMe> {
                           'itemid': itemsgrid[index].itemid,
                         };
 
-                        final response =
-                            await http.post(url, body: json.encode(body));
+                        final response = await http.post(Uri.parse(url),
+                            body: json.encode(body));
 
                         if (response.statusCode == 200) {
                           var jsondata = json.decode(response.body);
@@ -1295,7 +1353,7 @@ class NearMeState extends State<NearMe> {
         '/' +
         limit.toString();
     print(categoryurl);
-    final categoryresponse = await http.get(categoryurl);
+    final categoryresponse = await http.get(Uri.parse(categoryurl));
     if (categoryresponse.statusCode == 200) {
       var jsonbody = json.decode(categoryresponse.body);
 
@@ -1318,6 +1376,9 @@ class NearMeState extends State<NearMe> {
           username: jsonbody[i]['username'],
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
+          saleprice: jsonbody[i].containsKey('saleprice')
+              ? jsonbody[i]['saleprice'].toString()
+              : null,
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
@@ -1357,7 +1418,7 @@ class NearMeState extends State<NearMe> {
         '/' +
         limit.toString();
     print(categoryurl);
-    final categoryresponse = await http.get(categoryurl);
+    final categoryresponse = await http.get(Uri.parse(categoryurl));
     if (categoryresponse.statusCode == 200) {
       var jsonbody = json.decode(categoryresponse.body);
 
@@ -1380,6 +1441,9 @@ class NearMeState extends State<NearMe> {
               ? 0
               : jsonbody[i]['comments'].length,
           price: jsonbody[i]['price'].toString(),
+          saleprice: jsonbody[i].containsKey('saleprice')
+              ? jsonbody[i]['saleprice'].toString()
+              : null,
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
@@ -1417,7 +1481,7 @@ class NearMeState extends State<NearMe> {
         '/' +
         limit.toString();
     print(categoryurl);
-    final categoryresponse = await http.get(categoryurl);
+    final categoryresponse = await http.get(Uri.parse(categoryurl));
     if (categoryresponse.statusCode == 200) {
       var jsonbody = json.decode(categoryresponse.body);
 
@@ -1440,6 +1504,9 @@ class NearMeState extends State<NearMe> {
               ? 0
               : jsonbody[i]['comments'].length,
           price: jsonbody[i]['price'].toString(),
+          saleprice: jsonbody[i].containsKey('saleprice')
+              ? jsonbody[i]['saleprice'].toString()
+              : null,
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
@@ -1468,7 +1535,7 @@ class NearMeState extends State<NearMe> {
         '/' +
         limit.toString();
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
 
     var jsonbody = json.decode(response.body);
 
@@ -1491,6 +1558,9 @@ class NearMeState extends State<NearMe> {
             ? 0
             : jsonbody[i]['comments'].length,
         price: jsonbody[i]['price'].toString(),
+        saleprice: jsonbody[i].containsKey('saleprice')
+            ? jsonbody[i]['saleprice'].toString()
+            : null,
         category: jsonbody[i]['category'],
         sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
       );
@@ -1513,7 +1583,7 @@ class NearMeState extends State<NearMe> {
         '/' +
         limit.toString();
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
 
     var jsonbody = json.decode(response.body);
 
@@ -1536,6 +1606,9 @@ class NearMeState extends State<NearMe> {
             ? 0
             : jsonbody[i]['comments'].length,
         price: jsonbody[i]['price'].toString(),
+        saleprice: jsonbody[i].containsKey('saleprice')
+            ? jsonbody[i]['saleprice'].toString()
+            : null,
         category: jsonbody[i]['category'],
         sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
       );
@@ -1559,7 +1632,7 @@ class NearMeState extends State<NearMe> {
         '/' +
         limit.toString();
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
 
@@ -1583,6 +1656,9 @@ class NearMeState extends State<NearMe> {
               ? 0
               : jsonbody[i]['comments'].length,
           price: jsonbody[i]['price'].toString(),
+          saleprice: jsonbody[i].containsKey('saleprice')
+              ? jsonbody[i]['saleprice'].toString()
+              : null,
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );

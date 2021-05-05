@@ -8,12 +8,13 @@ import 'package:SellShip/verification/verifyphone.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
+
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:provider/provider.dart';
 
@@ -63,7 +64,6 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: true,
-        resizeToAvoidBottomPadding: true,
         key: _scaffoldKey,
         body: Container(
             color: Colors.white,
@@ -72,35 +72,33 @@ class _SignUpPageState extends State<SignUpPage> {
             child: Stack(children: [
               Align(
                 alignment: Alignment.topCenter,
-                child: FadeAnimation(
-                    1,
-                    Stack(
-                      children: [
-                        Align(
-                            alignment: Alignment.topCenter,
-                            child: Container(
-                                height: 250,
-                                width: MediaQuery.of(context).size.width,
-                                child: SvgPicture.asset(
-                                  'assets/LoginBG.svg',
-                                  semanticsLabel: 'SellShip BG',
-                                  fit: BoxFit.cover,
-                                ))),
-                        Align(
-                            alignment: Alignment.topLeft,
-                            child: Padding(
-                                padding: EdgeInsets.only(left: 35, top: 120),
-                                child: Text(
-                                  'Sign Up',
-                                  style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 40,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ))),
-                      ],
-                    )),
+                child: Stack(
+                  children: [
+                    Align(
+                        alignment: Alignment.topCenter,
+                        child: Container(
+                            height: 250,
+                            width: MediaQuery.of(context).size.width,
+                            child: SvgPicture.asset(
+                              'assets/LoginBG.svg',
+                              semanticsLabel: 'SellShip BG',
+                              fit: BoxFit.cover,
+                            ))),
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                            padding: EdgeInsets.only(left: 35, top: 120),
+                            child: Text(
+                              'Sign Up',
+                              style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 40,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ))),
+                  ],
+                ),
               ),
               Align(
                   alignment: Alignment.bottomCenter,
@@ -153,7 +151,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                                 fontFamily: 'Helvetica',
                                                 fontSize: 18),
                                             icon: Icon(
-                                              Feather.user,
+                                              FeatherIcons.user,
                                               color: Colors.blueGrey,
                                             ),
                                             border: InputBorder.none,
@@ -248,7 +246,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                                 fontFamily: 'Helvetica',
                                                 fontSize: 18),
                                             icon: Icon(
-                                              Feather.mail,
+                                              FeatherIcons.mail,
                                               color: Colors.blueGrey,
                                             ),
                                             border: InputBorder.none,
@@ -293,7 +291,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                                 fontFamily: 'Helvetica',
                                                 fontSize: 18),
                                             icon: Icon(
-                                              Feather.lock,
+                                              FeatherIcons.lock,
                                               color: Colors.blueGrey,
                                             ),
                                             border: InputBorder.none,
@@ -368,62 +366,57 @@ class _SignUpPageState extends State<SignUpPage> {
                         SizedBox(
                           height: 30,
                         ),
-                        FadeAnimation(
-                            1.5,
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                ForgotPassword()));
-                                  },
-                                  child: Text(
-                                    "Already have an account?  ",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 16,
-                                      fontFamily: 'Helvetica',
-                                    ),
-                                  ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ForgotPassword()));
+                              },
+                              child: Text(
+                                "Already have an account?  ",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w300,
+                                  fontSize: 16,
+                                  fontFamily: 'Helvetica',
                                 ),
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text(
-                                    "Login",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                      fontFamily: 'Helvetica',
-                                    ),
-                                  ),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                "Login",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  fontFamily: 'Helvetica',
                                 ),
-                              ],
-                            )),
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   )),
               Align(
-                alignment: Alignment.topLeft,
-                child: FadeAnimation(
-                    1,
-                    Padding(
-                      padding: EdgeInsets.only(top: 50, left: 20),
-                      child: InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Icon(
-                            Feather.arrow_left,
-                            color: Colors.white,
-                          )),
-                    )),
-              ),
+                  alignment: Alignment.topLeft,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 50, left: 20),
+                    child: InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Icon(
+                          FeatherIcons.chevronLeft,
+                          color: Colors.white,
+                        )),
+                  )),
             ])));
   }
 
@@ -488,27 +481,78 @@ class _SignUpPageState extends State<SignUpPage> {
   void showHttpResultDialog(String message) {
     showDialog(
         context: context,
+        barrierDismissible: false,
         useRootNavigator: false,
-        builder: (_) => AssetGiffyDialog(
-              image: Image.asset(
-                'assets/oops.gif',
-                fit: BoxFit.cover,
+        builder: (_) => new AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              content: Builder(
+                builder: (context) {
+                  return Container(
+                      height: 380,
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 250,
+                            width: MediaQuery.of(context).size.width,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: Image.asset(
+                                'assets/oops.gif',
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            'Oops!',
+                            style: TextStyle(
+                              fontFamily: 'Helvetica',
+                              fontSize: 16,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          InkWell(
+                            child: Container(
+                              width: MediaQuery.of(context).size.width - 30,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                  color: Color.fromRGBO(255, 115, 0, 1),
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color:
+                                            Color(0xFF9DA3B4).withOpacity(0.1),
+                                        blurRadius: 65.0,
+                                        offset: Offset(0.0, 15.0))
+                                  ]),
+                              child: Center(
+                                child: Text(
+                                  "Close",
+                                  style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 18,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            onTap: () {
+                              Navigator.of(context, rootNavigator: true)
+                                  .pop('dialog');
+                              Navigator.of(context, rootNavigator: true)
+                                  .pop('dialog');
+                            },
+                          ),
+                        ],
+                      ));
+                },
               ),
-              title: Text(
-                'Oops!',
-                style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600),
-              ),
-              description: Text(
-                message,
-                textAlign: TextAlign.center,
-                style: TextStyle(),
-              ),
-              onlyOkButton: true,
-              entryAnimation: EntryAnimation.DEFAULT,
-              onOkButtonPressed: () {
-                Navigator.of(context, rootNavigator: true).pop('dialog');
-                Navigator.of(context, rootNavigator: true).pop('dialog');
-              },
             ));
   }
 }
@@ -530,39 +574,36 @@ class _SignInTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FadeAnimation(
-        fadeDelay,
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              titleText,
-              style: TextStyle(
-                  fontSize: 15,
-                  fontFamily: "SF",
-                  fontWeight: FontWeight.w400,
-                  color: Colors.black87),
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            TextField(
-              obscureText: obscureText,
-              controller: controller,
-              decoration: InputDecoration(
-                hintText: hintText,
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-                enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey[400])),
-                border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey[400])),
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-          ],
-        ));
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          titleText,
+          style: TextStyle(
+              fontSize: 15,
+              fontFamily: "SF",
+              fontWeight: FontWeight.w400,
+              color: Colors.black87),
+        ),
+        SizedBox(
+          height: 5,
+        ),
+        TextField(
+          obscureText: obscureText,
+          controller: controller,
+          decoration: InputDecoration(
+            hintText: hintText,
+            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+            enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey[400])),
+            border: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey[400])),
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+      ],
+    );
   }
 }

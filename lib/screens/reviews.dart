@@ -6,12 +6,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
+
 import 'package:http/http.dart' as http;
-import 'package:smooth_star_rating/smooth_star_rating.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +62,7 @@ class _ReviewsPageState extends State<ReviewsPage> {
     userid = await storage.read(key: 'userid');
     if (userid != null) {
       var messageurl = 'https://api.sellship.co/api/getreviews/' + userid;
-      final response = await http.get(messageurl);
+      final response = await http.get(Uri.parse(messageurl));
 
       if (response.statusCode == 200) {
         List jsonResponse = json.decode(response.body);
@@ -106,7 +107,7 @@ class _ReviewsPageState extends State<ReviewsPage> {
     userid = await storage.read(key: 'userid');
     if (userid != null) {
       var messageurl = 'https://api.sellship.co/api/getreviews/' + userid;
-      final response = await http.get(messageurl);
+      final response = await http.get(Uri.parse(messageurl));
 
       if (response.statusCode == 200) {
         List jsonResponse = json.decode(response.body);
@@ -238,18 +239,27 @@ class _ReviewsPageState extends State<ReviewsPage> {
                                             ),
                                             Row(
                                               children: [
-                                                SmoothStarRating(
-                                                    allowHalfRating: true,
-                                                    starCount: 5,
-                                                    isReadOnly: true,
-                                                    rating:
-                                                        reviews[index].rating,
-                                                    size: 16.0,
-                                                    color: Color.fromRGBO(
-                                                        255, 115, 0, 1),
-                                                    borderColor:
-                                                        Colors.blueGrey,
-                                                    spacing: 0.0),
+                                                RatingBar.builder(
+                                                  initialRating:
+                                                      reviews[index].rating,
+                                                  minRating: 1,
+                                                  direction: Axis.horizontal,
+                                                  allowHalfRating: true,
+                                                  itemCount: 5,
+                                                  itemPadding:
+                                                      EdgeInsets.symmetric(
+                                                          horizontal: 4.0),
+                                                  itemBuilder: (context, _) =>
+                                                      Icon(
+                                                    Icons.star,
+                                                    color: Colors.deepOrange,
+                                                  ),
+                                                  itemSize: 20,
+                                                  ignoreGestures: true,
+                                                  onRatingUpdate: (rating) {
+                                                    print(rating);
+                                                  },
+                                                ),
                                                 SizedBox(
                                                   width: 4,
                                                 ),

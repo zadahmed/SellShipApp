@@ -17,14 +17,13 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:flutter_icons/flutter_icons.dart';
-import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
+
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart' as http; import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:location/location.dart' as Location;
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -140,7 +139,7 @@ class _AddItemState extends State<AddItem> {
     var userid = await storage.read(key: 'userid');
     var storeurl = 'https://api.sellship.co/api/userstores/' + userid;
 
-    final storeresponse = await http.get(storeurl);
+    final storeresponse = await http.get(Uri.parse(storeurl));
 
     if (storeresponse.statusCode == 200) {
       var jsonbody = json.decode(storeresponse.body);
@@ -333,11 +332,11 @@ class _AddItemState extends State<AddItem> {
   ];
 
   List<IconData> conditionicons = [
-    Feather.tag,
-    Feather.box,
-    Feather.award,
+    FeatherIcons.tag,
+    FeatherIcons.box,
+    FeatherIcons.award,
     Icons.new_releases,
-    Feather.eye,
+    FeatherIcons.eye,
   ];
 
   String _selectedCondition = 'Like new';
@@ -385,7 +384,7 @@ class _AddItemState extends State<AddItem> {
 
   loadbrands(category) async {
     var categoryurl = 'https://api.sellship.co/api/getbrands/' + category;
-    final categoryresponse = await http.get(categoryurl);
+    final categoryresponse = await http.get(Uri.parse(categoryurl));
 
     if (categoryresponse.statusCode == 200) {
       brands.clear();
@@ -470,7 +469,7 @@ class _AddItemState extends State<AddItem> {
   Widget build(BuildContext context) {
     return Scaffold(
         key: _scaffoldKey,
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: false,
         backgroundColor: Color.fromRGBO(248, 248, 248, 1),
         appBar: AppBar(
           title: Text(
@@ -3221,7 +3220,7 @@ class _AddItemState extends State<AddItem> {
                                                                                 ),
                                                                               ),
                                                                               leading: Icon(
-                                                                                FontAwesome.money,
+                                                                                FontAwesomeIcons.dollarSign,
                                                                                 color: Color.fromRGBO(255, 115, 0, 1),
                                                                               ),
                                                                             ),
@@ -3630,7 +3629,7 @@ class _AddItemState extends State<AddItem> {
                                                 'https://api.sellship.co/api/user/' +
                                                     userid;
                                             final userresponse =
-                                                await http.get(userurl);
+                                                await http.get(Uri.parse(userurl));
                                             if (userresponse.statusCode ==
                                                 200) {
                                               var userrespons = json

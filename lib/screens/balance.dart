@@ -7,10 +7,11 @@ import 'package:SellShip/screens/useritems.dart';
 import 'package:SellShip/screens/withdrawal.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
 class Balance extends StatefulWidget {
@@ -47,7 +48,7 @@ class _BalanceState extends State<Balance> {
 
     var url = 'https://api.sellship.co/api/withdrawalhistory/' + userid;
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
 
     var jsonbody = json.decode(response.body);
     print(jsonbody);
@@ -91,7 +92,7 @@ class _BalanceState extends State<Balance> {
     }
     var url = 'https://api.sellship.co/api/user/' + userid;
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);

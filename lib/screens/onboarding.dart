@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:SellShip/Navigation/routes.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:SellShip/controllers/handleNotifications.dart';
@@ -9,16 +11,15 @@ import 'package:SellShip/screens/signUpPage.dart';
 import 'package:SellShip/username.dart';
 import 'package:SellShip/verification/verifyphone.dart';
 import 'package:SellShip/verification/verifyphonesignup.dart';
-import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:auth_buttons/auth_buttons.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_oauth/firebase_auth_oauth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 import 'package:video_player/video_player.dart';
 
@@ -40,32 +41,36 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       facebookLogin.logOut();
     }
 
-    final result = await facebookLogin.logIn(['email']);
+    final result = await facebookLogin.logIn(permissions: [
+      FacebookPermission.publicProfile,
+      FacebookPermission.email,
+    ]);
 
     switch (result.status) {
-      case FacebookLoginStatus.loggedIn:
-        final token = result.accessToken.token;
-        final graphResponse = await http.get(
-            'https://graph.facebook.com/v2.12/me?fields=name,picture,email&access_token=$token');
+      case FacebookLoginStatus.success:
+        final FacebookAccessToken token = result.accessToken;
+        final graphResponse = await http.get(Uri.parse(
+            'https://graph.facebook.com/v2.12/me?fields=name,picture,email&access_token=$token'));
 
-        final profile = json.decode(graphResponse.body);
+        final profile = await facebookLogin.getUserProfile();
 
+        final imageUrl = await facebookLogin.getProfileImageUrl(width: 100);
+
+        final email = await facebookLogin.getUserEmail();
         var url = 'https://api.sellship.co/api/signup';
 
-        print(profile);
-
-        var name = profile['name'].split(" ");
+        var uuo = Uuid();
 
         Map<String, String> body = {
-          'first_name': name[0],
-          'last_name': name[1],
-          'email': profile['email'],
-          'phonenumber': uuidGenerator.v4().toString(),
-          'profilepicture': profile['picture']['data']['url'],
+          'first_name': profile.firstName,
+          'last_name': profile.lastName,
+          'email': email,
+          'phonenumber': uuo.v4().toString(),
+          'profilepicture': imageUrl,
           'password': 'password',
         };
 
-        final response = await http.post(url, body: body);
+        final response = await http.post(Uri.parse(url), body: body);
 
         if (response.statusCode == 200) {
           var jsondata = json.decode(response.body);
@@ -81,7 +86,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
               var userid = await storage.read(key: 'userid');
               var storeurl = 'https://api.sellship.co/api/userstores/' + userid;
-              final storeresponse = await http.get(storeurl);
+              final storeresponse = await http.get(Uri.parse(storeurl));
               var storejsonbody = json.decode(storeresponse.body);
 
               if (storejsonbody.isNotEmpty) {
@@ -104,7 +109,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
             var userid = await storage.read(key: 'userid');
             var storeurl = 'https://api.sellship.co/api/userstores/' + userid;
-            final storeresponse = await http.get(storeurl);
+            final storeresponse = await http.get(Uri.parse(storeurl));
             var storejsonbody = json.decode(storeresponse.body);
 
             if (storejsonbody.isNotEmpty) {
@@ -128,27 +133,76 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         } else {
           showDialog(
               context: context,
+              barrierDismissible: false,
               useRootNavigator: false,
-              builder: (_) => AssetGiffyDialog(
-                    image: Image.asset(
-                      'assets/oops.gif',
-                      fit: BoxFit.cover,
+              builder: (_) => new AlertDialog(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                    content: Builder(
+                      builder: (context) {
+                        return Container(
+                            height: 380,
+                            child: Column(
+                              children: [
+                                Container(
+                                  height: 250,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(15),
+                                    child: Image.asset(
+                                      'assets/oops.gif',
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  'Oops!',
+                                  style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 16,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                InkWell(
+                                  child: Container(
+                                    width:
+                                        MediaQuery.of(context).size.width - 30,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        color: Color.fromRGBO(255, 115, 0, 1),
+                                        borderRadius: BorderRadius.circular(10),
+                                        boxShadow: [
+                                          BoxShadow(
+                                              color: Color(0xFF9DA3B4)
+                                                  .withOpacity(0.1),
+                                              blurRadius: 65.0,
+                                              offset: Offset(0.0, 15.0))
+                                        ]),
+                                    child: Center(
+                                      child: Text(
+                                        "Close",
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 18,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            ));
+                      },
                     ),
-                    title: Text(
-                      'Oops!',
-                      style: TextStyle(
-                          fontSize: 22.0, fontWeight: FontWeight.w600),
-                    ),
-                    description: Text(
-                      'Looks like something went wrong!',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(),
-                    ),
-                    onlyOkButton: true,
-                    entryAnimation: EntryAnimation.DEFAULT,
-                    onOkButtonPressed: () {
-                      Navigator.of(context).pop();
-                    },
                   ));
         }
 
@@ -157,7 +211,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         });
         break;
 
-      case FacebookLoginStatus.cancelledByUser:
+      case FacebookLoginStatus.cancel:
         setState(() => loggedin = false);
         Navigator.of(context).pop();
         break;
@@ -231,7 +285,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       padding: const EdgeInsets.only(
                           left: 15, bottom: 20, right: 15),
                       child: GoogleAuthButton(
-                        width: MediaQuery.of(context).size.width / 1.15,
                         text: 'Continue with Google',
                         onPressed: () async {
                           GoogleSignIn _googleSignIn = GoogleSignIn(
@@ -284,16 +337,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                           var name = user.displayName.split(" ");
 
+                          var uui = Uuid();
+                          var uuid = uui.v4();
+
                           Map<String, String> body = {
                             'first_name': name[0],
                             'last_name': name[1],
                             'email': user.email,
-                            'phonenumber': uuidGenerator.v4().toString(),
+                            'phonenumber': uuid,
                             'profilepicture': user.photoUrl,
                             'password': 'password',
                           };
 
-                          final response = await http.post(url, body: body);
+                          final response =
+                              await http.post(Uri.parse(url), body: body);
 
                           if (response.statusCode == 200) {
                             var jsondata = json.decode(response.body);
@@ -314,7 +371,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 var storeurl =
                                     'https://api.sellship.co/api/userstores/' +
                                         userid;
-                                final storeresponse = await http.get(storeurl);
+                                final storeresponse =
+                                    await http.get(Uri.parse(storeurl));
                                 var storejsonbody =
                                     json.decode(storeresponse.body);
 
@@ -346,7 +404,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               var storeurl =
                                   'https://api.sellship.co/api/userstores/' +
                                       userid;
-                              final storeresponse = await http.get(storeurl);
+                              final storeresponse =
+                                  await http.get(Uri.parse(storeurl));
                               var storejsonbody =
                                   json.decode(storeresponse.body);
 
@@ -373,28 +432,97 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           } else {
                             showDialog(
                                 context: context,
+                                barrierDismissible: false,
                                 useRootNavigator: false,
-                                builder: (_) => AssetGiffyDialog(
-                                      image: Image.asset(
-                                        'assets/oops.gif',
-                                        fit: BoxFit.cover,
+                                builder: (_) => new AlertDialog(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10.0))),
+                                      content: Builder(
+                                        builder: (context) {
+                                          return Container(
+                                              height: 380,
+                                              child: Column(
+                                                children: [
+                                                  Container(
+                                                    height: 250,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15),
+                                                      child: Image.asset(
+                                                        'assets/oops.gif',
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Text(
+                                                    'Oops!',
+                                                    style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 16,
+                                                      color: Colors.grey,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  InkWell(
+                                                    child: Container(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width -
+                                                              30,
+                                                      height: 50,
+                                                      decoration: BoxDecoration(
+                                                          color: Color.fromRGBO(
+                                                              255, 115, 0, 1),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                          boxShadow: [
+                                                            BoxShadow(
+                                                                color: Color(
+                                                                        0xFF9DA3B4)
+                                                                    .withOpacity(
+                                                                        0.1),
+                                                                blurRadius:
+                                                                    65.0,
+                                                                offset: Offset(
+                                                                    0.0, 15.0))
+                                                          ]),
+                                                      child: Center(
+                                                        child: Text(
+                                                          "Close",
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'Helvetica',
+                                                              fontSize: 18,
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    onTap: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                  ),
+                                                ],
+                                              ));
+                                        },
                                       ),
-                                      title: Text(
-                                        'Oops!',
-                                        style: TextStyle(
-                                            fontSize: 22.0,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      description: Text(
-                                        'Looks like something went wrong!',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(),
-                                      ),
-                                      onlyOkButton: true,
-                                      entryAnimation: EntryAnimation.DEFAULT,
-                                      onOkButtonPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
                                     ));
                           }
                         },
@@ -448,7 +576,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           _loginWithFB();
                         },
                         text: 'Continue with Facebook',
-                        width: MediaQuery.of(context).size.width / 1.15,
                       ),
                     ),
                     Platform.isIOS
@@ -456,7 +583,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             padding: const EdgeInsets.only(
                                 left: 15, bottom: 20, right: 15),
                             child: AppleAuthButton(
-                              width: MediaQuery.of(context).size.width / 1.15,
                               text: 'Continue with Apple',
                               onPressed: () async {
                                 final result = await FirebaseAuthOAuth()
@@ -524,7 +650,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 };
 
                                 final response =
-                                    await http.post(url, body: body);
+                                    await http.post(Uri.parse(url), body: body);
 
                                 if (response.statusCode == 200) {
                                   var jsondata = json.decode(response.body);
@@ -547,7 +673,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                           'https://api.sellship.co/api/userstores/' +
                                               userid;
                                       final storeresponse =
-                                          await http.get(storeurl);
+                                          await http.get(Uri.parse(storeurl));
                                       print(storeresponse);
                                       var storejsonbody =
                                           json.decode(storeresponse.body);
@@ -585,7 +711,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                         'https://api.sellship.co/api/userstores/' +
                                             userid;
                                     final storeresponse =
-                                        await http.get(storeurl);
+                                        await http.get(Uri.parse(storeurl));
                                     var storejsonbody =
                                         json.decode(storeresponse.body);
 
@@ -611,30 +737,107 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 } else {
                                   showDialog(
                                       context: context,
-                                      useRootNavigator: false,
                                       barrierDismissible: false,
-                                      builder: (_) => AssetGiffyDialog(
-                                            image: Image.asset(
-                                              'assets/oops.gif',
-                                              fit: BoxFit.cover,
+                                      useRootNavigator: false,
+                                      builder: (_) => new AlertDialog(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(10.0))),
+                                            content: Builder(
+                                              builder: (context) {
+                                                return Container(
+                                                    height: 380,
+                                                    child: Column(
+                                                      children: [
+                                                        Container(
+                                                          height: 250,
+                                                          width: MediaQuery.of(
+                                                                  context)
+                                                              .size
+                                                              .width,
+                                                          child: ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        15),
+                                                            child: Image.asset(
+                                                              'assets/oops.gif',
+                                                              fit: BoxFit.cover,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 10,
+                                                        ),
+                                                        Text(
+                                                          'Oops!',
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            fontSize: 16,
+                                                            color: Colors.grey,
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 10,
+                                                        ),
+                                                        InkWell(
+                                                          child: Container(
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width -
+                                                                30,
+                                                            height: 50,
+                                                            decoration: BoxDecoration(
+                                                                color: Color
+                                                                    .fromRGBO(
+                                                                        255,
+                                                                        115,
+                                                                        0,
+                                                                        1),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10),
+                                                                boxShadow: [
+                                                                  BoxShadow(
+                                                                      color: Color(
+                                                                              0xFF9DA3B4)
+                                                                          .withOpacity(
+                                                                              0.1),
+                                                                      blurRadius:
+                                                                          65.0,
+                                                                      offset: Offset(
+                                                                          0.0,
+                                                                          15.0))
+                                                                ]),
+                                                            child: Center(
+                                                              child: Text(
+                                                                "Close",
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        'Helvetica',
+                                                                    fontSize:
+                                                                        18,
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          onTap: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                        ),
+                                                      ],
+                                                    ));
+                                              },
                                             ),
-                                            title: Text(
-                                              'Oops!',
-                                              style: TextStyle(
-                                                  fontSize: 22.0,
-                                                  fontWeight: FontWeight.w600),
-                                            ),
-                                            description: Text(
-                                              'Looks like something went wrong! Please try signing in again.',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(),
-                                            ),
-                                            onlyOkButton: true,
-                                            entryAnimation:
-                                                EntryAnimation.DEFAULT,
-                                            onOkButtonPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
                                           ));
                                 }
                               },
@@ -645,7 +848,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       padding: const EdgeInsets.only(
                           left: 15, bottom: 40, right: 15),
                       child: EmailAuthButton(
-                        width: MediaQuery.of(context).size.width / 1.15,
                         text: 'Continue with Email',
                         onPressed: () {
                           Navigator.push(

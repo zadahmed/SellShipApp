@@ -7,12 +7,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -51,7 +52,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
 
     if (userid != null) {
       var url = 'https://api.sellship.co/api/favourites/' + userid;
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         if (response.body != 'Empty') {
           var respons = json.decode(response.body);
@@ -357,7 +358,8 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                                                                             item[index]);
 
                                                                         final response = await http.post(
-                                                                            url,
+                                                                            Uri.parse(
+                                                                                url),
                                                                             body:
                                                                                 json.encode(body));
 
@@ -396,7 +398,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                                                                       }
                                                                     },
                                                                     child: Icon(
-                                                                      FontAwesome
+                                                                      FontAwesomeIcons
                                                                           .heart,
                                                                       color: Colors
                                                                           .deepPurple,
@@ -435,8 +437,8 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                                                                       );
                                                                     },
                                                                     child: Icon(
-                                                                        Feather
-                                                                            .message_circle),
+                                                                        FeatherIcons
+                                                                            .messageCircle),
                                                                   ),
                                                                   SizedBox(
                                                                     width: 5,
@@ -511,44 +513,55 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                                                               ),
                                                               SizedBox(
                                                                   height: 5.0),
-                                                              currency != null
-                                                                  ? Container(
-                                                                      child:
-                                                                          Text(
-                                                                        currency +
-                                                                            ' ' +
-                                                                            item[index].price.toString(),
-                                                                        style:
-                                                                            TextStyle(
-                                                                          fontFamily:
-                                                                              'Helvetica',
-                                                                          fontSize:
-                                                                              16,
-                                                                          color:
-                                                                              Colors.deepOrange,
-                                                                          fontWeight:
-                                                                              FontWeight.w800,
-                                                                        ),
+                                                              item[index].saleprice !=
+                                                                      null
+                                                                  ? Text.rich(
+                                                                      TextSpan(
+                                                                        children: <
+                                                                            TextSpan>[
+                                                                          new TextSpan(
+                                                                            text:
+                                                                                'AED ' + item[index].saleprice,
+                                                                            style: new TextStyle(
+                                                                                color: Colors.redAccent,
+                                                                                fontSize: 16,
+                                                                                fontWeight: FontWeight.bold),
+                                                                          ),
+                                                                          new TextSpan(
+                                                                            text:
+                                                                                '\nAED ' + item[index].price.toString(),
+                                                                            style:
+                                                                                new TextStyle(
+                                                                              color: Colors.grey,
+                                                                              fontSize: 10,
+                                                                              decoration: TextDecoration.lineThrough,
+                                                                            ),
+                                                                          ),
+                                                                          new TextSpan(
+                                                                            text: ' -' +
+                                                                                (((double.parse(item[index].price.toString()) - double.parse(item[index].saleprice.toString())) / double.parse(item[index].price.toString())) * 100).toStringAsFixed(0) +
+                                                                                '%',
+                                                                            style:
+                                                                                new TextStyle(
+                                                                              color: Colors.red,
+                                                                              fontSize: 12,
+                                                                            ),
+                                                                          ),
+                                                                        ],
                                                                       ),
                                                                     )
-                                                                  : Container(
-                                                                      child:
-                                                                          Text(
-                                                                        item[index]
-                                                                            .price
-                                                                            .toString(),
-                                                                        style:
-                                                                            TextStyle(
+                                                                  : Text(
+                                                                      currency +
+                                                                          ' ' +
+                                                                          item[index]
+                                                                              .price,
+                                                                      style: TextStyle(
                                                                           fontFamily:
                                                                               'Helvetica',
                                                                           fontSize:
                                                                               16,
-                                                                          color:
-                                                                              Colors.deepOrange,
                                                                           fontWeight:
-                                                                              FontWeight.w800,
-                                                                        ),
-                                                                      ),
+                                                                              FontWeight.bold),
                                                                     ),
                                                               SizedBox(
                                                                 height: 10,

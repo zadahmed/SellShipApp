@@ -71,9 +71,6 @@ class _BlogPageState extends State<BlogPage> {
               ),
               child: Html(
                 data: widget.content,
-                onLinkTap: (url) {
-                  print("Opening $url...");
-                },
                 onImageError: (exception, stackTrace) {
                   print(exception);
                 },

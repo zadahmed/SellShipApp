@@ -12,11 +12,11 @@ import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class TrackingDetails extends StatefulWidget {
   String trackingnumber;
@@ -38,7 +38,7 @@ class _TrackingDetailsState extends State<TrackingDetails> {
   fetchtrack() async {
     var url = 'https://api.sellship.co/api/gettrackinghistory/' +
         widget.trackingnumber;
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
 
     List<Tracking> trackinglis = List<Tracking>();
     var jsonbody = json.decode(response.body);

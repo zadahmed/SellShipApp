@@ -3,10 +3,11 @@ import 'dart:convert';
 import 'package:SellShip/models/user.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 
 class FollowersPage extends StatefulWidget {
@@ -45,7 +46,7 @@ class _FollowersPageState extends State<FollowersPage> {
           '/' +
           foluser.userid;
 
-      final followresponse = await http.get(followurl);
+      final followresponse = await http.get(Uri.parse(followurl));
       if (followresponse.statusCode == 200) {
         print('UnFollowed');
       }
@@ -58,7 +59,7 @@ class _FollowersPageState extends State<FollowersPage> {
           '/' +
           foluser.userid;
 
-      final followresponse = await http.get(followurl);
+      final followresponse = await http.get(Uri.parse(followurl));
       if (followresponse.statusCode == 200) {
         print('Followed');
       }
@@ -73,7 +74,7 @@ class _FollowersPageState extends State<FollowersPage> {
   getfollowing() async {
     var userid = await storage.read(key: 'userid');
     var url = 'https://api.sellship.co/api/getfollowing/' + userid;
-    var response = await http.get(url);
+    var response = await http.get(Uri.parse(url));
     var jsonbody = json.decode(response.body);
     for (int i = 0; i < jsonbody.length; i++) {
       User user = User(userid: jsonbody[i]['\$oid']);
@@ -141,7 +142,7 @@ class _FollowersPageState extends State<FollowersPage> {
           padding: EdgeInsets.all(10),
           child: InkWell(
               child: Icon(
-                Feather.chevron_left,
+                FeatherIcons.chevronLeft,
                 color: Color.fromRGBO(28, 45, 65, 1),
               ),
               onTap: () {
@@ -203,7 +204,7 @@ class _FollowersPageState extends State<FollowersPage> {
                                                         Icon(Icons.error),
                                               )
                                             : Icon(
-                                                FontAwesome.user_circle,
+                                                FontAwesomeIcons.userCircle,
                                                 color: Colors.blueGrey,
                                                 size: 60,
                                               ),

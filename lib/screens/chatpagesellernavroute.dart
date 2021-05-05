@@ -20,13 +20,13 @@ import 'package:flutter_easyrefresh/bezier_circle_header.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_easyrefresh/material_header.dart';
 import 'package:flutter_easyrefresh/phoenix_header.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
 class ChatPageOfferNav extends StatefulWidget {
@@ -1987,7 +1987,7 @@ class _ChatPageOfferNavState extends State<ChatPageOfferNav> {
   getItem() async {
     var itemurl =
         'https://api.sellship.co/api/selling/offer/' + userid + '/' + messageid;
-    final response = await http.get(itemurl);
+    final response = await http.get(Uri.parse(itemurl));
     if (response.statusCode == 200) {
       var itemmap = json.decode(response.body);
 
@@ -2059,7 +2059,7 @@ class _ChatPageOfferNavState extends State<ChatPageOfferNav> {
 
     if (userid != null) {
       var url = 'https://api.sellship.co/api/user/' + itemselling.buyerid;
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
       var respons = json.decode(response.body);
       Map<String, dynamic> profilemap = respons;
       var profilepic = profilemap['profilepicture'];
@@ -2098,7 +2098,7 @@ class _ChatPageOfferNavState extends State<ChatPageOfferNav> {
         '/' +
         skip.toString();
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(response.body);
@@ -2627,7 +2627,7 @@ class _ChatPageOfferNavState extends State<ChatPageOfferNav> {
                                   '/' +
                                   counterofferprice.toString();
 
-                          final response = await http.get(itemurl);
+                          final response = await http.get(Uri.parse(itemurl));
 
                           if (response.statusCode == 200) {
                             setState(() {
@@ -2706,7 +2706,7 @@ class _ChatPageOfferNavState extends State<ChatPageOfferNav> {
           itemselling.sellerid +
           '/' +
           itemselling.buyerid;
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         Navigator.of(context, rootNavigator: true).pop();
         setState(() {
@@ -2727,7 +2727,7 @@ class _ChatPageOfferNavState extends State<ChatPageOfferNav> {
           itemselling.sellerid +
           '/' +
           itemselling.buyerid;
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
       print(response.statusCode);
       if (response.statusCode == 200) {
         Navigator.of(context, rootNavigator: true).pop();
@@ -2808,7 +2808,7 @@ class _ChatPageOfferNavState extends State<ChatPageOfferNav> {
                                                         Icon(Icons.error),
                                               ))))
                                   : Icon(
-                                      Feather.user,
+                                      FeatherIcons.user,
                                       color: Colors.deepOrange,
                                     ),
                               onTap: () {

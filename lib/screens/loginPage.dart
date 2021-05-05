@@ -12,14 +12,15 @@ import 'package:SellShip/verification/verifyphonesignup.dart';
 import 'package:auth_buttons/auth_buttons.dart';
 import 'package:firebase_auth_oauth/firebase_auth_oauth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
+
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
@@ -59,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
       'password': PasswordController.text,
     };
 
-    final response = await http.post(url, body: body);
+    final response = await http.post(Uri.parse(url), body: body);
 
     if (response.statusCode == 200) {
       var jsondata = json.decode(response.body);
@@ -69,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
 
         var userid = await storage.read(key: 'userid');
         var storeurl = 'https://api.sellship.co/api/userstores/' + userid;
-        final storeresponse = await http.get(storeurl);
+        final storeresponse = await http.get(Uri.parse(storeurl));
         var storejsonbody = json.decode(storeresponse.body);
         print(storejsonbody);
         if (storejsonbody.isNotEmpty) {
@@ -91,214 +92,226 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.of(context).pop();
         showDialog(
             context: context,
+            barrierDismissible: false,
             useRootNavigator: false,
-            builder: (_) => AssetGiffyDialog(
-                  image: Image.asset(
-                    'assets/oops.gif',
-                    fit: BoxFit.cover,
+            builder: (_) => new AlertDialog(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                  content: Builder(
+                    builder: (context) {
+                      return Container(
+                          height: 380,
+                          child: Column(
+                            children: [
+                              Container(
+                                height: 250,
+                                width: MediaQuery.of(context).size.width,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(15),
+                                  child: Image.asset(
+                                    'assets/oops.gif',
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                'Oops!',
+                                style: TextStyle(
+                                  fontFamily: 'Helvetica',
+                                  fontSize: 16,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              InkWell(
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width - 30,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                      color: Color.fromRGBO(255, 115, 0, 1),
+                                      borderRadius: BorderRadius.circular(10),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color: Color(0xFF9DA3B4)
+                                                .withOpacity(0.1),
+                                            blurRadius: 65.0,
+                                            offset: Offset(0.0, 15.0))
+                                      ]),
+                                  child: Center(
+                                    child: Text(
+                                      "Close",
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 18,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          ));
+                    },
                   ),
-                  title: Text(
-                    'Oops!',
-                    style:
-                        TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600),
-                  ),
-                  description: Text(
-                    'Looks like you don\'t have an account with us!',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(),
-                  ),
-                  onlyOkButton: true,
-                  entryAnimation: EntryAnimation.DEFAULT,
-                  onOkButtonPressed: () {
-                    Navigator.of(context).pop();
-                  },
                 ));
       } else if (jsondata['status']['message'].toString().trim() ==
           'Invalid password, try again') {
         showDialog(
             context: context,
+            barrierDismissible: false,
             useRootNavigator: false,
-            builder: (_) => AssetGiffyDialog(
-                  image: Image.asset(
-                    'assets/oops.gif',
-                    fit: BoxFit.cover,
+            builder: (_) => new AlertDialog(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                  content: Builder(
+                    builder: (context) {
+                      return Container(
+                          height: 380,
+                          child: Column(
+                            children: [
+                              Container(
+                                height: 250,
+                                width: MediaQuery.of(context).size.width,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(15),
+                                  child: Image.asset(
+                                    'assets/oops.gif',
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                'Oops!',
+                                style: TextStyle(
+                                  fontFamily: 'Helvetica',
+                                  fontSize: 16,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              InkWell(
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width - 30,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                      color: Color.fromRGBO(255, 115, 0, 1),
+                                      borderRadius: BorderRadius.circular(10),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color: Color(0xFF9DA3B4)
+                                                .withOpacity(0.1),
+                                            blurRadius: 65.0,
+                                            offset: Offset(0.0, 15.0))
+                                      ]),
+                                  child: Center(
+                                    child: Text(
+                                      "Close",
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 18,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
+                                onTap: () {
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          ));
+                    },
                   ),
-                  title: Text(
-                    'Oops!',
-                    style:
-                        TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600),
-                  ),
-                  description: Text(
-                    'Looks like thats the wrong password!',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(),
-                  ),
-                  onlyOkButton: true,
-                  entryAnimation: EntryAnimation.DEFAULT,
-                  onOkButtonPressed: () {
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop();
-                  },
                 ));
       }
     } else {
       showDialog(
           context: context,
+          barrierDismissible: false,
           useRootNavigator: false,
-          builder: (_) => AssetGiffyDialog(
-                image: Image.asset(
-                  'assets/oops.gif',
-                  fit: BoxFit.cover,
+          builder: (_) => new AlertDialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                content: Builder(
+                  builder: (context) {
+                    return Container(
+                        height: 380,
+                        child: Column(
+                          children: [
+                            Container(
+                              height: 250,
+                              width: MediaQuery.of(context).size.width,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(15),
+                                child: Image.asset(
+                                  'assets/oops.gif',
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              'Oops!',
+                              style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            InkWell(
+                              child: Container(
+                                width: MediaQuery.of(context).size.width - 30,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                    color: Color.fromRGBO(255, 115, 0, 1),
+                                    borderRadius: BorderRadius.circular(10),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Color(0xFF9DA3B4)
+                                              .withOpacity(0.1),
+                                          blurRadius: 65.0,
+                                          offset: Offset(0.0, 15.0))
+                                    ]),
+                                child: Center(
+                                  child: Text(
+                                    "Close",
+                                    style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                              onTap: () {
+                                Navigator.of(context).pop();
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        ));
+                  },
                 ),
-                title: Text(
-                  'Oops!',
-                  style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600),
-                ),
-                description: Text(
-                  'Looks like something went wrong!\nPlease try again!',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(),
-                ),
-                onlyOkButton: true,
-                entryAnimation: EntryAnimation.DEFAULT,
-                onOkButtonPressed: () {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
-                },
               ));
-    }
-  }
-
-  _loginWithFB() async {
-    if (await facebookLogin.isLoggedIn == true) {
-      facebookLogin.logOut();
-    }
-
-    final result = await facebookLogin.logIn(['email']);
-
-    switch (result.status) {
-      case FacebookLoginStatus.loggedIn:
-        final token = result.accessToken.token;
-        final graphResponse = await http.get(
-            'https://graph.facebook.com/v2.12/me?fields=name,picture,email&access_token=$token');
-
-        final profile = json.decode(graphResponse.body);
-
-        var url = 'https://api.sellship.co/api/signup';
-
-        print(profile);
-
-        var name = profile['name'].split(" ");
-
-        Map<String, String> body = {
-          'first_name': name[0],
-          'last_name': name[1],
-          'email': profile['email'],
-          'phonenumber': uuidGenerator.v4().toString(),
-          'profilepicture': profile['picture']['data']['url'],
-          'password': 'password',
-        };
-
-        final response = await http.post(url, body: body);
-
-        if (response.statusCode == 200) {
-          var jsondata = json.decode(response.body);
-
-          print(jsondata);
-
-          if (jsondata.containsKey('status')) {
-            if (jsondata['status']['message'] == 'User already exists') {
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-              prefs.setBool('seen', true);
-              await storage.write(
-                  key: 'userid', value: jsondata['status']['id']);
-
-              var userid = await storage.read(key: 'userid');
-              var storeurl = 'https://api.sellship.co/api/userstores/' + userid;
-              final storeresponse = await http.get(storeurl);
-              var storejsonbody = json.decode(storeresponse.body);
-
-              if (storejsonbody.isNotEmpty) {
-                var storeid = storejsonbody[0]['_id']['\$oid'];
-                print(storeid);
-                await storage.write(key: 'storeid', value: storeid);
-              } else {
-                await storage.write(key: 'storeid', value: null);
-              }
-
-              Navigator.of(context).pop();
-
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                  Routes.rootScreen, (Route<dynamic> route) => false);
-            }
-          } else {
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            prefs.setBool('seen', true);
-            await storage.write(key: 'userid', value: jsondata['id']);
-
-            var userid = await storage.read(key: 'userid');
-            var storeurl = 'https://api.sellship.co/api/userstores/' + userid;
-            final storeresponse = await http.get(storeurl);
-            var storejsonbody = json.decode(storeresponse.body);
-
-            if (storejsonbody.isNotEmpty) {
-              var storeid = storejsonbody[0]['_id'];
-
-              await storage.write(key: 'storeid', value: storeid);
-            } else {
-              await storage.write(key: 'storeid', value: null);
-            }
-
-            Navigator.of(context).pop();
-
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => VerifyPhoneSignUp(
-                    userid: userid,
-                  ),
-                ));
-          }
-        } else {
-          showDialog(
-              context: context,
-              useRootNavigator: false,
-              builder: (_) => AssetGiffyDialog(
-                    image: Image.asset(
-                      'assets/oops.gif',
-                      fit: BoxFit.cover,
-                    ),
-                    title: Text(
-                      'Oops!',
-                      style: TextStyle(
-                          fontSize: 22.0, fontWeight: FontWeight.w600),
-                    ),
-                    description: Text(
-                      'Looks like something went wrong!',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(),
-                    ),
-                    onlyOkButton: true,
-                    entryAnimation: EntryAnimation.DEFAULT,
-                    onOkButtonPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ));
-        }
-
-        setState(() {
-          loggedin = true;
-        });
-        break;
-
-      case FacebookLoginStatus.cancelledByUser:
-        setState(() => loggedin = false);
-        Navigator.of(context).pop();
-        break;
-      case FacebookLoginStatus.error:
-        setState(() => loggedin = false);
-        Navigator.of(context).pop();
-        break;
     }
   }
 
@@ -311,37 +324,34 @@ class _LoginPageState extends State<LoginPage> {
           child: Stack(
             children: [
               Align(
-                alignment: Alignment.topCenter,
-                child: FadeAnimation(
-                    1,
-                    Stack(
-                      children: [
-                        Align(
-                            alignment: Alignment.topCenter,
-                            child: Container(
-                                height: 280,
-                                width: MediaQuery.of(context).size.width,
-                                child: SvgPicture.asset(
-                                  'assets/LoginBG.svg',
-                                  semanticsLabel: 'SellShip BG',
-                                  fit: BoxFit.cover,
-                                ))),
-                        Align(
-                            alignment: Alignment.topLeft,
-                            child: Padding(
-                                padding: EdgeInsets.only(left: 35, top: 120),
-                                child: Text(
-                                  'Welcome\nBack',
-                                  style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 40,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ))),
-                      ],
-                    )),
-              ),
+                  alignment: Alignment.topCenter,
+                  child: Stack(
+                    children: [
+                      Align(
+                          alignment: Alignment.topCenter,
+                          child: Container(
+                              height: 280,
+                              width: MediaQuery.of(context).size.width,
+                              child: SvgPicture.asset(
+                                'assets/LoginBG.svg',
+                                semanticsLabel: 'SellShip BG',
+                                fit: BoxFit.cover,
+                              ))),
+                      Align(
+                          alignment: Alignment.topLeft,
+                          child: Padding(
+                              padding: EdgeInsets.only(left: 35, top: 120),
+                              child: Text(
+                                'Welcome\nBack',
+                                style: TextStyle(
+                                  fontFamily: 'Helvetica',
+                                  fontSize: 40,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ))),
+                    ],
+                  )),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
@@ -515,71 +525,63 @@ class _LoginPageState extends State<LoginPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      FadeAnimation(
-                          1.5,
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ForgotPassword()));
-                                },
-                                child: Text(
-                                  "Forgot Password?",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 16,
-                                      fontFamily: 'Helvetica'),
-                                ),
-                              ),
-                            ],
-                          )),
-                      FadeAnimation(
-                          1.5,
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => SignUpPage()));
-                                },
-                                child: Text(
-                                  "Create an Account",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                      fontFamily: 'Helvetica'),
-                                ),
-                              ),
-                            ],
-                          )),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ForgotPassword()));
+                            },
+                            child: Text(
+                              "Forgot Password?",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w300,
+                                  fontSize: 16,
+                                  fontFamily: 'Helvetica'),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => SignUpPage()));
+                            },
+                            child: Text(
+                              "Create an Account",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  fontFamily: 'Helvetica'),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
               ),
               Align(
-                alignment: Alignment.topLeft,
-                child: FadeAnimation(
-                    1,
-                    Padding(
-                      padding: EdgeInsets.only(top: 50, left: 20),
-                      child: InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Icon(
-                            Feather.arrow_left,
-                            color: Colors.white,
-                          )),
-                    )),
-              ),
+                  alignment: Alignment.topLeft,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 50, left: 20),
+                    child: InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Icon(
+                          FeatherIcons.chevronLeft,
+                          color: Colors.white,
+                        )),
+                  )),
             ],
           )),
     );

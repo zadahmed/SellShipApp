@@ -38,29 +38,15 @@ class PrivacyPolicyState extends State<PrivacyPolicy> {
           ),
         ),
         body: InAppWebView(
-          initialUrl: 'https://sellship.co/policy',
-          initialHeaders: {
-            'Access-Control-Allow-Headers': '*',
-            'Access-Control-Allow-Origin': '*',
-            "Access-Control-Allow-Methods": "*"
-          },
+          initialUrlRequest:
+              URLRequest(url: Uri.parse('https://sellship.co/policy')),
           onWebViewCreated: (InAppWebViewController controller) {
             webView = controller;
           },
-          initialOptions: InAppWebViewGroupOptions(
-            crossPlatform: InAppWebViewOptions(
-                debuggingEnabled: true, useShouldOverrideUrlLoading: true),
-          ),
           onConsoleMessage: (controller, consoleMessage) {
             print(consoleMessage.toJson());
             print(consoleMessage.message);
           },
-          onLoadStart: (InAppWebViewController controller, String url) {
-            if (url == "return_url") {
-              Navigator.pop(context, 'Done');
-            }
-          },
-          onLoadStop: (InAppWebViewController controller, String url) {},
           androidOnPermissionRequest: (InAppWebViewController controller,
               String origin, List<String> resources) async {
             return PermissionRequestResponse(
@@ -71,11 +57,6 @@ class PrivacyPolicyState extends State<PrivacyPolicy> {
             setState(() {
               this.progress = progress / 100;
             });
-          },
-          onReceivedServerTrustAuthRequest: (InAppWebViewController controller,
-              ServerTrustChallenge challenge) async {
-            return ServerTrustAuthResponse(
-                action: ServerTrustAuthResponseAction.PROCEED);
           },
         ));
   }

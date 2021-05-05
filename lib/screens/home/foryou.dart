@@ -34,20 +34,21 @@ import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_easyrefresh/ball_pulse_footer.dart';
 import 'package:flutter_easyrefresh/bezier_circle_header.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:location/location.dart' as Location;
-import 'package:numeral/numeral.dart';
+
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-import 'package:search_map_place/search_map_place.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -90,7 +91,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
     var userid = await storage.read(key: 'userid');
     if (userid != null) {
       var url = 'https://api.sellship.co/api/favourites/' + userid;
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
         if (response.body != 'Empty') {
@@ -136,7 +137,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
         '/' +
         20.toString();
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     var jsonbody = json.decode(response.body);
 
     for (var i = 0; i < jsonbody.length; i++) {
@@ -158,6 +159,9 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
             ? 0
             : jsonbody[i]['comments'].length,
         price: jsonbody[i]['price'].toString(),
+        saleprice: jsonbody[i].containsKey('saleprice')
+            ? jsonbody[i]['saleprice'].toString()
+            : null,
         category: jsonbody[i]['category'],
         sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
       );
@@ -186,7 +190,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
           skip.toString() +
           '/' +
           limit.toString();
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
 
       var jsonbody = json.decode(response.body);
 
@@ -209,6 +213,9 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
               : jsonbody[i]['comments'].length,
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
+          saleprice: jsonbody[i].containsKey('saleprice')
+              ? jsonbody[i]['saleprice'].toString()
+              : null,
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
@@ -241,7 +248,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
           '/' +
           limit.toString();
 
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
 
       var jsonbody = json.decode(response.body);
 
@@ -264,6 +271,9 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
           username: jsonbody[i]['username'],
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
+          saleprice: jsonbody[i].containsKey('saleprice')
+              ? jsonbody[i]['saleprice'].toString()
+              : null,
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
@@ -295,7 +305,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
         '/' +
         limit.toString();
     print(categoryurl);
-    final categoryresponse = await http.get(categoryurl);
+    final categoryresponse = await http.get(Uri.parse(categoryurl));
     if (categoryresponse.statusCode == 200) {
       var jsonbody = json.decode(categoryresponse.body);
 
@@ -318,6 +328,9 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
               ? 0
               : jsonbody[i]['comments'].length,
           price: jsonbody[i]['price'].toString(),
+          saleprice: jsonbody[i].containsKey('saleprice')
+              ? jsonbody[i]['saleprice'].toString()
+              : null,
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
@@ -351,7 +364,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
         '/' +
         limit.toString();
     print(categoryurl);
-    final categoryresponse = await http.get(categoryurl);
+    final categoryresponse = await http.get(Uri.parse(categoryurl));
     if (categoryresponse.statusCode == 200) {
       var jsonbody = json.decode(categoryresponse.body);
 
@@ -374,6 +387,9 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
               ? 0
               : jsonbody[i]['comments'].length,
           price: jsonbody[i]['price'].toString(),
+          saleprice: jsonbody[i].containsKey('saleprice')
+              ? jsonbody[i]['saleprice'].toString()
+              : null,
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
@@ -409,7 +425,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
         '/' +
         limit.toString();
     print(categoryurl);
-    final categoryresponse = await http.get(categoryurl);
+    final categoryresponse = await http.get(Uri.parse(categoryurl));
     if (categoryresponse.statusCode == 200) {
       var jsonbody = json.decode(categoryresponse.body);
 
@@ -432,6 +448,9 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
               ? 0
               : jsonbody[i]['comments'].length,
           price: jsonbody[i]['price'].toString(),
+          saleprice: jsonbody[i].containsKey('saleprice')
+              ? jsonbody[i]['saleprice'].toString()
+              : null,
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
@@ -469,7 +488,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
         '/' +
         limit.toString();
     print(categoryurl);
-    final categoryresponse = await http.get(categoryurl);
+    final categoryresponse = await http.get(Uri.parse(categoryurl));
     if (categoryresponse.statusCode == 200) {
       var jsonbody = json.decode(categoryresponse.body);
 
@@ -492,6 +511,9 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
           username: jsonbody[i]['username'],
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
+          saleprice: jsonbody[i].containsKey('saleprice')
+              ? jsonbody[i]['saleprice'].toString()
+              : null,
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
@@ -531,7 +553,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
         '/' +
         limit.toString();
     print(categoryurl);
-    final categoryresponse = await http.get(categoryurl);
+    final categoryresponse = await http.get(Uri.parse(categoryurl));
     if (categoryresponse.statusCode == 200) {
       var jsonbody = json.decode(categoryresponse.body);
 
@@ -554,6 +576,9 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
               ? 0
               : jsonbody[i]['comments'].length,
           price: jsonbody[i]['price'].toString(),
+          saleprice: jsonbody[i].containsKey('saleprice')
+              ? jsonbody[i]['saleprice'].toString()
+              : null,
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
@@ -591,7 +616,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
         '/' +
         limit.toString();
     print(categoryurl);
-    final categoryresponse = await http.get(categoryurl);
+    final categoryresponse = await http.get(Uri.parse(categoryurl));
     if (categoryresponse.statusCode == 200) {
       var jsonbody = json.decode(categoryresponse.body);
 
@@ -614,6 +639,9 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
               ? 0
               : jsonbody[i]['comments'].length,
           price: jsonbody[i]['price'].toString(),
+          saleprice: jsonbody[i].containsKey('saleprice')
+              ? jsonbody[i]['saleprice'].toString()
+              : null,
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
@@ -660,7 +688,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
         '/' +
         limit.toString();
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
 
     var jsonbody = json.decode(response.body);
 
@@ -683,6 +711,9 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
             ? 0
             : jsonbody[i]['comments'].length,
         price: jsonbody[i]['price'].toString(),
+        saleprice: jsonbody[i].containsKey('saleprice')
+            ? jsonbody[i]['saleprice'].toString()
+            : null,
         category: jsonbody[i]['category'],
         sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
       );
@@ -705,7 +736,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
         '/' +
         limit.toString();
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
 
     var jsonbody = json.decode(response.body);
 
@@ -728,6 +759,9 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
             ? 0
             : jsonbody[i]['comments'].length,
         price: jsonbody[i]['price'].toString(),
+        saleprice: jsonbody[i].containsKey('saleprice')
+            ? jsonbody[i]['saleprice'].toString()
+            : null,
         category: jsonbody[i]['category'],
         sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
       );
@@ -750,7 +784,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
         '/' +
         limit.toString();
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
 
     var jsonbody = json.decode(response.body);
 
@@ -773,6 +807,9 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
             ? 0
             : jsonbody[i]['comments'].length,
         price: jsonbody[i]['price'].toString(),
+        saleprice: jsonbody[i].containsKey('saleprice')
+            ? jsonbody[i]['saleprice'].toString()
+            : null,
         category: jsonbody[i]['category'],
         sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
       );
@@ -941,7 +978,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
     if (userid != null) {
       var url = 'https://api.sellship.co/api/getnotification/' + userid;
 
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         var notificationinfo = json.decode(response.body);
         var notif = notificationinfo['notification'];
@@ -1077,7 +1114,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
           '/' +
           foluser.storeid;
 
-      final followresponse = await http.get(followurl);
+      final followresponse = await http.get(Uri.parse(followurl));
       if (followresponse.statusCode == 200) {
         print('UnFollowed');
       }
@@ -1090,7 +1127,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
           '/' +
           foluser.storeid;
 
-      final followresponse = await http.get(followurl);
+      final followresponse = await http.get(Uri.parse(followurl));
       if (followresponse.statusCode == 200) {
         print('Followed');
       }
@@ -1795,7 +1832,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
         '/' +
         limit.toString();
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
 
@@ -1831,7 +1868,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
         '/' +
         foryoulimit.toString();
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       print(response.body);
       var jsonbody = json.decode(response.body);
@@ -1876,7 +1913,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
         country;
 
     List<Stores> testList = new List<Stores>();
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
 
@@ -2312,7 +2349,8 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                                                 1;
                                                       });
                                                       final response =
-                                                          await http.post(url,
+                                                          await http.post(
+                                                              Uri.parse(url),
                                                               body: json.encode(
                                                                   body));
                                                       if (response.statusCode ==
@@ -2331,7 +2369,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                                     backgroundColor:
                                                         Colors.deepOrange,
                                                     child: Icon(
-                                                      FontAwesome.heart,
+                                                      FontAwesomeIcons.heart,
                                                       color: Colors.white,
                                                       size: 15,
                                                     ),
@@ -2365,7 +2403,8 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                                                 1;
                                                       });
                                                       final response =
-                                                          await http.post(url,
+                                                          await http.post(
+                                                              Uri.parse(url),
                                                               body: json.encode(
                                                                   body));
 
@@ -2385,7 +2424,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                                     backgroundColor:
                                                         Colors.white,
                                                     child: Icon(
-                                                      Feather.heart,
+                                                      FeatherIcons.heart,
                                                       color: Colors.blueGrey,
                                                       size: 16,
                                                     ),
@@ -2398,7 +2437,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                                 radius: 15,
                                                 backgroundColor: Colors.white,
                                                 child: Icon(
-                                                  Feather.heart,
+                                                  FeatherIcons.heart,
                                                   color: Colors.blueGrey,
                                                   size: 16,
                                                 ),
@@ -2630,7 +2669,8 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                                                 1;
                                                       });
                                                       final response =
-                                                          await http.post(url,
+                                                          await http.post(
+                                                              Uri.parse(url),
                                                               body: body);
 
                                                       if (response.statusCode ==
@@ -2649,7 +2689,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                                     backgroundColor:
                                                         Colors.deepOrange,
                                                     child: Icon(
-                                                      FontAwesome.heart,
+                                                      FontAwesomeIcons.heart,
                                                       color: Colors.white,
                                                       size: 15,
                                                     ),
@@ -2684,7 +2724,8 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                                                 1;
                                                       });
                                                       final response =
-                                                          await http.post(url,
+                                                          await http.post(
+                                                              Uri.parse(url),
                                                               body: body);
 
                                                       if (response.statusCode ==
@@ -2703,7 +2744,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                                     backgroundColor:
                                                         Colors.white,
                                                     child: Icon(
-                                                      Feather.heart,
+                                                      FeatherIcons.heart,
                                                       color: Colors.blueGrey,
                                                       size: 16,
                                                     ),
@@ -2716,7 +2757,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                                 radius: 15,
                                                 backgroundColor: Colors.white,
                                                 child: Icon(
-                                                  Feather.heart,
+                                                  FeatherIcons.heart,
                                                   color: Colors.blueGrey,
                                                   size: 16,
                                                 ),
@@ -2949,7 +2990,8 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                                                 1;
                                                       });
                                                       final response =
-                                                          await http.post(url,
+                                                          await http.post(
+                                                              Uri.parse(url),
                                                               body: body);
 
                                                       if (response.statusCode ==
@@ -2968,7 +3010,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                                     backgroundColor:
                                                         Colors.deepOrange,
                                                     child: Icon(
-                                                      FontAwesome.heart,
+                                                      FontAwesomeIcons.heart,
                                                       color: Colors.white,
                                                       size: 15,
                                                     ),
@@ -3003,7 +3045,8 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                                                 1;
                                                       });
                                                       final response =
-                                                          await http.post(url,
+                                                          await http.post(
+                                                              Uri.parse(url),
                                                               body: body);
 
                                                       if (response.statusCode ==
@@ -3022,7 +3065,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                                     backgroundColor:
                                                         Colors.white,
                                                     child: Icon(
-                                                      Feather.heart,
+                                                      FeatherIcons.heart,
                                                       color: Colors.blueGrey,
                                                       size: 16,
                                                     ),
@@ -3035,7 +3078,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                                 radius: 15,
                                                 backgroundColor: Colors.white,
                                                 child: Icon(
-                                                  Feather.heart,
+                                                  FeatherIcons.heart,
                                                   color: Colors.blueGrey,
                                                   size: 16,
                                                 ),
@@ -3305,8 +3348,9 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                                 itemsgrid[index].likes =
                                                     itemsgrid[index].likes - 1;
                                               });
-                                              final response = await http
-                                                  .post(url, body: body);
+                                              final response = await http.post(
+                                                  Uri.parse(url),
+                                                  body: body);
 
                                               if (response.statusCode == 200) {
                                               } else {
@@ -3321,7 +3365,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                             radius: 16,
                                             backgroundColor: Colors.deepOrange,
                                             child: Icon(
-                                              FontAwesome.heart,
+                                              FontAwesomeIcons.heart,
                                               color: Colors.white,
                                               size: 15,
                                             ),
@@ -3349,8 +3393,9 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                                 itemsgrid[index].likes =
                                                     itemsgrid[index].likes + 1;
                                               });
-                                              final response = await http
-                                                  .post(url, body: body);
+                                              final response = await http.post(
+                                                  Uri.parse(url),
+                                                  body: body);
 
                                               if (response.statusCode == 200) {
                                               } else {
@@ -3369,7 +3414,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                                 radius: 15,
                                                 backgroundColor: Colors.white,
                                                 child: Icon(
-                                                  Feather.heart,
+                                                  FeatherIcons.heart,
                                                   color: Colors.blueGrey,
                                                   size: 16,
                                                 ),
@@ -3381,7 +3426,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                         radius: 15,
                                         backgroundColor: Colors.white,
                                         child: Icon(
-                                          Feather.heart,
+                                          FeatherIcons.heart,
                                           color: Colors.blueGrey,
                                           size: 16,
                                         ),
@@ -3465,7 +3510,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
         '/' +
         '20';
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
 
@@ -3489,6 +3534,9 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
               ? 0
               : jsonbody[i]['comments'].length,
           price: jsonbody[i]['price'].toString(),
+          saleprice: jsonbody[i].containsKey('saleprice')
+              ? jsonbody[i]['saleprice'].toString()
+              : null,
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
@@ -3519,7 +3567,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
     var userid = await storage.read(key: 'userid');
     var url = 'https://api.sellship.co/api/top/subcategories/' + userid;
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
       for (int i = 0; i < jsonbody.length; i++) {
@@ -3553,7 +3601,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
         '/' +
         limit.toString();
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
 
@@ -3577,6 +3625,9 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
               ? 0
               : jsonbody[i]['comments'].length,
           price: jsonbody[i]['price'].toString(),
+          saleprice: jsonbody[i].containsKey('saleprice')
+              ? jsonbody[i]['saleprice'].toString()
+              : null,
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
@@ -3607,7 +3658,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
         '/' +
         limit.toString();
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
 
     var jsonbody = json.decode(response.body);
 
@@ -3631,6 +3682,9 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
             ? 0
             : jsonbody[i]['comments'].length,
         price: jsonbody[i]['price'].toString(),
+        saleprice: jsonbody[i].containsKey('saleprice')
+            ? jsonbody[i]['saleprice'].toString()
+            : null,
         category: jsonbody[i]['category'],
         sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
       );
@@ -3658,7 +3712,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
         '/' +
         position.latitude.toString();
 
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     print(url);
 
     var jsonbody = json.decode(response.body);
@@ -3684,6 +3738,9 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
             ? 0
             : jsonbody[i]['comments'].length,
         price: jsonbody[i]['price'].toString(),
+        saleprice: jsonbody[i].containsKey('saleprice')
+            ? jsonbody[i]['saleprice'].toString()
+            : null,
         category: jsonbody[i]['category'],
         sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
       );
@@ -3706,7 +3763,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
   loadbrands() async {
     brands.clear();
     var categoryurl = 'https://api.sellship.co/api/getallbrands';
-    final categoryresponse = await http.get(categoryurl);
+    final categoryresponse = await http.get(Uri.parse(categoryurl));
     if (categoryresponse.statusCode == 200) {
       var categoryrespons = json.decode(categoryresponse.body);
       print(categoryrespons);
@@ -3730,7 +3787,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Icon(Feather.chevron_down),
+              Icon(FeatherIcons.chevronDown),
               SizedBox(
                 height: 2,
               ),

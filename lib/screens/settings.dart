@@ -16,7 +16,8 @@ import 'package:SellShip/screens/store/createstorename.dart';
 
 import 'package:SellShip/screens/termscondition.dart';
 import 'package:SellShip/usernamesettings.dart';
-
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:SellShip/verification/verifyemail.dart';
 import 'package:SellShip/verification/verifyphone.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -24,14 +25,13 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/screens/editprofile.dart';
 import 'package:image_picker/image_picker.dart';
@@ -81,18 +81,21 @@ class _SettingsState extends State<Settings> {
   bool confirmedphone;
 
   verifyFB() async {
-    final result = await facebookLogin.logIn(['email']);
+    final result = await facebookLogin.logIn(permissions: [
+      FacebookPermission.publicProfile,
+      FacebookPermission.email,
+    ]);
 
     switch (result.status) {
-      case FacebookLoginStatus.loggedIn:
-        final token = result.accessToken.token;
-        final graphResponse = await http.get(
-            'https://graph.facebook.com/v2.12/me?fields=name,picture,email&access_token=$token');
+      case FacebookLoginStatus.success:
+        final FacebookAccessToken token = result.accessToken;
+        final graphResponse = await http.get(Uri.parse(
+            'https://graph.facebook.com/v2.12/me?fields=name,picture,email&access_token=$token'));
 
         final profile = json.decode(graphResponse.body);
         var email = profile['email'];
         var url = 'https://api.sellship.co/verify/fb/' + userid + '/' + email;
-        final response = await http.get(url);
+        final response = await http.get(Uri.parse(url));
         if (response.statusCode == 200) {
           setState(() {
             confirmedfb = true;
@@ -107,7 +110,7 @@ class _SettingsState extends State<Settings> {
 
         break;
 
-      case FacebookLoginStatus.cancelledByUser:
+      case FacebookLoginStatus.cancel:
         Navigator.of(context, rootNavigator: true).pop('dialog');
         break;
       case FacebookLoginStatus.error:
@@ -142,7 +145,7 @@ class _SettingsState extends State<Settings> {
               onTap: () {
                 Navigator.pop(context);
               },
-              child: Icon(Icons.arrow_back_ios)),
+              child: Icon(FeatherIcons.chevronLeft)),
           iconTheme: IconThemeData(
             color: Color.fromRGBO(28, 45, 65, 1),
           ),
@@ -179,11 +182,11 @@ class _SettingsState extends State<Settings> {
                     color: Colors.white,
                     child: ListTile(
                       leading: Icon(
-                        Icons.edit,
+                        FeatherIcons.edit,
                         color: Colors.deepOrange,
                       ),
                       trailing: Icon(
-                        Icons.chevron_right,
+                        FeatherIcons.chevronRight,
                         size: 16,
                         color: Colors.deepOrange,
                       ),
@@ -209,11 +212,11 @@ class _SettingsState extends State<Settings> {
                     color: Colors.white,
                     child: ListTile(
                       leading: Icon(
-                        Feather.user,
+                        FeatherIcons.user,
                         color: Colors.deepOrange,
                       ),
                       trailing: Icon(
-                        Icons.chevron_right,
+                        FeatherIcons.chevronRight,
                         size: 16,
                         color: Colors.deepOrange,
                       ),
@@ -241,11 +244,11 @@ class _SettingsState extends State<Settings> {
                     color: Colors.white,
                     child: ListTile(
                       leading: Icon(
-                        Feather.heart,
+                        FeatherIcons.heart,
                         color: Colors.deepOrange,
                       ),
                       trailing: Icon(
-                        Icons.chevron_right,
+                        FeatherIcons.chevronRight,
                         size: 16,
                         color: Colors.deepOrange,
                       ),
@@ -273,11 +276,11 @@ class _SettingsState extends State<Settings> {
                     color: Colors.white,
                     child: ListTile(
                       leading: Icon(
-                        Icons.attach_money,
+                        FeatherIcons.dollarSign,
                         color: Colors.deepOrange,
                       ),
                       trailing: Icon(
-                        Icons.chevron_right,
+                        FeatherIcons.chevronRight,
                         size: 16,
                         color: Colors.deepOrange,
                       ),
@@ -301,11 +304,11 @@ class _SettingsState extends State<Settings> {
             //   color: Colors.white,
             //   child: ListTile(
             //     leading: Icon(
-            //       Icons.business,
+            //       FeatherIcons.business,
             //       color: Colors.deepOrange,
             //     ),
             //     trailing: Icon(
-            //       Icons.chevron_right,
+            //       FeatherIcons.chevronRight,
             //       size: 16,
             //       color: Colors.deepOrange,
             //     ),
@@ -331,11 +334,11 @@ class _SettingsState extends State<Settings> {
               color: Colors.white,
               child: ListTile(
                 leading: Icon(
-                  Feather.file_text,
+                  FeatherIcons.fileText,
                   color: Colors.deepOrange,
                 ),
                 trailing: Icon(
-                  Icons.chevron_right,
+                  FeatherIcons.chevronRight,
                   size: 16,
                   color: Colors.deepOrange,
                 ),
@@ -358,11 +361,11 @@ class _SettingsState extends State<Settings> {
               color: Colors.white,
               child: ListTile(
                 leading: Icon(
-                  Feather.star,
+                  FeatherIcons.star,
                   color: Colors.deepOrange,
                 ),
                 trailing: Icon(
-                  Icons.chevron_right,
+                  FeatherIcons.chevronRight,
                   size: 16,
                   color: Colors.deepOrange,
                 ),
@@ -406,16 +409,16 @@ class _SettingsState extends State<Settings> {
                     color: Colors.white,
                     child: ListTile(
                       leading: Icon(
-                        Icons.alternate_email,
+                        Icons.alternate_email_rounded,
                         color: Colors.deepOrange,
                       ),
                       trailing: confirmedemail == false
                           ? Icon(
-                              Icons.chevron_right,
+                              FeatherIcons.chevronRight,
                               size: 16,
                               color: Colors.deepOrange,
                             )
-                          : Icon(Feather.check),
+                          : Icon(FeatherIcons.check),
                       title: confirmedemail == false
                           ? Text(
                               'Verify Email',
@@ -449,16 +452,16 @@ class _SettingsState extends State<Settings> {
                     color: Colors.white,
                     child: ListTile(
                       leading: Icon(
-                        Icons.phone,
+                        FeatherIcons.phone,
                         color: Colors.deepOrange,
                       ),
                       trailing: confirmedphone == false
                           ? Icon(
-                              Icons.chevron_right,
+                              FeatherIcons.chevronRight,
                               size: 16,
                               color: Colors.deepOrange,
                             )
-                          : Icon(Feather.check),
+                          : Icon(FeatherIcons.check),
                       title: confirmedphone == false
                           ? Text(
                               'Verify Phone',
@@ -491,16 +494,16 @@ class _SettingsState extends State<Settings> {
                     color: Colors.white,
                     child: ListTile(
                       leading: Icon(
-                        FontAwesome.facebook,
+                        FontAwesomeIcons.facebook,
                         color: Colors.deepOrange,
                       ),
                       trailing: confirmedfb == false
                           ? Icon(
-                              Icons.chevron_right,
+                              FeatherIcons.chevronRight,
                               size: 16,
                               color: Colors.deepOrange,
                             )
-                          : Icon(Feather.check),
+                          : Icon(FeatherIcons.check),
                       title: confirmedfb == false
                           ? Text(
                               'Verify Facebook',
@@ -576,11 +579,11 @@ class _SettingsState extends State<Settings> {
                       },
                       child: ListTile(
                         leading: Icon(
-                          Icons.help_outline,
+                          FeatherIcons.helpCircle,
                           color: Colors.deepOrange,
                         ),
                         trailing: Icon(
-                          Icons.chevron_right,
+                          FeatherIcons.chevronRight,
                           size: 16,
                           color: Colors.deepOrange,
                         ),
@@ -599,11 +602,11 @@ class _SettingsState extends State<Settings> {
               color: Colors.white,
               child: ListTile(
                 leading: Icon(
-                  Feather.file_text,
+                  FeatherIcons.fileText,
                   color: Colors.deepOrange,
                 ),
                 trailing: Icon(
-                  Icons.chevron_right,
+                  FeatherIcons.chevronRight,
                   size: 16,
                   color: Colors.deepOrange,
                 ),
@@ -627,11 +630,11 @@ class _SettingsState extends State<Settings> {
               color: Colors.white,
               child: ListTile(
                 leading: Icon(
-                  Feather.eye,
+                  FeatherIcons.eye,
                   color: Colors.deepOrange,
                 ),
                 trailing: Icon(
-                  Icons.chevron_right,
+                  FeatherIcons.chevronRight,
                   size: 16,
                   color: Colors.deepOrange,
                 ),
@@ -656,7 +659,7 @@ class _SettingsState extends State<Settings> {
                     color: Colors.white,
                     child: ListTile(
                       leading: Icon(
-                        Feather.log_out,
+                        FeatherIcons.logOut,
                         color: Colors.deepOrange,
                       ),
                       title: Text(
