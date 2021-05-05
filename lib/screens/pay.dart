@@ -29,10 +29,12 @@ class Pay extends StatefulWidget {
   AddressModel address;
   String phonenumber;
   double price;
+  String discountccode;
 
   Pay({
     Key key,
     this.itemid,
+    this.discountccode,
     this.messageid,
     this.price,
     this.phonenumber,
@@ -595,11 +597,11 @@ class _PayState extends State<Pay> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Subtotal',
+                              'Total',
                               style: TextStyle(
                                 fontFamily: 'Helvetica',
                                 fontSize: 16,
-                                color: Colors.black,
+                                color: Colors.blueGrey,
                               ),
                             ),
                             Text(
@@ -609,7 +611,7 @@ class _PayState extends State<Pay> {
                               style: TextStyle(
                                 fontFamily: 'Helvetica',
                                 fontSize: 16,
-                                color: Colors.black,
+                                color: Colors.blueGrey,
                               ),
                             ),
                           ],
@@ -625,7 +627,7 @@ class _PayState extends State<Pay> {
                               style: TextStyle(
                                 fontFamily: 'Helvetica',
                                 fontSize: 16,
-                                color: Colors.black,
+                                color: Colors.blueGrey,
                               ),
                             ),
                             Text(
@@ -633,7 +635,7 @@ class _PayState extends State<Pay> {
                               style: TextStyle(
                                 fontFamily: 'Helvetica',
                                 fontSize: 16,
-                                color: Colors.black,
+                                color: Colors.blueGrey,
                               ),
                             ),
                           ],

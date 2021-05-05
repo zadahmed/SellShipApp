@@ -85,6 +85,8 @@ class _CheckoutState extends State<Checkout> {
   var currency;
   var stripecurrency;
 
+  bool promocodeactive = true;
+
   final storage = new FlutterSecureStorage();
 
   AddressModel selectedaddress;
@@ -130,9 +132,9 @@ class _CheckoutState extends State<Checkout> {
             weight: decodeditem['weight'],
             freedelivery: decodeditem['freedelivery'],
             price: decodeditem['price'].toString(),
-            saleprice: decodeditem.containsKey('saleprice')
-                ? decodeditem['saleprice'].toString()
-                : null,
+            saleprice: decodeditem['saleprice'] == null
+                ? null
+                : decodeditem['saleprice'],
             image: decodeditem['image'],
             userid: decodeditem['sellerid'] == null
                 ? decodeditem['userid']
@@ -196,6 +198,8 @@ class _CheckoutState extends State<Checkout> {
   var payment;
   var totalrate;
   var deliveryaddress;
+
+  var discount;
 
   var zipcode;
 
@@ -887,11 +891,11 @@ class _CheckoutState extends State<Checkout> {
                             height: 10,
                           ),
                           Padding(
-                              padding: EdgeInsets.only(top: 10, bottom: 20),
+                              padding: EdgeInsets.only(top: 10, bottom: 5),
                               child: Container(
                                   height: 60,
                                   padding: EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 5),
+                                      horizontal: 10, vertical: 5),
                                   width: MediaQuery.of(context).size.width,
                                   decoration: BoxDecoration(
                                     color: Color.fromRGBO(131, 146, 165, 0.1),
@@ -909,7 +913,11 @@ class _CheckoutState extends State<Checkout> {
                                           decoration: InputDecoration(
                                             hintText: "Enter Promo Code",
                                             suffixIcon: IconButton(
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                setState(() {
+                                                  promocodecontroller.clear();
+                                                });
+                                              },
                                               icon: Icon(
                                                 Icons.clear,
                                                 color: Colors.grey,
@@ -934,44 +942,210 @@ class _CheckoutState extends State<Checkout> {
                                           ),
                                         ),
                                       ),
-                                      Padding(
-                                          padding: EdgeInsets.only(
-                                            left: 10,
-                                          ),
-                                          child: Container(
-                                            height: 50,
-                                            width: 60,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                color: Colors.deepOrange),
-                                          )),
+                                      InkWell(
+                                        enableFeedback: true,
+                                        onTap: () async {
+                                          SharedPreferences prefs =
+                                              await SharedPreferences
+                                                  .getInstance();
+                                          var welcomeuser =
+                                              prefs.getBool('welcomeuser');
+                                          if (welcomeuser == false ||
+                                              welcomeuser == null) {
+                                            if (promocodecontroller.text
+                                                .contains('WELCOMESHIP')) {
+                                              SharedPreferences prefs =
+                                                  await SharedPreferences
+                                                      .getInstance();
+                                              List cartitems = prefs
+                                                  .getStringList('cartitems');
+
+                                              var deliverycharges;
+                                              if (cartitems != null) {
+                                                for (int i = 0;
+                                                    i < cartitems.length;
+                                                    i++) {
+                                                  var decodeditem =
+                                                      json.decode(cartitems[i]);
+
+                                                  Item newItem = Item(
+                                                      name: decodeditem['name'],
+                                                      selectedsize: decodeditem[
+                                                          'selectedsize'],
+                                                      quantity: decodeditem[
+                                                          'quantity'],
+                                                      itemid:
+                                                          decodeditem['itemid'],
+                                                      weight:
+                                                          decodeditem['weight'],
+                                                      freedelivery: decodeditem[
+                                                          'freedelivery'],
+                                                      price:
+                                                          decodeditem['price']
+                                                              .toString(),
+                                                      saleprice: decodeditem[
+                                                                  'saleprice'] ==
+                                                              null
+                                                          ? null
+                                                          : decodeditem[
+                                                              'saleprice'],
+                                                      image:
+                                                          decodeditem['image'],
+                                                      userid: decodeditem[
+                                                                  'sellerid'] ==
+                                                              null
+                                                          ? decodeditem[
+                                                              'userid']
+                                                          : decodeditem[
+                                                              'sellerid'],
+                                                      username: decodeditem[
+                                                                  'sellername'] ==
+                                                              null
+                                                          ? decodeditem[
+                                                              'username']
+                                                          : decodeditem[
+                                                              'sellername']);
+
+                                                  if (newItem.freedelivery ==
+                                                      false) {
+                                                    var weightfees;
+                                                    if (newItem.weight == '5') {
+                                                      weightfees = 20;
+                                                    } else if (newItem.weight ==
+                                                        '10') {
+                                                      weightfees = 30;
+                                                    } else if (newItem.weight ==
+                                                        '20') {
+                                                      weightfees = 50;
+                                                    } else if (newItem.weight ==
+                                                        '50') {
+                                                      weightfees = 110;
+                                                    }
+
+                                                    setState(() {
+                                                      deliveryamount = 'AED ' +
+                                                          weightfees.toString();
+                                                      deliverycharges =
+                                                          double.parse(
+                                                              weightfees
+                                                                  .toString());
+                                                    });
+                                                  } else {
+                                                    setState(() {
+                                                      deliveryamount = 'FREE';
+                                                      deliverycharges = 0.0;
+                                                    });
+                                                  }
+
+                                                  orderprice = double.parse(
+                                                      newItem.price);
+                                                  if (newItem.saleprice !=
+                                                      null) {
+                                                    subtotal = double.parse(
+                                                        newItem.saleprice);
+                                                  } else {
+                                                    subtotal = double.parse(
+                                                        newItem.price);
+                                                  }
+                                                }
+                                              }
+
+                                              total =
+                                                  subtotal + deliverycharges;
+
+                                              discount = total * 0.10;
+
+                                              if (discount > 30) {
+                                                discount = 30;
+                                                total = total - discount;
+                                              } else {
+                                                discount = total * 0.10;
+                                                total = total - discount;
+                                                print(total);
+                                              }
+                                              setState(() {
+                                                promocodeactive = true;
+                                                total = total;
+                                                discount = discount;
+                                              });
+                                            } else {
+                                              setState(() {
+                                                discount = null;
+                                                promocodeactive = false;
+                                              });
+                                            }
+                                          }
+                                        },
+                                        child: Padding(
+                                            padding: EdgeInsets.only(
+                                              left: 10,
+                                            ),
+                                            child: Container(
+                                              height: 50,
+                                              width: 70,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  color: Colors.deepOrange),
+                                              child: Center(
+                                                child: Text(
+                                                  'Apply',
+                                                  style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 16,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ),
+                                            )),
+                                      ),
                                     ],
                                   ))),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Subtotal',
-                                style: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 16,
-                                  color: Colors.blueGrey,
+                          promocodeactive == false
+                              ? Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                      Text(
+                                        'Oops! Promocode is invalid.',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 12,
+                                          color: Colors.red,
+                                        ),
+                                      )
+                                    ])
+                              : Container(),
+                          Padding(
+                            padding: EdgeInsets.only(
+                              top: 5,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Subtotal',
+                                  style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 16,
+                                    color: Colors.blueGrey,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                subtotal != 0.0
-                                    ? currency +
-                                        ' ' +
-                                        orderprice.toStringAsFixed(2)
-                                    : 'AED 0',
-                                style: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 14,
-                                  color: Colors.blueGrey,
+                                Text(
+                                  subtotal != 0.0
+                                      ? currency +
+                                          ' ' +
+                                          orderprice.toStringAsFixed(2)
+                                      : 'AED 0',
+                                  style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 14,
+                                    color: Colors.blueGrey,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                           SizedBox(
                             height: 5,
@@ -1034,10 +1208,7 @@ class _CheckoutState extends State<Checkout> {
                                   ],
                                 )
                               : Container(),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          listitems[0].saleprice != null
+                          discount != null
                               ? Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -1045,26 +1216,56 @@ class _CheckoutState extends State<Checkout> {
                                     Row(
                                       children: [
                                         Text(
-                                          'Total',
+                                          'Discount - WELCOMESHIP',
                                           style: TextStyle(
                                             fontFamily: 'Helvetica',
                                             fontSize: 16,
-                                            color: Colors.black,
+                                            color: Colors.blueGrey,
                                           ),
                                         ),
                                       ],
                                     ),
                                     Text(
-                                      currency + total.toString(),
+                                      '- ' +
+                                          currency +
+                                          discount.toStringAsFixed(0),
                                       style: TextStyle(
                                         fontFamily: 'Helvetica',
                                         fontSize: 14,
-                                        color: Colors.black,
+                                        color: Colors.blueGrey,
                                       ),
                                     ),
                                   ],
                                 )
                               : Container(),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    'Total',
+                                    style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 16,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                currency + total.toStringAsFixed(2),
+                                style: TextStyle(
+                                  fontFamily: 'Helvetica',
+                                  fontSize: 14,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
                       )))
               : Container(),
@@ -1137,7 +1338,7 @@ class _CheckoutState extends State<Checkout> {
                                   color: Colors.black45,
                                 ),
                               ),
-                              Text('AED' + ' ' + subtotal.toStringAsFixed(2),
+                              Text('AED' + ' ' + total.toStringAsFixed(2),
                                   style: TextStyle(
                                     fontWeight: FontWeight.w900,
                                     fontSize: 20,
@@ -1163,7 +1364,8 @@ class _CheckoutState extends State<Checkout> {
                                         builder: (context) => Pay(
                                               messageid: widget.messageid,
                                               itemid: widget.itemid,
-                                              price: subtotal,
+                                              discountccode: 'WELCOMESHIP',
+                                              price: total,
                                               address: selectedaddress,
                                               phonenumber: phonenumber,
                                             )),
