@@ -272,6 +272,13 @@ class _OrderBuyerState extends State<OrderBuyer> {
         deliver = jsonbody['delivered'];
       }
 
+      var deliveryamoun;
+      if (jsonbody['deliveryamount'] == null) {
+        deliveryamoun = 'FREE';
+      } else {
+        deliveryamoun = jsonbody['deliveryamount'];
+      }
+
       var comple;
       if (jsonbody['sellerreviewed'] == null) {
         comple = false;
@@ -299,6 +306,7 @@ class _OrderBuyerState extends State<OrderBuyer> {
         buyerid = jsonbody['senderid'];
         buyername = jsonbody['buyername'];
         size = sz;
+        deliveryamount = deliveryamoun;
         quantity = jsonbody['orderquantity'];
         addressline1 = jsonbody['deliveryaddress']['addressline1'];
         addressline2 = jsonbody['deliveryaddress']['addressline2'];
@@ -312,7 +320,7 @@ class _OrderBuyerState extends State<OrderBuyer> {
 
   var quantity;
   var size;
-
+  var deliveryamount;
   var time = 0;
   checktransactioncompletedloop() async {
     var url = 'https://api.sellship.co/api/transactionhistory/' + messageid;
@@ -1413,7 +1421,10 @@ class _OrderBuyerState extends State<OrderBuyer> {
                                       color: Colors.blueGrey,
                                     ),
                                   ),
-                                  Text('Free',
+                                  Text(
+                                      deliveryamount != null
+                                          ? deliveryamount
+                                          : 'FREE',
                                       style: TextStyle(
                                         fontSize: 16,
                                         letterSpacing: 0.0,

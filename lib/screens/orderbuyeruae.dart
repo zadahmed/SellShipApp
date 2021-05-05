@@ -274,6 +274,13 @@ class _OrderBuyerPageState extends State<OrderBuyerPage> {
       deliver = jsonbody['delivered'];
     }
 
+    var deliveryamoun;
+    if (jsonbody['deliveryamount'] == null) {
+      deliveryamoun = 'FREE';
+    } else {
+      deliveryamoun = jsonbody['deliveryamount'];
+    }
+
     var comple;
     if (jsonbody['sellerreviewed'] == null) {
       comple = false;
@@ -306,12 +313,14 @@ class _OrderBuyerPageState extends State<OrderBuyerPage> {
       addressline2 = jsonbody['deliveryaddress']['addressline2'];
       area = jsonbody['deliveryaddress']['area'];
       city = jsonbody['deliveryaddress']['city'];
+      deliveryamount = deliveryamoun;
       country = jsonbody['deliveryaddress']['country'];
     });
   }
 
   var quantity;
   var size;
+  var deliveryamount;
 
   var time = 0;
   checktransactioncompletedloop() async {
@@ -1360,7 +1369,10 @@ class _OrderBuyerPageState extends State<OrderBuyerPage> {
                                       color: Colors.blueGrey,
                                     ),
                                   ),
-                                  Text('Free',
+                                  Text(
+                                      deliveryamount != null
+                                          ? deliveryamount
+                                          : 'FREE',
                                       style: TextStyle(
                                         fontSize: 16,
                                         letterSpacing: 0.0,

@@ -182,7 +182,7 @@ class _CheckoutState extends State<Checkout> {
         currency = 'AED';
         stripecurrency = 'AED';
         subtotal = subtotal;
-        total = subtotal + deliverycharges;
+        total = subtotal;
         listitems = listitems;
       });
     }
@@ -948,7 +948,7 @@ class _CheckoutState extends State<Checkout> {
                                           SharedPreferences prefs =
                                               await SharedPreferences
                                                   .getInstance();
-                                          var welcomeuser =
+                                          bool welcomeuser =
                                               prefs.getBool('welcomeuser');
                                           if (welcomeuser == false ||
                                               welcomeuser == null) {
@@ -1074,6 +1074,11 @@ class _CheckoutState extends State<Checkout> {
                                                 promocodeactive = false;
                                               });
                                             }
+                                          } else {
+                                            setState(() {
+                                              discount = null;
+                                              promocodeactive = false;
+                                            });
                                           }
                                         },
                                         child: Padding(
@@ -1257,7 +1262,7 @@ class _CheckoutState extends State<Checkout> {
                                 ],
                               ),
                               Text(
-                                currency + total.toStringAsFixed(2),
+                                currency + ' ' + total.toStringAsFixed(2),
                                 style: TextStyle(
                                   fontFamily: 'Helvetica',
                                   fontSize: 14,

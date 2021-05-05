@@ -866,7 +866,7 @@ class _PayState extends State<Pay> {
 
                                     var trref = ('SS' + uuid);
                                     var returnurl =
-                                        'https://api.sellship.co/api/payment/NEW/${orderid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${total.toStringAsFixed(2)}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}/${listitems[0].quantity}/${listitems[0].selectedsize}';
+                                        'https://api.sellship.co/api/payment/NEW/${orderid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${total.toStringAsFixed(2)}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}/${listitems[0].quantity}/${listitems[0].selectedsize}/${deliveryamount}';
 
                                     final response =
                                         await http.get(Uri.parse(returnurl));
