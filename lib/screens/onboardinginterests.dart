@@ -134,6 +134,8 @@ class _OnboardingInterestsState extends State<OnboardingInterests> {
                       Dio dio = new Dio();
                       var response = await dio.post(url, data: formData);
 
+                      print(response.statusCode);
+
                       if (response.statusCode == 200) {
                         Navigator.of(context).pop();
                         Navigator.pushAndRemoveUntil(

@@ -1649,10 +1649,9 @@ class _ProfilePageState extends State<ProfilePage>
                                               MaterialPageRoute(
                                                   builder: (context) =>
                                                       OrderBuyer(
-                                                          messageid: item[index]
-                                                              .description,
-                                                          itemid: item[index]
-                                                              .itemid)),
+                                                        messageid: item[index]
+                                                            .description,
+                                                      )),
                                             );
                                           }
                                         } else {

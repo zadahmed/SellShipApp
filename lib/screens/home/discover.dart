@@ -1265,28 +1265,7 @@ class _DiscoverState extends State<Discover>
   Widget homePage(BuildContext context) {
     return loading == false
         ? EasyRefresh.custom(
-            footer: CustomFooter(
-                extent: 40.0,
-                enableHapticFeedback: true,
-                enableInfiniteLoad: true,
-                footerBuilder: (context,
-                    loadState,
-                    pulledExtent,
-                    loadTriggerPullDistance,
-                    loadIndicatorExtent,
-                    axisDirection,
-                    float,
-                    completeDuration,
-                    enableInfiniteLoad,
-                    success,
-                    noMore) {
-                  return noMore == false
-                      ? Container()
-                      : SpinKitFadingCircle(
-                          color: Colors.deepOrange,
-                          size: 30.0,
-                        );
-                }),
+            scrollController: _scrollController,
             header: CustomHeader(
                 extent: 160.0,
                 enableHapticFeedback: true,
@@ -3534,92 +3513,103 @@ class _DiscoverState extends State<Discover>
                     : SliverToBoxAdapter(),
                 blogsList.isNotEmpty
                     ? SliverToBoxAdapter(
-                        child: CarouselSlider(
-                        options: CarouselOptions(
-                          height: 200.0,
-                          aspectRatio: 16 / 9,
-                          viewportFraction: 1,
-                          initialPage: 0,
-                          enableInfiniteScroll: true,
-                          reverse: false,
-                          autoPlay: true,
-                          autoPlayInterval: Duration(seconds: 3),
-                          autoPlayAnimationDuration:
-                              Duration(milliseconds: 800),
-                          autoPlayCurve: Curves.fastOutSlowIn,
-                          enlargeCenterPage: true,
-                        ),
-                        items: blogsList.map((blog) {
-                          return Builder(
-                            builder: (BuildContext context) {
-                              return InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      CupertinoPageRoute(
-                                          builder: (context) => BlogPage(
-                                                title: blog.blogname,
-                                                content: blog.blogcontent,
-                                                related: blog.relatedposts,
-                                                image: blog.blogimage,
-                                                blogid: blog.blogid,
-                                              )),
-                                    );
-                                  },
-                                  enableFeedback: true,
-                                  child: Stack(
-                                    children: [
-                                      Container(
-                                          height: 200,
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          margin: EdgeInsets.symmetric(
-                                              horizontal: 5.0),
-                                          decoration: BoxDecoration(
-                                              color: Colors.deepOrange,
-                                              borderRadius:
-                                                  BorderRadius.circular(5)),
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            child: Hero(
-                                              tag: 'Blog${blog.blogid}',
-                                              child: CachedNetworkImage(
-                                                imageUrl: blog.blogimage,
-                                                fit: BoxFit.cover,
-                                                fadeInDuration:
-                                                    Duration(microseconds: 5),
-                                                placeholder: (context, url) =>
-                                                    SpinKitDoubleBounce(
-                                                        color:
-                                                            Colors.deepOrange),
-                                                errorWidget:
-                                                    (context, url, error) =>
-                                                        Icon(Icons.error),
+                        child: Padding(
+                            padding: EdgeInsets.only(
+                              bottom: 30,
+                            ),
+                            child: CarouselSlider(
+                              options: CarouselOptions(
+                                height: 200.0,
+                                aspectRatio: 16 / 9,
+                                viewportFraction: 1,
+                                initialPage: 0,
+                                enableInfiniteScroll: true,
+                                reverse: false,
+                                autoPlay: true,
+                                autoPlayInterval: Duration(seconds: 3),
+                                autoPlayAnimationDuration:
+                                    Duration(milliseconds: 800),
+                                autoPlayCurve: Curves.fastOutSlowIn,
+                                enlargeCenterPage: true,
+                              ),
+                              items: blogsList.map((blog) {
+                                return Builder(
+                                  builder: (BuildContext context) {
+                                    return InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            CupertinoPageRoute(
+                                                builder: (context) => BlogPage(
+                                                      title: blog.blogname,
+                                                      content: blog.blogcontent,
+                                                      related:
+                                                          blog.relatedposts,
+                                                      image: blog.blogimage,
+                                                      blogid: blog.blogid,
+                                                    )),
+                                          );
+                                        },
+                                        enableFeedback: true,
+                                        child: Stack(
+                                          children: [
+                                            Container(
+                                                height: 200,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                margin: EdgeInsets.symmetric(
+                                                    horizontal: 5.0),
+                                                decoration: BoxDecoration(
+                                                    color: Colors.deepOrange,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5)),
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                  child: Hero(
+                                                    tag: 'Blog${blog.blogid}',
+                                                    child: CachedNetworkImage(
+                                                      imageUrl: blog.blogimage,
+                                                      fit: BoxFit.cover,
+                                                      fadeInDuration: Duration(
+                                                          microseconds: 5),
+                                                      placeholder: (context,
+                                                              url) =>
+                                                          SpinKitDoubleBounce(
+                                                              color: Colors
+                                                                  .deepOrange),
+                                                      errorWidget: (context,
+                                                              url, error) =>
+                                                          Icon(Icons.error),
+                                                    ),
+                                                  ),
+                                                )),
+                                            Align(
+                                              alignment: Alignment.bottomLeft,
+                                              child: Padding(
+                                                padding: EdgeInsets.only(
+                                                    bottom: 10,
+                                                    left: 20,
+                                                    right: 10),
+                                                child: Text(
+                                                  blog.blogname,
+                                                  style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 20.0,
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w800),
+                                                ),
                                               ),
-                                            ),
-                                          )),
-                                      Align(
-                                        alignment: Alignment.bottomLeft,
-                                        child: Padding(
-                                          padding: EdgeInsets.only(
-                                              bottom: 10, left: 20, right: 10),
-                                          child: Text(
-                                            blog.blogname,
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 20.0,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w800),
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ));
-                            },
-                          );
-                        }).toList(),
-                      ))
+                                            )
+                                          ],
+                                        ));
+                                  },
+                                );
+                              }).toList(),
+                            )))
                     : SliverToBoxAdapter(),
                 blogsList.isNotEmpty
                     ? SliverToBoxAdapter(

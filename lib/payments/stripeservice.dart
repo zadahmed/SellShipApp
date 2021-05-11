@@ -22,11 +22,11 @@ class StripeService {
   };
   static init() {
     StripePayment.setOptions(StripeOptions(
-        // publishableKey: "pk_live_CWGvDZru8fXBNVdXnhahkBoY00pzoyQfkz",
-        publishableKey:
-            "pk_test_51IgtU3HQRQo46FowHQtM5WCo8AoLhvyjReZonLiYWa0Ihw31LIlPyO0Y3d0wKIqe8idUnesGGXxmYjkoezfAk2Q700dh5KkpVl",
-        merchantId: "merchant.com.zafra.sellship",
-        androidPayMode: 'test'));
+      // publishableKey: "pk_live_CWGvDZru8fXBNVdXnhahkBoY00pzoyQfkz",
+      publishableKey:
+          "pk_live_51IgtU3HQRQo46FowVzqt5d8VVYrjNyL66rnckL1DrzyEB6iz5I1mvLhjRxa9BOdAGDFpjvRMLKyO2PsGy3ywi8l300fChGmh9p",
+      merchantId: "merchant.com.zafra.sellship",
+    ));
   }
 
   static Future<StripeTransactionResponse> payViaExistingCard(

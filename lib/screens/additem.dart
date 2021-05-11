@@ -9,7 +9,6 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:SellShip/screens/addbrans.dart';
 import 'package:SellShip/screens/addcategory.dart';
 import 'package:SellShip/screens/rootscreen.dart';
-import 'package:app_settings/app_settings.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';

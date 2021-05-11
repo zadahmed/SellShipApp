@@ -984,8 +984,8 @@ class _CreateSaleCampaignState extends State<CreateSaleCampaign> {
                                       priceslist.add(_controllers[i].text);
                                     }
                                     FormData formData = FormData.fromMap({
-                                      'itemids': itemlist,
-                                      'saleprices': priceslist,
+                                      'itemids': json.encode(itemlist),
+                                      'saleprices': json.encode(priceslist),
                                       'campaignname': salecampaignname.text,
                                       'collectionname':
                                           salecampaigncollection.text

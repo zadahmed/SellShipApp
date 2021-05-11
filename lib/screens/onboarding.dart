@@ -285,6 +285,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       padding: const EdgeInsets.only(
                           left: 15, bottom: 20, right: 15),
                       child: GoogleAuthButton(
+                        style: AuthButtonStyle(
+                          width: 300.0,
+                        ),
                         text: 'Continue with Google',
                         onPressed: () async {
                           GoogleSignIn _googleSignIn = GoogleSignIn(
@@ -532,6 +535,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       padding: const EdgeInsets.only(
                           left: 15, bottom: 20, right: 15),
                       child: FacebookAuthButton(
+                        style: AuthButtonStyle(
+                          width: 300.0,
+                        ),
                         onPressed: () {
                           showDialog(
                               context: context,
@@ -583,6 +589,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             padding: const EdgeInsets.only(
                                 left: 15, bottom: 20, right: 15),
                             child: AppleAuthButton(
+                              style: AuthButtonStyle(
+                                width: 300.0,
+                              ),
                               text: 'Continue with Apple',
                               onPressed: () async {
                                 final result = await FirebaseAuthOAuth()
@@ -848,6 +857,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       padding: const EdgeInsets.only(
                           left: 15, bottom: 40, right: 15),
                       child: EmailAuthButton(
+                        style: AuthButtonStyle(
+                          width: 300.0,
+                        ),
                         text: 'Continue with Email',
                         onPressed: () {
                           Navigator.push(

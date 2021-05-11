@@ -85,6 +85,9 @@ class _StorePublicState extends State<StorePublic> {
               name: itemrespons[i]['name'],
               image: itemrespons[i]['image'],
               price: itemrespons[i]['price'].toString(),
+              saleprice: itemrespons[i].containsKey('saleprice')
+                  ? itemrespons[i]['saleprice'].toString()
+                  : null,
               views:
                   itemrespons[i]['views'] == null ? 0 : itemrespons[i]['views'],
               likes:
@@ -295,6 +298,31 @@ class _StorePublicState extends State<StorePublic> {
                                       ),
                                     ),
                                   ),
+                                  item[index].saleprice != null
+                                      ? Align(
+                                          alignment: Alignment.topRight,
+                                          child: Container(
+                                            height: 30,
+                                            width: 50,
+                                            padding: EdgeInsets.only(
+                                                left: 5, right: 5),
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Colors.red.withOpacity(0.8),
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                'SALE',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ))
+                                      : Container(),
                                   item[index].sold == true
                                       ? Align(
                                           alignment: Alignment.center,

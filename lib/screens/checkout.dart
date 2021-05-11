@@ -21,6 +21,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stripe_payment/stripe_payment.dart';
 
 class Checkout extends StatefulWidget {
   String itemid;
@@ -113,6 +114,7 @@ class _CheckoutState extends State<Checkout> {
   List<Item> listitems = List<Item>();
 
   var phonenumber;
+  var discountprice = 0.0;
   getcurrency() async {
     var countr = await storage.read(key: 'country');
 
@@ -136,12 +138,8 @@ class _CheckoutState extends State<Checkout> {
                 ? null
                 : decodeditem['saleprice'],
             image: decodeditem['image'],
-            userid: decodeditem['sellerid'] == null
-                ? decodeditem['userid']
-                : decodeditem['sellerid'],
-            username: decodeditem['sellername'] == null
-                ? decodeditem['username']
-                : decodeditem['sellername']);
+            userid: decodeditem['userid'],
+            username: decodeditem['username']);
 
         if (newItem.freedelivery == false) {
           var weightfees;
@@ -166,11 +164,14 @@ class _CheckoutState extends State<Checkout> {
           });
         }
 
-        orderprice = double.parse(newItem.price);
+        orderprice = double.parse(newItem.price) + orderprice;
         if (newItem.saleprice != null) {
-          subtotal = double.parse(newItem.saleprice);
+          subtotal = double.parse(newItem.saleprice) + subtotal;
+          discountprice =
+              (double.parse(newItem.price) - double.parse(newItem.saleprice)) +
+                  discountprice;
         } else {
-          subtotal = double.parse(newItem.price);
+          subtotal = double.parse(newItem.price) + subtotal;
         }
 
         listitems.add(newItem);
@@ -188,7 +189,7 @@ class _CheckoutState extends State<Checkout> {
     }
   }
 
-  var orderprice;
+  var orderprice = 0.0;
   var deliveryamount;
   Item newItem;
   var addressline1;
@@ -257,7 +258,7 @@ class _CheckoutState extends State<Checkout> {
                                 itemCount: listitems.length,
                                 itemBuilder: (context, index) {
                                   return Padding(
-                                      padding: EdgeInsets.all(0),
+                                      padding: EdgeInsets.all(5),
                                       child: Column(
                                         children: [
                                           InkWell(
@@ -600,9 +601,60 @@ class _CheckoutState extends State<Checkout> {
                                                                             onPressed:
                                                                                 () async {
                                                                               SharedPreferences prefs = await SharedPreferences.getInstance();
-                                                                              prefs.remove('cartitems');
+                                                                              List cartitems = prefs.getStringList('cartitems');
+
+                                                                              List<Item> listitem = [];
+                                                                              List<String> itemsstring = [];
+                                                                              var deliverycharges;
+                                                                              if (cartitems != null) {
+                                                                                for (int i = 0; i < cartitems.length; i++) {
+                                                                                  var decodeditem = json.decode(cartitems[i]);
+
+                                                                                  Item newItem = Item(name: decodeditem['name'], selectedsize: decodeditem['selectedsize'], quantity: decodeditem['quantity'], itemid: decodeditem['itemid'], weight: decodeditem['weight'], freedelivery: decodeditem['freedelivery'], price: decodeditem['price'].toString(), saleprice: decodeditem['saleprice'] == null ? null : decodeditem['saleprice'], image: decodeditem['image'], userid: decodeditem['userid'], username: decodeditem['username']);
+
+                                                                                  if (newItem.freedelivery == false) {
+                                                                                    var weightfees;
+                                                                                    if (newItem.weight == '5') {
+                                                                                      weightfees = 20;
+                                                                                    } else if (newItem.weight == '10') {
+                                                                                      weightfees = 30;
+                                                                                    } else if (newItem.weight == '20') {
+                                                                                      weightfees = 50;
+                                                                                    } else if (newItem.weight == '50') {
+                                                                                      weightfees = 110;
+                                                                                    }
+
+                                                                                    setState(() {
+                                                                                      deliveryamount = 'AED ' + weightfees.toString();
+                                                                                      deliverycharges = double.parse(weightfees.toString());
+                                                                                    });
+                                                                                  } else {
+                                                                                    setState(() {
+                                                                                      deliveryamount = 'FREE';
+                                                                                      deliverycharges = 0.0;
+                                                                                    });
+                                                                                  }
+
+                                                                                  orderprice = double.parse(newItem.price);
+                                                                                  if (newItem.saleprice != null) {
+                                                                                    subtotal = double.parse(newItem.saleprice);
+                                                                                  } else {
+                                                                                    subtotal = double.parse(newItem.price);
+                                                                                  }
+
+                                                                                  if (newItem.itemid == listitems[index].itemid) {
+                                                                                    print('dont add');
+                                                                                  } else {
+                                                                                    print('add');
+                                                                                    listitem.add(newItem);
+                                                                                    String item = jsonEncode(newItem);
+                                                                                    itemsstring.add(item);
+                                                                                  }
+                                                                                }
+                                                                              }
+                                                                              prefs.setStringList('cartitems', itemsstring);
                                                                               setState(() {
-                                                                                listitems = [];
+                                                                                listitems = listitem;
                                                                               });
                                                                               Navigator.of(context).pop();
                                                                             },
@@ -652,7 +704,7 @@ class _CheckoutState extends State<Checkout> {
                                               )),
                                           Row(
                                             mainAxisAlignment:
-                                                MainAxisAlignment.end,
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               listitems[index].selectedsize !=
                                                           'nosize' &&
@@ -673,96 +725,111 @@ class _CheckoutState extends State<Checkout> {
                                                           color: Colors.grey),
                                                     )
                                                   : Container(),
-                                              // Container(
-                                              //     decoration: BoxDecoration(
-                                              //       color: Colors.white,
-                                              //       border: Border.all(
-                                              //           color: Colors
-                                              //               .grey.shade300),
-                                              //       borderRadius:
-                                              //           BorderRadius.all(
-                                              //               Radius.circular(
-                                              //                   15)),
-                                              //     ),
-                                              //     child: Container(
-                                              //         height: 30,
-                                              //         width: 130,
-                                              //         child: Row(
-                                              //           mainAxisAlignment:
-                                              //               MainAxisAlignment
-                                              //                   .end,
-                                              //           children: [
-                                              //             IconButton(
-                                              //               icon: Icon(
-                                              //                   Icons.remove),
-                                              //               iconSize: 16,
-                                              //               color: Colors
-                                              //                   .deepOrange,
-                                              //               onPressed: () {
-                                              //                 setState(() {
-                                              //                   if (listitems[
-                                              //                               index]
-                                              //                           .quantity >
-                                              //                       0) {
-                                              //                     listitems[
-                                              //                             index]
-                                              //                         .quantity = listitems[
-                                              //                                 index]
-                                              //                             .quantity -
-                                              //                         1;
-                                              //                   }
-                                              //                   subtotal = double.parse(
-                                              //                           listitems[index]
-                                              //                               .price) *
-                                              //                       listitems[
-                                              //                               index]
-                                              //                           .quantity;
-                                              //                 });
-                                              //               },
-                                              //             ),
-                                              //             Container(
-                                              //               width: 25,
-                                              //               child: Text(
-                                              //                 listitems[index]
-                                              //                     .quantity
-                                              //                     .toString(),
-                                              //                 style: TextStyle(
-                                              //                     fontSize: 18),
-                                              //                 textAlign:
-                                              //                     TextAlign
-                                              //                         .center,
-                                              //               ),
-                                              //             ),
-                                              //             IconButton(
-                                              //               icon:
-                                              //                   Icon(Icons.add),
-                                              //               iconSize: 16,
-                                              //               color: Colors
-                                              //                   .deepOrange,
-                                              //               onPressed: () {
-                                              //                 setState(() {
-                                              //                   if (listitems[
-                                              //                               index]
-                                              //                           .quantity >=
-                                              //                       0 ) {
-                                              //                     listitems[
-                                              //                             index]
-                                              //                         .quantity = listitems[
-                                              //                                 index]
-                                              //                             .quantity +
-                                              //                         1;
-                                              //                   }
-                                              //                   subtotal = double.parse(
-                                              //                           listitems[index]
-                                              //                               .price) *
-                                              //                       listitems[
-                                              //                               index]
-                                              //                           .quantity;
-                                              //                 });
-                                              //               },
-                                              //             ),
-                                              //           ],
-                                              //         )))
+                                              Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    border: Border.all(
+                                                        color: Colors
+                                                            .grey.shade300),
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                15)),
+                                                  ),
+                                                  child: Container(
+                                                      height: 25,
+                                                      width: 80,
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          InkWell(
+                                                            child: Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(5),
+                                                              child: Icon(
+                                                                Icons.remove,
+                                                                size: 16,
+                                                                color: Colors
+                                                                    .deepOrange,
+                                                              ),
+                                                            ),
+                                                            onTap: () {
+                                                              setState(() {
+                                                                if (listitems[
+                                                                            index]
+                                                                        .quantity >
+                                                                    0) {
+                                                                  listitems[
+                                                                          index]
+                                                                      .quantity = listitems[
+                                                                              index]
+                                                                          .quantity -
+                                                                      1;
+                                                                }
+                                                                subtotal = double.parse(
+                                                                        listitems[index]
+                                                                            .price) *
+                                                                    listitems[
+                                                                            index]
+                                                                        .quantity;
+                                                              });
+                                                            },
+                                                          ),
+                                                          Container(
+                                                            width: 25,
+                                                            child: Text(
+                                                              listitems[index]
+                                                                  .quantity
+                                                                  .toString(),
+                                                              style: TextStyle(
+                                                                  fontSize: 14),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                          ),
+                                                          InkWell(
+                                                            child: Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(5),
+                                                              child: Icon(
+                                                                Icons.add,
+                                                                size: 16,
+                                                                color: Colors
+                                                                    .deepOrange,
+                                                              ),
+                                                            ),
+                                                            onTap: () {
+                                                              setState(() {
+                                                                if (listitems[
+                                                                            index]
+                                                                        .quantity >=
+                                                                    0) {
+                                                                  listitems[
+                                                                          index]
+                                                                      .quantity = listitems[
+                                                                              index]
+                                                                          .quantity +
+                                                                      1;
+                                                                }
+                                                                subtotal = double.parse(
+                                                                        listitems[index]
+                                                                            .price) *
+                                                                    listitems[
+                                                                            index]
+                                                                        .quantity;
+                                                              });
+                                                            },
+                                                          ),
+                                                        ],
+                                                      )))
                                             ],
                                           )
                                         ],
@@ -831,7 +898,7 @@ class _CheckoutState extends State<Checkout> {
                                 'Delivery Address',
                                 style: TextStyle(
                                   fontFamily: 'Helvetica',
-                                  fontSize: 16,
+                                  fontSize: 14,
                                   color: Colors.blueGrey,
                                 ),
                               ),
@@ -1089,9 +1156,11 @@ class _CheckoutState extends State<Checkout> {
                                               height: 50,
                                               width: 70,
                                               decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  color: Colors.deepOrange),
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                color: Color.fromRGBO(
+                                                    65, 105, 225, 1),
+                                              ),
                                               child: Center(
                                                 child: Text(
                                                   'Apply',
@@ -1133,7 +1202,7 @@ class _CheckoutState extends State<Checkout> {
                                   'Subtotal',
                                   style: TextStyle(
                                     fontFamily: 'Helvetica',
-                                    fontSize: 16,
+                                    fontSize: 14,
                                     color: Colors.blueGrey,
                                   ),
                                 ),
@@ -1166,7 +1235,7 @@ class _CheckoutState extends State<Checkout> {
                                           'Discount',
                                           style: TextStyle(
                                             fontFamily: 'Helvetica',
-                                            fontSize: 16,
+                                            fontSize: 14,
                                             color: Colors.blueGrey,
                                           ),
                                         ),
@@ -1197,17 +1266,12 @@ class _CheckoutState extends State<Checkout> {
                                     Text(
                                       subtotal != 0.0
                                           ? ' -' +
-                                              currency +
-                                              (double.parse(
-                                                          listitems[0].price) -
-                                                      double.parse(listitems[0]
-                                                          .saleprice))
-                                                  .toString()
+                                              discountprice.toStringAsFixed(2)
                                           : 'AED 0',
                                       style: TextStyle(
                                         fontFamily: 'Helvetica',
                                         fontSize: 14,
-                                        color: Colors.blueGrey,
+                                        color: Colors.red,
                                       ),
                                     ),
                                   ],
@@ -1265,7 +1329,7 @@ class _CheckoutState extends State<Checkout> {
                                 currency + ' ' + total.toStringAsFixed(2),
                                 style: TextStyle(
                                   fontFamily: 'Helvetica',
-                                  fontSize: 14,
+                                  fontSize: 16,
                                   color: Colors.black,
                                 ),
                               ),
@@ -1334,15 +1398,34 @@ class _CheckoutState extends State<Checkout> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(
-                                'Total',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  letterSpacing: 0.0,
-                                  color: Colors.black45,
+                              Text.rich(TextSpan(children: <TextSpan>[
+                                new TextSpan(
+                                  text: 'Total ',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                    letterSpacing: 0.0,
+                                    color: Colors.black45,
+                                  ),
                                 ),
-                              ),
+                                TextSpan(
+                                  text: '( Inclusive of VAT )',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    letterSpacing: 0.0,
+                                    color: Colors.grey.shade300,
+                                  ),
+                                ),
+                              ])),
+                              // Text(
+                              //   'Total',
+                              //   style: TextStyle(
+                              //     fontWeight: FontWeight.bold,
+                              //     fontSize: 20,
+                              //     letterSpacing: 0.0,
+                              //     color: Colors.black45,
+                              //   ),
+                              // ),
                               Text('AED' + ' ' + total.toStringAsFixed(2),
                                   style: TextStyle(
                                     fontWeight: FontWeight.w900,

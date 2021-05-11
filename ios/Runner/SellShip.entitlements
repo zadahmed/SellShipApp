@@ -13,6 +13,10 @@
 		<string>applinks:sellship.app.link</string>
 		<string>applinks:sellship-alternate.app.link</string>
 	</array>
+	<key>com.apple.developer.in-app-payments</key>
+	<array>
+		<string>merchant.com.zafra.sellship</string>
+	</array>
 	<key>com.apple.security.application-groups</key>
 	<array>
 		<string>group.com.zafra.sellship.onesignal</string>

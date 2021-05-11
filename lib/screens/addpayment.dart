@@ -161,7 +161,7 @@ class _AddPaymentState extends State<AddPayment> {
                                                         MediaQuery.of(context)
                                                                 .size
                                                                 .height /
-                                                            1.6,
+                                                            2,
                                                     width:
                                                         MediaQuery.of(context)
                                                                 .size
@@ -208,25 +208,51 @@ class _AddPaymentState extends State<AddPayment> {
                                                                             height:
                                                                                 20,
                                                                           ),
-                                                                          CreditCardWidget(
-                                                                            cardBgColor:
-                                                                                Colors.deepOrange,
-                                                                            textStyle: TextStyle(
-                                                                                fontFamily: 'Helvetica',
-                                                                                fontSize: 16,
-                                                                                color: Colors.white,
-                                                                                fontWeight: FontWeight.w700),
-                                                                            cardNumber:
-                                                                                cardNumber,
-                                                                            expiryDate:
-                                                                                expiryDate,
-                                                                            cardHolderName:
-                                                                                cardHolderName,
-                                                                            cvvCode:
-                                                                                cvvCode,
-                                                                            showBackView:
-                                                                                isCvvFocused,
-                                                                          ),
+                                                                          // CreditCardWidget(
+                                                                          //   cardBgColor:
+                                                                          //       Colors.deepOrange,
+                                                                          //   textStyle: TextStyle(
+                                                                          //       fontFamily: 'Helvetica',
+                                                                          //       fontSize: 16,
+                                                                          //       color: Colors.white,
+                                                                          //       fontWeight: FontWeight.w700),
+                                                                          //   cardNumber:
+                                                                          //       cardNumber,
+                                                                          //   expiryDate:
+                                                                          //       expiryDate,
+                                                                          //   cardHolderName:
+                                                                          //       cardHolderName,
+                                                                          //   cvvCode:
+                                                                          //       cvvCode,
+                                                                          //   showBackView:
+                                                                          //       isCvvFocused,
+                                                                          // ),
+                                                                          // CreditCardWidget(
+                                                                          //   cardNumber:
+                                                                          //       cardNumber,
+                                                                          //   expiryDate:
+                                                                          //       expiryDate,
+                                                                          //   cardHolderName:
+                                                                          //       cardHolderName,
+                                                                          //   cvvCode:
+                                                                          //       cvvCode,
+                                                                          //   showBackView:
+                                                                          //       isCvvFocused,
+                                                                          //   cardBgColor:
+                                                                          //       Colors.blueAccent,
+                                                                          //   obscureCardNumber:
+                                                                          //       true,
+                                                                          //   obscureCardCvv:
+                                                                          //       true,
+                                                                          //   height:
+                                                                          //       175,
+                                                                          //   textStyle:
+                                                                          //       TextStyle(color: Colors.yellowAccent),
+                                                                          //   width:
+                                                                          //       MediaQuery.of(context).size.width,
+                                                                          //   animationDuration:
+                                                                          //       Duration(milliseconds: 1000),
+                                                                          // ),
                                                                           CreditCardForm(
                                                                             onCreditCardModelChange:
                                                                                 (creditCardModel) {
@@ -276,7 +302,12 @@ class _AddPaymentState extends State<AddPayment> {
                                                                                   )),
                                                                                 );
 
-                                                                                StripePayment.setOptions(StripeOptions(publishableKey: "pk_live_51IgtU3HQRQo46FowVzqt5d8VVYrjNyL66rnckL1DrzyEB6iz5I1mvLhjRxa9BOdAGDFpjvRMLKyO2PsGy3ywi8l300fChGmh9p", merchantId: "merchant.com.zafra.sellship", androidPayMode: 'test'));
+                                                                                StripePayment.setOptions(StripeOptions(
+                                                                                    // publishableKey: "pk_live_CWGvDZru8fXBNVdXnhahkBoY00pzoyQfkz",
+                                                                                    publishableKey: "pk_test_51IgtU3HQRQo46FowHQtM5WCo8AoLhvyjReZonLiYWa0Ihw31LIlPyO0Y3d0wKIqe8idUnesGGXxmYjkoezfAk2Q700dh5KkpVl",
+                                                                                    // "pk_live_51IgtU3HQRQo46FowVzqt5d8VVYrjNyL66rnckL1DrzyEB6iz5I1mvLhjRxa9BOdAGDFpjvRMLKyO2PsGy3ywi8l300fChGmh9p",
+                                                                                    merchantId: "merchant.com.zafra.sellship",
+                                                                                    androidPayMode: 'production'));
 
                                                                                 var paymentMethod = await StripePayment.createPaymentMethod(PaymentMethodRequest(card: stripeCard));
 

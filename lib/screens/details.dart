@@ -1502,7 +1502,9 @@ class _DetailsState extends State<Details> {
                                                       },
                                                       child: Container(
                                                           height: 50,
-                                                          width: 50,
+                                                          width: 70,
+                                                          padding:
+                                                              EdgeInsets.all(2),
                                                           decoration: BoxDecoration(
                                                               color:
                                                                   Colors.white,
@@ -1527,7 +1529,7 @@ class _DetailsState extends State<Details> {
                                                             style: TextStyle(
                                                                 fontFamily:
                                                                     'Helvetica',
-                                                                fontSize: 16,
+                                                                fontSize: 14,
                                                                 color: Colors
                                                                     .deepOrange),
                                                           )))));
@@ -3102,88 +3104,130 @@ class _DetailsState extends State<Details> {
                                             showInSnackBar(newItem.name +
                                                 ' added to Cart!');
                                           } else {
-                                            showDialog<void>(
-                                              context: context,
-                                              barrierDismissible:
-                                                  false, // user must tap button!
-                                              builder: (BuildContext context) {
-                                                return AlertDialog(
-                                                  title: Text(
-                                                    'Oops',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        fontSize: 18.0,
-                                                        fontWeight:
-                                                            FontWeight.w800),
-                                                  ),
-                                                  content: Text(
-                                                    'You have an item in your cart already.',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        fontSize: 16.0,
-                                                        fontWeight:
-                                                            FontWeight.w200),
-                                                  ),
-                                                  actions: <Widget>[
-                                                    TextButton(
-                                                      child: Text(
-                                                        'Add to Cart',
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 16.0,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w800),
-                                                      ),
-                                                      onPressed: () async {
-                                                        newItem.quantity = 1;
+                                            bool itemcontains = false;
+                                            cartitems.forEach((item) {
+                                              print(newItem.userid);
+                                              item = json.decode(item);
+                                              if (item['userid'] ==
+                                                  (newItem.userid)) {
+                                                setState(() {
+                                                  itemcontains = true;
+                                                });
+                                              }
+                                            });
 
-                                                        if (selectedSize !=
-                                                            null) {
-                                                          newItem.selectedsize =
-                                                              selectedSize
-                                                                  .toString();
-                                                        } else {
-                                                          newItem.selectedsize =
-                                                              'nosize';
-                                                        }
+                                            print('qqqq');
+                                            print(itemcontains);
 
-                                                        String item =
-                                                            jsonEncode(newItem);
+                                            if (itemcontains == true) {
+                                              newItem.quantity = 1;
 
-                                                        prefs.setStringList(
-                                                            'cartitems',
-                                                            [item]);
-                                                        showInSnackBar(newItem
-                                                                .name +
-                                                            ' added to Cart!');
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
+                                              if (selectedSize != null) {
+                                                newItem.selectedsize =
+                                                    selectedSize.toString();
+                                              } else {
+                                                newItem.selectedsize = 'nosize';
+                                              }
+
+                                              String item = jsonEncode(newItem);
+
+                                              cartitems.add(item);
+
+                                              prefs.setStringList(
+                                                  'cartitems', cartitems);
+                                              showInSnackBar(newItem.name +
+                                                  ' added to Cart!');
+                                            } else {
+                                              showDialog<void>(
+                                                context: context,
+                                                barrierDismissible:
+                                                    false, // user must tap button!
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return AlertDialog(
+                                                    title: Text(
+                                                      'Oops',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                          fontSize: 18.0,
+                                                          fontWeight:
+                                                              FontWeight.w800),
                                                     ),
-                                                    TextButton(
-                                                      child: Text(
-                                                        'Close',
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: TextStyle(
-                                                            fontSize: 16.0,
-                                                            color: Colors.red,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w800),
-                                                      ),
-                                                      onPressed: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
+                                                    content: Text(
+                                                      'You have an item in your cart from a seller already. You can only place an order from one seller at a time. Would you like to clear your existing cart and Add to Cart?',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                          fontSize: 16.0,
+                                                          fontWeight:
+                                                              FontWeight.w200),
                                                     ),
-                                                  ],
-                                                );
-                                              },
-                                            );
+                                                    actions: <Widget>[
+                                                      TextButton(
+                                                        child: Text(
+                                                          'Add to Cart',
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 16.0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w800),
+                                                        ),
+                                                        onPressed: () async {
+                                                          newItem.quantity = 1;
+
+                                                          if (selectedSize !=
+                                                              null) {
+                                                            newItem.selectedsize =
+                                                                selectedSize
+                                                                    .toString();
+                                                          } else {
+                                                            newItem.selectedsize =
+                                                                'nosize';
+                                                          }
+
+                                                          String item =
+                                                              jsonEncode(
+                                                                  newItem);
+
+                                                          print(item);
+
+                                                          prefs.setStringList(
+                                                              'cartitems',
+                                                              [item]);
+                                                          showInSnackBar(newItem
+                                                                  .name +
+                                                              ' added to Cart!');
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                      ),
+                                                      TextButton(
+                                                        child: Text(
+                                                          'Close',
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                              fontSize: 16.0,
+                                                              color: Colors.red,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w800),
+                                                        ),
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              );
+                                            }
                                           }
                                         }
                                       } else {
@@ -3367,78 +3411,112 @@ class _DetailsState extends State<Details> {
                                     showInSnackBar(
                                         newItem.name + ' added to Cart!');
                                   } else {
-                                    showDialog<void>(
-                                      context: context,
-                                      barrierDismissible:
-                                          false, // user must tap button!
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title: Text(
-                                            'Oops',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontSize: 18.0,
-                                                fontWeight: FontWeight.w800),
-                                          ),
-                                          content: Text(
-                                            'You have an item in your cart already.',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontSize: 16.0,
-                                                fontWeight: FontWeight.w200),
-                                          ),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              child: Text(
-                                                'Add to Cart',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 16.0,
-                                                    fontWeight:
-                                                        FontWeight.w800),
-                                              ),
-                                              onPressed: () async {
-                                                newItem.quantity = 1;
+                                    bool itemcontains = false;
+                                    cartitems.forEach((item) {
+                                      print(newItem.userid);
+                                      item = json.decode(item);
+                                      if (item['userid'] == (newItem.userid)) {
+                                        setState(() {
+                                          itemcontains = true;
+                                        });
+                                      }
+                                    });
 
-                                                if (selectedSize != null) {
-                                                  newItem.selectedsize =
-                                                      selectedSize.toString();
-                                                } else {
-                                                  newItem.selectedsize =
-                                                      'nosize';
-                                                }
+                                    print('qqqq');
+                                    print(itemcontains);
 
-                                                String item =
-                                                    jsonEncode(newItem);
+                                    if (itemcontains == true) {
+                                      newItem.quantity = 1;
 
-                                                print(item);
+                                      if (selectedSize != null) {
+                                        newItem.selectedsize =
+                                            selectedSize.toString();
+                                      } else {
+                                        newItem.selectedsize = 'nosize';
+                                      }
 
-                                                prefs.setStringList(
-                                                    'cartitems', [item]);
-                                                showInSnackBar(newItem.name +
-                                                    ' added to Cart!');
-                                                Navigator.of(context).pop();
-                                              },
+                                      String item = jsonEncode(newItem);
+
+                                      cartitems.add(item);
+
+                                      prefs.setStringList(
+                                          'cartitems', cartitems);
+                                      showInSnackBar(
+                                          newItem.name + ' added to Cart!');
+                                    } else {
+                                      showDialog<void>(
+                                        context: context,
+                                        barrierDismissible:
+                                            false, // user must tap button!
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Text(
+                                              'Oops',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontSize: 18.0,
+                                                  fontWeight: FontWeight.w800),
                                             ),
-                                            TextButton(
-                                              child: Text(
-                                                'Close',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    fontSize: 16.0,
-                                                    color: Colors.red,
-                                                    fontWeight:
-                                                        FontWeight.w800),
-                                              ),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
+                                            content: Text(
+                                              'You have an item in your cart from a seller already. You can only place an order from one seller at a time. Would you like to clear your existing cart and Add to Cart?',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontSize: 16.0,
+                                                  fontWeight: FontWeight.w200),
                                             ),
-                                          ],
-                                        );
-                                      },
-                                    );
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: Text(
+                                                  'Add to Cart',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 16.0,
+                                                      fontWeight:
+                                                          FontWeight.w800),
+                                                ),
+                                                onPressed: () async {
+                                                  newItem.quantity = 1;
+
+                                                  if (selectedSize != null) {
+                                                    newItem.selectedsize =
+                                                        selectedSize.toString();
+                                                  } else {
+                                                    newItem.selectedsize =
+                                                        'nosize';
+                                                  }
+
+                                                  String item =
+                                                      jsonEncode(newItem);
+
+                                                  print(item);
+
+                                                  prefs.setStringList(
+                                                      'cartitems', [item]);
+                                                  showInSnackBar(newItem.name +
+                                                      ' added to Cart!');
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                              TextButton(
+                                                child: Text(
+                                                  'Close',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      fontSize: 16.0,
+                                                      color: Colors.red,
+                                                      fontWeight:
+                                                          FontWeight.w800),
+                                                ),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }
                                   }
                                 }
                               } else {
