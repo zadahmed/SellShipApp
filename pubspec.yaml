@@ -54,7 +54,7 @@ dependencies:
   locally: ^1.0.5
   location: ^4.1.1
   multi_image_picker: ^4.8.00
-  uuid: ^3.0.4
+  slugid: ^1.1.0
   flutter_feather_icons: ^2.0.0+1
   flutter_login_facebook: ^1.0.1
   path_provider: ^2.0.1

@@ -195,7 +195,7 @@ class _RootScreenState extends State<RootScreen> {
           CupertinoPageRoute(
               builder: (context) => ChatPageOfferNav(
                     messageid: jsonrep['navid'],
-                    userid: jsonrep['itemid'],
+                    // userid: jsonrep['itemid'],
                   )),
         );
       } else if (jsonrep['navroute'] == 'activitybuy') {
@@ -242,7 +242,7 @@ class _RootScreenState extends State<RootScreen> {
           context,
           MaterialPageRoute(
               builder: (context) => OrderSeller(
-                    itemid: jsonrep['itemid'],
+                    // itemid: jsonrep['itemid'],
                     messageid: jsonrep['messageid'],
                   )),
         );

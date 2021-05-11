@@ -30,14 +30,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
 class ChatPageOfferNav extends StatefulWidget {
-  final String messageid;
-  final String userid;
+  List<Item> items;
+  String messageid;
 
-  const ChatPageOfferNav({
-    Key key,
-    this.userid,
-    this.messageid,
-  }) : super(key: key);
+  ChatPageOfferNav({Key key, this.messageid, this.items}) : super(key: key);
 
   @override
   _ChatPageOfferNavState createState() => _ChatPageOfferNavState();
@@ -64,7 +60,6 @@ class _ChatPageOfferNavState extends State<ChatPageOfferNav> {
 
     setState(() {
       skip = 10;
-      userid = widget.userid;
       messageid = widget.messageid;
     });
 
@@ -882,7 +877,7 @@ class _ChatPageOfferNavState extends State<ChatPageOfferNav> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => OrderSeller(
-                                        itemid: itemselling.itemid,
+                                        // itemid: itemselling.itemid,
                                         messageid: widget.messageid,
                                       )),
                             );
@@ -1529,7 +1524,7 @@ class _ChatPageOfferNavState extends State<ChatPageOfferNav> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => OrderSeller(
-                                        itemid: itemselling.itemid,
+                                        // itemid: itemselling.itemid,
                                         messageid: widget.messageid,
                                       )),
                             );
@@ -1781,7 +1776,7 @@ class _ChatPageOfferNavState extends State<ChatPageOfferNav> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => OrderSeller(
-                                        itemid: itemselling.itemid,
+                                        // itemid: itemselling.itemid,
                                         messageid: widget.messageid,
                                       )),
                             );
@@ -2125,7 +2120,7 @@ class _ChatPageOfferNavState extends State<ChatPageOfferNav> {
     childList = [];
 
     for (int i = 0; i < jsonResponse.length; i++) {
-      if (jsonResponse[i]['sender'] == widget.userid) {
+      if (jsonResponse[i]['sender'] == userid) {
         final f = new DateFormat('hh:mm');
         DateTime date = new DateTime.fromMillisecondsSinceEpoch(
             jsonResponse[i]['date']['\$date']);

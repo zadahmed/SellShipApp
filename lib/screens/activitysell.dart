@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/models/Items.dart';
+import 'package:SellShip/models/orders.dart';
 import 'package:SellShip/screens/chatpageviewseller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -63,85 +64,9 @@ class _ActivitySellState extends State<ActivitySell>
   bool loading;
   final storage = new FlutterSecureStorage();
 
-  loadbuyingactivity() async {
-    buyingItem.clear();
-    var countr = await storage.read(key: 'country');
-
-    if (countr.trim().toLowerCase() == 'united arab emirates') {
-      setState(() {
-        currency = 'AED';
-      });
-    } else if (countr.trim().toLowerCase() == 'united states') {
-      setState(() {
-        currency = '\$';
-      });
-    } else if (countr.trim().toLowerCase() == 'canada') {
-      setState(() {
-        currency = '\$';
-      });
-    } else if (countr.trim().toLowerCase() == 'united kingdom') {
-      setState(() {
-        currency = '\£';
-      });
-    }
-
-    var userid = await storage.read(key: 'userid');
-    var itemurl = 'https://api.sellship.co/api/activity/buying/' + userid;
-    final response = await http.get(Uri.parse(itemurl));
-    if (response.statusCode == 200) {
-      var itemrespons = json.decode(response.body);
-      List itemmap = itemrespons;
-
-      List<Item> ites = List<Item>();
-
-      if (itemmap != null) {
-        for (var i = 0; i < itemmap.length; i++) {
-          Item ite = Item(
-              itemid: itemmap[i]['item']['_id']['\$oid'],
-              name: itemmap[i]['item']['name'],
-              image: itemmap[i]['item']['image'],
-              price: itemmap[i]['offer'].toString(),
-              offerstage: itemmap[i]['offerstage'],
-              buyerid: itemmap[i]['buyerid']['\$oid'].toString(),
-              buyername: itemmap[i]['buyername'],
-              messageid: itemmap[i]['messageid'].toString(),
-              sellername: itemmap[i]['sellername'],
-              sellerid: itemmap[i]['sellerid']['\$oid'].toString(),
-              sold: itemmap[i]['item']['sold']);
-          ites.add(ite);
-        }
-
-        if (mounted)
-          setState(() {
-            keepalive = false;
-            loading = false;
-            buyingItem = ites;
-          });
-      }
-    }
-  }
-
   loadsellingactivity() async {
     sellingItem.clear();
-    var countr = await storage.read(key: 'country');
 
-    if (countr.trim().toLowerCase() == 'united arab emirates') {
-      setState(() {
-        currency = 'AED';
-      });
-    } else if (countr.trim().toLowerCase() == 'united states') {
-      setState(() {
-        currency = '\$';
-      });
-    } else if (countr.trim().toLowerCase() == 'canada') {
-      setState(() {
-        currency = '\$';
-      });
-    } else if (countr.trim().toLowerCase() == 'united kingdom') {
-      setState(() {
-        currency = '\£';
-      });
-    }
     var userid = await storage.read(key: 'userid');
     var itemurl = 'https://api.sellship.co/api/activity/selling/' + userid;
     final response = await http.get(Uri.parse(itemurl));
@@ -149,16 +74,13 @@ class _ActivitySellState extends State<ActivitySell>
       var itemrespons = json.decode(response.body);
       List itemmap = itemrespons;
 
-      List<Item> ites = List<Item>();
-
       if (itemmap != null) {
         for (var i = 0; i < itemmap.length; i++) {
+          print(itemmap[i]);
+          print('ddd');
           var buyerid;
-          if (itemmap[i]['buyerid'].containsKey('\$oid')) {
-            buyerid = itemmap[i]['buyerid']['\$oid'];
-          } else {
-            buyerid = itemmap[i]['buyerid'];
-          }
+
+          buyerid = itemmap[i]['buyerid'];
 
           var buyername;
           if (itemmap[i].containsKey('buyername')) {
@@ -168,11 +90,8 @@ class _ActivitySellState extends State<ActivitySell>
           }
 
           var sellerid;
-          if (itemmap[i]['sellerid'].containsKey('\$oid')) {
-            sellerid = itemmap[i]['sellerid']['\$oid'];
-          } else {
-            sellerid = itemmap[i]['sellerid'];
-          }
+
+          sellerid = itemmap[i]['userid'];
 
           var date;
           if (itemmap[i]['offerdate'].containsKey('\$date')) {
@@ -182,61 +101,69 @@ class _ActivitySellState extends State<ActivitySell>
           }
 
           var sellername;
-          if (itemmap[i].containsKey('sellername')) {
-            sellername = itemmap[i]['sellername'];
+          if (itemmap[i].containsKey('username')) {
+            sellername = itemmap[i]['username'];
           } else {
-            buyername = 'Unknown';
+            sellername = 'Unknown';
           }
 
-          bool freedel;
-          if (itemmap[i]['freedelivery'] == 'false' ||
-              itemmap[i]['freedelivery'] == null) {
-            freedel = false;
-          } else {
-            freedel = true;
+          List<Item> itemsorder = [];
+
+          for (int l = 0; l < itemmap[i]['items'].length; l++) {
+            var itemjson = itemmap[i]['items'][l];
+            Item ite = Item(
+                name: itemmap[i]['items'][l]['name'],
+                selectedsize: itemmap[i]['items'][l]['selectedsize'],
+                quantity: itemmap[i]['items'][l]['quantity'],
+                itemid: itemmap[i]['items'][l]['itemid'],
+                weight: itemmap[i]['items'][l]['weight'],
+                freedelivery: itemmap[i]['items'][l]['freedelivery'],
+                price: itemmap[i]['items'][l]['price'].toString(),
+                saleprice: itemmap[i]['items'][l]['saleprice'] == null
+                    ? null
+                    : itemmap[i]['items'][l]['saleprice'],
+                image: itemmap[i]['items'][l]['image'],
+                userid: itemmap[i]['items'][l]['userid'],
+                username: itemmap[i]['items'][l]['username']);
+            itemsorder.add(ite);
           }
 
-          Item ite = Item(
-              itemid: itemmap[i]['item']['_id']['\$oid'],
-              name: itemmap[i]['item']['name'],
-              image: itemmap[i]['item']['image'],
-              weight: itemmap[i]['item']['weight'].toString(),
-              price: itemmap[i]['offer'].toString(),
-              storetype: itemmap[i]['item']['storetype'],
-              messageid: itemmap[i]['messageid'].toString(),
+          Orders order = Orders(
+              orderdate: date.toString(),
+              orderid: itemmap[i]['messageid'],
+              // sellerid: sellerid,
+              sellername: buyername,
+              items: itemsorder,
               offerstage: itemmap[i]['offerstage'],
-              buyerid: buyerid,
-              date: date.toString(),
-              freedelivery: freedel,
-              buyername: buyername,
-              sellername: sellername,
-              sellerid: sellerid,
-              sold: itemmap[i]['item']['sold']);
-          ites.add(ite);
+              orderamount: itemmap[i]['offer'],
+              messageid: itemmap[i]['messageid']);
+
+          sellingItem.add(order);
         }
-        ites.sort((a, b) => int.parse(b.date).compareTo((int.parse(a.date))));
-        if (mounted) print(ites.length);
+      }
+      if (mounted) {
         setState(() {
-          sellingItem = ites;
+          currency = 'AED';
+          keepalive = false;
           loading = false;
+          sellingItem = sellingItem;
         });
       }
     }
   }
 
-  List<Item> buyingItem = new List<Item>();
-  List<Item> sellingItem = new List<Item>();
+  List<Orders> buyingItem = new List<Orders>();
+  List<Orders> sellingItem = new List<Orders>();
 
-  Widget offerstatusseller(BuildContext context, offerstage, itemid,
-      senderuserid, recieveruserid, offerprice) {
+  Widget offerstatusseller(BuildContext context, offerstage, offerprice) {
     if (offerstage == 0) {
       return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             width: 155,
-            height: 25,
+            height: 30,
             padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             decoration: BoxDecoration(
                 color: Color.fromRGBO(69, 80, 163, 1),
@@ -256,12 +183,12 @@ class _ActivitySellState extends State<ActivitySell>
       );
     } else if (offerstage == -1) {
       return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             width: 155,
-            height: 25,
+            height: 30,
             padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             decoration: BoxDecoration(
                 color: Colors.red, borderRadius: BorderRadius.circular(5)),
@@ -280,12 +207,12 @@ class _ActivitySellState extends State<ActivitySell>
       );
     } else if (offerstage == 2) {
       return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             width: 155,
-            height: 25,
+            height: 30,
             padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             decoration: BoxDecoration(
                 color: Colors.amber, borderRadius: BorderRadius.circular(5)),
@@ -304,12 +231,12 @@ class _ActivitySellState extends State<ActivitySell>
       );
     } else if (offerstage == 1) {
       return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             width: 165,
-            height: 25,
+            height: 30,
             padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             decoration: BoxDecoration(
                 color: Color.fromRGBO(239, 190, 125, 1),
@@ -328,12 +255,12 @@ class _ActivitySellState extends State<ActivitySell>
       );
     } else if (offerstage == 3) {
       return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             width: 155,
-            height: 25,
+            height: 30,
             padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             decoration: BoxDecoration(
                 color: Colors.deepOrange,
@@ -353,7 +280,7 @@ class _ActivitySellState extends State<ActivitySell>
     } else if (offerstage == 5) {
       return Container(
           width: 155,
-          height: 25,
+          height: 30,
           padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
           decoration: BoxDecoration(
               color: Colors.black, borderRadius: BorderRadius.circular(5)),
@@ -369,8 +296,8 @@ class _ActivitySellState extends State<ActivitySell>
           )));
     } else {
       return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(
             FeatherIcons.chevronRight,
@@ -580,7 +507,7 @@ class _ActivitySellState extends State<ActivitySell>
                             final response = await http.get(Uri.parse(itemurl));
 
                             if (response.statusCode == 200) {
-                              loadbuyingactivity();
+                              loadsellingactivity();
                               Navigator.pop(context);
                               Navigator.pop(context);
                             } else {
@@ -861,67 +788,85 @@ class _ActivitySellState extends State<ActivitySell>
                                       padding: EdgeInsets.only(
                                           left: 10, right: 10, bottom: 10),
                                       child: InkWell(
-                                          onTap: () async {
-                                            final result = await Navigator.push(
+                                          enableFeedback: true,
+                                          onTap: () {
+                                            Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      ChatPageViewSeller(
-                                                        freedelivery:
+                                                      OrderSeller(
+                                                        items:
                                                             sellingItem[index]
-                                                                .freedelivery,
-                                                        itemsold:
-                                                            sellingItem[index]
-                                                                .sold,
-                                                        weight:
-                                                            sellingItem[index]
-                                                                .weight,
-                                                        itemid:
-                                                            sellingItem[index]
-                                                                .itemid,
-                                                        recipentid:
-                                                            sellingItem[index]
-                                                                .buyerid,
-                                                        senderid:
-                                                            sellingItem[index]
-                                                                .sellerid,
-                                                        storetype:
-                                                            sellingItem[index]
-                                                                .storetype,
-                                                        recipentname:
-                                                            sellingItem[index]
-                                                                .buyername,
-                                                        itemprice:
-                                                            sellingItem[index]
-                                                                .price,
+                                                                .items,
                                                         messageid:
                                                             sellingItem[index]
                                                                 .messageid,
-                                                        offer:
-                                                            sellingItem[index]
-                                                                .price,
-                                                        offerstage:
-                                                            sellingItem[index]
-                                                                .offerstage,
-                                                        itemimage:
-                                                            sellingItem[index]
-                                                                .image,
-                                                        itemname:
-                                                            sellingItem[index]
-                                                                .name,
                                                       )),
                                             );
-                                            if (result == null) {
-                                              setState(() {
-                                                loading = true;
-                                              });
-                                              return loadsellingactivity();
-                                            }
                                           },
+                                          // final result = await Navigator.push(
+                                          //   context,
+                                          //   MaterialPageRoute(
+                                          //       builder: (context) =>
+                                          //           ChatPageViewSeller(
+                                          //             freedelivery:
+                                          //                 sellingItem[index]
+                                          //                     .freedelivery,
+                                          //             itemsold:
+                                          //                 sellingItem[index]
+                                          //                     .sold,
+                                          //             weight:
+                                          //                 sellingItem[index]
+                                          //                     .weight,
+                                          //             itemid:
+                                          //                 sellingItem[index]
+                                          //                     .itemid,
+                                          //             recipentid:
+                                          //                 sellingItem[index]
+                                          //                     .buyerid,
+                                          //             senderid:
+                                          //                 sellingItem[index]
+                                          //                     .sellerid,
+                                          //             storetype:
+                                          //                 sellingItem[index]
+                                          //                     .storetype,
+                                          //             recipentname:
+                                          //                 sellingItem[index]
+                                          //                     .buyername,
+                                          //             itemprice:
+                                          //                 sellingItem[index]
+                                          //                     .price,
+                                          //             messageid:
+                                          //                 sellingItem[index]
+                                          //                     .messageid,
+                                          //             offer:
+                                          //                 sellingItem[index]
+                                          //                     .price,
+                                          //             offerstage:
+                                          //                 sellingItem[index]
+                                          //                     .offerstage,
+                                          //             itemimage:
+                                          //                 sellingItem[index]
+                                          //                     .image,
+                                          //             itemname:
+                                          //                 sellingItem[index]
+                                          //                     .name,
+                                          //           )),
+                                          // );
+                                          // if (result == null) {
+                                          //   setState(() {
+                                          //     loading = true;
+                                          //   });
+                                          //   return loadsellingactivity();
+                                          // }
+                                          // },
                                           child: Container(
-                                              height: 100,
+                                              height: 295,
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
                                               padding: EdgeInsets.symmetric(
-                                                  horizontal: 15, vertical: 5),
+                                                  horizontal: 5, vertical: 5),
                                               decoration: BoxDecoration(
                                                   color: Colors.white,
                                                   boxShadow: [
@@ -935,195 +880,284 @@ class _ActivitySellState extends State<ActivitySell>
                                                   ],
                                                   borderRadius:
                                                       BorderRadius.circular(5)),
-                                              child: Row(
+                                              child: Column(
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
+                                                    CrossAxisAlignment.start,
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
+                                                    MainAxisAlignment.start,
                                                 children: [
-                                                  Row(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        InkWell(
-                                                          onTap: () {
-                                                            Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          Details(
-                                                                            source:
-                                                                                'activity',
-                                                                            item:
-                                                                                sellingItem[index],
-                                                                            itemid:
-                                                                                sellingItem[index].itemid,
-                                                                            image:
-                                                                                sellingItem[index].image,
-                                                                            name:
-                                                                                sellingItem[index].name,
-                                                                            sold:
-                                                                                sellingItem[index].sold,
-                                                                          )),
-                                                            );
-                                                          },
-                                                          child: Container(
-                                                            height: 80,
-                                                            width: 80,
-                                                            child: ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          5),
-                                                              child:
-                                                                  CachedNetworkImage(
-                                                                imageUrl:
-                                                                    sellingItem[
-                                                                            index]
-                                                                        .image,
-                                                                height: 200,
-                                                                width: 300,
-                                                                fadeInDuration:
-                                                                    Duration(
-                                                                        microseconds:
-                                                                            5),
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                                placeholder: (context,
-                                                                        url) =>
-                                                                    SpinKitDoubleBounce(
-                                                                        color: Colors
-                                                                            .deepOrange),
-                                                                errorWidget: (context,
-                                                                        url,
-                                                                        error) =>
-                                                                    Icon(Icons
-                                                                        .error),
+                                                  ListTile(
+                                                    dense: true,
+                                                    title: Text(
+                                                      'Buyer - @' +
+                                                          sellingItem[index]
+                                                              .sellername,
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 14,
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.w800),
+                                                    ),
+                                                    contentPadding:
+                                                        EdgeInsets.only(
+                                                            left: 5, right: 5),
+                                                    subtitle: Text(
+                                                      'ORDER ' +
+                                                          sellingItem[index]
+                                                              .orderid
+                                                              .toUpperCase(),
+                                                      style: TextStyle(
+                                                        fontFamily: 'Helvetica',
+                                                        fontSize: 12,
+                                                        color: Colors.blueGrey,
+                                                      ),
+                                                    ),
+                                                    trailing: InkWell(
+                                                        onTap: () {
+                                                          // Navigator.push(
+                                                          //   context,
+                                                          //   MaterialPageRoute(
+                                                          //       builder:
+                                                          //           (context) =>
+                                                          //               Details(
+                                                          //                 source:
+                                                          //                     'activity',
+                                                          //                 item:
+                                                          //                     buyingItem[index],
+                                                          //                 itemid:
+                                                          //                     buyingItem[index].itemid,
+                                                          //                 image:
+                                                          //                     buyingItem[index].image,
+                                                          //                 name:
+                                                          //                     buyingItem[index].name,
+                                                          //                 sold:
+                                                          //                     buyingItem[index].sold,
+                                                          //               )),
+                                                          // );
+                                                        },
+                                                        child: Container(
+                                                            width: 100,
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .end,
+                                                              children: [
+                                                                Text(
+                                                                  'AED ' +
+                                                                      sellingItem[
+                                                                              index]
+                                                                          .orderamount,
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      fontSize:
+                                                                          14,
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                ),
+                                                              ],
+                                                            ))),
+                                                  ),
+                                                  Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 5, right: 5),
+                                                      child: Divider()),
+                                                  Container(
+                                                      height: 135,
+                                                      child: ListView.builder(
+                                                          scrollDirection:
+                                                              Axis.horizontal,
+                                                          itemCount:
+                                                              sellingItem[index]
+                                                                  .items
+                                                                  .length,
+                                                          itemBuilder:
+                                                              (context, i) {
+                                                            return InkWell(
+                                                              onTap: () {},
+                                                              child: Container(
+                                                                height: 120,
+                                                                width: 120,
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .all(5),
+                                                                child: Column(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .start,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: <
+                                                                      Widget>[
+                                                                    Stack(
+                                                                        children: [
+                                                                          Container(
+                                                                            height:
+                                                                                70,
+                                                                            width:
+                                                                                70,
+                                                                            child:
+                                                                                ClipRRect(
+                                                                              borderRadius: BorderRadius.circular(15),
+                                                                              child: CachedNetworkImage(
+                                                                                height: 200,
+                                                                                width: 300,
+                                                                                fadeInDuration: Duration(microseconds: 5),
+                                                                                imageUrl: sellingItem[index].items[i].image,
+                                                                                fit: BoxFit.cover,
+                                                                                placeholder: (context, url) => SpinKitDoubleBounce(color: Colors.deepOrange),
+                                                                                errorWidget: (context, url, error) => Icon(Icons.error),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ]),
+                                                                    SizedBox(
+                                                                      height: 2,
+                                                                    ),
+                                                                    Text(
+                                                                      sellingItem[
+                                                                              index]
+                                                                          .items[
+                                                                              i]
+                                                                          .name,
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontFamily:
+                                                                            'Helvetica',
+                                                                        fontSize:
+                                                                            12,
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      height: 2,
+                                                                    ),
+                                                                    sellingItem[index].items[i].saleprice !=
+                                                                            null
+                                                                        ? Text
+                                                                            .rich(
+                                                                            TextSpan(
+                                                                              children: <TextSpan>[
+                                                                                new TextSpan(
+                                                                                  text: 'AED ' + sellingItem[index].items[i].saleprice.toString(),
+                                                                                  style: new TextStyle(color: Colors.redAccent, fontSize: 16, fontWeight: FontWeight.bold),
+                                                                                ),
+                                                                                new TextSpan(
+                                                                                  text: '\nAED ' + sellingItem[index].items[i].price.toString(),
+                                                                                  style: new TextStyle(
+                                                                                    color: Colors.grey,
+                                                                                    fontSize: 10,
+                                                                                    decoration: TextDecoration.lineThrough,
+                                                                                  ),
+                                                                                ),
+                                                                                new TextSpan(
+                                                                                  text: ' -' + (((double.parse(sellingItem[index].items[i].price.toString()) - double.parse(sellingItem[index].items[i].saleprice.toString())) / double.parse(sellingItem[index].items[i].price.toString())) * 100).toStringAsFixed(0) + '%',
+                                                                                  style: new TextStyle(
+                                                                                    color: Colors.red,
+                                                                                    fontSize: 12,
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          )
+                                                                        : Text(
+                                                                            'AED ' +
+                                                                                sellingItem[index].items[i].price.toString(),
+                                                                            style:
+                                                                                TextStyle(
+                                                                              fontFamily: 'Helvetica',
+                                                                              fontSize: 12,
+                                                                            ),
+                                                                          )
+                                                                  ],
+                                                                ),
                                                               ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: 10,
-                                                        ),
-                                                        Column(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Container(
-                                                              height: 20,
-                                                              width: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width /
-                                                                  2,
-                                                              child: Text(
-                                                                sellingItem[
-                                                                        index]
-                                                                    .name,
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .start,
-                                                                style: TextStyle(
+                                                            );
+                                                          })),
+                                                  Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 5, right: 5),
+                                                      child: Divider()),
+                                                  ListTile(
+                                                    dense: true,
+                                                    title: offerstatusseller(
+                                                      context,
+                                                      sellingItem[index]
+                                                          .offerstage,
+                                                      sellingItem[index]
+                                                          .orderamount,
+                                                    ),
+                                                    contentPadding:
+                                                        EdgeInsets.only(
+                                                            left: 5, right: 5),
+                                                    trailing: InkWell(
+                                                        onTap: () {
+                                                          // Navigator.push(
+                                                          //   context,
+                                                          //   MaterialPageRoute(
+                                                          //       builder:
+                                                          //           (context) =>
+                                                          //               Details(
+                                                          //                 source:
+                                                          //                     'activity',
+                                                          //                 item:
+                                                          //                     buyingItem[index],
+                                                          //                 itemid:
+                                                          //                     buyingItem[index].itemid,
+                                                          //                 image:
+                                                          //                     buyingItem[index].image,
+                                                          //                 name:
+                                                          //                     buyingItem[index].name,
+                                                          //                 sold:
+                                                          //                     buyingItem[index].sold,
+                                                          //               )),
+                                                          // );
+                                                        },
+                                                        child: Container(
+                                                            width: 100,
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .end,
+                                                              children: [
+                                                                Text(
+                                                                  'View Details',
+                                                                  style:
+                                                                      TextStyle(
                                                                     fontFamily:
                                                                         'Helvetica',
                                                                     fontSize:
-                                                                        16,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    color: Colors
-                                                                        .black),
-                                                              ),
-                                                            ),
-                                                            Text(
-                                                              '@' +
-                                                                  sellingItem[
-                                                                          index]
-                                                                      .buyername,
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Helvetica',
-                                                                  fontSize: 12,
-                                                                  color: Colors
-                                                                      .grey),
-                                                            ),
-                                                            SizedBox(
-                                                              height: 2,
-                                                            ),
-                                                            Text(
-                                                              'Offer ' +
-                                                                  currency +
-                                                                  ' ' +
-                                                                  sellingItem[
-                                                                          index]
-                                                                      .price,
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Helvetica',
-                                                                  fontSize:
-                                                                      12.0,
-                                                                  color: Colors
-                                                                      .black),
-                                                            ),
-                                                            SizedBox(
-                                                              height: 2,
-                                                            ),
-                                                            offerstatusseller(
-                                                              context,
-                                                              sellingItem[index]
-                                                                  .offerstage,
-                                                              sellingItem[index]
-                                                                  .itemid,
-                                                              sellingItem[index]
-                                                                  .buyerid,
-                                                              sellingItem[index]
-                                                                  .sellerid,
-                                                              sellingItem[index]
-                                                                  .price,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ]),
-                                                  Row(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .end,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment.end,
-                                                      children: [
-                                                        Row(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .end,
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .end,
-                                                            children: [
-                                                              Icon(
-                                                                FeatherIcons
-                                                                    .chevronRight,
-                                                                color:
-                                                                    Colors.grey,
-                                                              )
-                                                            ])
-                                                      ])
+                                                                        14,
+                                                                    color: Color
+                                                                        .fromRGBO(
+                                                                            65,
+                                                                            105,
+                                                                            225,
+                                                                            1),
+                                                                  ),
+                                                                ),
+                                                                Icon(
+                                                                  FeatherIcons
+                                                                      .chevronRight,
+                                                                  size: 16,
+                                                                  color: Color
+                                                                      .fromRGBO(
+                                                                          65,
+                                                                          105,
+                                                                          225,
+                                                                          1),
+                                                                )
+                                                              ],
+                                                            ))),
+                                                  ),
                                                 ],
                                               ))))
                                   : Padding(
@@ -1148,7 +1182,7 @@ class _ActivitySellState extends State<ActivitySell>
                       setState(() {
                         loading = true;
                       });
-                      return loadbuyingactivity();
+                      return loadsellingactivity();
                     },
                     header: CustomHeader(
                         extent: 40.0,

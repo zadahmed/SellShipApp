@@ -21,6 +21,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:slugid/slugid.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 import 'package:stripe_sdk/stripe_sdk.dart';
 import 'package:uuid/uuid.dart';
@@ -52,11 +53,11 @@ class _PayState extends State<Pay> {
   double total;
   double subtotal = 0.0;
   checkuser() async {
-    var uuidmessage = Uuid().v4().toString();
+    var uuidmessage = Slugid.nice().toString().toUpperCase();
     var userid = await storage.read(key: 'userid');
 
     setState(() {
-      messageid = 'SS-ORDER' + uuidmessage;
+      messageid = 'SS' + uuidmessage;
     });
 
     if (userid == null) {

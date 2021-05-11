@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/models/Items.dart';
+import 'package:SellShip/models/orders.dart';
 import 'package:SellShip/screens/chatpageviewseller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -75,16 +76,13 @@ class _ActivityBuyState extends State<ActivityBuy>
         var itemrespons = json.decode(response.body);
         List itemmap = itemrespons;
 
-        List<Item> ites = List<Item>();
-
         if (itemmap != null) {
           for (var i = 0; i < itemmap.length; i++) {
+            print(itemmap[i]);
+            print('ddd');
             var buyerid;
-            if (itemmap[i]['buyerid'].containsKey('\$oid')) {
-              buyerid = itemmap[i]['buyerid']['\$oid'];
-            } else {
-              buyerid = itemmap[i]['buyerid'];
-            }
+
+            buyerid = itemmap[i]['buyerid'];
 
             var buyername;
             if (itemmap[i].containsKey('buyername')) {
@@ -94,11 +92,8 @@ class _ActivityBuyState extends State<ActivityBuy>
             }
 
             var sellerid;
-            if (itemmap[i]['sellerid'].containsKey('\$oid')) {
-              sellerid = itemmap[i]['sellerid']['\$oid'];
-            } else {
-              sellerid = itemmap[i]['sellerid'];
-            }
+
+            sellerid = itemmap[i]['sellerid'];
 
             var date;
             if (itemmap[i]['offerdate'].containsKey('\$date')) {
@@ -114,43 +109,47 @@ class _ActivityBuyState extends State<ActivityBuy>
               sellername = 'Unknown';
             }
 
-            bool freedel;
-            if (itemmap[i]['item']['freedelivery'] == 'false' ||
-                itemmap[i]['item']['freedelivery'] == null) {
-              freedel = false;
-            } else {
-              freedel = true;
+            List<Item> itemsorder = [];
+
+            for (int l = 0; l < itemmap[i]['items'].length; l++) {
+              var itemjson = itemmap[i]['items'][l];
+              Item ite = Item(
+                  name: itemmap[i]['items'][l]['name'],
+                  selectedsize: itemmap[i]['items'][l]['selectedsize'],
+                  quantity: itemmap[i]['items'][l]['quantity'],
+                  itemid: itemmap[i]['items'][l]['itemid'],
+                  weight: itemmap[i]['items'][l]['weight'],
+                  freedelivery: itemmap[i]['items'][l]['freedelivery'],
+                  price: itemmap[i]['items'][l]['price'].toString(),
+                  saleprice: itemmap[i]['items'][l]['saleprice'] == null
+                      ? null
+                      : itemmap[i]['items'][l]['saleprice'],
+                  image: itemmap[i]['items'][l]['image'],
+                  userid: itemmap[i]['items'][l]['userid'],
+                  username: itemmap[i]['items'][l]['username']);
+              itemsorder.add(ite);
             }
 
-            Item ite = Item(
-                itemid: itemmap[i]['item']['_id']['\$oid'],
-                name: itemmap[i]['item']['name'],
-                image: itemmap[i]['item']['image'],
-                price: itemmap[i]['offer'].toString(),
-                weight: itemmap[i]['item']['weight'],
-                offerstage: itemmap[i]['offerstage'],
-                date: date.toString(),
-                storetype: itemmap[i]['item']['storetype'],
-                buyerid: buyerid,
-                freedelivery: freedel,
-                userid: itemmap[i]['item']['userid'],
-                username: itemmap[i]['item']['username'],
-                buyername: buyername,
-                messageid: itemmap[i]['messageid'].toString(),
+            Orders order = Orders(
+                orderdate: date.toString(),
+                orderid: itemmap[i]['messageid'],
+                // sellerid: sellerid,
                 sellername: sellername,
-                sellerid: sellerid,
-                sold: itemmap[i]['item']['sold']);
-            ites.add(ite);
-          }
-          ites.sort((a, b) => int.parse(b.date).compareTo((int.parse(a.date))));
+                items: itemsorder,
+                offerstage: itemmap[i]['offerstage'],
+                orderamount: itemmap[i]['offer'],
+                messageid: itemmap[i]['messageid']);
 
-          if (mounted)
-            setState(() {
-              currency = 'AED';
-              keepalive = false;
-              loading = false;
-              buyingItem = ites;
-            });
+            buyingItem.add(order);
+          }
+        }
+        if (mounted) {
+          setState(() {
+            currency = 'AED';
+            keepalive = false;
+            loading = false;
+            buyingItem = buyingItem;
+          });
         }
       }
     }
@@ -212,12 +211,10 @@ class _ActivityBuyState extends State<ActivityBuy>
     }
   }
 
-  List<Item> buyingItem = new List<Item>();
+  List<Orders> buyingItem = new List<Orders>();
   List<Item> sellingItem = new List<Item>();
 
-  Widget offerstatus(BuildContext context, offerstage, itemid, senderuserid,
-      recieveruserid, offerprice) {
-    print(offerstage);
+  Widget offerstatus(BuildContext context, offerstage, offerprice) {
     if (offerstage == 0) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -225,7 +222,7 @@ class _ActivityBuyState extends State<ActivityBuy>
         children: [
           Container(
             width: 155,
-            height: 25,
+            height: 30,
             padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             decoration: BoxDecoration(
                 color: Color.fromRGBO(69, 80, 163, 1),
@@ -246,7 +243,7 @@ class _ActivityBuyState extends State<ActivityBuy>
     } else if (offerstage == 2) {
       return Container(
           width: 155,
-          height: 25,
+          height: 30,
           padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
           decoration: BoxDecoration(
               color: Colors.green, borderRadius: BorderRadius.circular(5)),
@@ -263,7 +260,7 @@ class _ActivityBuyState extends State<ActivityBuy>
     } else if (offerstage == 3) {
       return Container(
           width: 155,
-          height: 25,
+          height: 30,
           padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
           decoration: BoxDecoration(
               color: Colors.deepOrange, borderRadius: BorderRadius.circular(5)),
@@ -280,7 +277,7 @@ class _ActivityBuyState extends State<ActivityBuy>
     } else if (offerstage == 4) {
       return Container(
           width: 155,
-          height: 25,
+          height: 30,
           padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
           decoration: BoxDecoration(
               color: Colors.deepOrange, borderRadius: BorderRadius.circular(5)),
@@ -297,7 +294,7 @@ class _ActivityBuyState extends State<ActivityBuy>
     } else if (offerstage == 5) {
       return Container(
           width: 155,
-          height: 25,
+          height: 30,
           padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
           decoration: BoxDecoration(
               color: Colors.black, borderRadius: BorderRadius.circular(5)),
@@ -318,7 +315,7 @@ class _ActivityBuyState extends State<ActivityBuy>
         children: [
           Container(
             width: 155,
-            height: 25,
+            height: 30,
             padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             decoration: BoxDecoration(
                 color: Colors.red, borderRadius: BorderRadius.circular(5)),
@@ -342,7 +339,7 @@ class _ActivityBuyState extends State<ActivityBuy>
         children: [
           Container(
             width: 155,
-            height: 25,
+            height: 30,
             padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             decoration: BoxDecoration(
                 color: Color.fromRGBO(69, 80, 163, 1),
@@ -842,54 +839,72 @@ class _ActivityBuyState extends State<ActivityBuy>
                                       padding: EdgeInsets.only(
                                           left: 10, right: 10, bottom: 10),
                                       child: InkWell(
-                                          onTap: () async {
-                                            final result = await Navigator.push(
+
+                                          // final result = await Navigator.push(
+                                          //   context,
+                                          //   MaterialPageRoute(
+                                          //       builder: (context) => ChatPageView(
+                                          //           freedelivery:
+                                          //               buyingItem[index]
+                                          //                   .freedelivery,
+                                          //           itemsold: buyingItem[index]
+                                          //               .sold,
+                                          //           storeid: buyingItem[index]
+                                          //               .userid,
+                                          //           storetype: buyingItem[index]
+                                          //               .storetype,
+                                          //           storename: buyingItem[index]
+                                          //               .username,
+                                          //           itemid: buyingItem[index]
+                                          //               .itemid,
+                                          //           recipentid: buyingItem[index]
+                                          //               .sellerid,
+                                          //           senderid: buyingItem[index]
+                                          //               .buyerid,
+                                          //           recipentname:
+                                          //               buyingItem[index]
+                                          //                   .sellername,
+                                          //           itemprice: buyingItem[index]
+                                          //               .price,
+                                          //           messageid: buyingItem[index]
+                                          //               .messageid,
+                                          //           offer: buyingItem[index]
+                                          //               .price,
+                                          //           offerstage:
+                                          //               buyingItem[index].offerstage,
+                                          //           itemimage: buyingItem[index].image,
+                                          //           itemname: buyingItem[index].name,
+                                          //           item: buyingItem[index])),
+                                          // );
+                                          // if (result == null) {
+                                          //   setState(() {
+                                          //     loading = true;
+                                          //   });
+                                          //   return loadbuyingactivity();
+                                          // }
+
+                                          enableFeedback: true,
+                                          onTap: () {
+                                            Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                  builder: (context) => ChatPageView(
-                                                      freedelivery:
-                                                          buyingItem[index]
-                                                              .freedelivery,
-                                                      itemsold: buyingItem[index]
-                                                          .sold,
-                                                      storeid: buyingItem[index]
-                                                          .userid,
-                                                      storetype: buyingItem[index]
-                                                          .storetype,
-                                                      storename: buyingItem[index]
-                                                          .username,
-                                                      itemid: buyingItem[index]
-                                                          .itemid,
-                                                      recipentid: buyingItem[index]
-                                                          .sellerid,
-                                                      senderid: buyingItem[index]
-                                                          .buyerid,
-                                                      recipentname:
-                                                          buyingItem[index]
-                                                              .sellername,
-                                                      itemprice: buyingItem[index]
-                                                          .price,
-                                                      messageid: buyingItem[index]
-                                                          .messageid,
-                                                      offer: buyingItem[index]
-                                                          .price,
-                                                      offerstage:
-                                                          buyingItem[index].offerstage,
-                                                      itemimage: buyingItem[index].image,
-                                                      itemname: buyingItem[index].name,
-                                                      item: buyingItem[index])),
+                                                  builder: (context) =>
+                                                      OrderBuyer(
+                                                        items: buyingItem[index]
+                                                            .items,
+                                                        messageid:
+                                                            buyingItem[index]
+                                                                .messageid,
+                                                      )),
                                             );
-                                            if (result == null) {
-                                              setState(() {
-                                                loading = true;
-                                              });
-                                              return loadbuyingactivity();
-                                            }
                                           },
                                           child: Container(
-                                              height: 100,
+                                              height: 290,
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
                                               padding: EdgeInsets.symmetric(
-                                                  horizontal: 15, vertical: 5),
+                                                  horizontal: 5, vertical: 5),
                                               decoration: BoxDecoration(
                                                   color: Colors.white,
                                                   boxShadow: [
@@ -903,186 +918,276 @@ class _ActivityBuyState extends State<ActivityBuy>
                                                   ],
                                                   borderRadius:
                                                       BorderRadius.circular(5)),
-                                              child: Row(
+                                              child: Column(
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
+                                                    CrossAxisAlignment.start,
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
+                                                    MainAxisAlignment.start,
                                                 children: [
-                                                  Row(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        InkWell(
-                                                          onTap: () {
-                                                            Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          Details(
-                                                                            source:
-                                                                                'activity',
-                                                                            item:
-                                                                                buyingItem[index],
-                                                                            itemid:
-                                                                                buyingItem[index].itemid,
-                                                                            image:
-                                                                                buyingItem[index].image,
-                                                                            name:
-                                                                                buyingItem[index].name,
-                                                                            sold:
-                                                                                buyingItem[index].sold,
-                                                                          )),
+                                                  ListTile(
+                                                    dense: true,
+                                                    title: Text(
+                                                      buyingItem[index]
+                                                          .sellername
+                                                          .toUpperCase(),
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 14,
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.w800),
+                                                    ),
+                                                    contentPadding:
+                                                        EdgeInsets.only(
+                                                            left: 5, right: 5),
+                                                    subtitle: Text(
+                                                      'ORDER ' +
+                                                          buyingItem[index]
+                                                              .orderid
+                                                              .toUpperCase(),
+                                                      style: TextStyle(
+                                                        fontFamily: 'Helvetica',
+                                                        fontSize: 12,
+                                                        color: Colors.blueGrey,
+                                                      ),
+                                                    ),
+                                                    trailing: InkWell(
+                                                        onTap: () {
+                                                          // Navigator.push(
+                                                          //   context,
+                                                          //   MaterialPageRoute(
+                                                          //       builder:
+                                                          //           (context) =>
+                                                          //               Details(
+                                                          //                 source:
+                                                          //                     'activity',
+                                                          //                 item:
+                                                          //                     buyingItem[index],
+                                                          //                 itemid:
+                                                          //                     buyingItem[index].itemid,
+                                                          //                 image:
+                                                          //                     buyingItem[index].image,
+                                                          //                 name:
+                                                          //                     buyingItem[index].name,
+                                                          //                 sold:
+                                                          //                     buyingItem[index].sold,
+                                                          //               )),
+                                                          // );
+                                                        },
+                                                        child: Container(
+                                                            width: 100,
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .end,
+                                                              children: [
+                                                                Text(
+                                                                  'AED ' +
+                                                                      buyingItem[
+                                                                              index]
+                                                                          .orderamount,
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      fontSize:
+                                                                          14,
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                ),
+                                                              ],
+                                                            ))),
+                                                  ),
+                                                  Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 5, right: 5),
+                                                      child: Divider()),
+                                                  Container(
+                                                      height: 135,
+                                                      child: ListView.builder(
+                                                          scrollDirection:
+                                                              Axis.horizontal,
+                                                          itemCount:
+                                                              buyingItem[index]
+                                                                  .items
+                                                                  .length,
+                                                          itemBuilder:
+                                                              (context, i) {
+                                                            return InkWell(
+                                                              onTap: () {},
+                                                              child: Container(
+                                                                height: 120,
+                                                                width: 120,
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .all(5),
+                                                                child: Column(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .start,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: <
+                                                                      Widget>[
+                                                                    Stack(
+                                                                        children: [
+                                                                          Container(
+                                                                            height:
+                                                                                70,
+                                                                            width:
+                                                                                70,
+                                                                            child:
+                                                                                ClipRRect(
+                                                                              borderRadius: BorderRadius.circular(15),
+                                                                              child: CachedNetworkImage(
+                                                                                height: 200,
+                                                                                width: 300,
+                                                                                fadeInDuration: Duration(microseconds: 5),
+                                                                                imageUrl: buyingItem[index].items[i].image,
+                                                                                fit: BoxFit.cover,
+                                                                                placeholder: (context, url) => SpinKitDoubleBounce(color: Colors.deepOrange),
+                                                                                errorWidget: (context, url, error) => Icon(Icons.error),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ]),
+                                                                    SizedBox(
+                                                                      height: 2,
+                                                                    ),
+                                                                    Text(
+                                                                      buyingItem[
+                                                                              index]
+                                                                          .items[
+                                                                              i]
+                                                                          .name,
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontFamily:
+                                                                            'Helvetica',
+                                                                        fontSize:
+                                                                            12,
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      height: 2,
+                                                                    ),
+                                                                    buyingItem[index].items[i].saleprice !=
+                                                                            null
+                                                                        ? Text
+                                                                            .rich(
+                                                                            TextSpan(
+                                                                              children: <TextSpan>[
+                                                                                new TextSpan(
+                                                                                  text: 'AED ' + buyingItem[index].items[i].saleprice.toString(),
+                                                                                  style: new TextStyle(color: Colors.redAccent, fontSize: 16, fontWeight: FontWeight.bold),
+                                                                                ),
+                                                                                new TextSpan(
+                                                                                  text: '\nAED ' + buyingItem[index].items[i].price.toString(),
+                                                                                  style: new TextStyle(
+                                                                                    color: Colors.grey,
+                                                                                    fontSize: 10,
+                                                                                    decoration: TextDecoration.lineThrough,
+                                                                                  ),
+                                                                                ),
+                                                                                new TextSpan(
+                                                                                  text: ' -' + (((double.parse(buyingItem[index].items[i].price.toString()) - double.parse(buyingItem[index].items[i].saleprice.toString())) / double.parse(buyingItem[index].items[i].price.toString())) * 100).toStringAsFixed(0) + '%',
+                                                                                  style: new TextStyle(
+                                                                                    color: Colors.red,
+                                                                                    fontSize: 12,
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          )
+                                                                        : Text(
+                                                                            'AED ' +
+                                                                                buyingItem[index].items[i].price.toString(),
+                                                                            style:
+                                                                                TextStyle(
+                                                                              fontFamily: 'Helvetica',
+                                                                              fontSize: 12,
+                                                                            ),
+                                                                          )
+                                                                  ],
+                                                                ),
+                                                              ),
                                                             );
-                                                          },
-                                                          child: Container(
-                                                            height: 80,
-                                                            width: 80,
-                                                            child: ClipRRect(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            5),
-                                                                child: buyingItem[
-                                                                            index]
-                                                                        .image
-                                                                        .isNotEmpty
-                                                                    ? CachedNetworkImage(
-                                                                        imageUrl:
-                                                                            buyingItem[index].image,
-                                                                        height:
-                                                                            200,
-                                                                        width:
-                                                                            300,
-                                                                        fadeInDuration:
-                                                                            Duration(microseconds: 5),
-                                                                        fit: BoxFit
-                                                                            .cover,
-                                                                        placeholder:
-                                                                            (context, url) =>
-                                                                                SpinKitDoubleBounce(color: Colors.deepOrange),
-                                                                        errorWidget: (context,
-                                                                                url,
-                                                                                error) =>
-                                                                            Icon(Icons.error),
-                                                                      )
-                                                                    : SpinKitFadingCircle(
-                                                                        color: Colors
-                                                                            .deepOrange,
-                                                                      )),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: 10,
-                                                        ),
-                                                        Column(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Container(
-                                                              height: 20,
-                                                              width: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width /
-                                                                  2,
-                                                              child: Text(
-                                                                buyingItem[
-                                                                        index]
-                                                                    .name,
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .start,
-                                                                style: TextStyle(
+                                                          })),
+                                                  Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 5, right: 5),
+                                                      child: Divider()),
+                                                  ListTile(
+                                                    dense: true,
+                                                    title: offerstatus(
+                                                      context,
+                                                      buyingItem[index]
+                                                          .offerstage,
+                                                      buyingItem[index]
+                                                          .orderamount,
+                                                    ),
+                                                    contentPadding:
+                                                        EdgeInsets.only(
+                                                            left: 5, right: 5),
+                                                    trailing: InkWell(
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        OrderBuyer(
+                                                                          items:
+                                                                              buyingItem[index].items,
+                                                                          messageid:
+                                                                              buyingItem[index].messageid,
+                                                                        )),
+                                                          );
+                                                        },
+                                                        child: Container(
+                                                            width: 100,
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .end,
+                                                              children: [
+                                                                Text(
+                                                                  'View Details',
+                                                                  style:
+                                                                      TextStyle(
                                                                     fontFamily:
                                                                         'Helvetica',
                                                                     fontSize:
-                                                                        16,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    color: Colors
-                                                                        .black),
-                                                              ),
-                                                            ),
-                                                            Text(
-                                                              '@' +
-                                                                  buyingItem[
-                                                                          index]
-                                                                      .sellername,
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Helvetica',
-                                                                  fontSize: 12,
-                                                                  color: Colors
-                                                                      .grey),
-                                                            ),
-                                                            SizedBox(
-                                                              height: 2,
-                                                            ),
-                                                            Text(
-                                                              'Offer ' +
-                                                                  currency +
-                                                                  ' ' +
-                                                                  buyingItem[
-                                                                          index]
-                                                                      .price,
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Helvetica',
-                                                                  fontSize:
-                                                                      12.0,
-                                                                  color: Colors
-                                                                      .black),
-                                                            ),
-                                                            SizedBox(
-                                                              height: 2,
-                                                            ),
-                                                            offerstatus(
-                                                              context,
-                                                              buyingItem[index]
-                                                                  .offerstage,
-                                                              buyingItem[index]
-                                                                  .itemid,
-                                                              buyingItem[index]
-                                                                  .buyerid,
-                                                              buyingItem[index]
-                                                                  .sellerid,
-                                                              buyingItem[index]
-                                                                  .price,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ]),
-                                                  Row(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .end,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment.end,
-                                                      children: [
-                                                        Icon(
-                                                          FeatherIcons
-                                                              .chevronRight,
-                                                          color: Colors.grey,
-                                                        )
-                                                      ])
+                                                                        14,
+                                                                    color: Color
+                                                                        .fromRGBO(
+                                                                            65,
+                                                                            105,
+                                                                            225,
+                                                                            1),
+                                                                  ),
+                                                                ),
+                                                                Icon(
+                                                                  FeatherIcons
+                                                                      .chevronRight,
+                                                                  size: 16,
+                                                                  color: Color
+                                                                      .fromRGBO(
+                                                                          65,
+                                                                          105,
+                                                                          225,
+                                                                          1),
+                                                                )
+                                                              ],
+                                                            ))),
+                                                  ),
                                                 ],
                                               ))))
                                   : Padding(
@@ -1149,7 +1254,7 @@ class _ActivityBuyState extends State<ActivityBuy>
                                   SizedBox(
                                     height: 10,
                                   ),
-                                  Text('You have not made any offers yet ',
+                                  Text('Browse products and start ordering.',
                                       style: TextStyle(
                                           fontFamily: 'Helvetica',
                                           fontSize: 18.0,
@@ -1160,7 +1265,7 @@ class _ActivityBuyState extends State<ActivityBuy>
                                     height: 10,
                                   ),
                                   Text(
-                                    'The buy section is for all your activities regarding items you are buying. You can make offers, track your orders and even make purchases. What are you waiting for?',
+                                    'You can make purchases, track your orders and checkout your offers here. What are you waiting for?',
                                     style: TextStyle(
                                         fontFamily: 'Helvetica',
                                         fontSize: 16.0,

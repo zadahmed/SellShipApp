@@ -280,7 +280,7 @@ class _NotifcationPageState extends State<NotifcationPage>
                                                 ChatPageOfferNav(
                                                   messageid: notifs[index]
                                                       .navigationid,
-                                                  userid: notifs[index].itemid,
+                                                  // userid: notifs[index].itemid,
                                                 )),
                                       );
                                     } else if (notifs[index].navroute ==
@@ -347,7 +347,7 @@ class _NotifcationPageState extends State<NotifcationPage>
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => OrderSeller(
-                                                  itemid: notifs[index].itemid,
+                                                  // itemid: notifs[index].itemid,
                                                   messageid: notifs[index]
                                                       .navigationid,
                                                 )),

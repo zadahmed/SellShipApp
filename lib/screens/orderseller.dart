@@ -28,10 +28,10 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OrderSeller extends StatefulWidget {
+  List<Item> items;
   String messageid;
-  String itemid;
 
-  OrderSeller({Key key, this.messageid, this.itemid}) : super(key: key);
+  OrderSeller({Key key, this.messageid, this.items}) : super(key: key);
   @override
   _OrderSellerState createState() => _OrderSellerState();
 }
@@ -98,7 +98,7 @@ class _OrderSellerState extends State<OrderSeller> {
       });
     }
 
-    var url = 'https://api.sellship.co/api/getitem/' + widget.itemid;
+    var url = 'https://api.sellship.co/api/getitem/';
     final response = await http.get(Uri.parse(url));
 
     var jsonbody = json.decode(response.body);
@@ -181,7 +181,6 @@ class _OrderSellerState extends State<OrderSeller> {
 
     setState(() {
       loading = true;
-      itemid = widget.itemid;
       messageid = widget.messageid;
     });
 
@@ -1517,7 +1516,7 @@ class _OrderSellerState extends State<OrderSeller> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => Details(
-                                                  itemid: widget.itemid,
+                                                  // itemid: widget.itemid,
                                                   name: item.name,
                                                   sold: item.sold,
                                                   source: 'order',

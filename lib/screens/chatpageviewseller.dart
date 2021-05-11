@@ -915,7 +915,7 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => OrderSeller(
-                                        itemid: widget.itemid,
+                                        // itemid: widget.itemid,
                                         messageid: widget.messageid,
                                       )),
                             );
@@ -1559,7 +1559,7 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => OrderSeller(
-                                        itemid: widget.itemid,
+                                        // itemid: widget.itemid,
                                         messageid: widget.messageid,
                                       )),
                             );
@@ -1811,7 +1811,7 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => OrderSeller(
-                                        itemid: widget.itemid,
+                                        // itemid: widget.itemid,
                                         messageid: widget.messageid,
                                       )),
                             );
