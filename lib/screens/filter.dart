@@ -6,7 +6,7 @@ import 'package:SellShip/screens/orderbuyer.dart';
 import 'package:SellShip/screens/orderbuyeruae.dart';
 import 'package:SellShip/screens/orderseller.dart';
 import 'package:SellShip/screens/orderselleruae.dart';
-import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';

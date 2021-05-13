@@ -11,7 +11,7 @@ import 'package:SellShip/screens/storepagepublic.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:substring_highlight/substring_highlight.dart';
-import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
+
 //import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -130,7 +130,6 @@ class _SearchState extends State<Search>
     }
     discoverstores();
     discoverhashtags();
-    discoverproducts();
   }
 
   List<Stores> storeList = new List<Stores>();
@@ -180,40 +179,6 @@ class _SearchState extends State<Search>
     });
   }
 
-  discoverproducts() async {
-    var url = 'https://api.sellship.co/api/products/discover/${skip}/${limit}';
-
-    final response = await http.get(Uri.parse(url));
-    var jsonbody = json.decode(response.body);
-    for (var jsondata in jsonbody) {
-      var q = Map<String, dynamic>.from(jsondata['dateuploaded']);
-
-      DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
-      var dateuploaded = timeago.format(dateuploade);
-      Item item = Item(
-        itemid: jsondata['_id']['\$oid'],
-        name: jsondata['name'],
-        date: dateuploaded,
-        likes: jsondata['likes'] == null ? 0 : jsondata['likes'],
-        comments:
-            jsondata['comments'] == null ? 0 : jsondata['comments'].length,
-        image: jsondata['image'],
-        price: jsondata['price'].toString(),
-        saleprice: jsondata.containsKey('saleprice')
-            ? jsondata['saleprice'].toString()
-            : null,
-        category: jsondata['category'],
-        sold: jsondata['sold'] == null ? false : jsondata['sold'],
-      );
-      discoverproductslist.add(item);
-    }
-
-    setState(() {
-      discoverproductslist = discoverproductslist.toSet().toList();
-      loading = false;
-    });
-  }
-
   List<Item> discoverproductslist = List<Item>();
 
   discoverstores() async {
@@ -257,7 +222,7 @@ class _SearchState extends State<Search>
     var url = 'https://api.sellship.co/api/searchitems/' +
         country +
         '/' +
-        capitalize(textsearch).trim() +
+        (textsearch).trim().toString().toLowerCase() +
         '/' +
         skip.toString() +
         '/' +
@@ -285,7 +250,7 @@ class _SearchState extends State<Search>
         saleprice: jsondata.containsKey('saleprice')
             ? jsondata['saleprice'].toString()
             : null,
-        category: jsondata['category'],
+        subcategory: jsondata['subcategory'],
         sold: jsondata['sold'] == null ? false : jsondata['sold'],
       );
       itemsgrid.add(item);
@@ -300,7 +265,7 @@ class _SearchState extends State<Search>
   onSearchHashtags(textsearch) async {
     storeList.clear();
     var url = 'https://api.sellship.co/api/searchhashtags/' +
-        capitalize(textsearch).trim() +
+        (textsearch).trim().toString().toLowerCase() +
         '/' +
         skip.toString() +
         '/' +
@@ -326,7 +291,7 @@ class _SearchState extends State<Search>
 
     List<Stores> newstores = List<Stores>();
     var url = 'https://api.sellship.co/api/searchstores/' +
-        capitalize(textsearch).trim() +
+        (textsearch).trim().toString().toLowerCase() +
         '/' +
         skip.toString() +
         '/' +
@@ -423,7 +388,7 @@ class _SearchState extends State<Search>
     var url = 'https://api.sellship.co/api/searchitems/' +
         country +
         '/' +
-        capitalize(textsearch).trim() +
+        (textsearch).trim().toString().toLowerCase() +
         '/' +
         skip.toString() +
         '/' +
@@ -437,7 +402,7 @@ class _SearchState extends State<Search>
 
       DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
       var dateuploaded = timeago.format(dateuploade);
-      print(jsondata['name']);
+
       Item item = Item(
         itemid: jsondata['_id']['\$oid'],
         name: jsondata['name'],
@@ -450,14 +415,14 @@ class _SearchState extends State<Search>
         saleprice: jsondata.containsKey('saleprice')
             ? jsondata['saleprice'].toString()
             : null,
-        category: jsondata['category'],
+        subcategory: jsondata['subcategory'],
         sold: jsondata['sold'] == null ? false : jsondata['sold'],
       );
       itemsgrid.add(item);
     }
 
     setState(() {
-      itemsgrid = itemsgrid.toSet().toList();
+      itemsgrid = new List.from(itemsgrid.toSet().toList());
       loading = false;
     });
   }
@@ -706,7 +671,7 @@ class _SearchState extends State<Search>
 
   loadhashtagresults(textsearch) async {
     var url = 'https://api.sellship.co/api/searchhashtagsresults/' +
-        textsearch.trim() +
+        (textsearch).trim().toString().toLowerCase() +
         '/' +
         skip.toString() +
         '/' +
@@ -1145,7 +1110,7 @@ class _SearchState extends State<Search>
                     padding: EdgeInsets.only(left: 15, right: 10),
                     child: Icon(
                       FeatherIcons.search,
-                      size: 24,
+                      size: 20,
                       color: Color.fromRGBO(115, 115, 125, 1),
                     ),
                   ),
@@ -1155,8 +1120,7 @@ class _SearchState extends State<Search>
                         FocusScope.of(context).requestFocus(new FocusNode());
                       },
                       onChanged: (text) {
-                        if (_tabController.index == 0 ||
-                            _tabController.index == 1) {
+                        if (_tabController.index == 0) {
                           setState(() {
                             searched = false;
                             skip = 0;
@@ -1166,8 +1130,7 @@ class _SearchState extends State<Search>
                           });
                           onSearch(text);
                           _getRecentSearches();
-                          discoverproducts();
-                        } else if (_tabController.index == 2) {
+                        } else if (_tabController.index == 1) {
                           setState(() {
                             searched = false;
                             skip = 0;
@@ -1178,7 +1141,7 @@ class _SearchState extends State<Search>
                           onSearchUsers(text);
                           _getRecentSearches();
                           discoverstores();
-                        } else if (_tabController.index == 3) {
+                        } else if (_tabController.index == 2) {
                           setState(() {
                             searched = false;
                             skip = 0;
@@ -1192,7 +1155,46 @@ class _SearchState extends State<Search>
                         }
                       },
                       controller: searchcontroller,
+                      textInputAction: TextInputAction.search,
+                      onSubmitted: (text) {
+                        if (_tabController.index == 0) {
+                          setState(() {
+                            skip = 0;
+                            limit = 20;
+                            itemsgrid.clear();
+                            onSearch(text);
+                            loading = true;
+                            searched = true;
+                          });
+                        } else if (_tabController.index == 1) {
+                          setState(() {
+                            skip = 0;
+                            limit = 20;
+                            storeList.clear();
+                            onSearchUsers(text);
+                            loading = true;
+                            searched = true;
+                          });
+                        } else if (_tabController.index == 2) {
+                          setState(() {
+                            skip = 0;
+                            limit = 20;
+                            hashtagList.clear();
+                            onSearchHashtags(text);
+                            loading = true;
+                            searched = true;
+                          });
+                        }
+                      },
                       decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                            onPressed: () => searchcontroller.clear(),
+                            icon: Icon(
+                              Icons.clear,
+                              size: 16,
+                              color: Colors.blueGrey,
+                            ),
+                          ),
                           hintText: 'What are you looking for?',
                           hintStyle: TextStyle(
                             fontFamily: 'Helvetica',
@@ -1283,144 +1285,149 @@ class _SearchState extends State<Search>
                                             FocusScope.of(context)
                                                 .requestFocus(new FocusNode());
                                           },
-                                          child: CustomScrollView(
-                                              slivers: <Widget>[
-                                                SliverToBoxAdapter(
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(
-                                                        left: 15,
-                                                        top: 5,
-                                                        bottom: 10),
-                                                    child: Align(
-                                                      alignment:
-                                                          Alignment.centerLeft,
-                                                      child: Text(
-                                                        'Search Results',
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                'Helvetica',
-                                                            fontSize: 18,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w900),
-                                                      ),
-                                                    ),
+                                          child: CustomScrollView(slivers: <
+                                              Widget>[
+                                            SliverToBoxAdapter(
+                                              child: Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 15,
+                                                    top: 5,
+                                                    bottom: 10),
+                                                child: Align(
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  child: Text(
+                                                    'Search Results',
+                                                    style: TextStyle(
+                                                        fontFamily: 'Helvetica',
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.w900),
                                                   ),
                                                 ),
-                                                itemsgrid.isNotEmpty
-                                                    ? SliverList(
-                                                        delegate:
-                                                            new SliverChildBuilderDelegate(
-                                                          (context, index) =>
-                                                              ListTile(
-                                                                  onTap:
-                                                                      () async {
-                                                                    await _saveToRecentSearches(
-                                                                        itemsgrid[index]
-                                                                            .name);
-                                                                    setState(
-                                                                        () {
-                                                                      loading =
-                                                                          true;
-                                                                      onSearch(itemsgrid[
-                                                                              index]
-                                                                          .name);
-                                                                      searched =
-                                                                          true;
-                                                                    });
-                                                                  },
-                                                                  leading: Icon(
-                                                                      FeatherIcons
-                                                                          .search),
-                                                                  title:
-                                                                      SubstringHighlight(
-                                                                    text: itemsgrid[
-                                                                            index]
-                                                                        .name,
-                                                                    term: searchcontroller
-                                                                        .text,
-                                                                    textStyle: TextStyle(
-                                                                        fontFamily:
-                                                                            'Helvetica',
-                                                                        fontSize:
-                                                                            18,
-                                                                        color: Colors
-                                                                            .black),
-                                                                    textStyleHighlight: TextStyle(
-                                                                        fontFamily:
-                                                                            'Helvetica',
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .bold,
-                                                                        fontSize:
-                                                                            18,
-                                                                        color: Colors
-                                                                            .black),
-                                                                  )
-
-//
-                                                                  ),
-                                                          childCount: itemsgrid
-                                                                      .length <=
-                                                                  30
+                                              ),
+                                            ),
+                                            itemsgrid.isNotEmpty
+                                                ? SliverList(
+                                                    delegate:
+                                                        new SliverChildBuilderDelegate(
+                                                      (context, index) =>
+                                                          ListTile(
+                                                        dense: true,
+                                                        onTap: () async {
+                                                          await _saveToRecentSearches(
+                                                              itemsgrid[index]
+                                                                  .name);
+                                                          setState(() {
+                                                            loading = true;
+                                                            onSearch(
+                                                                itemsgrid[index]
+                                                                    .name);
+                                                            searched = true;
+                                                          });
+                                                        },
+                                                        leading: Icon(
+                                                            FeatherIcons
+                                                                .search),
+                                                        title:
+                                                            SubstringHighlight(
+                                                          text: itemsgrid[index]
+                                                              .name,
+                                                          term: searchcontroller
+                                                              .text,
+                                                          textStyle: TextStyle(
+                                                              fontFamily:
+                                                                  'Helvetica',
+                                                              fontSize: 16,
+                                                              color:
+                                                                  Colors.black),
+                                                          textStyleHighlight:
+                                                              TextStyle(
+                                                                  fontFamily:
+                                                                      'Helvetica',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize: 16,
+                                                                  color: Colors
+                                                                      .black),
+                                                        ),
+                                                        subtitle: Text(
+                                                          'In ' +
+                                                              itemsgrid[index]
+                                                                  .subcategory,
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'Helvetica',
+                                                              fontSize: 12,
+                                                              color: Colors
+                                                                  .deepOrange),
+                                                        ),
+                                                      ),
+                                                      childCount:
+                                                          itemsgrid.length <= 30
                                                               ? itemsgrid.length
                                                               : 30,
-                                                        ),
-                                                      )
-                                                    : SliverToBoxAdapter(
-                                                        child: Padding(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    left: 15,
-                                                                    top: 10),
-                                                            child: Column(
-                                                              children: [
-                                                                Container(
-                                                                    height:
-                                                                        MediaQuery.of(context).size.height /
-                                                                                2 -
-                                                                            200,
-                                                                    width: MediaQuery.of(context)
+                                                    ),
+                                                  )
+                                                : SliverToBoxAdapter(
+                                                    child: Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                left: 15,
+                                                                top: 10),
+                                                        child: Column(
+                                                          children: [
+                                                            Container(
+                                                                height: MediaQuery.of(context)
                                                                             .size
-                                                                            .width -
-                                                                        50,
-                                                                    child: Image
-                                                                        .asset(
-                                                                      'assets/184.png',
-                                                                      fit: BoxFit
-                                                                          .fitHeight,
-                                                                    )),
-                                                                SizedBox(
-                                                                  height: 30,
-                                                                ),
-                                                                searchcontroller
-                                                                            .text
-                                                                            .length >
-                                                                        3
-                                                                    ? Text(
-                                                                        'Oops. Can\'t find any results for that search.',
-                                                                        style: TextStyle(
-                                                                            fontFamily:
-                                                                                'Helvetica',
-                                                                            fontSize:
-                                                                                18,
-                                                                            color:
-                                                                                Colors.grey.shade500),
-                                                                      )
-                                                                    : Text(
-                                                                        'Woah. That\'s way few letters to search for, Please ellaborate on what you are searching for, to get better results',
-                                                                        style: TextStyle(
-                                                                            fontFamily:
-                                                                                'Helvetica',
-                                                                            fontSize:
-                                                                                18,
-                                                                            color:
-                                                                                Colors.grey.shade500),
-                                                                      )
-                                                              ],
-                                                            )),
-                                                      ),
-                                              ]))
+                                                                            .height /
+                                                                        2 -
+                                                                    200,
+                                                                width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width -
+                                                                    50,
+                                                                child:
+                                                                    Image.asset(
+                                                                  'assets/184.png',
+                                                                  fit: BoxFit
+                                                                      .fitHeight,
+                                                                )),
+                                                            SizedBox(
+                                                              height: 30,
+                                                            ),
+                                                            searchcontroller
+                                                                        .text
+                                                                        .length >
+                                                                    3
+                                                                ? Text(
+                                                                    'Oops. Can\'t find any results for that search.',
+                                                                    style: TextStyle(
+                                                                        fontFamily:
+                                                                            'Helvetica',
+                                                                        fontSize:
+                                                                            18,
+                                                                        color: Colors
+                                                                            .grey
+                                                                            .shade500),
+                                                                  )
+                                                                : Text(
+                                                                    'Woah. That\'s way few letters to search for, Please ellaborate on what you are searching for, to get better results',
+                                                                    style: TextStyle(
+                                                                        fontFamily:
+                                                                            'Helvetica',
+                                                                        fontSize:
+                                                                            18,
+                                                                        color: Colors
+                                                                            .grey
+                                                                            .shade500),
+                                                                  )
+                                                          ],
+                                                        )),
+                                                  ),
+                                          ]))
                                       : searchresults(context)
                                   : Container(
                                       height:
@@ -1562,7 +1569,7 @@ class _SearchState extends State<Search>
                                                 },
                                                 leading: Icon(
                                                   FeatherIcons.clock,
-                                                  size: 18,
+                                                  size: 16,
                                                 ),
                                                 trailing: InkWell(
                                                   onTap: () async {
@@ -1775,6 +1782,7 @@ class _SearchState extends State<Search>
                                                             new SliverChildBuilderDelegate(
                                                           (context, index) =>
                                                               ListTile(
+                                                            dense: true,
                                                             onTap: () async {
                                                               Navigator.push(
                                                                 context,
@@ -1839,7 +1847,7 @@ class _SearchState extends State<Search>
                                                               textStyle: TextStyle(
                                                                   fontFamily:
                                                                       'Helvetica',
-                                                                  fontSize: 18,
+                                                                  fontSize: 16,
                                                                   color: Colors
                                                                       .black),
                                                               textStyleHighlight: TextStyle(
@@ -1848,7 +1856,7 @@ class _SearchState extends State<Search>
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold,
-                                                                  fontSize: 18,
+                                                                  fontSize: 16,
                                                                   color: Colors
                                                                       .black),
                                                             ),
@@ -2409,6 +2417,7 @@ class _SearchState extends State<Search>
                                                             new SliverChildBuilderDelegate(
                                                           (context, index) =>
                                                               ListTile(
+                                                                  dense: true,
                                                                   onTap:
                                                                       () async {
                                                                     hashtagitemsgrid
@@ -2448,7 +2457,7 @@ class _SearchState extends State<Search>
                                                                         fontFamily:
                                                                             'Helvetica',
                                                                         fontSize:
-                                                                            18,
+                                                                            16,
                                                                         color: Colors
                                                                             .black),
                                                                     textStyleHighlight: TextStyle(
@@ -2458,7 +2467,7 @@ class _SearchState extends State<Search>
                                                                             FontWeight
                                                                                 .bold,
                                                                         fontSize:
-                                                                            18,
+                                                                            16,
                                                                         color: Colors
                                                                             .black),
                                                                   )
@@ -2743,6 +2752,7 @@ class _SearchState extends State<Search>
                                     SliverList(
                                       delegate: new SliverChildBuilderDelegate(
                                         (context, index) => ListTile(
+                                            dense: true,
                                             onTap: () async {
                                               await _saveToRecentSearches(
                                                   hashtagList[index]);
@@ -2767,7 +2777,7 @@ class _SearchState extends State<Search>
                                                       .toLowerCase(),
                                               style: TextStyle(
                                                   fontFamily: 'Helvetica',
-                                                  fontSize: 18,
+                                                  fontSize: 16,
                                                   color: Colors.black),
                                             )),
                                         childCount: hashtagList.length <= 15
@@ -3349,85 +3359,6 @@ class _SearchState extends State<Search>
     }
 
     return itemsgrid.toSet().toList();
-  }
-
-  loadbrands() async {
-    brands.clear();
-    var categoryurl = 'https://api.sellship.co/api/getallbrands';
-    final categoryresponse = await http.get(Uri.parse(categoryurl));
-    if (categoryresponse.statusCode == 200) {
-      var categoryrespons = json.decode(categoryresponse.body);
-      print(categoryrespons);
-      for (int i = 0; i < categoryrespons.length; i++) {
-        brands.add(categoryrespons[i]);
-      }
-      setState(() {
-        brands = brands;
-      });
-    } else {
-      print(categoryresponse.statusCode);
-    }
-
-    scaffoldState.currentState.showBottomSheet((context) {
-      return Container(
-        height: 500,
-        width: MediaQuery.of(context).size.width,
-        child: Padding(
-          padding: const EdgeInsets.all(1.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Icon(FeatherIcons.chevronDown),
-              SizedBox(
-                height: 2,
-              ),
-              Center(
-                child: Text(
-                  'Brand',
-                  style: TextStyle(
-                      fontFamily: 'Helvetica',
-                      fontSize: 16,
-                      color: Colors.deepOrange),
-                ),
-              ),
-              Flexible(
-//                  height: 600,
-                  child: AlphabetListScrollView(
-                showPreview: true,
-                strList: brands,
-                indexedHeight: (i) {
-                  return 40;
-                },
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () async {
-                      setState(() {
-                        _selectedFilter = 'Brand';
-                        _FilterLoad = "Brand";
-                        brand = brands[index];
-                        skip = 0;
-                        limit = 20;
-                        loading = true;
-                      });
-                      itemsgrid.clear();
-                      Navigator.of(context).pop();
-
-                      fetchbrands(brands[index]);
-                    },
-                    child: ListTile(
-                      title: brands[index] != null
-                          ? Text(brands[index])
-                          : Text('sd'),
-                    ),
-                  );
-                },
-              ))
-            ],
-          ),
-        ),
-      );
-    });
   }
 
   List<String> brands = List<String>();

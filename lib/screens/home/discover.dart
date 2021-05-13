@@ -25,7 +25,7 @@ import 'package:SellShip/screens/search.dart';
 import 'package:SellShip/screens/storepage.dart';
 import 'package:SellShip/screens/storepagepublic.dart';
 import 'package:SellShip/screens/subcategory.dart';
-import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
+
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -2189,7 +2189,7 @@ class _DiscoverState extends State<Discover>
                 below100list.isNotEmpty
                     ? SliverToBoxAdapter(
                         child: Container(
-                        height: 275,
+                        height: 280,
                         width: MediaQuery.of(context).size.width,
                         child: ListView.builder(
                           itemCount: below100list.length,
@@ -3143,7 +3143,7 @@ class _DiscoverState extends State<Discover>
                 itemsgrid.isNotEmpty
                     ? SliverToBoxAdapter(
                         child: Container(
-                        height: 285,
+                        height: 290,
                         width: MediaQuery.of(context).size.width,
                         child: ListView.builder(
                           itemCount: itemsgrid.length,

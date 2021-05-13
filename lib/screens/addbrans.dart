@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -121,31 +120,32 @@ class _BrandsState extends State<Brands> {
           ),
         ),
         SliverFillRemaining(
-            child: AlphabetListScrollView(
-          showPreview: true,
-          strList: brands,
-          indexedHeight: (i) {
-            return 50;
-          },
-          itemBuilder: (context, index) {
-            return InkWell(
-              onTap: () async {
-                Navigator.pop(context, brands[index]);
-              },
-              child: ListTile(
-                title: brands[index] != null
-                    ? Text(
-                        brands[index],
-                        style: TextStyle(
-                            fontFamily: 'Helvetica',
-                            fontSize: 16,
-                            color: Colors.black),
-                      )
-                    : Text(''),
-              ),
-            );
-          },
-        ))
+          child: AlphabetListScrollView(
+            showPreview: true,
+            strList: brands,
+            indexedHeight: (i) {
+              return 50;
+            },
+            itemBuilder: (context, index) {
+              return InkWell(
+                onTap: () async {
+                  Navigator.pop(context, brands[index]);
+                },
+                child: ListTile(
+                  title: brands[index] != null
+                      ? Text(
+                          brands[index],
+                          style: TextStyle(
+                              fontFamily: 'Helvetica',
+                              fontSize: 16,
+                              color: Colors.black),
+                        )
+                      : Text(''),
+                ),
+              );
+            },
+          ),
+        )
       ],
     ));
   }

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:SellShip/models/messages.dart';
+import 'package:SellShip/screens/chatpage.dart';
 import 'package:SellShip/screens/chatpageview.dart';
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:SellShip/screens/test.dart';
@@ -40,103 +41,53 @@ class MessagesState extends State<Messages> {
       final responsemessage = await http.get(Uri.parse(messageurl));
 
       var messageinfo = json.decode(responsemessage.body);
-
-      if (messageinfo.isNotEmpty) {
-        for (int i = 0; i < messageinfo.length; i++) {
-          var imageprofile = messageinfo[i]['profilepicture'];
-          var itemname = messageinfo[i]['itemname'];
-          var itemid = messageinfo[i]['itemid']['\$oid'];
+      print(messageinfo);
+      for (int i = 0; i < messageinfo.length; i++) {
+        if (messageinfo[i]['senderid'] == userid) {
           final f = new DateFormat('hh:mm');
-          final t = new DateFormat('yyyy-MM-dd hh:mm');
+          DateTime date = new DateTime.fromMillisecondsSinceEpoch(
+              messageinfo[i]['lastdate']['\$date']);
+          var s = f.format(date);
 
-          var offe;
-          var offerstage;
-          var unread;
-          var msgcount;
-
-          if (messageinfo[i]['offer'] != null) {
-            offe = messageinfo[i]['offer'];
-          } else if (messageinfo[i]['offer'] == null) {
-            offe = null;
-          }
-
-          if (messageinfo[i]['offerstage'] != null) {
-            offerstage = messageinfo[i]['offerstage'];
-          } else if (messageinfo[i]['offerstage'] == null) {
-            offerstage = null;
-          }
-
-          if (messageinfo[i]['lastid'] != null) {
-            var lastid = messageinfo[i]['lastid'];
-
-            if (lastid == userid) {
-              unread = false;
-            } else if (lastid != userid) {
-              if (messageinfo[i]['unread'] == true) {
-                unread = true;
-                if (messageinfo[i]['msgcount'] != null) {
-                  msgcount = messageinfo[i]['msgcount'];
-                } else if (messageinfo[i]['msgcount'] == null) {
-                  msgcount = null;
-                }
-              } else {
-                unread = false;
-              }
-            }
-          }
-
-          if (messageinfo[i]['date'] != null) {
-            DateTime date = new DateTime.fromMillisecondsSinceEpoch(
-                messageinfo[i]['date']['\$date']);
-            var s = f.format(date);
-            var q = t.format(date);
-
-            var sender;
-            var reciever;
-            if (userid == messageinfo[i]['user1']) {
-              sender = userid;
-              reciever = messageinfo[i]['user2'];
-            } else {
-              sender = messageinfo[i]['user2'];
-              reciever = messageinfo[i]['user1'];
-            }
-
-            ChatMessages msg = ChatMessages(
-                messageid: messageinfo[i]['msgid'],
-                peoplemessaged: messageinfo[i]['user2name'],
-                senderid: sender,
-                offer: offe,
-                offerstage: offerstage,
-                lastrecieved: messageinfo[i]['lastrecieved'],
-                unread: unread,
-                recieveddate: s,
-                hiddendate: q,
-                msgcount: msgcount,
-                itemname: itemname,
-                senderName: messageinfo[i]['user1name'],
-                recipentid: reciever,
-                profilepicture: imageprofile,
-                itemid: itemid,
-                fcmtokenreciever: messageinfo[i]['fcmtokenreciever']);
-
-            messagesd.add(msg);
-          }
+          ChatMessages chats = ChatMessages(
+              messageid: messageinfo[i]['msgid'],
+              recievername: messageinfo[i]['recieverusername'],
+              senderid: messageinfo[i]['senderid'],
+              recipentid: messageinfo[i]['recieverid'],
+              profilepicture: messageinfo[i]['recieverpp'],
+              lastrecieved: messageinfo[i].containsKey('lastmessage')
+                  ? messageinfo[i]['lastmessage']
+                  : null,
+              unread: messageinfo[i].containsKey('unread')
+                  ? messageinfo[i]['unread']
+                  : false,
+              recieveddate: s);
+          messagesd.add(chats);
+        } else {
+          final f = new DateFormat('hh:mm');
+          DateTime date = new DateTime.fromMillisecondsSinceEpoch(
+              messageinfo[i]['lastdate']['\$date']);
+          var s = f.format(date);
+          ChatMessages chats = ChatMessages(
+              messageid: messageinfo[i]['msgid'],
+              recievername: messageinfo[i]['senderusername'],
+              senderid: messageinfo[i]['recieverid'],
+              recipentid: messageinfo[i]['senderid'],
+              profilepicture: messageinfo[i]['senderpp'],
+              lastrecieved: messageinfo[i].containsKey('lastmessage')
+                  ? messageinfo[i]['lastmessage']
+                  : null,
+              unread: messageinfo[i].containsKey('unread')
+                  ? messageinfo[i]['unread']
+                  : false,
+              recieveddate: s);
+          messagesd.add(chats);
         }
-      } else {
-        messagesd = [];
       }
-
-      messagesd.sort();
-
-      if (mounted) {
-        setState(() {
-          messagesd = messagesd;
-          loading = false;
-        });
-      } else {
+      setState(() {
         messagesd = messagesd;
         loading = false;
-      }
+      });
     } else {
       setState(() {
         messagesd = [];
@@ -161,258 +112,113 @@ class MessagesState extends State<Messages> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        iconTheme: IconThemeData(
-          color: Colors.deepOrange,
-        ),
-        centerTitle: true,
-        title: Text(
-          'CHATS',
-          style: TextStyle(
-              fontFamily: 'Helvetica',
-              fontSize: 16,
-              color: Colors.deepOrange,
-              fontWeight: FontWeight.w800),
-        ),
-        actions: <Widget>[
-          Padding(
-              padding: EdgeInsets.all(20),
-              child: InkWell(
-                onTap: () async {
-                  var messageurl =
-                      'https://api.sellship.co/api/clearnotification/' +
-                          userid.toString();
-                  final responsemessage = await http.get(Uri.parse(messageurl));
-                  print(responsemessage.statusCode);
-                },
-                child: Text(
-                  'Clear',
-                  style: TextStyle(
-                      fontFamily: 'Helvetica',
-                      fontSize: 14,
-                      color: Colors.deepOrangeAccent,
-                      fontWeight: FontWeight.w400),
-                ),
-              )),
-        ],
-      ),
       body: loading == false
           ? messagesd.isNotEmpty
               ? EasyRefresh(
-                  header: BallPulseHeader(color: Colors.deepPurple),
+                  header: CustomHeader(
+                      extent: 160.0,
+                      enableHapticFeedback: true,
+                      triggerDistance: 160.0,
+                      headerBuilder: (context,
+                          loadState,
+                          pulledExtent,
+                          loadTriggerPullDistance,
+                          loadIndicatorExtent,
+                          axisDirection,
+                          float,
+                          completeDuration,
+                          enableInfiniteLoad,
+                          success,
+                          noMore) {
+                        return SpinKitFadingCircle(
+                          color: Colors.deepOrange,
+                          size: 30.0,
+                        );
+                      }),
                   child: ListView.builder(
-                      cacheExtent: double.parse(messagesd.length.toString()),
                       itemCount: messagesd.length,
                       itemBuilder: (BuildContext ctxt, int index) {
                         return Slidable(
                           actionPane: SlidableDrawerActionPane(),
                           actionExtentRatio: 0.25,
-                          child: Column(
-                            children: <Widget>[
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    flex: 10,
-                                    child: ListTile(
-                                      title: Text(
-                                        messagesd[index].itemname,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: 'Helvetica',
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                      isThreeLine: true,
-                                      subtitle: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text(
-                                            messagesd[index].peoplemessaged,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 13,
-                                                color: Colors.black,
-                                                fontWeight:
-                                                    messagesd[index].unread ==
-                                                            true
-                                                        ? FontWeight.bold
-                                                        : FontWeight.normal),
-                                          ),
-                                          Text(
-                                            messagesd[index].lastrecieved,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 11,
-                                                color:
-                                                    messagesd[index].unread ==
-                                                            true
-                                                        ? Colors.black
-                                                        : Colors.grey,
-                                                fontWeight:
-                                                    messagesd[index].unread ==
-                                                            true
-                                                        ? FontWeight.bold
-                                                        : FontWeight.normal),
-                                          ),
-                                        ],
-                                      ),
-                                      leading: Container(
-                                        height: 70,
-                                        width: 70,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            child: messagesd[index]
-                                                        .profilepicture ==
-                                                    null
-                                                ? Image.asset(
-                                                    'assets/personplaceholder.png',
-                                                    fit: BoxFit.cover,
-                                                  )
-                                                : CachedNetworkImage(
-                                                    height: 200,
-                                                    width: 300,
-                                                    imageUrl: messagesd[index]
-                                                        .profilepicture,
-                                                    fit: BoxFit.cover,
-                                                    placeholder: (context,
-                                                            url) =>
-                                                        SpinKitDoubleBounce(
-                                                            color: Colors
-                                                                .deepOrange),
-                                                    errorWidget:
-                                                        (context, url, error) =>
-                                                            Icon(Icons.error),
-                                                  )),
-                                      ),
-                                      trailing: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Text(
-                                            messagesd[index].recieveddate,
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 11,
-                                                fontWeight:
-                                                    messagesd[index].unread ==
-                                                            true
-                                                        ? FontWeight.bold
-                                                        : FontWeight.normal),
-                                          ),
+                          child: ListTile(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ChatPage(
+                                          messageid: messagesd[index].messageid,
+                                          recipentid:
+                                              messagesd[index].recipentid,
+                                          recipentname:
+                                              messagesd[index].recievername,
+                                          senderid: userid,
+                                        )),
+                              );
+                            },
+                            title: Text(
+                              '@' + messagesd[index].recievername.toUpperCase(),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Helvetica',
+                                fontSize: 16,
+                              ),
+                            ),
+                            trailing: Text(
+                              messagesd[index].recieveddate,
+                              style: TextStyle(
+                                  fontFamily: 'Helvetica',
+                                  fontSize: 12,
+                                  color: Colors.grey),
+                            ),
+                            // isThreeLine: true,
+                            subtitle: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  messagesd[index].lastrecieved != null
+                                      ? messagesd[index].lastrecieved
+                                      : '',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 13,
+                                      color: Colors.black,
+                                      fontWeight:
                                           messagesd[index].unread == true
-                                              ? Container(
-                                                  margin: const EdgeInsets.only(
-                                                      top: 5.0),
-                                                  height: 10,
-                                                  width: 10,
-                                                  decoration: BoxDecoration(
-                                                      color: Colors
-                                                          .deepOrangeAccent,
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                        Radius.circular(20.0),
-                                                      )),
-                                                  child: Center(
-                                                      child: Text(
-                                                    '',
-                                                    style: TextStyle(
-                                                        fontSize: 8,
-                                                        fontFamily: 'Helvetica',
-                                                        color: Colors.white),
-                                                  )),
-                                                )
-                                              : SizedBox()
-                                        ],
+                                              ? FontWeight.bold
+                                              : FontWeight.normal),
+                                ),
+                              ],
+                            ),
+                            leading: messagesd[index].profilepicture != null &&
+                                    messagesd[index].profilepicture.isNotEmpty
+                                ? Container(
+                                    height: 50,
+                                    width: 50,
+                                    child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(50),
+                                        child: CachedNetworkImage(
+                                          height: 200,
+                                          width: 300,
+                                          imageUrl:
+                                              messagesd[index].profilepicture,
+                                          fit: BoxFit.cover,
+                                        )),
+                                  )
+                                : CircleAvatar(
+                                    radius: 25,
+                                    backgroundColor: Colors.deepOrangeAccent
+                                        .withOpacity(0.3),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(25),
+                                      child: Image.asset(
+                                        'assets/personplaceholder.png',
+                                        fit: BoxFit.fitWidth,
                                       ),
-                                      onTap: () {
-                                        if (messagesd[index].offerstage !=
-                                            null) {
-//                                          Navigator.push(
-//                                              context,
-//                                              MaterialPageRoute(
-//                                                  builder: (context) =>
-//                                                      ChatPageView(
-//                                                        senderName:
-//                                                            messagesd[index]
-//                                                                .senderName,
-//                                                        messageid:
-//                                                            messagesd[index]
-//                                                                .messageid,
-//                                                        recipentname:
-//                                                            messagesd[index]
-//                                                                .peoplemessaged,
-//                                                        senderid:
-//                                                            messagesd[index]
-//                                                                .senderid,
-//                                                        recipentid:
-//                                                            messagesd[index]
-//                                                                .recipentid,
-//                                                        fcmToken: messagesd[
-//                                                                index]
-//                                                            .fcmtokenreciever,
-//                                                        itemid: messagesd[index]
-//                                                            .itemid,
-//                                                        offerstage:
-//                                                            messagesd[index]
-//                                                                .offerstage,
-//                                                        offer: messagesd[index]
-//                                                            .offer,
-//                                                      )));
-//                                        } else {
-//                                          Navigator.push(
-//                                              context,
-//                                              MaterialPageRoute(
-//                                                  builder: (context) =>
-//                                                      ChatPageView(
-//                                                        senderName:
-//                                                            messagesd[index]
-//                                                                .senderName,
-//                                                        messageid:
-//                                                            messagesd[index]
-//                                                                .messageid,
-//                                                        recipentname:
-//                                                            messagesd[index]
-//                                                                .peoplemessaged,
-//                                                        senderid:
-//                                                            messagesd[index]
-//                                                                .senderid,
-//                                                        recipentid:
-//                                                            messagesd[index]
-//                                                                .recipentid,
-//                                                        fcmToken: messagesd[
-//                                                                index]
-//                                                            .fcmtokenreciever,
-//                                                        itemid: messagesd[index]
-//                                                            .itemid,
-//                                                      )));
-//                                        }
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Divider(
-                                endIndent: 12.0,
-                                indent: 12.0,
-                                height: 0,
-                              ),
-                            ],
+                                    )),
                           ),
                           secondaryActions: <Widget>[
                             IconSlideAction(
@@ -442,29 +248,91 @@ class MessagesState extends State<Messages> {
                     getMessages();
                   },
                 )
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Center(
-                      child: Text(
-                        'View your Messages here ',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontFamily: 'Helvetica',
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                        child: Image.asset(
-                      'assets/messages.png',
-                      fit: BoxFit.fitWidth,
-                    ))
-                  ],
-                )
+              : Container(
+                  width: double.infinity,
+                  child: Padding(
+                      padding: EdgeInsets.only(left: 20, right: 20, top: 40),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            '💬',
+                            style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 40.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text('Nothing to see here',
+                              style: TextStyle(
+                                  fontFamily: 'Helvetica',
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black),
+                              textAlign: TextAlign.center),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            'You don\'t have any new messages.',
+                            style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 16.0,
+                                color: Colors.black),
+                            textAlign: TextAlign.justify,
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          InkWell(
+                            child: Padding(
+                              padding: EdgeInsets.all(20),
+                              child: Container(
+                                height: 45,
+                                width: MediaQuery.of(context).size.width / 2,
+                                decoration: BoxDecoration(
+                                  color: Colors.deepOrange,
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(25.0),
+                                  ),
+                                  boxShadow: <BoxShadow>[
+                                    BoxShadow(
+                                        color:
+                                            Colors.deepOrange.withOpacity(0.4),
+                                        offset: const Offset(1.1, 1.1),
+                                        blurRadius: 5.0),
+                                  ],
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Start Messaging',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16,
+                                      letterSpacing: 0.0,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            onTap: () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => RootScreen(
+                                          index: 2,
+                                        )),
+                              );
+                            },
+                          ),
+                        ],
+                      )))
           : Container(
               width: double.infinity,
               padding:

@@ -148,7 +148,7 @@ class _ActivityBuyState extends State<ActivityBuy>
             currency = 'AED';
             keepalive = false;
             loading = false;
-            buyingItem = buyingItem;
+            buyingItem = new List.from(buyingItem.reversed);
           });
         }
       }

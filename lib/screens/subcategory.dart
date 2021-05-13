@@ -13,7 +13,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:SellShip/screens/comments.dart';
-import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
@@ -758,36 +758,6 @@ class _SubCategoryState extends State<SubCategory> {
                       color: Colors.deepOrange),
                 ),
               ),
-              Flexible(
-//                  height: 600,
-                  child: AlphabetListScrollView(
-                showPreview: true,
-                strList: brands,
-                indexedHeight: (i) {
-                  return 40;
-                },
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () async {
-                      setState(() {
-                        brand = brands[index];
-                        skip = 0;
-                        limit = 20;
-                        loading = true;
-                      });
-                      itemsgrid.clear();
-                      Navigator.of(context).pop();
-
-                      fetchbrands(brands[index]);
-                    },
-                    child: ListTile(
-                      title: brands[index] != null
-                          ? Text(brands[index])
-                          : Text('sd'),
-                    ),
-                  );
-                },
-              ))
             ],
           ),
         ),

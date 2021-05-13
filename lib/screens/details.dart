@@ -5,6 +5,7 @@ import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/screens/CommentsDetail.dart';
 import 'package:SellShip/screens/brand.dart';
 import 'package:SellShip/screens/categorydynamic.dart';
+import 'package:SellShip/screens/chatpage.dart';
 import 'package:SellShip/screens/chatpageview.dart';
 import 'package:SellShip/screens/checkout.dart';
 import 'package:SellShip/screens/comments.dart';
@@ -21,6 +22,7 @@ import 'package:SellShip/screens/subcategory.dart';
 import 'package:SellShip/screens/subsubcategory.dart';
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -2179,6 +2181,106 @@ class _DetailsState extends State<Details> {
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.w400),
                                             ),
+                                            trailing: InkWell(
+                                                onTap: () async {
+                                                  showDialog(
+                                                      context: context,
+                                                      barrierDismissible: true,
+                                                      useRootNavigator: false,
+                                                      builder: (_) => Center(
+                                                            child: Container(
+                                                                height: 50,
+                                                                width: 50,
+                                                                child:
+                                                                    SpinKitDoubleBounce(
+                                                                  color: Colors
+                                                                      .deepOrange,
+                                                                )),
+                                                          ));
+
+                                                  Dio dio = new Dio();
+
+                                                  var url =
+                                                      'https://api.sellship.co/api/chat/${userid}/${newItem.userid}';
+
+                                                  var response =
+                                                      await dio.post(url);
+                                                  if (response.statusCode ==
+                                                      200) {
+                                                    var jsonbody =
+                                                        response.data;
+                                                    Navigator.of(context,
+                                                            rootNavigator: true)
+                                                        .pop('dialog');
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              ChatPage(
+                                                                messageid: jsonbody[
+                                                                    'messageid'],
+                                                                recipentid:
+                                                                    newItem
+                                                                        .userid,
+                                                                recipentname:
+                                                                    newItem
+                                                                        .username,
+                                                                senderid:
+                                                                    userid,
+                                                              )),
+                                                    );
+                                                  }
+                                                },
+                                                child: Container(
+                                                  height: 35,
+                                                  width: 90,
+                                                  decoration: BoxDecoration(
+                                                    color: Color.fromRGBO(
+                                                        255, 115, 0, 1),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors
+                                                            .grey.shade300,
+                                                        offset: Offset(
+                                                            0.0, 1.0), //(x,y)
+                                                        blurRadius: 6.0,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  child: Center(
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Icon(
+                                                          FeatherIcons
+                                                              .messageCircle,
+                                                          color: Colors.white,
+                                                          size: 14,
+                                                        ),
+                                                        SizedBox(
+                                                          width: 2,
+                                                        ),
+                                                        Text(
+                                                          'Chat',
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            fontSize: 14,
+                                                            color: Colors.white,
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                )),
                                             contentPadding:
                                                 EdgeInsets.symmetric(
                                                     vertical: 0.0,
@@ -3371,7 +3473,8 @@ class _DetailsState extends State<Details> {
                                             fontSize: 16,
                                             fontFamily: 'Helvetica',
                                             letterSpacing: 0.0,
-                                            color: Colors.deepOrange,
+                                            color:
+                                                Color.fromRGBO(65, 105, 225, 1),
                                           ),
                                         ),
                                       ),
@@ -3630,7 +3733,7 @@ class _DetailsState extends State<Details> {
                             child: Container(
                                 width: MediaQuery.of(context).size.width - 50,
                                 decoration: BoxDecoration(
-                                  color: Colors.deepOrange,
+                                  color: Color.fromRGBO(65, 105, 225, 1),
                                   borderRadius: const BorderRadius.all(
                                     Radius.circular(5.0),
                                   ),

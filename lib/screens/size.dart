@@ -12,7 +12,7 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:SellShip/screens/comments.dart';
-import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 

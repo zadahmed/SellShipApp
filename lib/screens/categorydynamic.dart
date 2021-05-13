@@ -13,7 +13,7 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:SellShip/screens/comments.dart';
-import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
@@ -718,83 +718,6 @@ class _CategoryDynamicState extends State<CategoryDynamic>
     }
 
     return itemsgrid;
-  }
-
-  loadbrands() async {
-    brands.clear();
-    var categoryurl = 'https://api.sellship.co/api/getbrands/' + category;
-    final categoryresponse = await http.get(Uri.parse(categoryurl));
-    if (categoryresponse.statusCode == 200) {
-      var categoryrespons = json.decode(categoryresponse.body);
-      print(categoryrespons);
-      for (int i = 0; i < categoryrespons.length; i++) {
-        brands.add(categoryrespons[i]);
-      }
-      setState(() {
-        brands = brands;
-      });
-    } else {
-      print(categoryresponse.statusCode);
-    }
-
-    scaffoldState.currentState.showBottomSheet((context) {
-      return Container(
-        height: 500,
-        width: MediaQuery.of(context).size.width,
-        child: Padding(
-          padding: const EdgeInsets.all(1.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Icon(FeatherIcons.chevronDown),
-              SizedBox(
-                height: 2,
-              ),
-              Center(
-                child: Text(
-                  'Brand',
-                  style: TextStyle(
-                      fontFamily: 'Helvetica',
-                      fontSize: 16,
-                      color: Colors.deepOrange),
-                ),
-              ),
-              Flexible(
-//                  height: 600,
-                  child: AlphabetListScrollView(
-                showPreview: true,
-                strList: brands,
-                indexedHeight: (i) {
-                  return 40;
-                },
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () async {
-                      setState(() {
-                        brand = brands[index];
-                        skip = 0;
-                        limit = 40;
-                        loading = true;
-                      });
-                      itemsgrid.clear();
-                      Navigator.of(context).pop();
-
-                      fetchbrands(brands[index]);
-                    },
-                    child: ListTile(
-                      title: brands[index] != null
-                          ? Text(brands[index])
-                          : Text('sd'),
-                    ),
-                  );
-                },
-              ))
-            ],
-          ),
-        ),
-      );
-    });
   }
 
   List<String> brands = List<String>();

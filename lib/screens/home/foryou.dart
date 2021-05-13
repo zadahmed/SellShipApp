@@ -21,7 +21,7 @@ import 'package:SellShip/screens/search.dart';
 import 'package:SellShip/screens/storepage.dart';
 import 'package:SellShip/screens/storepagepublic.dart';
 import 'package:SellShip/screens/subcategory.dart';
-import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
+
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -3800,36 +3800,6 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                       color: Colors.deepOrange),
                 ),
               ),
-              Flexible(
-//                  height: 600,
-                  child: AlphabetListScrollView(
-                showPreview: true,
-                strList: brands,
-                indexedHeight: (i) {
-                  return 40;
-                },
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () async {
-                      setState(() {
-                        brand = brands[index];
-                        skip = 0;
-                        limit = 20;
-                        loading = true;
-                      });
-                      itemsgrid.clear();
-                      Navigator.of(context).pop();
-
-                      fetchbrands(brands[index]);
-                    },
-                    child: ListTile(
-                      title: brands[index] != null
-                          ? Text(brands[index])
-                          : Text('sd'),
-                    ),
-                  );
-                },
-              ))
             ],
           ),
         ),

@@ -37,7 +37,6 @@ class OrderSeller extends StatefulWidget {
 }
 
 class _OrderSellerState extends State<OrderSeller> {
-  Item item;
   String messageid;
   var addressline1;
   var city;
@@ -98,78 +97,54 @@ class _OrderSellerState extends State<OrderSeller> {
       });
     }
 
-    var url = 'https://api.sellship.co/api/getitem/';
-    final response = await http.get(Uri.parse(url));
+    for (int i = 0; i < widget.items.length; i++) {
+      Item ite = Item(
+          name: widget.items[i].name,
+          selectedsize: widget.items[i].selectedsize,
+          quantity: widget.items[i].quantity,
+          weight: widget.items[i].weight,
+          freedelivery: widget.items[i].freedelivery,
+          price: widget.items[i].price,
+          saleprice: widget.items[i].saleprice == null
+              ? null
+              : widget.items[i].saleprice,
+          image: widget.items[i].image,
+          userid: widget.items[i].sellerid == null
+              ? widget.items[i].userid
+              : widget.items[i].sellerid,
+          username: widget.items[i].sellername == null
+              ? widget.items[i].username
+              : widget.items[i].sellername);
 
-    var jsonbody = json.decode(response.body);
-
-    item = Item(
-        name: jsonbody[0]['name'],
-        itemid: jsonbody[0]['_id']['\$oid'].toString(),
-        price: jsonbody[0]['price'].toString(),
-        description: jsonbody[0]['description'],
-        category: jsonbody[0]['category'],
-        condition: jsonbody[0]['condition'] == null
-            ? 'Like New'
-            : jsonbody[0]['condition'],
-        image: jsonbody[0]['image'],
-        image1: jsonbody[0]['image1'],
-        image2: jsonbody[0]['image2'],
-        image3: jsonbody[0]['image3'],
-        image4: jsonbody[0]['image4'],
-        image5: jsonbody[0]['image5'],
-        sellerid: jsonbody[0]['selleruserid'],
-        sellername: jsonbody[0]['sellerusername'],
-        sold: jsonbody[0]['sold'] == null ? false : jsonbody[0]['sold'],
-        likes: jsonbody[0]['likes'] == null ? 0 : jsonbody[0]['likes'],
-        city: jsonbody[0]['city'],
-        username: jsonbody[0]['username'],
-        brand: jsonbody[0]['brand'] == null ? 'Other' : jsonbody[0]['brand'],
-        size: jsonbody[0]['size'] == null ? '' : jsonbody[0]['size'],
-        useremail: jsonbody[0]['useremail'],
-        usernumber: jsonbody[0]['usernumber'],
-        userid: jsonbody[0]['userid'],
-        latitude: jsonbody[0]['latitude'],
-        comments: jsonbody[0]['comments'] == null
-            ? 0
-            : jsonbody[0]['comments'].length,
-        longitude: jsonbody[0]['longitude'],
-        subsubcategory: jsonbody[0]['subsubcategory'],
-        subcategory: jsonbody[0]['subcategory']);
-
-    var offerprice = totalpaid;
-    var _selectedweight = int.parse(jsonbody[0]['weight']);
-    var weightfees;
-    if (_selectedweight == 5) {
-      weightfees = 20;
-    } else if (_selectedweight == 10) {
-      weightfees = 30;
-    } else if (_selectedweight == 20) {
-      weightfees = 50;
-    } else if (_selectedweight == 50) {
-      weightfees = 110;
+      if (widget.items[i].saleprice != null) {
+        subtotal = double.parse(widget.items[i].saleprice) + subtotal;
+        discountprice = (double.parse(widget.items[i].price) -
+                double.parse(widget.items[i].saleprice)) +
+            discountprice;
+      } else {
+        subtotal = double.parse(widget.items[i].price) + subtotal;
+      }
+      orderprice = double.parse(widget.items[i].price) + orderprice;
+      setState(() {
+        item.add(ite);
+      });
     }
 
-    fees = totalpaid / 1.15;
-
-    fees = fees - weightfees;
-
-    print(fees);
-    print('sss');
-    print(jsonbody[0]['originalprice'].toString());
-
-    getuserDetails();
-    getstore(jsonbody[0]['userid']);
-
     setState(() {
-      storeid = jsonbody[0]['userid'];
       item = item;
       fees = fees;
     });
 
+    getuserDetails();
+    getstore(item[0].userid);
+
     return item;
   }
 
+  double discountprice = 0.0;
+  double subtotal = 0.0;
+  double orderprice = 0.0;
+  List<Item> item = [];
   var fees;
   var storeid;
 
@@ -302,11 +277,11 @@ class _OrderSellerState extends State<OrderSeller> {
         date = s;
         cancelled = cancell;
         completed = comple;
-
+        fees = jsonbody['userearnings'];
         size = sz;
         qty = qt;
         delivered = deliver;
-        orderid = jsonbody['paymentid'];
+        orderid = jsonbody['messageid'];
         trackingnumber = track;
         deliverystage = delstage;
         buyerid = jsonbody['senderid'];
@@ -1165,7 +1140,122 @@ class _OrderSellerState extends State<OrderSeller> {
         body: loading == false
             ? ListView(children: <Widget>[
                 SizedBox(height: 10),
-
+                Padding(
+                  padding: EdgeInsets.only(
+                    bottom: 10,
+                    top: 5,
+                  ),
+                  child: Container(
+                      padding: EdgeInsets.all(20),
+                      decoration: BoxDecoration(boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.shade300,
+                          offset: Offset(0.0, 1.0), //(x,y)
+                          blurRadius: 6.0,
+                        ),
+                      ], color: Colors.white),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            completed == false
+                                ? delivered == true
+                                    ? Text(
+                                        'This order will automatically be marked complete once the Buyer\'s Protection period ends.',
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 13,
+                                            color: Colors.blueGrey),
+                                      )
+                                    : Container()
+                                : Container(),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  'Order -',
+                                  style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 14,
+                                      color: Colors.blueGrey),
+                                ),
+                                SizedBox(
+                                  width: 2,
+                                ),
+                                Container(
+                                    child: Text(
+                                  orderid.toString().toUpperCase(),
+                                  style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color.fromRGBO(27, 44, 64, 1)),
+                                )),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 2,
+                            ),
+                            Text(
+                              'Order placed on ' + date.toString(),
+                              style: TextStyle(
+                                  fontFamily: 'Helvetica',
+                                  fontSize: 14,
+                                  color: Colors.blueGrey),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(5),
+                              child: Divider(),
+                            ),
+                            Padding(
+                                padding: EdgeInsets.only(
+                                  bottom: 10,
+                                  top: 10,
+                                ),
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Icon(
+                                            FontAwesomeIcons.shippingFast,
+                                            size: 16,
+                                            color: Colors.blueGrey,
+                                          ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text(
+                                            'Pickup Address',
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 16,
+                                                color: Colors.blueGrey),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Container(
+                                          child: Text(
+                                        mystore.storebio,
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 14,
+                                            color:
+                                                Color.fromRGBO(27, 44, 64, 1)),
+                                      )),
+                                    ]))
+                          ])),
+                ),
                 trackingnumber.isNotEmpty
                     ? Padding(
                         padding: EdgeInsets.only(
@@ -1483,325 +1573,468 @@ class _OrderSellerState extends State<OrderSeller> {
                   height: 10,
                 ),
                 Padding(
-                    padding: EdgeInsets.only(
-                        left: 15, bottom: 10, top: 5, right: 15),
-                    child: Container(
-                        padding: EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.shade300,
-                                offset: Offset(0.0, 1.0), //(x,y)
-                                blurRadius: 6.0,
-                              ),
-                            ],
-                            borderRadius: BorderRadius.circular(15),
-                            color: Colors.white),
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Items: ',
-                                style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 16,
-                                    color: Colors.blueGrey),
-                              ),
-                              Padding(
-                                  padding: EdgeInsets.only(top: 10),
-                                  child: InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => Details(
-                                                  // itemid: widget.itemid,
-                                                  name: item.name,
-                                                  sold: item.sold,
-                                                  source: 'order',
-                                                  image: item.image,
-                                                )),
-                                      );
-                                    },
-                                    child: ListTile(
-                                      contentPadding: EdgeInsets.zero,
-                                      dense: true,
-                                      title: Text(
-                                        item.name,
-                                        style: TextStyle(
-                                            fontFamily: 'Helvetica',
-                                            fontSize: 16,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w800),
-                                      ),
-                                      leading: Container(
-                                        height: 70,
-                                        width: 70,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          child: CachedNetworkImage(
-                                            height: 200,
-                                            width: 300,
-                                            imageUrl: item.image,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                      ),
-                                      subtitle: Text(
-                                        size.isNotEmpty
-                                            ? 'Size: ' + size
-                                            : item.subcategory,
-                                        style: TextStyle(
-                                            fontFamily: 'Helvetica',
-                                            fontSize: 14,
-                                            color: Colors.deepOrange,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      trailing: Text(
-                                        currency + ' ' + item.price.toString(),
-                                        style: TextStyle(
-                                            fontFamily: 'Helvetica',
-                                            fontSize: 14,
-                                            color: Colors.deepOrange,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  )),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Delivery',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      letterSpacing: 0.0,
-                                      color: Colors.blueGrey,
-                                    ),
-                                  ),
-                                  Text('Free',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        letterSpacing: 0.0,
-                                        color: Colors.green,
-                                      )),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Total',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      letterSpacing: 0.0,
-                                      color: Colors.blueGrey,
-                                    ),
-                                  ),
-                                  Text(currency + ' ' + totalpaid.toString(),
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        letterSpacing: 0.0,
-                                        color: Colors.blueGrey,
-                                      )),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'You Earn',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20,
-                                      letterSpacing: 0.0,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  Text(currency + ' ' + fees.toStringAsFixed(2),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w900,
-                                        fontSize: 20,
-                                        letterSpacing: 0.0,
-                                        color: Colors.black,
-                                      )),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                            ]))),
-                Padding(
-                  padding:
-                      EdgeInsets.only(left: 15, bottom: 10, top: 5, right: 15),
+                  padding: EdgeInsets.only(
+                    bottom: 10,
+                    top: 5,
+                  ),
                   child: Container(
-                      padding: EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.shade300,
-                              offset: Offset(0.0, 1.0), //(x,y)
-                              blurRadius: 6.0,
+                    padding: EdgeInsets.all(20),
+                    decoration: BoxDecoration(boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.shade300,
+                        offset: Offset(0.0, 1.0), //(x,y)
+                        blurRadius: 6.0,
+                      ),
+                    ], color: Colors.white),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Order Summary',
+                            style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 16,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w800),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: item.length,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                    padding: EdgeInsets.all(5),
+                                    child: Column(
+                                      children: [
+                                        InkWell(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Details(
+                                                          itemid: item[index]
+                                                              .itemid,
+                                                          name:
+                                                              item[index].name,
+                                                          sold:
+                                                              item[index].sold,
+                                                          source: 'activity',
+                                                          image:
+                                                              item[index].image,
+                                                        )),
+                                              );
+                                            },
+                                            child: Row(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Container(
+                                                      height: 80,
+                                                      width: 80,
+                                                      child: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(5),
+                                                          child: item[index]
+                                                                  .image
+                                                                  .isNotEmpty
+                                                              ? Hero(
+                                                                  tag:
+                                                                      'activity${item[index].itemid}',
+                                                                  child:
+                                                                      CachedNetworkImage(
+                                                                    imageUrl: item[
+                                                                            index]
+                                                                        .image,
+                                                                    height: 200,
+                                                                    width: 300,
+                                                                    fadeInDuration:
+                                                                        Duration(
+                                                                            microseconds:
+                                                                                5),
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                    placeholder: (context,
+                                                                            url) =>
+                                                                        SpinKitDoubleBounce(
+                                                                            color:
+                                                                                Colors.deepOrange),
+                                                                    errorWidget: (context,
+                                                                            url,
+                                                                            error) =>
+                                                                        Icon(Icons
+                                                                            .error),
+                                                                  ),
+                                                                )
+                                                              : SpinKitFadingCircle(
+                                                                  color: Colors
+                                                                      .deepOrange,
+                                                                )),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Container(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                      .size
+                                                                      .width /
+                                                                  3 -
+                                                              10,
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Container(
+                                                            height: 25,
+                                                            width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width /
+                                                                    2 -
+                                                                10,
+                                                            child: Text(
+                                                              item[index].name,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'Helvetica',
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                      .black),
+                                                            ),
+                                                          ),
+                                                          Text(
+                                                            'Sold by @' +
+                                                                item[index]
+                                                                    .username,
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Helvetica',
+                                                                fontSize: 14,
+                                                                color: Colors
+                                                                    .grey),
+                                                          ),
+                                                          item[index].selectedsize !=
+                                                                      'nosize' &&
+                                                                  item[index]
+                                                                          .selectedsize !=
+                                                                      null
+                                                              ? Text(
+                                                                  'Size: ' +
+                                                                      item[index]
+                                                                          .selectedsize
+                                                                          .toString(),
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      fontSize:
+                                                                          14.0,
+                                                                      color: Colors
+                                                                          .grey),
+                                                                )
+                                                              : Container(),
+                                                          item[index].quantity !=
+                                                                  null
+                                                              ? Text(
+                                                                  'Quantity: ' +
+                                                                      item[index]
+                                                                          .quantity
+                                                                          .toString(),
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      fontSize:
+                                                                          14.0,
+                                                                      color: Colors
+                                                                          .grey),
+                                                                )
+                                                              : Container(),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Container(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                      .size
+                                                                      .width /
+                                                                  3 -
+                                                              10,
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .end,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .end,
+                                                        children: [
+                                                          item[index].saleprice !=
+                                                                  null
+                                                              ? Text.rich(
+                                                                  TextSpan(
+                                                                    children: <
+                                                                        TextSpan>[
+                                                                      new TextSpan(
+                                                                        text: 'AED ' +
+                                                                            item[index].saleprice,
+                                                                        style: new TextStyle(
+                                                                            color: Colors
+                                                                                .redAccent,
+                                                                            fontSize:
+                                                                                20,
+                                                                            fontWeight:
+                                                                                FontWeight.bold),
+                                                                      ),
+                                                                      new TextSpan(
+                                                                        text: '\nAED ' +
+                                                                            item[index].price.toString(),
+                                                                        style:
+                                                                            new TextStyle(
+                                                                          color:
+                                                                              Colors.grey,
+                                                                          fontSize:
+                                                                              10,
+                                                                          decoration:
+                                                                              TextDecoration.lineThrough,
+                                                                        ),
+                                                                      ),
+                                                                      new TextSpan(
+                                                                        text: ' -' +
+                                                                            (((double.parse(item[index].price.toString()) - double.parse(item[index].saleprice.toString())) / double.parse(item[index].price.toString())) * 100).toStringAsFixed(0) +
+                                                                            '%',
+                                                                        style:
+                                                                            new TextStyle(
+                                                                          color:
+                                                                              Colors.red,
+                                                                          fontSize:
+                                                                              12,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                )
+                                                              : Text(
+                                                                  currency +
+                                                                      ' ' +
+                                                                      item[index]
+                                                                          .price,
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .right,
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      fontSize:
+                                                                          20,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      color: Colors
+                                                                          .black),
+                                                                ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )
+                                              ],
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                            )),
+                                      ],
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                    ));
+                              },
                             ),
-                          ],
-                          borderRadius: BorderRadius.circular(15),
-                          color: Colors.white),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(5),
+                            child: Divider(),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                              top: 5,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
                                 Text(
-                                  'Order ID: ',
+                                  'Subtotal',
                                   style: TextStyle(
-                                      fontFamily: 'Helvetica',
-                                      fontSize: 16,
-                                      color: Colors.blueGrey),
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 14,
+                                    color: Colors.blueGrey,
+                                  ),
                                 ),
-                                SizedBox(
-                                  width: 2,
-                                ),
-                                Container(
-                                    child: Text(
-                                  orderid,
+                                Text(
+                                  orderprice != 0.0
+                                      ? currency +
+                                          ' ' +
+                                          orderprice.toStringAsFixed(2)
+                                      : 'AED 0',
                                   style: TextStyle(
-                                      fontFamily: 'Helvetica',
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color.fromRGBO(27, 44, 64, 1)),
-                                )),
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 14,
+                                    color: Colors.blueGrey,
+                                  ),
+                                ),
                               ],
                             ),
-                            Padding(
-                                padding: EdgeInsets.only(
-                                  bottom: 10,
-                                  top: 20,
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          discountprice != null
+                              ? Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          'Discount',
+                                          style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 14,
+                                            color: Colors.blueGrey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Text(
+                                      subtotal != 0.0
+                                          ? ' -' +
+                                              discountprice.toStringAsFixed(2)
+                                          : 'AED 0',
+                                      style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 14,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : Container(),
+                          Padding(
+                            padding: EdgeInsets.only(
+                              top: 5,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Total',
+                                  style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 14,
+                                    color: Colors.blueGrey,
+                                  ),
                                 ),
-                                child: Container(
-                                    padding: EdgeInsets.all(20),
-                                    width: MediaQuery.of(context).size.width,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color:
-                                            Color.fromRGBO(27, 44, 64, 0.03)),
-                                    child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'Pickup from:',
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 16,
-                                                color: Colors.blueGrey),
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Container(
-                                              child: Text(
-                                            mystore.storebio,
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                                color: Color.fromRGBO(
-                                                    27, 44, 64, 1)),
-                                          )),
-                                        ]))),
-                            // Padding(
-                            //     padding: EdgeInsets.only(
-                            //       bottom: 10,
-                            //       top: 5,
-                            //     ),
-                            //     child: Container(
-                            //         padding: EdgeInsets.all(20),
-                            //         width: MediaQuery.of(context).size.width,
-                            //         decoration: BoxDecoration(
-                            //             borderRadius: BorderRadius.circular(15),
-                            //             color:
-                            //                 Color.fromRGBO(27, 44, 64, 0.03)),
-                            //         child: Column(
-                            //             mainAxisAlignment:
-                            //                 MainAxisAlignment.start,
-                            //             crossAxisAlignment:
-                            //                 CrossAxisAlignment.start,
-                            //             children: [
-                            //               Text(
-                            //                 'Delivered to:',
-                            //                 style: TextStyle(
-                            //                     fontFamily: 'Helvetica',
-                            //                     fontSize: 16,
-                            //                     color: Colors.blueGrey),
-                            //               ),
-                            //               SizedBox(
-                            //                 height: 10,
-                            //               ),
-                            //               Container(
-                            //                   child: Text(
-                            //                 addressline1 +
-                            //                     '\n' +
-                            //                     addressline2 +
-                            //                     '\n' +
-                            //                     area +
-                            //                     '\n' +
-                            //                     city +
-                            //                     '\n' +
-                            //                     country,
-                            //                 style: TextStyle(
-                            //                     fontFamily: 'Helvetica',
-                            //                     fontSize: 16,
-                            //                     fontWeight: FontWeight.bold,
-                            //                     color: Color.fromRGBO(
-                            //                         27, 44, 64, 1)),
-                            //               )),
-                            //             ])))
-                          ])),
+                                Text(
+                                  subtotal != 0.0
+                                      ? currency +
+                                          ' ' +
+                                          subtotal.toStringAsFixed(2)
+                                      : 'AED 0',
+                                  style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 14,
+                                    color: Colors.blueGrey,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(5),
+                            child: Divider(),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                              top: 5,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'You Earn',
+                                  style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 16,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  subtotal != 0.0
+                                      ? currency + ' ' + fees.toStringAsFixed(2)
+                                      : 'AED 0',
+                                  style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 16,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ]),
+                  ),
                 ),
+
                 Padding(
                     padding: EdgeInsets.only(
-                        left: 15, bottom: 10, top: 5, right: 15),
+                      bottom: 10,
+                      top: 5,
+                    ),
                     child: Container(
                       padding: EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.shade300,
-                              offset: Offset(0.0, 1.0), //(x,y)
-                              blurRadius: 6.0,
-                            ),
-                          ],
-                          borderRadius: BorderRadius.circular(15),
-                          color: Colors.white),
+                      decoration: BoxDecoration(boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.shade300,
+                          offset: Offset(0.0, 1.0), //(x,y)
+                          blurRadius: 6.0,
+                        ),
+                      ], color: Colors.white),
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Buyer: ',
+                              'Ordered by: ',
                               style: TextStyle(
                                   fontFamily: 'Helvetica',
                                   fontSize: 16,
@@ -1860,7 +2093,8 @@ class _OrderSellerState extends State<OrderSeller> {
                                     ),
                                     trailing: Icon(
                                       FeatherIcons.chevronRight,
-                                      color: Colors.black,
+                                      color: Colors.blueGrey,
+                                      size: 16,
                                     ),
                                     contentPadding: EdgeInsets.zero),
                                 SizedBox(
@@ -1873,19 +2107,18 @@ class _OrderSellerState extends State<OrderSeller> {
 
                 Padding(
                     padding: EdgeInsets.only(
-                        left: 15, bottom: 20, top: 5, right: 15),
+                      bottom: 20,
+                      top: 5,
+                    ),
                     child: Container(
                         padding: EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.shade300,
-                                offset: Offset(0.0, 1.0), //(x,y)
-                                blurRadius: 6.0,
-                              ),
-                            ],
-                            borderRadius: BorderRadius.circular(15),
-                            color: Colors.white),
+                        decoration: BoxDecoration(boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade300,
+                            offset: Offset(0.0, 1.0), //(x,y)
+                            blurRadius: 6.0,
+                          ),
+                        ], color: Colors.white),
                         child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,

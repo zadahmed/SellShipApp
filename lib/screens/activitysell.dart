@@ -111,6 +111,7 @@ class _ActivitySellState extends State<ActivitySell>
 
           for (int l = 0; l < itemmap[i]['items'].length; l++) {
             var itemjson = itemmap[i]['items'][l];
+            print(itemjson);
             Item ite = Item(
                 name: itemmap[i]['items'][l]['name'],
                 selectedsize: itemmap[i]['items'][l]['selectedsize'],
@@ -146,7 +147,7 @@ class _ActivitySellState extends State<ActivitySell>
           currency = 'AED';
           keepalive = false;
           loading = false;
-          sellingItem = sellingItem;
+          sellingItem = new List.from(sellingItem.reversed);
         });
       }
     }
@@ -1100,26 +1101,18 @@ class _ActivitySellState extends State<ActivitySell>
                                                             left: 5, right: 5),
                                                     trailing: InkWell(
                                                         onTap: () {
-                                                          // Navigator.push(
-                                                          //   context,
-                                                          //   MaterialPageRoute(
-                                                          //       builder:
-                                                          //           (context) =>
-                                                          //               Details(
-                                                          //                 source:
-                                                          //                     'activity',
-                                                          //                 item:
-                                                          //                     buyingItem[index],
-                                                          //                 itemid:
-                                                          //                     buyingItem[index].itemid,
-                                                          //                 image:
-                                                          //                     buyingItem[index].image,
-                                                          //                 name:
-                                                          //                     buyingItem[index].name,
-                                                          //                 sold:
-                                                          //                     buyingItem[index].sold,
-                                                          //               )),
-                                                          // );
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        OrderSeller(
+                                                                          items:
+                                                                              sellingItem[index].items,
+                                                                          messageid:
+                                                                              sellingItem[index].messageid,
+                                                                        )),
+                                                          );
                                                         },
                                                         child: Container(
                                                             width: 100,

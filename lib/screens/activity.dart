@@ -98,7 +98,7 @@ class _ActivityState extends State<Activity>
       });
     }
 
-    _tabController = new TabController(length: 2, vsync: this);
+    _tabController = new TabController(length: 3, vsync: this);
   }
 
   var currency;
@@ -1097,15 +1097,21 @@ class _ActivityState extends State<Activity>
                               labelColor: Colors.black,
                               tabs: [
                                 new Container(
-                                  width: MediaQuery.of(context).size.width / 2,
+                                  width: MediaQuery.of(context).size.width / 3,
                                   child: new Tab(
                                     text: 'Buy',
                                   ),
                                 ),
                                 new Container(
-                                  width: MediaQuery.of(context).size.width / 2,
+                                  width: MediaQuery.of(context).size.width / 3,
                                   child: new Tab(
                                     text: 'Sell',
+                                  ),
+                                ),
+                                new Container(
+                                  width: MediaQuery.of(context).size.width / 3,
+                                  child: new Tab(
+                                    text: 'Messages',
                                   ),
                                 ),
                               ],
@@ -1116,6 +1122,6 @@ class _ActivityState extends State<Activity>
                 },
                 body: TabBarView(
                     controller: _tabController,
-                    children: [ActivityBuy(), ActivitySell()]))));
+                    children: [ActivityBuy(), ActivitySell(), Messages()]))));
   }
 }

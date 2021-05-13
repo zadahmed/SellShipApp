@@ -14,7 +14,7 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:SellShip/screens/comments.dart';
-import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
@@ -124,61 +124,71 @@ class _AllStoresState extends State<AllStores> {
                   return InkWell(
                     onTap: () async {},
                     child: Padding(
-                      padding: EdgeInsets.all(10),
-                      child: ListTile(
-                          onTap: () async {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => StorePublic(
-                                        storename: storeList[index].storename,
-                                        storeid: storeList[index].storeid,
-                                      )),
-                            );
-                          },
-                          leading: storeList[index].storelogo != null &&
-                                  storeList[index].storelogo.isNotEmpty
-                              ? Container(
-                                  height: 60,
-                                  width: 60,
-                                  child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(50),
-                                      child: CachedNetworkImage(
-                                        height: 200,
-                                        width: 300,
-                                        imageUrl: storeList[index].storelogo,
-                                        fit: BoxFit.cover,
-                                      )),
-                                )
-                              : CircleAvatar(
-                                  radius: 25,
-                                  backgroundColor:
-                                      Colors.deepOrangeAccent.withOpacity(0.3),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(25),
-                                    child: Image.asset(
-                                      'assets/personplaceholder.png',
-                                      fit: BoxFit.fitWidth,
-                                    ),
-                                  )),
-                          title: Text(
-                            storeList[index].storename,
-                            style: TextStyle(
-                                fontFamily: 'Helvetica',
-                                fontSize: 14,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w800),
-                          ),
-                          subtitle: Text(
-                            storeList[index].storetype,
-                            style: TextStyle(
-                              fontFamily: 'Helvetica',
-                              fontSize: 14,
-                              color: Colors.black,
-                            ),
-                          )),
+                        padding: EdgeInsets.all(1),
+                        child: Column(
+                          children: [
+                            ListTile(
+                                dense: true,
+                                onTap: () async {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => StorePublic(
+                                              storename:
+                                                  storeList[index].storename,
+                                              storeid: storeList[index].storeid,
+                                            )),
+                                  );
+                                },
+                                leading: storeList[index].storelogo != null &&
+                                        storeList[index].storelogo.isNotEmpty
+                                    ? Container(
+                                        height: 50,
+                                        width: 50,
+                                        child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            child: CachedNetworkImage(
+                                              height: 200,
+                                              width: 300,
+                                              imageUrl:
+                                                  storeList[index].storelogo,
+                                              fit: BoxFit.cover,
+                                            )),
+                                      )
+                                    : CircleAvatar(
+                                        radius: 25,
+                                        backgroundColor: Colors.deepOrangeAccent
+                                            .withOpacity(0.3),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(25),
+                                          child: Image.asset(
+                                            'assets/personplaceholder.png',
+                                            fit: BoxFit.fitWidth,
+                                          ),
+                                        )),
+                                title: Text(
+                                  storeList[index].storename.toUpperCase(),
+                                  style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 14,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w800),
+                                ),
+                                subtitle: Text(
+                                  storeList[index].storetype,
+                                  style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 14,
+                                    color: Colors.black,
+                                  ),
+                                )),
+                            Divider()
+                          ],
+                        )
 //
-                    ),
+                        ),
                   );
                 })
             : Center(

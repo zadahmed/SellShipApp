@@ -135,6 +135,9 @@ class Item {
     return order;
   }
 
+  @override
+  String getSuspensionTag() => itemid;
+
   // inside Item class
   @override
   bool operator ==(other) {
