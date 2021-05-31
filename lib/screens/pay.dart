@@ -12,6 +12,7 @@ import 'package:SellShip/screens/onboardingbottom.dart';
 import 'package:SellShip/screens/paymentweb.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -104,7 +105,16 @@ class _PayState extends State<Pay> {
     checkuser();
     getcurrency();
 
-    setState(() {});
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:PaymentPage',
+      screenClassOverride: 'AppPaymentPage',
+    );
   }
 
   GlobalKey _toolTipKey = GlobalKey();
@@ -785,6 +795,16 @@ class _PayState extends State<Pay> {
                                           json.decode(response.body);
 
                                       if (paymentresponse.containsKey('done')) {
+                                        FirebaseAnalytics analytics =
+                                            FirebaseAnalytics();
+                                        await analytics.logEcommercePurchase(
+                                          currency: 'AED',
+                                          value: double.parse(total.toString()),
+                                          transactionId: messageid,
+                                          shipping:
+                                              double.parse(deliveryamount),
+                                        );
+
                                         var url =
                                             'https://api.sellship.co/api/payment/${messageid}';
 
@@ -975,8 +995,16 @@ class _PayState extends State<Pay> {
 
                                         if (paymentIntent['status'] ==
                                             'succeeded') {
-                                          print('Success');
-
+                                          FirebaseAnalytics analytics =
+                                              FirebaseAnalytics();
+                                          await analytics.logEcommercePurchase(
+                                            currency: 'AED',
+                                            value:
+                                                double.parse(total.toString()),
+                                            transactionId: messageid,
+                                            shipping:
+                                                double.parse(deliveryamount),
+                                          );
                                           var url =
                                               'https://api.sellship.co/api/payment/${messageid}';
 
@@ -1326,8 +1354,6 @@ class _PayState extends State<Pay> {
                                         json.decode(response.body);
 
                                     if (paymentresponse.containsKey('done')) {
-                                      print('success');
-                                      print(paymentresponse['paymentid']);
                                       StripePayment.completeNativePayRequest()
                                           .then((_) async {
                                         var url =
@@ -1358,6 +1384,16 @@ class _PayState extends State<Pay> {
                                         var response =
                                             await dio.post(url, data: formData);
                                         if (response.statusCode == 200) {
+                                          FirebaseAnalytics analytics =
+                                              FirebaseAnalytics();
+                                          await analytics.logEcommercePurchase(
+                                            currency: 'AED',
+                                            value:
+                                                double.parse(total.toString()),
+                                            transactionId: messageid,
+                                            shipping:
+                                                double.parse(deliveryamount),
+                                          );
                                           SharedPreferences prefs =
                                               await SharedPreferences
                                                   .getInstance();

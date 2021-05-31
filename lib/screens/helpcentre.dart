@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
@@ -19,6 +20,16 @@ class HelpCentreState extends State<HelpCentre> {
   @override
   void initState() {
     super.initState();
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:HelpCentre',
+      screenClassOverride: 'AppHelpCentre',
+    );
   }
 
   @override

@@ -12,6 +12,7 @@ import 'package:SellShip/screens/tracking.dart';
 import 'package:SellShip/screens/useritems.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -162,6 +163,16 @@ class _OrderSellerState extends State<OrderSeller> {
     print(messageid);
 
     getDetails();
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:SellerOrderPage',
+      screenClassOverride: 'AppSellerOrderPage',
+    );
   }
 
   var userid;

@@ -23,6 +23,7 @@ import 'package:SellShip/screens/subsubcategory.dart';
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -813,7 +814,20 @@ class _DetailsState extends State<Details> {
         subsubcategory: jsonbody[0]['subsubcategory'],
         subcategory: jsonbody[0]['subcategory']);
 
-    print(newItem.size);
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:View' + newItem.name,
+      screenClassOverride: 'AppView' + newItem.name,
+    );
+
+    await analytics.logViewItem(
+      itemId: newItem.itemid,
+      itemName: newItem.name,
+      itemCategory: newItem.category,
+      price: double.parse(newItem.price),
+      quantity: newItem.quantity,
+    );
 
     var q = Map<String, dynamic>.from(jsonbody[0]['dateuploaded']);
 
@@ -1049,7 +1063,11 @@ class _DetailsState extends State<Details> {
                           subject: widget.name,
                           sharePositionOrigin:
                               box.localToGlobal(Offset.zero) & box.size);
-                      print('${response.result}');
+                      FirebaseAnalytics analytics = FirebaseAnalytics();
+                      await analytics.logShare(
+                        contentType: widget.name,
+                        itemId: widget.itemid,
+                      );
                     }
                   },
                   child: Icon(
@@ -1226,6 +1244,22 @@ class _DetailsState extends State<Details> {
                                                     newItem.likes =
                                                         newItem.likes + 1;
                                                   });
+
+                                                  FirebaseAnalytics analytics =
+                                                      FirebaseAnalytics();
+                                                  await analytics
+                                                      .logAddToWishlist(
+                                                    itemId: newItem.itemid,
+                                                    itemName: newItem.name,
+                                                    itemCategory:
+                                                        newItem.category,
+                                                    price: double.parse(
+                                                        newItem.price),
+                                                    value: double.parse(
+                                                        newItem.price),
+                                                    currency: 'AED',
+                                                  );
+
                                                   final response = await http
                                                       .post(Uri.parse(url),
                                                           body: json
@@ -3296,7 +3330,26 @@ class _DetailsState extends State<Details> {
                                                               jsonEncode(
                                                                   newItem);
 
-                                                          print(item);
+                                                          FirebaseAnalytics
+                                                              analytics =
+                                                              FirebaseAnalytics();
+                                                          await analytics
+                                                              .logAddToCart(
+                                                            currency: 'AED',
+                                                            value: double.parse(
+                                                                newItem.price),
+                                                            itemId:
+                                                                newItem.itemid,
+                                                            itemName:
+                                                                newItem.name,
+                                                            itemCategory:
+                                                                newItem
+                                                                    .category,
+                                                            quantity: newItem
+                                                                .quantity,
+                                                            price: double.parse(
+                                                                newItem.price),
+                                                          );
 
                                                           prefs.setStringList(
                                                               'cartitems',
@@ -3592,7 +3645,20 @@ class _DetailsState extends State<Details> {
                                                   String item =
                                                       jsonEncode(newItem);
 
-                                                  print(item);
+                                                  FirebaseAnalytics analytics =
+                                                      FirebaseAnalytics();
+                                                  await analytics.logAddToCart(
+                                                    currency: 'AED',
+                                                    value: double.parse(
+                                                        newItem.price),
+                                                    itemId: newItem.itemid,
+                                                    itemName: newItem.name,
+                                                    itemCategory:
+                                                        newItem.category,
+                                                    quantity: newItem.quantity,
+                                                    price: double.parse(
+                                                        newItem.price),
+                                                  );
 
                                                   prefs.setStringList(
                                                       'cartitems', [item]);

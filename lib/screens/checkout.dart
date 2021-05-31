@@ -12,6 +12,7 @@ import 'package:SellShip/screens/pay.dart';
 
 import 'package:SellShip/screens/paymentweb.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -78,7 +79,16 @@ class _CheckoutState extends State<Checkout> {
     checkuser();
     getcurrency();
 
-    setState(() {});
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:CheckoutPage',
+      screenClassOverride: 'AppCheckoutPage',
+    );
   }
 
   GlobalKey _toolTipKey = GlobalKey();
@@ -476,7 +486,7 @@ class _CheckoutState extends State<Checkout> {
                                                                     return AlertDialog(
                                                                       title:
                                                                           Text(
-                                                                        'Are you sure you want to move this item to favourites?',
+                                                                        'Are you sure you want to move this item to Wishlist?',
                                                                         textAlign:
                                                                             TextAlign.center,
                                                                         style: TextStyle(
@@ -490,7 +500,7 @@ class _CheckoutState extends State<Checkout> {
                                                                         TextButton(
                                                                           child:
                                                                               Text(
-                                                                            'Favourite Item',
+                                                                            'Wishlist Item',
                                                                             textAlign:
                                                                                 TextAlign.center,
                                                                             style: TextStyle(
@@ -509,8 +519,20 @@ class _CheckoutState extends State<Checkout> {
                                                                             Map<String, String>
                                                                                 body =
                                                                                 {
-                                                                              'itemid': listitems[0].itemid,
+                                                                              'itemid': listitems[index].itemid,
                                                                             };
+
+                                                                            FirebaseAnalytics
+                                                                                analytics =
+                                                                                FirebaseAnalytics();
+                                                                            await analytics.logAddToWishlist(
+                                                                              itemId: listitems[index].itemid,
+                                                                              itemName: listitems[index].name,
+                                                                              itemCategory: listitems[index].category,
+                                                                              price: double.parse(listitems[index].price),
+                                                                              value: double.parse(listitems[index].price),
+                                                                              currency: 'AED',
+                                                                            );
 
                                                                             final response =
                                                                                 await http.post(Uri.parse(url), body: json.encode(body));
@@ -523,7 +545,7 @@ class _CheckoutState extends State<Checkout> {
                                                                                 listitems = [];
                                                                               });
                                                                               Navigator.of(context).pop();
-                                                                              showInSnackBar(listitems[0].name + ' has been moved to favourites');
+                                                                              showInSnackBar(listitems[index].name + ' has been moved to your Wishlist');
                                                                             } else {
                                                                               print(response.statusCode);
                                                                             }

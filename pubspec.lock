@@ -849,6 +849,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  mixpanel_analytics:
+    dependency: "direct main"
+    description:
+      name: mixpanel_analytics
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   multi_image_picker:
     dependency: "direct main"
     description:

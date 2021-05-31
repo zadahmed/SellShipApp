@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:SellShip/screens/messages.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -52,6 +53,16 @@ class _ReviewsPageState extends State<ReviewsPage> {
   void initState() {
     super.initState();
     refreshreviews();
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:UserReviews',
+      screenClassOverride: 'AppUserReviews',
+    );
   }
 
   List<Reviews> reviewlist = List<Reviews>();

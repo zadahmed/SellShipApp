@@ -9,6 +9,7 @@ import 'package:SellShip/screens/hashtags.dart';
 import 'package:SellShip/screens/storepage.dart';
 import 'package:SellShip/screens/storepagepublic.dart';
 import 'package:badges/badges.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:substring_highlight/substring_highlight.dart';
 
@@ -130,6 +131,16 @@ class _SearchState extends State<Search>
     }
     discoverstores();
     discoverhashtags();
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:SearchPage',
+      screenClassOverride: 'AppSearchPager',
+    );
   }
 
   List<Stores> storeList = new List<Stores>();
@@ -263,68 +274,81 @@ class _SearchState extends State<Search>
   }
 
   onSearchHashtags(textsearch) async {
-    storeList.clear();
-    var url = 'https://api.sellship.co/api/searchhashtags/' +
-        (textsearch).trim().toString().toLowerCase() +
-        '/' +
-        skip.toString() +
-        '/' +
-        limit.toString();
+    if (textsearch.isNotEmpty) {
+      storeList.clear();
+      var url = 'https://api.sellship.co/api/searchhashtags/' +
+          (textsearch).trim().toString().toLowerCase() +
+          '/' +
+          skip.toString() +
+          '/' +
+          limit.toString();
 
-    final response = await http.get(Uri.parse(url));
-    print(response.statusCode);
+      final response = await http.get(Uri.parse(url));
+      FirebaseAnalytics analytics = FirebaseAnalytics();
+      await analytics.logSearch(
+        searchTerm: textsearch,
+      );
 
-    var jsonbody = json.decode(response.body);
+      var jsonbody = json.decode(response.body);
 
-    for (var jsondata in jsonbody) {
-      hashtagList.add(jsondata);
+      for (var jsondata in jsonbody) {
+        hashtagList.add(jsondata);
+      }
+
+      if (mounted) {
+        setState(() {
+          hashtagList = hashtagList.toSet().toList();
+          loading = false;
+        });
+      }
     }
-
-    setState(() {
-      hashtagList = hashtagList.toSet().toList();
-      loading = false;
-    });
   }
 
   onSearchUsers(textsearch) async {
-    storeList.clear();
+    if (textsearch.isNotEmpty) {
+      storeList.clear();
 
-    List<Stores> newstores = List<Stores>();
-    var url = 'https://api.sellship.co/api/searchstores/' +
-        (textsearch).trim().toString().toLowerCase() +
-        '/' +
-        skip.toString() +
-        '/' +
-        limit.toString();
+      List<Stores> newstores = List<Stores>();
+      var url = 'https://api.sellship.co/api/searchstores/' +
+          (textsearch).trim().toString().toLowerCase() +
+          '/' +
+          skip.toString() +
+          '/' +
+          limit.toString();
 
-    final response = await http.get(Uri.parse(url));
+      final response = await http.get(Uri.parse(url));
+      FirebaseAnalytics analytics = FirebaseAnalytics();
+      await analytics.logSearch(
+        searchTerm: textsearch,
+      );
 
-    var jsonbody = json.decode(response.body);
+      var jsonbody = json.decode(response.body);
 
-    for (var jsondata in jsonbody) {
-      var approved;
-      if (jsondata['approved'] == null) {
-        approved = false;
-      } else {
-        approved = jsondata['approved'];
+      for (var jsondata in jsonbody) {
+        var approved;
+        if (jsondata['approved'] == null) {
+          approved = false;
+        } else {
+          approved = jsondata['approved'];
+        }
+        if (approved == true) {
+          Stores store = Stores(
+              approved: approved,
+              storename: jsondata['storename'],
+              storeid: jsondata['_id']['\$oid'],
+              storetype: jsondata['storetype'],
+              storelogo: jsondata['storelogo'],
+              storecategory: jsondata['storecategory']);
+          newstores.add(store);
+        }
       }
-      if (approved == true) {
-        Stores store = Stores(
-            approved: approved,
-            storename: jsondata['storename'],
-            storeid: jsondata['_id']['\$oid'],
-            storetype: jsondata['storetype'],
-            storelogo: jsondata['storelogo'],
-            storecategory: jsondata['storecategory']);
-        newstores.add(store);
+      if (mounted) {
+        setState(() {
+          storeList = newstores.toSet().toList();
+          loading = false;
+        });
       }
     }
-
-    print(newstores.length);
-    setState(() {
-      storeList = newstores.toSet().toList();
-      loading = false;
-    });
   }
 
   Future<List<String>> _getRecentSearchesLike(String query) async {
@@ -384,47 +408,57 @@ class _SearchState extends State<Search>
       s.isNotEmpty ? s[0].toUpperCase() + s.substring(1) : s;
 
   onSearch(textsearch) async {
-    itemsgrid.clear();
-    var url = 'https://api.sellship.co/api/searchitems/' +
-        country +
-        '/' +
-        (textsearch).trim().toString().toLowerCase() +
-        '/' +
-        skip.toString() +
-        '/' +
-        limit.toString();
+    if (textsearch.isNotEmpty) {
+      itemsgrid.clear();
+      var url = 'https://api.sellship.co/api/searchitems/' +
+          country +
+          '/' +
+          (textsearch).trim().toString().toLowerCase() +
+          '/' +
+          skip.toString() +
+          '/' +
+          limit.toString();
 
-    final response = await http.get(Uri.parse(url));
+      final response = await http.get(Uri.parse(url));
 
-    var jsonbody = json.decode(response.body);
-    for (var jsondata in jsonbody) {
-      var q = Map<String, dynamic>.from(jsondata['dateuploaded']);
-
-      DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
-      var dateuploaded = timeago.format(dateuploade);
-
-      Item item = Item(
-        itemid: jsondata['_id']['\$oid'],
-        name: jsondata['name'],
-        date: dateuploaded,
-        likes: jsondata['likes'] == null ? 0 : jsondata['likes'],
-        comments:
-            jsondata['comments'] == null ? 0 : jsondata['comments'].length,
-        image: jsondata['image'],
-        price: jsondata['price'].toString(),
-        saleprice: jsondata.containsKey('saleprice')
-            ? jsondata['saleprice'].toString()
-            : null,
-        subcategory: jsondata['subcategory'],
-        sold: jsondata['sold'] == null ? false : jsondata['sold'],
+      FirebaseAnalytics analytics = FirebaseAnalytics();
+      await analytics.logSearch(
+        searchTerm: textsearch,
       );
-      itemsgrid.add(item);
-    }
 
-    setState(() {
-      itemsgrid = new List.from(itemsgrid.toSet().toList());
-      loading = false;
-    });
+      var jsonbody = json.decode(response.body);
+      print(jsonbody);
+      for (var jsondata in jsonbody) {
+        var q = Map<String, dynamic>.from(jsondata['dateuploaded']);
+
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
+
+        Item item = Item(
+          itemid: jsondata['_id']['\$oid'],
+          name: jsondata['name'],
+          date: dateuploaded,
+          likes: jsondata['likes'] == null ? 0 : jsondata['likes'],
+          comments:
+              jsondata['comments'] == null ? 0 : jsondata['comments'].length,
+          image: jsondata['image'],
+          price: jsondata['price'].toString(),
+          saleprice: jsondata.containsKey('saleprice')
+              ? jsondata['saleprice'].toString()
+              : null,
+          subcategory: jsondata['subcategory'],
+          sold: jsondata['sold'] == null ? false : jsondata['sold'],
+        );
+        itemsgrid.add(item);
+      }
+
+      if (mounted) {
+        setState(() {
+          itemsgrid = new List.from(itemsgrid.toSet().toList());
+          loading = false;
+        });
+      }
+    }
   }
 
   Widget searchresults(BuildContext context) {
@@ -1089,17 +1123,10 @@ class _SearchState extends State<Search>
           title: Container(
             margin: EdgeInsets.only(top: 10.0, right: 10, bottom: 10),
             child: Container(
-              height: 50,
+              height: 45,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25.0),
-                color: Colors.grey.shade200,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.shade100,
-                    offset: Offset(0.0, 1.0), //(x,y)
-                    blurRadius: 6.0,
-                  ),
-                ],
+                borderRadius: BorderRadius.circular(5.0),
+                color: Color.fromRGBO(249, 249, 249, 1),
               ),
               child: Center(
                   child: Row(
@@ -1110,8 +1137,8 @@ class _SearchState extends State<Search>
                     padding: EdgeInsets.only(left: 15, right: 10),
                     child: Icon(
                       FeatherIcons.search,
-                      size: 20,
-                      color: Color.fromRGBO(115, 115, 125, 1),
+                      size: 24,
+                      color: Color.fromRGBO(28, 45, 65, 1),
                     ),
                   ),
                   Expanded(
@@ -1154,36 +1181,39 @@ class _SearchState extends State<Search>
                           discoverhashtags();
                         }
                       },
+                      autofocus: true,
                       controller: searchcontroller,
                       textInputAction: TextInputAction.search,
                       onSubmitted: (text) {
-                        if (_tabController.index == 0) {
-                          setState(() {
-                            skip = 0;
-                            limit = 20;
-                            itemsgrid.clear();
-                            onSearch(text);
-                            loading = true;
-                            searched = true;
-                          });
-                        } else if (_tabController.index == 1) {
-                          setState(() {
-                            skip = 0;
-                            limit = 20;
-                            storeList.clear();
-                            onSearchUsers(text);
-                            loading = true;
-                            searched = true;
-                          });
-                        } else if (_tabController.index == 2) {
-                          setState(() {
-                            skip = 0;
-                            limit = 20;
-                            hashtagList.clear();
-                            onSearchHashtags(text);
-                            loading = true;
-                            searched = true;
-                          });
+                        if (text.isNotEmpty) {
+                          if (_tabController.index == 0) {
+                            setState(() {
+                              skip = 0;
+                              limit = 20;
+                              itemsgrid.clear();
+                              onSearch(text);
+                              loading = true;
+                              searched = true;
+                            });
+                          } else if (_tabController.index == 1) {
+                            setState(() {
+                              skip = 0;
+                              limit = 20;
+                              storeList.clear();
+                              onSearchUsers(text);
+                              loading = true;
+                              searched = true;
+                            });
+                          } else if (_tabController.index == 2) {
+                            setState(() {
+                              skip = 0;
+                              limit = 20;
+                              hashtagList.clear();
+                              onSearchHashtags(text);
+                              loading = true;
+                              searched = true;
+                            });
+                          }
                         }
                       },
                       decoration: InputDecoration(
@@ -1191,14 +1221,14 @@ class _SearchState extends State<Search>
                             onPressed: () => searchcontroller.clear(),
                             icon: Icon(
                               Icons.clear,
-                              size: 16,
+                              size: 18,
                               color: Colors.blueGrey,
                             ),
                           ),
-                          hintText: 'What are you looking for?',
+                          hintText: 'Search SellShip',
                           hintStyle: TextStyle(
                             fontFamily: 'Helvetica',
-                            fontSize: 14,
+                            fontSize: 16,
                           ),
                           border: InputBorder.none),
                     ),
@@ -1221,12 +1251,12 @@ class _SearchState extends State<Search>
                         elevation: 0,
                         pinned: true,
                         title: Padding(
-                          padding: EdgeInsets.only(top: 10),
+                          padding: EdgeInsets.only(top: 1),
                           child: Container(
                             child: TabBar(
                               controller: _tabController,
                               labelStyle: TextStyle(
-                                fontSize: 16,
+                                fontSize: 18,
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: 'Helvetica',
@@ -1240,17 +1270,26 @@ class _SearchState extends State<Search>
                               indicator: UnderlineTabIndicator(
                                   borderSide: BorderSide(
                                       width: 2.0, color: Colors.deepOrange)),
-                              isScrollable: true,
+                              // isScrollable: true,
                               labelColor: Colors.black,
                               tabs: [
-                                new Tab(
-                                  text: 'Products',
+                                Container(
+                                  width: MediaQuery.of(context).size.width / 3,
+                                  child: Tab(
+                                    text: 'Products',
+                                  ),
                                 ),
-                                new Tab(
-                                  text: 'Stores',
+                                Container(
+                                  width: MediaQuery.of(context).size.width / 3,
+                                  child: Tab(
+                                    text: 'Stores',
+                                  ),
                                 ),
-                                new Tab(
-                                  text: 'Hashtags',
+                                Container(
+                                  width: MediaQuery.of(context).size.width / 3,
+                                  child: Tab(
+                                    text: 'Hashtags',
+                                  ),
                                 ),
                               ],
                             ),
@@ -1557,6 +1596,7 @@ class _SearchState extends State<Search>
                                             delegate:
                                                 new SliverChildBuilderDelegate(
                                               (context, index) => ListTile(
+                                                dense: true,
                                                 onTap: () async {
                                                   await _saveToRecentSearches(
                                                       recentsearches[index]);
@@ -1623,7 +1663,7 @@ class _SearchState extends State<Search>
                                             'Categories',
                                             style: TextStyle(
                                                 fontFamily: 'Helvetica',
-                                                fontSize: 22.0,
+                                                fontSize: 18.0,
                                                 fontWeight: FontWeight.bold),
                                           ),
                                         ),
@@ -1658,31 +1698,17 @@ class _SearchState extends State<Search>
                                                   child: Column(
                                                     children: [
                                                       Container(
-                                                        height: 120,
-                                                        width: 120,
-                                                        decoration: BoxDecoration(
-                                                            color: Colors.white,
-                                                            border: Border.all(
-                                                                color: Color
-                                                                    .fromRGBO(
-                                                                        255,
-                                                                        115,
-                                                                        0,
-                                                                        0.7),
-                                                                width: 5),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        60)),
+                                                        height: 100,
+                                                        width: 100,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors.white,
+                                                        ),
                                                         child: categoryList[
                                                                         index]
                                                                     .categoryimage !=
                                                                 null
                                                             ? ClipRRect(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            60),
                                                                 child: Hero(
                                                                     tag: 'cat' +
                                                                         categoryList[index]
@@ -1697,30 +1723,29 @@ class _SearchState extends State<Search>
                                                                           categoryList[index]
                                                                               .categoryimage,
                                                                       fit: BoxFit
-                                                                          .cover,
+                                                                          .fitHeight,
                                                                     )))
                                                             : Container(),
                                                       ),
                                                       Container(
-                                                        height: 50,
+                                                        height: 30,
                                                         width: 120,
                                                         padding:
                                                             EdgeInsets.all(5),
                                                         child: Center(
                                                           child: Text(
                                                             categoryList[index]
-                                                                .categoryname,
+                                                                .categoryname
+                                                                .toUpperCase(),
                                                             textAlign: TextAlign
                                                                 .center,
                                                             style: TextStyle(
-                                                                fontFamily:
-                                                                    'Helvetica',
-                                                                fontSize: 16,
-                                                                color: Colors
-                                                                    .black,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
+                                                              fontFamily:
+                                                                  'Helvetica',
+                                                              fontSize: 12,
+                                                              color:
+                                                                  Colors.black,
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
@@ -2135,6 +2160,7 @@ class _SearchState extends State<Search>
                                             delegate:
                                                 new SliverChildBuilderDelegate(
                                               (context, index) => ListTile(
+                                                dense: true,
                                                 onTap: () async {
                                                   await _saveToRecentSearches(
                                                       recentsearches[index]);
@@ -2281,18 +2307,10 @@ class _SearchState extends State<Search>
                                                   child: Column(
                                                     children: [
                                                       Container(
-                                                        height: 120,
-                                                        width: 120,
+                                                        height: 100,
+                                                        width: 100,
                                                         decoration: BoxDecoration(
                                                             color: Colors.white,
-                                                            border: Border.all(
-                                                                color: Color
-                                                                    .fromRGBO(
-                                                                        255,
-                                                                        115,
-                                                                        0,
-                                                                        0.7),
-                                                                width: 5),
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
@@ -2324,40 +2342,19 @@ class _SearchState extends State<Search>
                                                             EdgeInsets.all(5),
                                                         child: Center(
                                                           child: Text(
-                                                            storeList[index]
-                                                                .storename,
+                                                            '@' +
+                                                                storeList[index]
+                                                                    .storename
+                                                                    .toUpperCase(),
                                                             textAlign: TextAlign
                                                                 .center,
                                                             style: TextStyle(
-                                                                fontFamily:
-                                                                    'Helvetica',
-                                                                fontSize: 16,
-                                                                color: Colors
-                                                                    .black,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        width: 120,
-                                                        height: 45,
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                bottom: 10,
-                                                                left: 5,
-                                                                right: 5),
-                                                        child: Text(
-                                                          storeList[index]
-                                                              .storetype,
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(
-                                                            fontFamily:
-                                                                'Helvetica',
-                                                            fontSize: 14,
-                                                            color: Colors.grey,
+                                                              fontFamily:
+                                                                  'Helvetica',
+                                                              fontSize: 12,
+                                                              color:
+                                                                  Colors.black,
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
@@ -2665,6 +2662,7 @@ class _SearchState extends State<Search>
                                             delegate:
                                                 new SliverChildBuilderDelegate(
                                               (context, index) => ListTile(
+                                                dense: true,
                                                 onTap: () async {
                                                   await _saveToRecentSearches(
                                                       recentsearches[index]);

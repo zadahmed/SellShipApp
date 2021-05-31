@@ -9,6 +9,7 @@ import 'package:SellShip/screens/orderseller.dart';
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flag/flag.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -74,6 +75,16 @@ class _AddressState extends State<Address> {
     super.initState();
     readData();
     loadaddresses();
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:AddAddress',
+      screenClassOverride: 'AppAddAddress',
+    );
   }
 
   var userid;
@@ -840,7 +851,8 @@ class _AddressState extends State<Address> {
                                                                           left:
                                                                               10),
                                                                   child: Text(
-                                                                    value,
+                                                                    capitalize(value
+                                                                        .toLowerCase()),
                                                                     style: TextStyle(
                                                                         fontFamily:
                                                                             'Helvetica',

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/screens/filterpage.dart';
@@ -1069,6 +1070,16 @@ class _SubSubCategoryState extends State<SubSubCategory> {
     fetchItems(skip, limit);
 
     super.initState();
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:${widget.subcategory}',
+      screenClassOverride: 'App${widget.subcategory}',
+    );
   }
 
   TabController _tabController;

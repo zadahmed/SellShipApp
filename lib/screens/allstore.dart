@@ -9,6 +9,7 @@ import 'package:SellShip/screens/notifications.dart';
 import 'package:SellShip/screens/storepage.dart';
 import 'package:SellShip/screens/storepagepublic.dart';
 import 'package:badges/badges.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 
@@ -45,6 +46,16 @@ class _AllStoresState extends State<AllStores> {
   void initState() {
     super.initState();
     getallstores();
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:ViewAllStores',
+      screenClassOverride: 'AppViewAllStores',
+    );
   }
 
   getallstores() async {

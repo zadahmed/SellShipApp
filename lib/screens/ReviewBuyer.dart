@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:SellShip/screens/rootscreen.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -36,6 +37,16 @@ class _ReviewBuyerState extends State<ReviewBuyer> {
       reviewuser = widget.reviewuserid;
       messageid = widget.messageid;
     });
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:ReviewBuyer',
+      screenClassOverride: 'AppReviewBuyer',
+    );
   }
 
   TextEditingController reviewcontroller = TextEditingController();

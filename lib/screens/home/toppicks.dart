@@ -9,6 +9,7 @@ import 'package:SellShip/screens/orderbuyeruae.dart';
 import 'package:SellShip/screens/orderseller.dart';
 import 'package:SellShip/screens/orderselleruae.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -206,8 +207,12 @@ class TopPicksState extends State<TopPicks> {
   var showfloatingbutton = false;
 
   ScrollController _scrollController = ScrollController();
-
+  static FirebaseAnalytics analytics = FirebaseAnalytics();
   getfavourites() async {
+    await analytics.setCurrentScreen(
+      screenName: 'App:TopPicks',
+      screenClassOverride: 'AppTopPicks',
+    );
     var userid = await storage.read(key: 'userid');
     if (userid != null) {
       var url = 'https://api.sellship.co/api/favourites/' + userid;

@@ -5,6 +5,7 @@ import 'package:SellShip/controllers/FadeAnimations.dart';
 
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:SellShip/screens/store/createstore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -38,6 +39,16 @@ class _CreateStoreBusinessDetailState extends State<CreateStoreBusinessDetail> {
     setState(() {
       userid = widget.userid;
     });
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:CreateStoreChooseCategory',
+      screenClassOverride: 'AppCreateStoreChooseCategory',
+    );
   }
 
   bool disabled = true;

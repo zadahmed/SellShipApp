@@ -6,6 +6,7 @@ import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/useritems.dart';
 import 'package:SellShip/screens/withdrawal.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -28,6 +29,16 @@ class _BalanceState extends State<Balance> {
     });
     getBalance();
     getDetails();
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:ViewUserBalance',
+      screenClassOverride: 'AppViewUserBalance',
+    );
   }
 
   List<Withdrawals> withdrawllist = List<Withdrawals>();

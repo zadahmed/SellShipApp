@@ -5,6 +5,7 @@ import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/models/orders.dart';
 import 'package:SellShip/screens/chatpageviewseller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -58,6 +59,16 @@ class _ActivitySellState extends State<ActivitySell>
     super.initState();
 
     loadsellingactivity();
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:ActivitySellPage',
+      screenClassOverride: 'AppActivitySellPage',
+    );
   }
 
   var currency;

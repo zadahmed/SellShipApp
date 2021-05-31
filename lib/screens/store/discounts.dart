@@ -7,6 +7,7 @@ import 'package:SellShip/screens/store/createlayout.dart';
 import 'package:SellShip/screens/store/createsalecampaign.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
@@ -52,6 +53,16 @@ class _DiscountsState extends State<Discounts> {
   void initState() {
     super.initState();
     getsalecampaigns();
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:StoreDiscounts',
+      screenClassOverride: 'AppStoreDiscounts',
+    );
   }
 
   getsalecampaigns() async {

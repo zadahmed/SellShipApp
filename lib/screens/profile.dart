@@ -936,7 +936,7 @@ class _ProfilePageState extends State<ProfilePage>
                                       text: 'Stores',
                                     ),
                                     new Tab(
-                                      text: 'Favourites',
+                                      text: 'Wishlist',
                                     ),
                                     new Tab(
                                       text: 'Reviews',
@@ -1057,7 +1057,7 @@ class _ProfilePageState extends State<ProfilePage>
           Padding(
             padding: EdgeInsets.only(left: 36, bottom: 20, right: 36),
             child: Text(
-              favouritelist.length.toString() + ' Favourites',
+              favouritelist.length.toString() + ' Wishlist items',
               style: TextStyle(
                   fontFamily: 'Helvetica',
                   fontSize: 18.0,
@@ -1248,7 +1248,7 @@ class _ProfilePageState extends State<ProfilePage>
                                                           }
                                                         } else {
                                                           showInSnackBar(
-                                                              'Please Login to use Favourites');
+                                                              'Please Login to use Wishlist');
                                                         }
                                                       },
                                                       child: CircleAvatar(
@@ -1331,7 +1331,7 @@ class _ProfilePageState extends State<ProfilePage>
                               ),
                               Center(
                                 child: Text(
-                                  'View your favourites here!',
+                                  'View your Wishlist here!',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontFamily: 'Helvetica',

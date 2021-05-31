@@ -8,6 +8,7 @@ import 'package:SellShip/screens/home.dart';
 import 'package:SellShip/screens/messages.dart';
 import 'package:SellShip/screens/notifications.dart';
 import 'package:badges/badges.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 
@@ -1110,6 +1111,19 @@ class _CategoryDetailState extends State<CategoryDetail>
     });
 
     super.initState();
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:' + widget.category,
+      screenClassOverride: 'App' + widget.category,
+    );
+    await analytics.logViewItemList(
+      itemCategory: widget.category,
+    );
   }
 
   Future<List<Item>> fetchsubcategories(

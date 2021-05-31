@@ -7,6 +7,7 @@ import 'package:SellShip/screens/store/createlayout.dart';
 import 'package:SellShip/screens/store/salechooseproducts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
@@ -51,6 +52,21 @@ class _CreateSaleCampaignState extends State<CreateSaleCampaign> {
   List<TextEditingController> _controllers = new List();
 
   List<double> discountpercentage = new List();
+
+  @override
+  void initState() {
+    super.initState();
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:StoreCreateSaleCampaign',
+      screenClassOverride: 'AppStoreCreateSaleCampaign',
+    );
+  }
 
   calculatepricebyamount() async {
     discountpercentage.clear();

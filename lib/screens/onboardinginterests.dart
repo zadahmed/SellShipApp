@@ -5,6 +5,7 @@ import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/controllers/FadeAnimations.dart';
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -36,6 +37,16 @@ class _OnboardingInterestsState extends State<OnboardingInterests> {
     setState(() {
       userid = widget.userid;
     });
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:OnboardingInterests',
+      screenClassOverride: 'AppOnboardingInterests',
+    );
   }
 
   List<String> categoryimages = [
@@ -131,6 +142,10 @@ class _OnboardingInterestsState extends State<OnboardingInterests> {
                         'interests': selectedinterests,
                       });
 
+                      FirebaseAnalytics analytics = FirebaseAnalytics();
+                      await analytics.setUserProperty(
+                          name: 'interests',
+                          value: selectedinterests.toString());
                       Dio dio = new Dio();
                       var response = await dio.post(url, data: formData);
 

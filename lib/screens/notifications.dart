@@ -9,6 +9,7 @@ import 'package:SellShip/screens/messages.dart';
 import 'package:SellShip/screens/onboardingbottom.dart';
 import 'package:SellShip/screens/storepagepublic.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -99,6 +100,16 @@ class _NotifcationPageState extends State<NotifcationPage>
     checkuser();
 
     refreshnotification();
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:NotificationsPage',
+      screenClassOverride: 'AppNotificationsPage',
+    );
   }
 
   List<Notifications> notificationlist = List<Notifications>();

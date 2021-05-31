@@ -1400,7 +1400,7 @@ class _HashtagsState extends State<Hashtags> {
                                                           }
                                                         } else {
                                                           showInSnackBar(
-                                                              'Please Login to use Favourites');
+                                                              'Please Login to use Wishlist');
                                                         }
                                                       },
                                                       child: CircleAvatar(
@@ -1462,7 +1462,7 @@ class _HashtagsState extends State<Hashtags> {
                                                           }
                                                         } else {
                                                           showInSnackBar(
-                                                              'Please Login to use Favourites');
+                                                              'Please Login to use Wishlist');
                                                         }
                                                       },
                                                       child: CircleAvatar(

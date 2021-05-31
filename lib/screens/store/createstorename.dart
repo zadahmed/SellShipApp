@@ -6,6 +6,7 @@ import 'package:SellShip/screens/onboardingbottom.dart';
 
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:SellShip/screens/store/createstorebusinessdetail.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -54,7 +55,13 @@ class _CreateStoreNameState extends State<CreateStoreName> {
   }
 
   final storage = new FlutterSecureStorage();
+  static FirebaseAnalytics analytics = FirebaseAnalytics();
+
   checkuser() async {
+    await analytics.setCurrentScreen(
+      screenName: 'App:CreateStoreName',
+      screenClassOverride: 'AppCreateStoreName',
+    );
     var userid = await storage.read(key: 'userid');
 
     if (userid == null) {

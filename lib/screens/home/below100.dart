@@ -9,6 +9,7 @@ import 'package:SellShip/screens/orderbuyeruae.dart';
 import 'package:SellShip/screens/orderseller.dart';
 import 'package:SellShip/screens/orderselleruae.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -207,8 +208,13 @@ class Below100State extends State<Below100> {
   var showfloatingbutton = false;
 
   ScrollController _scrollController = ScrollController();
+  static FirebaseAnalytics analytics = FirebaseAnalytics();
 
   getfavourites() async {
+    await analytics.setCurrentScreen(
+      screenName: 'App:Products Below 100',
+      screenClassOverride: 'AppBelow100Page',
+    );
     var userid = await storage.read(key: 'userid');
     if (userid != null) {
       var url = 'https://api.sellship.co/api/favourites/' + userid;
@@ -625,7 +631,7 @@ class Below100State extends State<Below100> {
                                                 }
                                               } else {
                                                 showInSnackBar(
-                                                    'Please Login to use Favourites');
+                                                    'Please Login to use Wishlist');
                                               }
                                             },
                                             child: CircleAvatar(

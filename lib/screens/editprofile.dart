@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:SellShip/verification/verifyphone.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -22,6 +23,16 @@ class EditProfileState extends State<EditProfile>
   void initState() {
     super.initState();
     getProfileData();
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:EditProfile',
+      screenClassOverride: 'AppEditProfile',
+    );
   }
 
   final storage = new FlutterSecureStorage();

@@ -8,6 +8,7 @@ import 'package:SellShip/screens/store/discounts.dart';
 import 'package:SellShip/screens/store/editstore.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -52,6 +53,16 @@ class _StorePageState extends State<StorePage> {
     super.initState();
     getuser();
     getItemData();
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:UserStorePage',
+      screenClassOverride: 'AppUserStorePage',
+    );
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -836,6 +847,11 @@ class _StorePageState extends State<StorePage> {
                                       box.localToGlobal(Offset.zero) &
                                           box.size);
                             }
+                            FirebaseAnalytics analytics = FirebaseAnalytics();
+                            await analytics.logShare(
+                              contentType: widget.storename,
+                              itemId: widget.storeid,
+                            );
                           },
                           title: Text('Share',
                               style: TextStyle(

@@ -9,6 +9,7 @@ import 'package:SellShip/screens/orderseller.dart';
 
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_credit_card/credit_card_form.dart';
@@ -64,6 +65,17 @@ class _AddPaymentState extends State<AddPayment> {
     super.initState();
 
     loadpayments();
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:AddPaymentCard',
+      screenClassOverride: 'AppAddPaymentCard',
+    );
+    await analytics.logAddPaymentInfo();
   }
 
   loadpayments() async {

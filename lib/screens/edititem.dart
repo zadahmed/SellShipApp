@@ -7,6 +7,7 @@ import 'package:SellShip/screens/addlocation.dart';
 import 'package:SellShip/screens/home.dart';
 import 'package:dio/dio.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -174,6 +175,16 @@ class EditItemState extends State<EditItem>
       loading = true;
     });
     getProfileData();
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:EditItem',
+      screenClassOverride: 'AppEditItem',
+    );
   }
 
   Future getImage() async {

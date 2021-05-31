@@ -16,6 +16,7 @@ import 'package:SellShip/screens/store/createstorename.dart';
 
 import 'package:SellShip/screens/termscondition.dart';
 import 'package:SellShip/usernamesettings.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:SellShip/verification/verifyemail.dart';
@@ -71,6 +72,16 @@ class _SettingsState extends State<Settings> {
   void initState() {
     readdetails();
     super.initState();
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:SettingsPage',
+      screenClassOverride: 'AppSettingsPage',
+    );
   }
 
   bool verified;

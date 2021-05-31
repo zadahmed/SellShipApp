@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:http/http.dart' as http;
@@ -97,6 +98,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 await storage.write(key: 'storeid', value: null);
               }
 
+              FirebaseAnalytics analytics = FirebaseAnalytics();
+              await analytics.setUserId(userid);
+              await analytics.logLogin();
+              await analytics.setUserProperty(
+                  name: 'name', value: profile.firstName + profile.lastName);
               Navigator.of(context).pop();
 
               Navigator.of(context).pushNamedAndRemoveUntil(
@@ -120,6 +126,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               await storage.write(key: 'storeid', value: null);
             }
 
+            FirebaseAnalytics analytics = FirebaseAnalytics();
+            await analytics.setUserId(userid);
+            await analytics.logLogin();
+            await analytics.setUserProperty(
+                name: 'name', value: profile.firstName + profile.lastName);
             Navigator.of(context).pop();
 
             Navigator.push(
@@ -233,6 +244,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         _controller.play();
         setState(() {});
       });
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:OnboardingScreen',
+      screenClassOverride: 'AppOnboardingScreen',
+    );
   }
 
   @override
@@ -390,6 +411,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                       key: 'storeid', value: null);
                                 }
 
+                                FirebaseAnalytics analytics =
+                                    FirebaseAnalytics();
+                                await analytics.setUserId(userid);
+                                await analytics.logLogin();
+                                await analytics.setUserProperty(
+                                    name: 'name', value: name[0] + name[1]);
+
                                 Navigator.of(context).pop();
 
                                 Navigator.of(context).pushNamedAndRemoveUntil(
@@ -421,6 +449,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 await storage.write(
                                     key: 'storeid', value: null);
                               }
+
+                              FirebaseAnalytics analytics = FirebaseAnalytics();
+                              await analytics.setUserId(userid);
+                              await analytics.logLogin();
+                              await analytics.setUserProperty(
+                                  name: 'name', value: name[0] + name[1]);
 
                               Navigator.of(context).pop();
 
@@ -695,6 +729,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                             key: 'storeid', value: storeid);
                                       }
 
+                                      FirebaseAnalytics analytics =
+                                          FirebaseAnalytics();
+                                      await analytics.setUserId(userid);
+                                      await analytics.logLogin();
+                                      await analytics.setUserProperty(
+                                          name: 'name',
+                                          value: user.displayName);
+
                                       Navigator.of(context).pop();
                                       Navigator.of(context)
                                           .pushNamedAndRemoveUntil(
@@ -731,10 +773,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                           key: 'storeid', value: storeid);
                                     }
 
-                                    print(userid);
+                                    FirebaseAnalytics analytics =
+                                        FirebaseAnalytics();
+                                    await analytics.setUserId(userid);
+                                    await analytics.logLogin();
+                                    await analytics.setUserProperty(
+                                        name: 'name', value: user.displayName);
                                     Navigator.of(context).pop();
 
-                                    print('I am here');
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:SellShip/screens/store/createlayout.dart';
 import 'package:SellShip/screens/store/createstorepage.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
@@ -83,6 +84,16 @@ class _CreateStoreState extends State<CreateStore> {
       userid = widget.userid;
       storename = widget.storename;
     });
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:CreateStoreChooseLogoAddress',
+      screenClassOverride: 'AppCreateStoreChooseLogoAddress',
+    );
   }
 
   bool disabled = true;

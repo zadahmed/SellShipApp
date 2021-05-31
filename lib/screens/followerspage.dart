@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:SellShip/models/user.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -28,6 +29,16 @@ class _FollowersPageState extends State<FollowersPage> {
       followers = widget.followers;
     });
     getusers();
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:StoreFollowersPage',
+      screenClassOverride: 'AppStoreFollowersPage',
+    );
   }
 
   List followers = List();

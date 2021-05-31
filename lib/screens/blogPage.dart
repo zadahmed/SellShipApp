@@ -1,5 +1,6 @@
 import 'package:SellShip/screens/helpcentre.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html/html_parser.dart';
@@ -25,6 +26,25 @@ class BlogPage extends StatefulWidget {
 }
 
 class _BlogPageState extends State<BlogPage> {
+  @override
+  void initState() {
+    super.initState();
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:ViewBlog',
+      screenClassOverride: 'AppViewBlog',
+    );
+    await analytics.logViewItem(
+      itemId: widget.blogid.toString(),
+      itemName: widget.title,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(

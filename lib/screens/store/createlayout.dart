@@ -4,6 +4,7 @@ import 'package:SellShip/screens/store/createstorepage.dart';
 import 'package:SellShip/screens/store/createstoretier.dart';
 import 'package:SellShip/screens/store/mystorepage.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
@@ -59,7 +60,16 @@ class _CreateLayoutState extends State<CreateLayout> {
   @override
   void initState() {
     super.initState();
-    // print(widget.storeaddress);
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:CreateStoreChooseLayout',
+      screenClassOverride: 'AppCreateStoreChooseLayout',
+    );
   }
 
   bool disabled = true;

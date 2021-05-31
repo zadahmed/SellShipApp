@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:SellShip/screens/notavaialablecountry.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:location/location.dart' as Location;
 import 'package:SellShip/Navigation/routes.dart';
@@ -107,6 +108,9 @@ class _RootScreenState extends State<RootScreen> {
   var profilepicture;
 
   getuser() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+    await analytics.setAnalyticsCollectionEnabled(true);
+
     var userid = await storage.read(key: 'userid');
     storeid = await storage.read(key: 'storeid');
     if (userid != null) {
@@ -267,6 +271,7 @@ class _RootScreenState extends State<RootScreen> {
     setState(() {
       if (widget.index != null) {
         _currentPage = widget.index;
+        onselected();
       }
     });
     pageController = new PageController(initialPage: _currentPage);

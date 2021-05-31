@@ -10,6 +10,7 @@ import 'package:SellShip/screens/addbrans.dart';
 import 'package:SellShip/screens/addcategory.dart';
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -78,6 +79,16 @@ class _AddItemState extends State<AddItem> {
     getuser();
     getStoreData();
     focusNode = FocusNode();
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:AddItem',
+      screenClassOverride: 'AppAddItem',
+    );
   }
 
   ColorSwatch _tempMainColor;

@@ -24,6 +24,7 @@ import 'package:SellShip/screens/subcategory.dart';
 
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -829,7 +830,13 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
 
   final storage = new FlutterSecureStorage();
 
+  static FirebaseAnalytics analytics = FirebaseAnalytics();
+
   checkuser() async {
+    await analytics.setCurrentScreen(
+      screenName: 'App:ForYou',
+      screenClassOverride: 'AppForYou',
+    );
     var userid = await storage.read(key: 'userid');
     if (userid == null) {
       showModalBottomSheet(

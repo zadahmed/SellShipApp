@@ -6,6 +6,7 @@ import 'package:SellShip/providers/userProvider.dart';
 import 'package:SellShip/screens/OTPScreenSignUp.dart';
 import 'package:SellShip/verification/verifyphone.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -39,6 +40,16 @@ class _SignUpPageState extends State<SignUpPage> {
   void initState() {
     super.initState();
     Firebase.initializeApp();
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:SignupEmail',
+      screenClassOverride: 'AppSignupEmail',
+    );
   }
 
   TextEditingController signupEmailController = new TextEditingController();
@@ -441,6 +452,8 @@ class _SignUpPageState extends State<SignUpPage> {
         signupphonecontroller.text.isNotEmpty) {
       final bool isValid = EmailValidator.validate(signupEmailController.text);
       if (isValid) {
+        FirebaseAnalytics analytics = FirebaseAnalytics();
+        await analytics.setUserId(userid);
         Navigator.of(context).pop();
         Navigator.push(
             context,

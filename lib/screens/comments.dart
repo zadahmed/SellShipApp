@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/screens/messages.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -70,6 +71,16 @@ class _CommentsPageState extends State<CommentsPage> {
       commentsloader = true;
     });
     loadcomments();
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:CommentsPage',
+      screenClassOverride: 'AppCommentsPage',
+    );
   }
 
   bool commentsloader;

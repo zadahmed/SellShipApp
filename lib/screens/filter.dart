@@ -9,6 +9,7 @@ import 'package:SellShip/screens/orderselleruae.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -111,6 +112,16 @@ class FilteredState extends State<Filtered> {
     fetchData();
     itemsgrid.clear();
     getfavourites();
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:Filter',
+      screenClassOverride: 'AppFilter',
+    );
   }
 
   getfavourites() async {

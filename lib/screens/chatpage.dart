@@ -15,6 +15,7 @@ import 'package:SellShip/screens/storepagepublic.dart';
 import 'package:SellShip/screens/useritems.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/ball_pulse_footer.dart';
@@ -78,6 +79,16 @@ class _ChatPageState extends State<ChatPage> {
       senderid = widget.senderid;
       recipentid = widget.recipentid;
     });
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:ChatPage',
+      screenClassOverride: 'AppChatPage',
+    );
   }
 
   var senderid;

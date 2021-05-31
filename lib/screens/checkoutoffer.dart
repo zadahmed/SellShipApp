@@ -10,6 +10,7 @@ import 'package:SellShip/screens/pay.dart';
 
 import 'package:SellShip/screens/paymentweb.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -48,7 +49,16 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
     super.initState();
     getcurrency();
 
-    setState(() {});
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:CheckoutOfferPage',
+      screenClassOverride: 'AppCheckoutOfferPage',
+    );
   }
 
   GlobalKey _toolTipKey = GlobalKey();

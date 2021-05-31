@@ -10,6 +10,7 @@ import 'package:SellShip/screens/signUpPage.dart';
 import 'package:SellShip/username.dart';
 import 'package:SellShip/verification/verifyphonesignup.dart';
 import 'package:auth_buttons/auth_buttons.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth_oauth/firebase_auth_oauth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -37,6 +38,16 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
+    enableanalytics();
+  }
+
+  enableanalytics() async {
+    FirebaseAnalytics analytics = FirebaseAnalytics();
+
+    await analytics.setCurrentScreen(
+      screenName: 'App:LoginEmail',
+      screenClassOverride: 'AppLoginEmail',
+    );
   }
 
   var loggedin;
@@ -78,7 +89,10 @@ class _LoginPageState extends State<LoginPage> {
           await storage.write(key: 'storeid', value: storeid);
         }
 
-        print('Loggd in ');
+        FirebaseAnalytics analytics = FirebaseAnalytics();
+        await analytics.setUserId(userid);
+        await analytics.logLogin();
+
         Navigator.of(context).pop();
         setState(() {
           userid = jsondata['id'];
