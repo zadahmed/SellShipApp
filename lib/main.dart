@@ -15,6 +15,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:mixpanel_flutter/mixpanel_flutter.dart';
+
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -43,10 +45,20 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+
+  Mixpanel mixpanel;
+
+
+  Future<void> initMixpanel() async {
+    mixpanel = await Mixpanel.init("1be171c524fca2fd96672c400955fda3",
+        optOutTrackingDefault: false);
+  }
+
   @override
   void initState() {
     super.initState();
     getuser();
+    initMixpanel();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.deepOrange, //or set color with: Color(0xFF0000FF)
     ));
