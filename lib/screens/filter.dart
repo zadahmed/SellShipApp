@@ -295,12 +295,16 @@ class FilteredState extends State<Filtered> {
               crossAxisSpacing: 4.0,
               itemBuilder: (BuildContext context, index) {
                 return new Padding(
-                  padding: EdgeInsets.all(10),
+                  padding: EdgeInsets.all(5),
                   child: Container(
+                    height: 240,
+                    width: MediaQuery.of(context).size.width / 2 - 20,
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(
+                          color: Color.fromRGBO(240, 240, 240, 1),
+                        )),
                     child: Column(
                       children: <Widget>[
                         new InkWell(
@@ -313,208 +317,253 @@ class FilteredState extends State<Filtered> {
                                       image: itemsgrid[index].image,
                                       name: itemsgrid[index].name,
                                       sold: itemsgrid[index].sold,
-                                      source: 'newin')),
+                                      source: 'category')),
                             );
                           },
                           child: Stack(children: <Widget>[
                             Container(
-                              height: 195,
+                              height: 170,
                               width: MediaQuery.of(context).size.width,
                               decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.shade300,
-                                    offset: Offset(0.0, 1.0), //(x,y)
-                                    blurRadius: 6.0,
-                                  ),
-                                ],
+                                borderRadius: BorderRadius.circular(5),
                               ),
                               child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Hero(
-                                  tag: 'newin${itemsgrid[index].itemid}',
-                                  child: CachedNetworkImage(
-                                    height: 200,
-                                    width: 300,
-                                    fadeInDuration: Duration(microseconds: 5),
-                                    imageUrl: itemsgrid[index].image.isEmpty
-                                        ? SpinKitDoubleBounce(
-                                            color: Colors.deepOrange)
-                                        : itemsgrid[index].image,
-                                    fit: BoxFit.cover,
-                                    placeholder: (context, url) =>
-                                        SpinKitDoubleBounce(
-                                            color: Colors.deepOrange),
-                                    errorWidget: (context, url, error) =>
-                                        Icon(Icons.error),
-                                  ),
+                                borderRadius: BorderRadius.circular(5),
+                                child: CachedNetworkImage(
+                                  height: 200,
+                                  width: 300,
+                                  fadeInDuration: Duration(microseconds: 5),
+                                  imageUrl: itemsgrid[index].image.isEmpty
+                                      ? SpinKitDoubleBounce(
+                                          color: Colors.deepOrange)
+                                      : itemsgrid[index].image,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) =>
+                                      SpinKitDoubleBounce(
+                                          color: Colors.deepOrange),
+                                  errorWidget: (context, url, error) =>
+                                      Icon(Icons.error),
                                 ),
                               ),
                             ),
-                            itemsgrid[index].sold == true
-                                ? Align(
-                                    alignment: Alignment.center,
-                                    child: Container(
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                        color: Colors.black.withOpacity(0.4),
-                                      ),
-                                      width: 210,
-                                      child: Center(
-                                        child: Text(
-                                          'Sold',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontFamily: 'Helvetica',
-                                            color: Colors.white,
-                                          ),
+                            Positioned(
+                              top: 5,
+                              right: 5,
+                              child: favourites != null
+                                  ? favourites.contains(itemsgrid[index].itemid)
+                                      ? InkWell(
+                                          enableFeedback: true,
+                                          onTap: () async {
+                                            var userid = await storage.read(
+                                                key: 'userid');
+
+                                            if (userid != null) {
+                                              var url =
+                                                  'https://api.sellship.co/api/favourite/' +
+                                                      userid;
+
+                                              Map<String, String> body = {
+                                                'itemid':
+                                                    itemsgrid[index].itemid,
+                                              };
+
+                                              favourites.remove(
+                                                  itemsgrid[index].itemid);
+                                              setState(() {
+                                                favourites = favourites;
+                                                itemsgrid[index].likes =
+                                                    itemsgrid[index].likes - 1;
+                                              });
+                                              final response = await http.post(
+                                                  Uri.parse(url),
+                                                  body: json.encode(body));
+                                              if (response.statusCode == 200) {
+                                              } else {
+                                                print(response.statusCode);
+                                              }
+                                            } else {
+                                              showInSnackBar(
+                                                  'Please Login to use Favourites');
+                                            }
+                                          },
+                                          child: CircleAvatar(
+                                            radius: 16,
+                                            backgroundColor: Colors.deepOrange,
+                                            child: Icon(
+                                              FontAwesomeIcons.heart,
+                                              color: Colors.white,
+                                              size: 15,
+                                            ),
+                                          ))
+                                      : InkWell(
+                                          enableFeedback: true,
+                                          onTap: () async {
+                                            var userid = await storage.read(
+                                                key: 'userid');
+
+                                            if (userid != null) {
+                                              var url =
+                                                  'https://api.sellship.co/api/favourite/' +
+                                                      userid;
+
+                                              Map<String, String> body = {
+                                                'itemid':
+                                                    itemsgrid[index].itemid,
+                                              };
+
+                                              favourites
+                                                  .add(itemsgrid[index].itemid);
+                                              setState(() {
+                                                favourites = favourites;
+                                                itemsgrid[index].likes =
+                                                    itemsgrid[index].likes + 1;
+                                              });
+                                              final response = await http.post(
+                                                  Uri.parse(url),
+                                                  body: json.encode(body));
+
+                                              if (response.statusCode == 200) {
+                                              } else {
+                                                print(response.statusCode);
+                                              }
+                                            } else {
+                                              showInSnackBar(
+                                                  'Please Login to use Favourites');
+                                            }
+                                          },
+                                          child: CircleAvatar(
+                                              radius: 16,
+                                              backgroundColor:
+                                                  Colors.blueGrey.shade50,
+                                              child: CircleAvatar(
+                                                radius: 15,
+                                                backgroundColor: Colors.white,
+                                                child: Icon(
+                                                  FeatherIcons.heart,
+                                                  color: Colors.blueGrey,
+                                                  size: 16,
+                                                ),
+                                              )))
+                                  : CircleAvatar(
+                                      radius: 16,
+                                      backgroundColor: Colors.blueGrey.shade50,
+                                      child: CircleAvatar(
+                                        radius: 15,
+                                        backgroundColor: Colors.white,
+                                        child: Icon(
+                                          FeatherIcons.heart,
+                                          color: Colors.blueGrey,
+                                          size: 16,
                                         ),
-                                      ),
-                                    ))
-                                : Container(),
+                                      )),
+                            )
                           ]),
                         ),
                         SizedBox(
-                          height: 4,
+                          height: 5,
                         ),
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Expanded(
-                                child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  itemsgrid[index].name,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
+                        Padding(
+                          padding: EdgeInsets.all(5),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                  child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    itemsgrid[index].name,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
                                       fontFamily: 'Helvetica',
                                       fontSize: 14,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                SizedBox(
-                                  height: 1,
-                                ),
-                                Text(
-                                  'AED' + ' ' + itemsgrid[index].price,
-                                )
-                              ],
-                            )),
-                            favourites != null
-                                ? favourites.contains(itemsgrid[index].itemid)
-                                    ? InkWell(
-                                        enableFeedback: true,
-                                        onTap: () async {
-                                          var userid =
-                                              await storage.read(key: 'userid');
-
-                                          if (userid != null) {
-                                            var url =
-                                                'https://api.sellship.co/api/favourite/' +
-                                                    userid;
-
-                                            Map<String, String> body = {
-                                              'itemid': itemsgrid[index].itemid,
-                                            };
-
-                                            favourites.remove(
-                                                itemsgrid[index].itemid);
-                                            setState(() {
-                                              favourites = favourites;
-                                              itemsgrid[index].likes =
-                                                  itemsgrid[index].likes - 1;
-                                            });
-                                            final response = await http.post(
-                                                Uri.parse(url),
-                                                body: json.encode(body));
-
-                                            if (response.statusCode == 200) {
-                                            } else {
-                                              print(response.statusCode);
-                                            }
-                                          } else {
-                                            showInSnackBar(
-                                                'Please Login to use Favourites');
-                                          }
-                                        },
-                                        child: CircleAvatar(
-                                          radius: 16,
-                                          backgroundColor: Colors.deepOrange,
-                                          child: Icon(
-                                            FontAwesomeIcons.heart,
-                                            color: Colors.white,
-                                            size: 15,
-                                          ),
-                                        ))
-                                    : InkWell(
-                                        enableFeedback: true,
-                                        onTap: () async {
-                                          var userid =
-                                              await storage.read(key: 'userid');
-
-                                          if (userid != null) {
-                                            var url =
-                                                'https://api.sellship.co/api/favourite/' +
-                                                    userid;
-
-                                            Map<String, String> body = {
-                                              'itemid': itemsgrid[index].itemid,
-                                            };
-
-                                            favourites
-                                                .add(itemsgrid[index].itemid);
-                                            setState(() {
-                                              favourites = favourites;
-                                              itemsgrid[index].likes =
-                                                  itemsgrid[index].likes + 1;
-                                            });
-                                            final response = await http.post(
-                                                Uri.parse(url),
-                                                body: json.encode(body));
-
-                                            if (response.statusCode == 200) {
-                                            } else {
-                                              print(response.statusCode);
-                                            }
-                                          } else {
-                                            showInSnackBar(
-                                                'Please Login to use Favourites');
-                                          }
-                                        },
-                                        child: CircleAvatar(
-                                            radius: 16,
-                                            backgroundColor:
-                                                Colors.blueGrey.shade50,
-                                            child: CircleAvatar(
-                                              radius: 15,
-                                              backgroundColor: Colors.white,
-                                              child: Icon(
-                                                FeatherIcons.heart,
-                                                color: Colors.blueGrey,
-                                                size: 16,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 2,
+                                  ),
+                                  itemsgrid[index].saleprice != null
+                                      ? Text.rich(
+                                          TextSpan(
+                                            children: <TextSpan>[
+                                              new TextSpan(
+                                                text: 'AED ' +
+                                                    itemsgrid[index].saleprice,
+                                                style: new TextStyle(
+                                                    color: Colors.redAccent,
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
-                                            )))
-                                : CircleAvatar(
-                                    radius: 16,
-                                    backgroundColor: Colors.blueGrey.shade50,
-                                    child: CircleAvatar(
-                                      radius: 15,
-                                      backgroundColor: Colors.white,
-                                      child: Icon(
-                                        FeatherIcons.heart,
-                                        color: Colors.blueGrey,
-                                        size: 16,
-                                      ),
-                                    ))
-                          ],
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                        )
+                                              new TextSpan(
+                                                text: '\nAED ' +
+                                                    itemsgrid[index]
+                                                        .price
+                                                        .toString(),
+                                                style: new TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 10,
+                                                  decoration: TextDecoration
+                                                      .lineThrough,
+                                                ),
+                                              ),
+                                              new TextSpan(
+                                                text: ' -' +
+                                                    (((double.parse(itemsgrid[
+                                                                            index]
+                                                                        .price
+                                                                        .toString()) -
+                                                                    double.parse(itemsgrid[
+                                                                            index]
+                                                                        .saleprice
+                                                                        .toString())) /
+                                                                double.parse(
+                                                                    itemsgrid[
+                                                                            index]
+                                                                        .price
+                                                                        .toString())) *
+                                                            100)
+                                                        .toStringAsFixed(0) +
+                                                    '%',
+                                                style: new TextStyle(
+                                                  color: Colors.red,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      : Text.rich(
+                                          TextSpan(
+                                            children: <TextSpan>[
+                                              new TextSpan(
+                                                text: 'AED ',
+                                                style: new TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                              new TextSpan(
+                                                text: itemsgrid[index]
+                                                    .price
+                                                    .toString(),
+                                                style: new TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                ],
+                              )),
+                            ],
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                          ),
+                        ),
                       ],
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,

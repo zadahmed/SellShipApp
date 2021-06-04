@@ -3505,7 +3505,7 @@ class _DetailsState extends State<Details> {
                                               2 -
                                           20,
                                       decoration: BoxDecoration(
-                                        color: Colors.white,
+                                        color: Color.fromRGBO(65, 105, 225, 1),
                                         borderRadius: const BorderRadius.all(
                                           Radius.circular(5.0),
                                         ),
@@ -3526,8 +3526,7 @@ class _DetailsState extends State<Details> {
                                             fontSize: 16,
                                             fontFamily: 'Helvetica',
                                             letterSpacing: 0.0,
-                                            color:
-                                                Color.fromRGBO(65, 105, 225, 1),
+                                            color: Colors.white,
                                           ),
                                         ),
                                       ),

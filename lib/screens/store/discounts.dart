@@ -76,6 +76,7 @@ class _DiscountsState extends State<Discounts> {
       Campaigns campaign = new Campaigns(
           campaignname: jsonbody[i]['campaignname'],
           items: jsonbody[i]['items']);
+      print(campaign);
       campaignList.add(campaign);
     }
     setState(() {

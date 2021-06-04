@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:SellShip/models/category.dart';
 import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/global.dart';
@@ -241,6 +241,13 @@ class _HomeScreenState extends State<HomeScreen>
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5.0),
                   color: Color.fromRGBO(249, 249, 249, 1),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.shade300,
+                      offset: Offset(0.0, 1.0), //(x,y)
+                      blurRadius: 3.0,
+                    ),
+                  ],
                 ),
                 child: Center(
                     child: Row(

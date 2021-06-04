@@ -6,7 +6,7 @@ import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/global.dart';
 import 'package:SellShip/models/Items.dart';
-import 'package:SellShip/models/blogs.dart';
+import 'package:SellShip/models/category.dart';
 import 'package:SellShip/models/stores.dart';
 import 'package:SellShip/models/user.dart';
 import 'package:SellShip/screens/blogPage.dart';
@@ -31,7 +31,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -153,7 +152,6 @@ class _DiscoverState extends State<Discover>
       gardenitemsgrid.add(item);
     }
 
-
     for (var i = 0; i < kids.length; i++) {
       var q = Map<String, dynamic>.from(kids[i]['dateuploaded']);
 
@@ -163,13 +161,11 @@ class _DiscoverState extends State<Discover>
         itemid: kids[i]['_id']['\$oid'],
         date: dateuploaded,
         name: kids[i]['name'],
-        condition: kids[i]['condition'] == null
-            ? 'Like New'
-            : kids[i]['condition'],
+        condition:
+            kids[i]['condition'] == null ? 'Like New' : kids[i]['condition'],
         username: kids[i]['username'],
         likes: kids[i]['likes'] == null ? 0 : kids[i]['likes'],
-        comments:
-        kids[i]['comments'] == null ? 0 : kids[i]['comments'].length,
+        comments: kids[i]['comments'] == null ? 0 : kids[i]['comments'].length,
         image: kids[i]['image'],
         price: kids[i]['price'].toString(),
         saleprice: kids[i].containsKey('saleprice')
@@ -190,13 +186,11 @@ class _DiscoverState extends State<Discover>
         itemid: toys[i]['_id']['\$oid'],
         date: dateuploaded,
         name: toys[i]['name'],
-        condition: toys[i]['condition'] == null
-            ? 'Like New'
-            : toys[i]['condition'],
+        condition:
+            toys[i]['condition'] == null ? 'Like New' : toys[i]['condition'],
         username: toys[i]['username'],
         likes: toys[i]['likes'] == null ? 0 : toys[i]['likes'],
-        comments:
-        toys[i]['comments'] == null ? 0 : toys[i]['comments'].length,
+        comments: toys[i]['comments'] == null ? 0 : toys[i]['comments'].length,
         image: toys[i]['image'],
         price: toys[i]['price'].toString(),
         saleprice: toys[i].containsKey('saleprice')
@@ -460,6 +454,33 @@ class _DiscoverState extends State<Discover>
     ));
 
     gethome();
+    getCategories();
+  }
+
+  List<Category> categoryList = new List<Category>();
+
+  List<String> hashtagList = [];
+
+  getCategories() async {
+    var url = 'https://api.sellship.co/api/categories/view';
+
+    final response = await http.get(Uri.parse(url));
+    var jsonbody = json.decode(response.body);
+
+    for (int i = 0; i < jsonbody.length; i++) {
+      if (jsonbody[i]['name'] != 'Other') {
+        Category cat = new Category(
+            categoryname: jsonbody[i]['name'],
+            categoryimage: jsonbody[i]['categoryimage'],
+            subcategories: jsonbody[i]['subcategories']);
+
+        categoryList.add(cat);
+      }
+    }
+
+    setState(() {
+      categoryList = categoryList;
+    });
   }
 
   String locationcountry;
@@ -594,852 +615,147 @@ class _DiscoverState extends State<Discover>
     return Scaffold(
         key: scaffoldState,
         backgroundColor: Colors.white,
-        body: CustomScrollView(
-          slivers: [
-            handmadeitemsgrid.isNotEmpty
-                ?  SliverToBoxAdapter(
-                child: InkWell(onTap:(){
-
-                },child: Container(
-                  height: 120,
-                  width: MediaQuery.of(context).size.width,
-                  child: Image.network('https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2789.PNG',fit:BoxFit.contain),
-                ))) : SliverToBoxAdapter(),
-            handmadeitemsgrid.isNotEmpty
-                ? SliverToBoxAdapter(
-              child: Padding(
-                  padding:
-                  EdgeInsets.only(left: 16, bottom: 10, right: 16,top: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        enableFeedback: true,
-                        onTap: () {
-                          // Navigator.push(
-                          //   context,
-                          //   CupertinoPageRoute(
-                          //       builder: (context) => CategoryDynamic(
-                          //             category: 'Electronics',
-                          //           )),
-                          // );
-                        },
-                        child: Text(
-                          'Top Picks in Handmade',
-                          style: TextStyle(
-                              fontFamily: 'Helvetica',
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          // Navigator.push(
-                          //   context,
-                          //   CupertinoPageRoute(
-                          //       builder: (context) => CategoryDynamic(
-                          //             category: 'Electronics',
-                          //           )),
-                          // );
-                        },
-                        enableFeedback: true,
-                        child: Container(
-                          padding: EdgeInsets.all(3),
-                          decoration: BoxDecoration(
-                              border:
-                              Border.all(color: Colors.deepOrange),
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Text('See All',
-                              style: TextStyle(
-                                fontFamily: 'Helvetica',
-                                color: Colors.deepOrange,
-                                fontSize: 14.0,
-                              )),
-                        ),
-                      ),
-                    ],
-                  )),
-            )
-                : SliverToBoxAdapter(),
-            handmadeitemsgrid.isNotEmpty
-                ? SliverToBoxAdapter(
-                child: Container(
-                  height: 250,
-                  width: MediaQuery.of(context).size.width,
-                  child: ListView.builder(
-                    itemCount: handmadeitemsgrid.length > 20
-                        ? 20
-                        : handmadeitemsgrid.length,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (BuildContext context, int index) {
-                      return new Padding(
-                        padding: EdgeInsets.all(5),
-                        child: Container(
-                          height: 2,
-                          width: MediaQuery.of(context).size.width / 2 - 20,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(5),
-                              border: Border.all(
-                                color: Color.fromRGBO(240, 240, 240, 1),
-                              )),
-                          child: Column(
-                            children: <Widget>[
-                              new InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                        builder: (context) => Details(
-                                            itemid:
-                                            handmadeitemsgrid[index]
-                                                .itemid,
-                                            image: handmadeitemsgrid[index]
-                                                .image,
-                                            name: handmadeitemsgrid[index]
-                                                .name,
-                                            sold: handmadeitemsgrid[index]
-                                                .sold,
-                                            source: 'handmadeitemsgrid')),
-                                  );
-                                },
-                                child: Stack(children: <Widget>[
-                                  Container(
-                                    height: 170,
-                                    width: MediaQuery.of(context).size.width,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(5),
-                                      child: Hero(
-                                        tag:
-                                        'handmadeitemsgrid${handmadeitemsgrid[index].itemid}',
-                                        child: CachedNetworkImage(
-                                          height: 200,
-                                          width: 300,
-                                          fadeInDuration:
-                                          Duration(microseconds: 5),
-                                          imageUrl: handmadeitemsgrid[
-                                          index]
-                                              .image
-                                              .isEmpty
-                                              ? SpinKitDoubleBounce(
-                                              color: Colors.deepOrange)
-                                              : handmadeitemsgrid[index]
-                                              .image,
-                                          fit: BoxFit.cover,
-                                          placeholder: (context, url) =>
-                                              SpinKitDoubleBounce(
-                                                  color: Colors.deepOrange),
-                                          errorWidget:
-                                              (context, url, error) =>
-                                              Icon(Icons.error),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    top: 5,
-                                    right: 5,
-                                    child: favourites != null
-                                        ? favourites.contains(
-                                        handmadeitemsgrid[index]
-                                            .itemid)
-                                        ? InkWell(
-                                        enableFeedback: true,
-                                        onTap: () async {
-                                          var userid = await storage
-                                              .read(key: 'userid');
-
-                                          if (userid != null) {
-                                            var url =
-                                                'https://api.sellship.co/api/favourite/' +
-                                                    userid;
-
-                                            Map<String, String> body =
-                                            {
-                                              'itemid':
-                                              handmadeitemsgrid[
-                                              index]
-                                                  .itemid,
-                                            };
-
-                                            favourites.remove(
-                                                handmadeitemsgrid[
-                                                index]
-                                                    .itemid);
-                                            setState(() {
-                                              favourites = favourites;
-                                              handmadeitemsgrid[
-                                              index]
-                                                  .likes =
-                                                  handmadeitemsgrid[
-                                                  index]
-                                                      .likes -
-                                                      1;
-                                            });
-                                            final response =
-                                            await http.post(
-                                                Uri.parse(url),
-                                                body: json.encode(
-                                                    body));
-                                            if (response.statusCode ==
-                                                200) {
-                                            } else {
-                                              print(response
-                                                  .statusCode);
-                                            }
-                                          } else {
-                                            showInSnackBar(
-                                                'Please Login to use Favourites');
-                                          }
-                                        },
-                                        child: CircleAvatar(
-                                          radius: 16,
-                                          backgroundColor:
-                                          Colors.deepOrange,
-                                          child: Icon(
-                                            FontAwesomeIcons.heart,
-                                            color: Colors.white,
-                                            size: 15,
-                                          ),
-                                        ))
-                                        : InkWell(
-                                        enableFeedback: true,
-                                        onTap: () async {
-                                          var userid = await storage
-                                              .read(key: 'userid');
-
-                                          if (userid != null) {
-                                            var url =
-                                                'https://api.sellship.co/api/favourite/' +
-                                                    userid;
-
-                                            Map<String, String> body =
-                                            {
-                                              'itemid':
-                                              handmadeitemsgrid[
-                                              index]
-                                                  .itemid,
-                                            };
-
-                                            favourites.add(
-                                                handmadeitemsgrid[
-                                                index]
-                                                    .itemid);
-                                            setState(() {
-                                              favourites = favourites;
-                                              handmadeitemsgrid[
-                                              index]
-                                                  .likes =
-                                                  handmadeitemsgrid[
-                                                  index]
-                                                      .likes +
-                                                      1;
-                                            });
-                                            final response =
-                                            await http.post(
-                                                Uri.parse(url),
-                                                body: json.encode(
-                                                    body));
-
-                                            if (response.statusCode ==
-                                                200) {
-                                            } else {
-                                              print(response
-                                                  .statusCode);
-                                            }
-                                          } else {
-                                            showInSnackBar(
-                                                'Please Login to use Favourites');
-                                          }
-                                        },
-                                        child: CircleAvatar(
-                                            radius: 16,
-                                            backgroundColor: Colors
-                                                .blueGrey.shade50,
-                                            child: CircleAvatar(
-                                              radius: 15,
-                                              backgroundColor:
-                                              Colors.white,
-                                              child: Icon(
-                                                FeatherIcons.heart,
-                                                color:
-                                                Colors.blueGrey,
-                                                size: 16,
-                                              ),
-                                            )))
-                                        : CircleAvatar(
-                                        radius: 16,
-                                        backgroundColor:
-                                        Colors.blueGrey.shade50,
-                                        child: CircleAvatar(
-                                          radius: 15,
-                                          backgroundColor: Colors.white,
-                                          child: Icon(
-                                            FeatherIcons.heart,
-                                            color: Colors.blueGrey,
-                                            size: 16,
-                                          ),
-                                        )),
-                                  )
-                                ]),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(5),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              handmadeitemsgrid[index].name,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 2,
-                                            ),
-                                            handmadeitemsgrid[index]
-                                                .saleprice !=
-                                                null
-                                                ? Text.rich(
-                                              TextSpan(
-                                                children: <TextSpan>[
-                                                  new TextSpan(
-                                                    text: 'AED ' +
-                                                        handmadeitemsgrid[
-                                                        index]
-                                                            .saleprice,
-                                                    style: new TextStyle(
-                                                        color: Colors
-                                                            .redAccent,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .bold),
-                                                  ),
-                                                  new TextSpan(
-                                                    text: '\nAED ' +
-                                                        handmadeitemsgrid[
-                                                        index]
-                                                            .price
-                                                            .toString(),
-                                                    style: new TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 10,
-                                                      decoration:
-                                                      TextDecoration
-                                                          .lineThrough,
-                                                    ),
-                                                  ),
-                                                  new TextSpan(
-                                                    text: ' -' +
-                                                        (((double.parse(handmadeitemsgrid[index].price.toString()) -
-                                                            double.parse(handmadeitemsgrid[index]
-                                                                .saleprice
-                                                                .toString())) /
-                                                            double.parse(handmadeitemsgrid[index]
-                                                                .price
-                                                                .toString())) *
-                                                            100)
-                                                            .toStringAsFixed(
-                                                            0) +
-                                                        '%',
-                                                    style: new TextStyle(
-                                                      color: Colors.red,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                                : Text.rich(
-                                              TextSpan(
-                                                children: <TextSpan>[
-                                                  new TextSpan(
-                                                    text: 'AED ',
-                                                    style: new TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                  new TextSpan(
-                                                    text:
-                                                    handmadeitemsgrid[
-                                                    index]
-                                                        .price
-                                                        .toString(),
-                                                    style: new TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .bold),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        )),
-                                  ],
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                ),
-                              ),
-                            ],
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+        body: loading == false
+            ? CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(
+                      child: CarouselSlider(
+                          options: CarouselOptions(
+                            height: 120.0,
+                            aspectRatio: 16 / 9,
+                            viewportFraction: 1,
+                            initialPage: 0,
+                            enableInfiniteScroll: true,
+                            reverse: false,
+                            autoPlay: true,
+                            autoPlayInterval: Duration(seconds: 3),
+                            autoPlayAnimationDuration:
+                                Duration(milliseconds: 800),
+                            autoPlayCurve: Curves.fastOutSlowIn,
+                            enlargeCenterPage: true,
                           ),
-                        ),
-                      );
-                    },
-                  ),
-                ))
-                : SliverToBoxAdapter(),
-            beautyitemsgrid.isNotEmpty
-                ?  SliverToBoxAdapter(
-                child: InkWell(onTap:(){
-
-                },child: Container(
-                  height: 120,
-                  width: MediaQuery.of(context).size.width,
-                  child: Image.network('https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2795.PNG',fit:BoxFit.contain),
-                ))) : SliverToBoxAdapter(),
-            beautyitemsgrid.isNotEmpty
-                ? SliverToBoxAdapter(
-              child: Padding(
-                  padding:
-                  EdgeInsets.only(left: 16, bottom: 10, right: 16,top: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        enableFeedback: true,
-                        onTap: () {
-                          // Navigator.push(
-                          //   context,
-                          //   CupertinoPageRoute(
-                          //       builder: (context) => CategoryDynamic(
-                          //             category: 'Electronics',
-                          //           )),
-                          // );
-                        },
-                        child: Text(
-                          'Top Picks in Beauty',
-                          style: TextStyle(
-                              fontFamily: 'Helvetica',
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          // Navigator.push(
-                          //   context,
-                          //   CupertinoPageRoute(
-                          //       builder: (context) => CategoryDynamic(
-                          //             category: 'Electronics',
-                          //           )),
-                          // );
-                        },
-                        enableFeedback: true,
-                        child: Container(
-                          padding: EdgeInsets.all(3),
-                          decoration: BoxDecoration(
-                              border:
-                              Border.all(color: Colors.deepOrange),
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Text('See All',
-                              style: TextStyle(
-                                fontFamily: 'Helvetica',
-                                color: Colors.deepOrange,
-                                fontSize: 14.0,
-                              )),
-                        ),
-                      ),
-                    ],
-                  )),
-            )
-                : SliverToBoxAdapter(),
-            beautyitemsgrid.isNotEmpty
-                ? SliverToBoxAdapter(
-                child: Container(
-                  height: 250,
-                  width: MediaQuery.of(context).size.width,
-                  child: ListView.builder(
-                    itemCount: beautyitemsgrid.length > 20
-                        ? 20
-                        : beautyitemsgrid.length,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (BuildContext context, int index) {
-                      return new Padding(
-                        padding: EdgeInsets.all(5),
-                        child: Container(
-                          height: 2,
-                          width: MediaQuery.of(context).size.width / 2 - 20,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(5),
-                              border: Border.all(
-                                color: Color.fromRGBO(240, 240, 240, 1),
-                              )),
-                          child: Column(
-                            children: <Widget>[
-                              new InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                        builder: (context) => Details(
-                                            itemid:
-                                            beautyitemsgrid[index]
-                                                .itemid,
-                                            image: beautyitemsgrid[index]
-                                                .image,
-                                            name: beautyitemsgrid[index]
-                                                .name,
-                                            sold: beautyitemsgrid[index]
-                                                .sold,
-                                            source: 'beautyitemsgrid')),
-                                  );
-                                },
-                                child: Stack(children: <Widget>[
-                                  Container(
-                                    height: 170,
-                                    width: MediaQuery.of(context).size.width,
-                                    decoration: BoxDecoration(
+                          items: [
+                        Builder(
+                          builder: (BuildContext context) {
+                            return InkWell(
+                              onTap: () {},
+                              enableFeedback: true,
+                              child: Container(
+                                  height: 120,
+                                  width: MediaQuery.of(context).size.width,
+                                  margin: EdgeInsets.symmetric(horizontal: 5.0),
+                                  decoration: BoxDecoration(
                                       color: Colors.white,
-                                      borderRadius: BorderRadius.circular(5),
+                                      borderRadius: BorderRadius.circular(5)),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(5),
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                          'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/homebanners/IMG_2980.PNG',
+                                      fit: BoxFit.contain,
+                                      fadeInDuration: Duration(microseconds: 5),
+                                      placeholder: (context, url) =>
+                                          SpinKitDoubleBounce(
+                                              color: Colors.deepOrange),
+                                      errorWidget: (context, url, error) =>
+                                          Icon(Icons.error),
                                     ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(5),
-                                      child: Hero(
-                                        tag:
-                                        'beautyitemsgrid${beautyitemsgrid[index].itemid}',
-                                        child: CachedNetworkImage(
-                                          height: 200,
-                                          width: 300,
-                                          fadeInDuration:
-                                          Duration(microseconds: 5),
-                                          imageUrl: beautyitemsgrid[
-                                          index]
-                                              .image
-                                              .isEmpty
-                                              ? SpinKitDoubleBounce(
-                                              color: Colors.deepOrange)
-                                              : beautyitemsgrid[index]
-                                              .image,
-                                          fit: BoxFit.cover,
-                                          placeholder: (context, url) =>
-                                              SpinKitDoubleBounce(
-                                                  color: Colors.deepOrange),
-                                          errorWidget:
-                                              (context, url, error) =>
-                                              Icon(Icons.error),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    top: 5,
-                                    right: 5,
-                                    child: favourites != null
-                                        ? favourites.contains(
-                                        beautyitemsgrid[index]
-                                            .itemid)
-                                        ? InkWell(
-                                        enableFeedback: true,
-                                        onTap: () async {
-                                          var userid = await storage
-                                              .read(key: 'userid');
-
-                                          if (userid != null) {
-                                            var url =
-                                                'https://api.sellship.co/api/favourite/' +
-                                                    userid;
-
-                                            Map<String, String> body =
-                                            {
-                                              'itemid':
-                                              beautyitemsgrid[
-                                              index]
-                                                  .itemid,
-                                            };
-
-                                            favourites.remove(
-                                                beautyitemsgrid[
-                                                index]
-                                                    .itemid);
-                                            setState(() {
-                                              favourites = favourites;
-                                              beautyitemsgrid[
-                                              index]
-                                                  .likes =
-                                                  beautyitemsgrid[
-                                                  index]
-                                                      .likes -
-                                                      1;
-                                            });
-                                            final response =
-                                            await http.post(
-                                                Uri.parse(url),
-                                                body: json.encode(
-                                                    body));
-                                            if (response.statusCode ==
-                                                200) {
-                                            } else {
-                                              print(response
-                                                  .statusCode);
-                                            }
-                                          } else {
-                                            showInSnackBar(
-                                                'Please Login to use Favourites');
-                                          }
-                                        },
-                                        child: CircleAvatar(
-                                          radius: 16,
-                                          backgroundColor:
-                                          Colors.deepOrange,
-                                          child: Icon(
-                                            FontAwesomeIcons.heart,
-                                            color: Colors.white,
-                                            size: 15,
-                                          ),
-                                        ))
-                                        : InkWell(
-                                        enableFeedback: true,
-                                        onTap: () async {
-                                          var userid = await storage
-                                              .read(key: 'userid');
-
-                                          if (userid != null) {
-                                            var url =
-                                                'https://api.sellship.co/api/favourite/' +
-                                                    userid;
-
-                                            Map<String, String> body =
-                                            {
-                                              'itemid':
-                                              beautyitemsgrid[
-                                              index]
-                                                  .itemid,
-                                            };
-
-                                            favourites.add(
-                                                beautyitemsgrid[
-                                                index]
-                                                    .itemid);
-                                            setState(() {
-                                              favourites = favourites;
-                                              beautyitemsgrid[
-                                              index]
-                                                  .likes =
-                                                  beautyitemsgrid[
-                                                  index]
-                                                      .likes +
-                                                      1;
-                                            });
-                                            final response =
-                                            await http.post(
-                                                Uri.parse(url),
-                                                body: json.encode(
-                                                    body));
-
-                                            if (response.statusCode ==
-                                                200) {
-                                            } else {
-                                              print(response
-                                                  .statusCode);
-                                            }
-                                          } else {
-                                            showInSnackBar(
-                                                'Please Login to use Favourites');
-                                          }
-                                        },
-                                        child: CircleAvatar(
-                                            radius: 16,
-                                            backgroundColor: Colors
-                                                .blueGrey.shade50,
-                                            child: CircleAvatar(
-                                              radius: 15,
-                                              backgroundColor:
-                                              Colors.white,
-                                              child: Icon(
-                                                FeatherIcons.heart,
-                                                color:
-                                                Colors.blueGrey,
-                                                size: 16,
-                                              ),
-                                            )))
-                                        : CircleAvatar(
-                                        radius: 16,
-                                        backgroundColor:
-                                        Colors.blueGrey.shade50,
-                                        child: CircleAvatar(
-                                          radius: 15,
-                                          backgroundColor: Colors.white,
-                                          child: Icon(
-                                            FeatherIcons.heart,
-                                            color: Colors.blueGrey,
-                                            size: 16,
-                                          ),
-                                        )),
-                                  )
-                                ]),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(5),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              beautyitemsgrid[index].name,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 2,
-                                            ),
-                                            beautyitemsgrid[index]
-                                                .saleprice !=
-                                                null
-                                                ? Text.rich(
-                                              TextSpan(
-                                                children: <TextSpan>[
-                                                  new TextSpan(
-                                                    text: 'AED ' +
-                                                        beautyitemsgrid[
-                                                        index]
-                                                            .saleprice,
-                                                    style: new TextStyle(
-                                                        color: Colors
-                                                            .redAccent,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .bold),
-                                                  ),
-                                                  new TextSpan(
-                                                    text: '\nAED ' +
-                                                        beautyitemsgrid[
-                                                        index]
-                                                            .price
-                                                            .toString(),
-                                                    style: new TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 10,
-                                                      decoration:
-                                                      TextDecoration
-                                                          .lineThrough,
-                                                    ),
-                                                  ),
-                                                  new TextSpan(
-                                                    text: ' -' +
-                                                        (((double.parse(beautyitemsgrid[index].price.toString()) -
-                                                            double.parse(beautyitemsgrid[index]
-                                                                .saleprice
-                                                                .toString())) /
-                                                            double.parse(beautyitemsgrid[index]
-                                                                .price
-                                                                .toString())) *
-                                                            100)
-                                                            .toStringAsFixed(
-                                                            0) +
-                                                        '%',
-                                                    style: new TextStyle(
-                                                      color: Colors.red,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                                : Text.rich(
-                                              TextSpan(
-                                                children: <TextSpan>[
-                                                  new TextSpan(
-                                                    text: 'AED ',
-                                                    style: new TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                  new TextSpan(
-                                                    text:
-                                                    beautyitemsgrid[
-                                                    index]
-                                                        .price
-                                                        .toString(),
-                                                    style: new TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .bold),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        )),
-                                  ],
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                ),
-                              ),
-                            ],
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                          ),
+                                  )),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
-                ))
-                : SliverToBoxAdapter(),
-        electronicsitemsgrid.isNotEmpty
-        ?  SliverToBoxAdapter(
-        child: InkWell(onTap:(){
-
-        },child: Container(
-          height: 120,
-          width: MediaQuery.of(context).size.width,
-          child: Image.network('https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2782.PNG',fit:BoxFit.contain),
-        ))) : SliverToBoxAdapter(),
-            electronicsitemsgrid.isNotEmpty
-                ? SliverToBoxAdapter(
+                        Builder(
+                          builder: (BuildContext context) {
+                            return InkWell(
+                              onTap: () {},
+                              enableFeedback: true,
+                              child: Container(
+                                  height: 120,
+                                  width: MediaQuery.of(context).size.width,
+                                  margin: EdgeInsets.symmetric(horizontal: 5.0),
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(5)),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(5),
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                          'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/homebanners/IMG_2984.PNG',
+                                      fit: BoxFit.contain,
+                                      fadeInDuration: Duration(microseconds: 5),
+                                      placeholder: (context, url) =>
+                                          SpinKitDoubleBounce(
+                                              color: Colors.deepOrange),
+                                      errorWidget: (context, url, error) =>
+                                          Icon(Icons.error),
+                                    ),
+                                  )),
+                            );
+                          },
+                        ),
+                        Builder(
+                          builder: (BuildContext context) {
+                            return InkWell(
+                              onTap: () {},
+                              enableFeedback: true,
+                              child: Container(
+                                  height: 120,
+                                  width: MediaQuery.of(context).size.width,
+                                  margin: EdgeInsets.symmetric(horizontal: 5.0),
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(5)),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(5),
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                          'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/homebanners/IMG_2986.PNG',
+                                      fit: BoxFit.contain,
+                                      fadeInDuration: Duration(microseconds: 5),
+                                      placeholder: (context, url) =>
+                                          SpinKitDoubleBounce(
+                                              color: Colors.deepOrange),
+                                      errorWidget: (context, url, error) =>
+                                          Icon(Icons.error),
+                                    ),
+                                  )),
+                            );
+                          },
+                        ),
+                        Builder(
+                          builder: (BuildContext context) {
+                            return InkWell(
+                              onTap: () {},
+                              enableFeedback: true,
+                              child: Container(
+                                  height: 120,
+                                  width: MediaQuery.of(context).size.width,
+                                  margin: EdgeInsets.symmetric(horizontal: 5.0),
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(5)),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(5),
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                          'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/homebanners/IMG_2996.PNG',
+                                      fit: BoxFit.contain,
+                                      fadeInDuration: Duration(microseconds: 5),
+                                      placeholder: (context, url) =>
+                                          SpinKitDoubleBounce(
+                                              color: Colors.deepOrange),
+                                      errorWidget: (context, url, error) =>
+                                          Icon(Icons.error),
+                                    ),
+                                  )),
+                            );
+                          },
+                        ),
+                      ])),
+                  SliverToBoxAdapter(
                     child: Padding(
-                        padding:
-                            EdgeInsets.only(left: 16, bottom: 10, right: 16,top: 5),
+                        padding: EdgeInsets.only(
+                            left: 16, bottom: 10, right: 16, top: 5),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -1456,3298 +772,4690 @@ class _DiscoverState extends State<Discover>
                                 // );
                               },
                               child: Text(
-                                'Top Picks in Electronics',
+                                'Categories',
                                 style: TextStyle(
                                     fontFamily: 'Helvetica',
                                     fontSize: 18.0,
                                     fontWeight: FontWeight.bold),
                               ),
                             ),
-                            InkWell(
-                              onTap: () {
-                                // Navigator.push(
-                                //   context,
-                                //   CupertinoPageRoute(
-                                //       builder: (context) => CategoryDynamic(
-                                //             category: 'Electronics',
-                                //           )),
-                                // );
-                              },
-                              enableFeedback: true,
-                              child: Container(
-                                padding: EdgeInsets.all(3),
-                                decoration: BoxDecoration(
-                                    border:
-                                        Border.all(color: Colors.deepOrange),
-                                    borderRadius: BorderRadius.circular(5)),
-                                child: Text('See All',
-                                    style: TextStyle(
-                                      fontFamily: 'Helvetica',
-                                      color: Colors.deepOrange,
-                                      fontSize: 14.0,
-                                    )),
-                              ),
-                            ),
                           ],
                         )),
-                  )
-                : SliverToBoxAdapter(),
-            electronicsitemsgrid.isNotEmpty
-                ? SliverToBoxAdapter(
-                    child: Container(
-                    height: 250,
-                    width: MediaQuery.of(context).size.width,
-                    child: ListView.builder(
-                      itemCount: electronicsitemsgrid.length > 20
-                          ? 20
-                          : electronicsitemsgrid.length,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (BuildContext context, int index) {
-                        return new Padding(
-                          padding: EdgeInsets.all(5),
-                          child: Container(
-                            height: 2,
-                            width: MediaQuery.of(context).size.width / 2 - 20,
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(5),
-                                border: Border.all(
-                                  color: Color.fromRGBO(240, 240, 240, 1),
-                                )),
-                            child: Column(
-                              children: <Widget>[
-                                new InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      CupertinoPageRoute(
-                                          builder: (context) => Details(
-                                              itemid:
-                                                  electronicsitemsgrid[index]
-                                                      .itemid,
-                                              image: electronicsitemsgrid[index]
-                                                  .image,
-                                              name: electronicsitemsgrid[index]
-                                                  .name,
-                                              sold: electronicsitemsgrid[index]
-                                                  .sold,
-                                              source: 'electronicsitemsgrid')),
-                                    );
-                                  },
-                                  child: Stack(children: <Widget>[
-                                    Container(
-                                      height: 170,
-                                      width: MediaQuery.of(context).size.width,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(5),
-                                        child: Hero(
-                                          tag:
-                                              'electronicsitemsgrid${electronicsitemsgrid[index].itemid}',
-                                          child: CachedNetworkImage(
-                                            height: 200,
-                                            width: 300,
-                                            fadeInDuration:
-                                                Duration(microseconds: 5),
-                                            imageUrl: electronicsitemsgrid[
-                                                        index]
-                                                    .image
-                                                    .isEmpty
-                                                ? SpinKitDoubleBounce(
-                                                    color: Colors.deepOrange)
-                                                : electronicsitemsgrid[index]
-                                                    .image,
-                                            fit: BoxFit.cover,
-                                            placeholder: (context, url) =>
-                                                SpinKitDoubleBounce(
-                                                    color: Colors.deepOrange),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    Icon(Icons.error),
+                  ),
+                  SliverToBoxAdapter(
+                      child: Container(
+                          height: 150,
+                          width: MediaQuery.of(context).size.width,
+                          child: ListView.builder(
+                              itemCount: categoryList.length,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (BuildContext context, int index) {
+                                return InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                CategoryDetail(
+                                                  categoryimage:
+                                                      categoryList[index]
+                                                          .banner,
+                                                  category: categoryList[index]
+                                                      .categoryname,
+                                                  subcategory:
+                                                      categoryList[index]
+                                                          .subcategories,
+                                                )),
+                                      );
+                                    },
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          height: 120,
+                                          width: 120,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
                                           ),
-                                        ),
-                                      ),
-                                    ),
-                                    Positioned(
-                                      top: 5,
-                                      right: 5,
-                                      child: favourites != null
-                                          ? favourites.contains(
-                                                  electronicsitemsgrid[index]
-                                                      .itemid)
-                                              ? InkWell(
-                                                  enableFeedback: true,
-                                                  onTap: () async {
-                                                    var userid = await storage
-                                                        .read(key: 'userid');
-
-                                                    if (userid != null) {
-                                                      var url =
-                                                          'https://api.sellship.co/api/favourite/' +
-                                                              userid;
-
-                                                      Map<String, String> body =
-                                                          {
-                                                        'itemid':
-                                                            electronicsitemsgrid[
-                                                                    index]
-                                                                .itemid,
-                                                      };
-
-                                                      favourites.remove(
-                                                          electronicsitemsgrid[
-                                                                  index]
-                                                              .itemid);
-                                                      setState(() {
-                                                        favourites = favourites;
-                                                        electronicsitemsgrid[
-                                                                    index]
-                                                                .likes =
-                                                            electronicsitemsgrid[
-                                                                        index]
-                                                                    .likes -
-                                                                1;
-                                                      });
-                                                      final response =
-                                                          await http.post(
-                                                              Uri.parse(url),
-                                                              body: json.encode(
-                                                                  body));
-                                                      if (response.statusCode ==
-                                                          200) {
-                                                      } else {
-                                                        print(response
-                                                            .statusCode);
-                                                      }
-                                                    } else {
-                                                      showInSnackBar(
-                                                          'Please Login to use Favourites');
-                                                    }
-                                                  },
-                                                  child: CircleAvatar(
-                                                    radius: 16,
-                                                    backgroundColor:
-                                                        Colors.deepOrange,
-                                                    child: Icon(
-                                                      FontAwesomeIcons.heart,
-                                                      color: Colors.white,
-                                                      size: 15,
-                                                    ),
-                                                  ))
-                                              : InkWell(
-                                                  enableFeedback: true,
-                                                  onTap: () async {
-                                                    var userid = await storage
-                                                        .read(key: 'userid');
-
-                                                    if (userid != null) {
-                                                      var url =
-                                                          'https://api.sellship.co/api/favourite/' +
-                                                              userid;
-
-                                                      Map<String, String> body =
-                                                          {
-                                                        'itemid':
-                                                            electronicsitemsgrid[
-                                                                    index]
-                                                                .itemid,
-                                                      };
-
-                                                      favourites.add(
-                                                          electronicsitemsgrid[
-                                                                  index]
-                                                              .itemid);
-                                                      setState(() {
-                                                        favourites = favourites;
-                                                        electronicsitemsgrid[
-                                                                    index]
-                                                                .likes =
-                                                            electronicsitemsgrid[
-                                                                        index]
-                                                                    .likes +
-                                                                1;
-                                                      });
-                                                      final response =
-                                                          await http.post(
-                                                              Uri.parse(url),
-                                                              body: json.encode(
-                                                                  body));
-
-                                                      if (response.statusCode ==
-                                                          200) {
-                                                      } else {
-                                                        print(response
-                                                            .statusCode);
-                                                      }
-                                                    } else {
-                                                      showInSnackBar(
-                                                          'Please Login to use Favourites');
-                                                    }
-                                                  },
-                                                  child: CircleAvatar(
-                                                      radius: 16,
-                                                      backgroundColor: Colors
-                                                          .blueGrey.shade50,
-                                                      child: CircleAvatar(
-                                                        radius: 15,
-                                                        backgroundColor:
-                                                            Colors.white,
-                                                        child: Icon(
-                                                          FeatherIcons.heart,
-                                                          color:
-                                                              Colors.blueGrey,
-                                                          size: 16,
-                                                        ),
+                                          child: categoryList[index]
+                                                      .categoryimage !=
+                                                  null
+                                              ? ClipRRect(
+                                                  child: Hero(
+                                                      tag: 'cat' +
+                                                          categoryList[index]
+                                                              .categoryimage,
+                                                      child: CachedNetworkImage(
+                                                        height: 120,
+                                                        width: 120,
+                                                        imageUrl:
+                                                            categoryList[index]
+                                                                .categoryimage,
+                                                        fit: BoxFit.fitHeight,
                                                       )))
-                                          : CircleAvatar(
-                                              radius: 16,
-                                              backgroundColor:
-                                                  Colors.blueGrey.shade50,
-                                              child: CircleAvatar(
-                                                radius: 15,
-                                                backgroundColor: Colors.white,
-                                                child: Icon(
-                                                  FeatherIcons.heart,
-                                                  color: Colors.blueGrey,
-                                                  size: 16,
-                                                ),
-                                              )),
-                                    )
-                                  ]),
-                                ),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.all(5),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                          child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            electronicsitemsgrid[index].name,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                              fontFamily: 'Helvetica',
-                                              fontSize: 14,
+                                              : Container(),
+                                        ),
+                                        Container(
+                                          height: 30,
+                                          width: 120,
+                                          padding: EdgeInsets.all(5),
+                                          child: Center(
+                                            child: Text(
+                                              categoryList[index]
+                                                  .categoryname
+                                                  .toUpperCase(),
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 12,
+                                                color: Colors.black,
+                                              ),
                                             ),
                                           ),
-                                          SizedBox(
-                                            height: 2,
-                                          ),
-                                          electronicsitemsgrid[index]
-                                                      .saleprice !=
-                                                  null
-                                              ? Text.rich(
-                                                  TextSpan(
-                                                    children: <TextSpan>[
-                                                      new TextSpan(
-                                                        text: 'AED ' +
-                                                            electronicsitemsgrid[
-                                                                    index]
-                                                                .saleprice,
-                                                        style: new TextStyle(
-                                                            color: Colors
-                                                                .redAccent,
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                      new TextSpan(
-                                                        text: '\nAED ' +
-                                                            electronicsitemsgrid[
-                                                                    index]
-                                                                .price
-                                                                .toString(),
-                                                        style: new TextStyle(
-                                                          color: Colors.grey,
-                                                          fontSize: 10,
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .lineThrough,
-                                                        ),
-                                                      ),
-                                                      new TextSpan(
-                                                        text: ' -' +
-                                                            (((double.parse(electronicsitemsgrid[index].price.toString()) -
-                                                                            double.parse(electronicsitemsgrid[index]
-                                                                                .saleprice
-                                                                                .toString())) /
-                                                                        double.parse(electronicsitemsgrid[index]
-                                                                            .price
-                                                                            .toString())) *
-                                                                    100)
-                                                                .toStringAsFixed(
-                                                                    0) +
-                                                            '%',
-                                                        style: new TextStyle(
-                                                          color: Colors.red,
-                                                          fontSize: 12,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                )
-                                              : Text.rich(
-                                                  TextSpan(
-                                                    children: <TextSpan>[
-                                                      new TextSpan(
-                                                        text: 'AED ',
-                                                        style: new TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 12,
-                                                        ),
-                                                      ),
-                                                      new TextSpan(
-                                                        text:
-                                                            electronicsitemsgrid[
-                                                                    index]
-                                                                .price
-                                                                .toString(),
-                                                        style: new TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                )
-                                        ],
+                                        ),
+                                      ],
+                                    ));
+                              }))),
+                  handmadeitemsgrid.isNotEmpty
+                      ? SliverToBoxAdapter(
+                          child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CategoryDetail(
+                                            categoryimage:
+                                                'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2789.PNG',
+                                            category: 'Handmade',
+                                            subcategory:
+                                                categoryList[4].subcategories,
+                                          )),
+                                );
+                              },
+                              child: Container(
+                                height: 120,
+                                width: MediaQuery.of(context).size.width,
+                                child: Image.network(
+                                    'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2789.PNG',
+                                    fit: BoxFit.contain),
+                              )))
+                      : SliverToBoxAdapter(),
+                  handmadeitemsgrid.isNotEmpty
+                      ? SliverToBoxAdapter(
+                          child: Padding(
+                              padding: EdgeInsets.only(
+                                  left: 16, bottom: 10, right: 16, top: 5),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  InkWell(
+                                    enableFeedback: true,
+                                    onTap: () {
+                                      // Navigator.push(
+                                      //   context,
+                                      //   CupertinoPageRoute(
+                                      //       builder: (context) => CategoryDynamic(
+                                      //             category: 'Electronics',
+                                      //           )),
+                                      // );
+                                    },
+                                    child: Text(
+                                      'Top Picks in Handmade',
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                CategoryDetail(
+                                                  categoryimage:
+                                                      'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2789.PNG',
+                                                  category: 'Handmade',
+                                                  subcategory: categoryList[4]
+                                                      .subcategories,
+                                                )),
+                                      );
+                                    },
+                                    enableFeedback: true,
+                                    child: Container(
+                                      padding: EdgeInsets.all(3),
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: Colors.deepOrange),
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                      child: Text('See All',
+                                          style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            color: Colors.deepOrange,
+                                            fontSize: 14.0,
+                                          )),
+                                    ),
+                                  ),
+                                ],
+                              )),
+                        )
+                      : SliverToBoxAdapter(),
+                  handmadeitemsgrid.isNotEmpty
+                      ? SliverToBoxAdapter(
+                          child: Container(
+                          height: 250,
+                          width: MediaQuery.of(context).size.width,
+                          child: ListView.builder(
+                            itemCount: handmadeitemsgrid.length > 20
+                                ? 20
+                                : handmadeitemsgrid.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (BuildContext context, int index) {
+                              return new Padding(
+                                padding: EdgeInsets.all(5),
+                                child: Container(
+                                  height: 2,
+                                  width: MediaQuery.of(context).size.width / 2 -
+                                      20,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(5),
+                                      border: Border.all(
+                                        color: Color.fromRGBO(240, 240, 240, 1),
                                       )),
+                                  child: Column(
+                                    children: <Widget>[
+                                      new InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            CupertinoPageRoute(
+                                                builder: (context) => Details(
+                                                    itemid:
+                                                        handmadeitemsgrid[index]
+                                                            .itemid,
+                                                    image:
+                                                        handmadeitemsgrid[index]
+                                                            .image,
+                                                    name:
+                                                        handmadeitemsgrid[index]
+                                                            .name,
+                                                    sold:
+                                                        handmadeitemsgrid[index]
+                                                            .sold,
+                                                    source:
+                                                        'handmadeitemsgrid')),
+                                          );
+                                        },
+                                        child: Stack(children: <Widget>[
+                                          Container(
+                                            height: 170,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              child: CachedNetworkImage(
+                                                height: 200,
+                                                width: 300,
+                                                fadeInDuration:
+                                                    Duration(microseconds: 5),
+                                                imageUrl: handmadeitemsgrid[
+                                                            index]
+                                                        .image
+                                                        .isEmpty
+                                                    ? SpinKitDoubleBounce(
+                                                        color:
+                                                            Colors.deepOrange)
+                                                    : handmadeitemsgrid[index]
+                                                        .image,
+                                                fit: BoxFit.cover,
+                                                placeholder: (context, url) =>
+                                                    SpinKitDoubleBounce(
+                                                        color:
+                                                            Colors.deepOrange),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Icon(Icons.error),
+                                              ),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            top: 5,
+                                            right: 5,
+                                            child: favourites != null
+                                                ? favourites.contains(
+                                                        handmadeitemsgrid[index]
+                                                            .itemid)
+                                                    ? InkWell(
+                                                        enableFeedback: true,
+                                                        onTap: () async {
+                                                          var userid =
+                                                              await storage.read(
+                                                                  key:
+                                                                      'userid');
+
+                                                          if (userid != null) {
+                                                            var url =
+                                                                'https://api.sellship.co/api/favourite/' +
+                                                                    userid;
+
+                                                            Map<String, String>
+                                                                body = {
+                                                              'itemid':
+                                                                  handmadeitemsgrid[
+                                                                          index]
+                                                                      .itemid,
+                                                            };
+
+                                                            favourites.remove(
+                                                                handmadeitemsgrid[
+                                                                        index]
+                                                                    .itemid);
+                                                            setState(() {
+                                                              favourites =
+                                                                  favourites;
+                                                              handmadeitemsgrid[
+                                                                          index]
+                                                                      .likes =
+                                                                  handmadeitemsgrid[
+                                                                              index]
+                                                                          .likes -
+                                                                      1;
+                                                            });
+                                                            final response =
+                                                                await http.post(
+                                                                    Uri.parse(
+                                                                        url),
+                                                                    body: json
+                                                                        .encode(
+                                                                            body));
+                                                            if (response
+                                                                    .statusCode ==
+                                                                200) {
+                                                            } else {
+                                                              print(response
+                                                                  .statusCode);
+                                                            }
+                                                          } else {
+                                                            showInSnackBar(
+                                                                'Please Login to use Favourites');
+                                                          }
+                                                        },
+                                                        child: CircleAvatar(
+                                                          radius: 16,
+                                                          backgroundColor:
+                                                              Colors.deepOrange,
+                                                          child: Icon(
+                                                            FontAwesomeIcons
+                                                                .heart,
+                                                            color: Colors.white,
+                                                            size: 15,
+                                                          ),
+                                                        ))
+                                                    : InkWell(
+                                                        enableFeedback: true,
+                                                        onTap: () async {
+                                                          var userid =
+                                                              await storage.read(
+                                                                  key:
+                                                                      'userid');
+
+                                                          if (userid != null) {
+                                                            var url =
+                                                                'https://api.sellship.co/api/favourite/' +
+                                                                    userid;
+
+                                                            Map<String, String>
+                                                                body = {
+                                                              'itemid':
+                                                                  handmadeitemsgrid[
+                                                                          index]
+                                                                      .itemid,
+                                                            };
+
+                                                            favourites.add(
+                                                                handmadeitemsgrid[
+                                                                        index]
+                                                                    .itemid);
+                                                            setState(() {
+                                                              favourites =
+                                                                  favourites;
+                                                              handmadeitemsgrid[
+                                                                          index]
+                                                                      .likes =
+                                                                  handmadeitemsgrid[
+                                                                              index]
+                                                                          .likes +
+                                                                      1;
+                                                            });
+                                                            final response =
+                                                                await http.post(
+                                                                    Uri.parse(
+                                                                        url),
+                                                                    body: json
+                                                                        .encode(
+                                                                            body));
+
+                                                            if (response
+                                                                    .statusCode ==
+                                                                200) {
+                                                            } else {
+                                                              print(response
+                                                                  .statusCode);
+                                                            }
+                                                          } else {
+                                                            showInSnackBar(
+                                                                'Please Login to use Favourites');
+                                                          }
+                                                        },
+                                                        child: CircleAvatar(
+                                                            radius: 16,
+                                                            backgroundColor:
+                                                                Colors.blueGrey
+                                                                    .shade50,
+                                                            child: CircleAvatar(
+                                                              radius: 15,
+                                                              backgroundColor:
+                                                                  Colors.white,
+                                                              child: Icon(
+                                                                FeatherIcons
+                                                                    .heart,
+                                                                color: Colors
+                                                                    .blueGrey,
+                                                                size: 16,
+                                                              ),
+                                                            )))
+                                                : CircleAvatar(
+                                                    radius: 16,
+                                                    backgroundColor:
+                                                        Colors.blueGrey.shade50,
+                                                    child: CircleAvatar(
+                                                      radius: 15,
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      child: Icon(
+                                                        FeatherIcons.heart,
+                                                        color: Colors.blueGrey,
+                                                        size: 16,
+                                                      ),
+                                                    )),
+                                          )
+                                        ]),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.all(5),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                                child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  handmadeitemsgrid[index].name,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 2,
+                                                ),
+                                                handmadeitemsgrid[index]
+                                                            .saleprice !=
+                                                        null
+                                                    ? Text.rich(
+                                                        TextSpan(
+                                                          children: <TextSpan>[
+                                                            new TextSpan(
+                                                              text: 'AED ' +
+                                                                  handmadeitemsgrid[
+                                                                          index]
+                                                                      .saleprice,
+                                                              style: new TextStyle(
+                                                                  color: Colors
+                                                                      .redAccent,
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                            new TextSpan(
+                                                              text: '\nAED ' +
+                                                                  handmadeitemsgrid[
+                                                                          index]
+                                                                      .price
+                                                                      .toString(),
+                                                              style:
+                                                                  new TextStyle(
+                                                                color:
+                                                                    Colors.grey,
+                                                                fontSize: 10,
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .lineThrough,
+                                                              ),
+                                                            ),
+                                                            new TextSpan(
+                                                              text: ' -' +
+                                                                  (((double.parse(handmadeitemsgrid[index].price.toString()) - double.parse(handmadeitemsgrid[index].saleprice.toString())) / double.parse(handmadeitemsgrid[index].price.toString())) *
+                                                                          100)
+                                                                      .toStringAsFixed(
+                                                                          0) +
+                                                                  '%',
+                                                              style:
+                                                                  new TextStyle(
+                                                                color:
+                                                                    Colors.red,
+                                                                fontSize: 12,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                                    : Text.rich(
+                                                        TextSpan(
+                                                          children: <TextSpan>[
+                                                            new TextSpan(
+                                                              text: 'AED ',
+                                                              style:
+                                                                  new TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 12,
+                                                              ),
+                                                            ),
+                                                            new TextSpan(
+                                                              text: handmadeitemsgrid[
+                                                                      index]
+                                                                  .price
+                                                                  .toString(),
+                                                              style: new TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                              ],
+                                            )),
+                                          ],
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                        ),
+                                      ),
                                     ],
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                   ),
                                 ),
-                              ],
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                            ),
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
-                  ))
-                : SliverToBoxAdapter(),
-            womenitemsgrid.isNotEmpty
-                ?  SliverToBoxAdapter(
-                child: InkWell(onTap:(){
-
-                },child: Container(
-                  height: 120,
-                  width: MediaQuery.of(context).size.width,
-                  child: Image.network('https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2787.PNG',fit:BoxFit.contain),
-                ))) : SliverToBoxAdapter(),
-            womenitemsgrid.isNotEmpty
-                ? SliverToBoxAdapter(
-              child: Padding(
-                  padding:
-                  EdgeInsets.only(left: 16, bottom: 10, right: 16,top: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        enableFeedback: true,
-                        onTap: () {
-                          // Navigator.push(
-                          //   context,
-                          //   CupertinoPageRoute(
-                          //       builder: (context) => CategoryDynamic(
-                          //             category: 'Electronics',
-                          //           )),
-                          // );
-                        },
-                        child: Text(
-                          'Top Picks in Women',
-                          style: TextStyle(
-                              fontFamily: 'Helvetica',
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          // Navigator.push(
-                          //   context,
-                          //   CupertinoPageRoute(
-                          //       builder: (context) => CategoryDynamic(
-                          //             category: 'Electronics',
-                          //           )),
-                          // );
-                        },
-                        enableFeedback: true,
-                        child: Container(
-                          padding: EdgeInsets.all(3),
-                          decoration: BoxDecoration(
-                              border:
-                              Border.all(color: Colors.deepOrange),
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Text('See All',
-                              style: TextStyle(
-                                fontFamily: 'Helvetica',
-                                color: Colors.deepOrange,
-                                fontSize: 14.0,
-                              )),
-                        ),
-                      ),
-                    ],
-                  )),
-            )
-                : SliverToBoxAdapter(),
-            womenitemsgrid.isNotEmpty
-                ? SliverToBoxAdapter(
-                child: Container(
-                  height: 250,
-                  width: MediaQuery.of(context).size.width,
-                  child: ListView.builder(
-                    itemCount: womenitemsgrid.length > 20
-                        ? 20
-                        : womenitemsgrid.length,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (BuildContext context, int index) {
-                      return new Padding(
-                        padding: EdgeInsets.all(5),
-                        child: Container(
-                          height: 2,
-                          width: MediaQuery.of(context).size.width / 2 - 20,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(5),
-                              border: Border.all(
-                                color: Color.fromRGBO(240, 240, 240, 1),
-                              )),
-                          child: Column(
-                            children: <Widget>[
-                              new InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                        builder: (context) => Details(
-                                            itemid:
-                                            womenitemsgrid[index]
-                                                .itemid,
-                                            image: womenitemsgrid[index]
-                                                .image,
-                                            name: womenitemsgrid[index]
-                                                .name,
-                                            sold: womenitemsgrid[index]
-                                                .sold,
-                                            source: 'womenitemgrid')),
-                                  );
-                                },
-                                child: Stack(children: <Widget>[
-                                  Container(
-                                    height: 170,
-                                    width: MediaQuery.of(context).size.width,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(5),
-                                      child: Hero(
-                                        tag:
-                                        'womenitemgrid${womenitemsgrid[index].itemid}',
-                                        child: CachedNetworkImage(
-                                          height: 200,
-                                          width: 300,
-                                          fadeInDuration:
-                                          Duration(microseconds: 5),
-                                          imageUrl: womenitemsgrid[
-                                          index]
-                                              .image
-                                              .isEmpty
-                                              ? SpinKitDoubleBounce(
-                                              color: Colors.deepOrange)
-                                              : womenitemsgrid[index]
-                                              .image,
-                                          fit: BoxFit.cover,
-                                          placeholder: (context, url) =>
-                                              SpinKitDoubleBounce(
-                                                  color: Colors.deepOrange),
-                                          errorWidget:
-                                              (context, url, error) =>
-                                              Icon(Icons.error),
-                                        ),
-                                      ),
+                        ))
+                      : SliverToBoxAdapter(),
+                  beautyitemsgrid.isNotEmpty
+                      ? SliverToBoxAdapter(
+                          child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CategoryDetail(
+                                            categoryimage:
+                                                'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2795.PNG',
+                                            category: 'Beauty',
+                                            subcategory:
+                                                categoryList[2].subcategories,
+                                          )),
+                                );
+                              },
+                              child: Container(
+                                height: 120,
+                                width: MediaQuery.of(context).size.width,
+                                child: Image.network(
+                                    'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2795.PNG',
+                                    fit: BoxFit.contain),
+                              )))
+                      : SliverToBoxAdapter(),
+                  beautyitemsgrid.isNotEmpty
+                      ? SliverToBoxAdapter(
+                          child: Padding(
+                              padding: EdgeInsets.only(
+                                  left: 16, bottom: 10, right: 16, top: 5),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  InkWell(
+                                    enableFeedback: true,
+                                    onTap: () {
+                                      // Navigator.push(
+                                      //   context,
+                                      //   CupertinoPageRoute(
+                                      //       builder: (context) => CategoryDynamic(
+                                      //             category: 'Electronics',
+                                      //           )),
+                                      // );
+                                    },
+                                    child: Text(
+                                      'Top Picks in Beauty',
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
-                                  Positioned(
-                                    top: 5,
-                                    right: 5,
-                                    child: favourites != null
-                                        ? favourites.contains(
-                                        womenitemsgrid[index]
-                                            .itemid)
-                                        ? InkWell(
-                                        enableFeedback: true,
-                                        onTap: () async {
-                                          var userid = await storage
-                                              .read(key: 'userid');
-
-                                          if (userid != null) {
-                                            var url =
-                                                'https://api.sellship.co/api/favourite/' +
-                                                    userid;
-
-                                            Map<String, String> body =
-                                            {
-                                              'itemid':
-                                              womenitemsgrid[
-                                              index]
-                                                  .itemid,
-                                            };
-
-                                            favourites.remove(
-                                                womenitemsgrid[
-                                                index]
-                                                    .itemid);
-                                            setState(() {
-                                              favourites = favourites;
-                                              womenitemsgrid[
-                                              index]
-                                                  .likes =
-                                                  womenitemsgrid[
-                                                  index]
-                                                      .likes -
-                                                      1;
-                                            });
-                                            final response =
-                                            await http.post(
-                                                Uri.parse(url),
-                                                body: json.encode(
-                                                    body));
-                                            if (response.statusCode ==
-                                                200) {
-                                            } else {
-                                              print(response
-                                                  .statusCode);
-                                            }
-                                          } else {
-                                            showInSnackBar(
-                                                'Please Login to use Favourites');
-                                          }
-                                        },
-                                        child: CircleAvatar(
-                                          radius: 16,
-                                          backgroundColor:
-                                          Colors.deepOrange,
-                                          child: Icon(
-                                            FontAwesomeIcons.heart,
-                                            color: Colors.white,
-                                            size: 15,
-                                          ),
-                                        ))
-                                        : InkWell(
-                                        enableFeedback: true,
-                                        onTap: () async {
-                                          var userid = await storage
-                                              .read(key: 'userid');
-
-                                          if (userid != null) {
-                                            var url =
-                                                'https://api.sellship.co/api/favourite/' +
-                                                    userid;
-
-                                            Map<String, String> body =
-                                            {
-                                              'itemid':
-                                              womenitemsgrid[
-                                              index]
-                                                  .itemid,
-                                            };
-
-                                            favourites.add(
-                                                womenitemsgrid[
-                                                index]
-                                                    .itemid);
-                                            setState(() {
-                                              favourites = favourites;
-                                              womenitemsgrid[
-                                              index]
-                                                  .likes =
-                                                  womenitemsgrid[
-                                                  index]
-                                                      .likes +
-                                                      1;
-                                            });
-                                            final response =
-                                            await http.post(
-                                                Uri.parse(url),
-                                                body: json.encode(
-                                                    body));
-
-                                            if (response.statusCode ==
-                                                200) {
-                                            } else {
-                                              print(response
-                                                  .statusCode);
-                                            }
-                                          } else {
-                                            showInSnackBar(
-                                                'Please Login to use Favourites');
-                                          }
-                                        },
-                                        child: CircleAvatar(
-                                            radius: 16,
-                                            backgroundColor: Colors
-                                                .blueGrey.shade50,
-                                            child: CircleAvatar(
-                                              radius: 15,
-                                              backgroundColor:
-                                              Colors.white,
-                                              child: Icon(
-                                                FeatherIcons.heart,
-                                                color:
-                                                Colors.blueGrey,
-                                                size: 16,
-                                              ),
-                                            )))
-                                        : CircleAvatar(
-                                        radius: 16,
-                                        backgroundColor:
-                                        Colors.blueGrey.shade50,
-                                        child: CircleAvatar(
-                                          radius: 15,
-                                          backgroundColor: Colors.white,
-                                          child: Icon(
-                                            FeatherIcons.heart,
-                                            color: Colors.blueGrey,
-                                            size: 16,
-                                          ),
-                                        )),
-                                  )
-                                ]),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(5),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              womenitemsgrid[index].name,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 2,
-                                            ),
-                                            womenitemsgrid[index]
-                                                .saleprice !=
-                                                null
-                                                ? Text.rich(
-                                              TextSpan(
-                                                children: <TextSpan>[
-                                                  new TextSpan(
-                                                    text: 'AED ' +
-                                                        womenitemsgrid[
-                                                        index]
-                                                            .saleprice,
-                                                    style: new TextStyle(
-                                                        color: Colors
-                                                            .redAccent,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .bold),
-                                                  ),
-                                                  new TextSpan(
-                                                    text: '\nAED ' +
-                                                        womenitemsgrid[
-                                                        index]
-                                                            .price
-                                                            .toString(),
-                                                    style: new TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 10,
-                                                      decoration:
-                                                      TextDecoration
-                                                          .lineThrough,
-                                                    ),
-                                                  ),
-                                                  new TextSpan(
-                                                    text: ' -' +
-                                                        (((double.parse(womenitemsgrid[index].price.toString()) -
-                                                            double.parse(womenitemsgrid[index]
-                                                                .saleprice
-                                                                .toString())) /
-                                                            double.parse(womenitemsgrid[index]
-                                                                .price
-                                                                .toString())) *
-                                                            100)
-                                                            .toStringAsFixed(
-                                                            0) +
-                                                        '%',
-                                                    style: new TextStyle(
-                                                      color: Colors.red,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                                : Text.rich(
-                                              TextSpan(
-                                                children: <TextSpan>[
-                                                  new TextSpan(
-                                                    text: 'AED ',
-                                                    style: new TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                  new TextSpan(
-                                                    text:
-                                                    womenitemsgrid[
-                                                    index]
-                                                        .price
-                                                        .toString(),
-                                                    style: new TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .bold),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        )),
-                                  ],
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                ),
-                              ),
-                            ],
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ))
-                : SliverToBoxAdapter(),
-            homeitemsgrid.isNotEmpty
-                ?  SliverToBoxAdapter(
-                child: InkWell(onTap:(){
-
-                },child: Container(
-                  height: 120,
-                  width: MediaQuery.of(context).size.width,
-                  child: Image.network('https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2793.PNG',fit:BoxFit.contain),
-                ))) : SliverToBoxAdapter(),
-            homeitemsgrid.isNotEmpty
-                ? SliverToBoxAdapter(
-              child: Padding(
-                  padding:
-                  EdgeInsets.only(left: 16, bottom: 10, right: 16,top: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        enableFeedback: true,
-                        onTap: () {
-                          // Navigator.push(
-                          //   context,
-                          //   CupertinoPageRoute(
-                          //       builder: (context) => CategoryDynamic(
-                          //             category: 'Electronics',
-                          //           )),
-                          // );
-                        },
-                        child: Text(
-                          'Top Picks in Home',
-                          style: TextStyle(
-                              fontFamily: 'Helvetica',
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          // Navigator.push(
-                          //   context,
-                          //   CupertinoPageRoute(
-                          //       builder: (context) => CategoryDynamic(
-                          //             category: 'Electronics',
-                          //           )),
-                          // );
-                        },
-                        enableFeedback: true,
-                        child: Container(
-                          padding: EdgeInsets.all(3),
-                          decoration: BoxDecoration(
-                              border:
-                              Border.all(color: Colors.deepOrange),
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Text('See All',
-                              style: TextStyle(
-                                fontFamily: 'Helvetica',
-                                color: Colors.deepOrange,
-                                fontSize: 14.0,
-                              )),
-                        ),
-                      ),
-                    ],
-                  )),
-            )
-                : SliverToBoxAdapter(),
-            homeitemsgrid.isNotEmpty
-                ? SliverToBoxAdapter(
-                child: Container(
-                  height: 250,
-                  width: MediaQuery.of(context).size.width,
-                  child: ListView.builder(
-                    itemCount: homeitemsgrid.length > 20
-                        ? 20
-                        : homeitemsgrid.length,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (BuildContext context, int index) {
-                      return new Padding(
-                        padding: EdgeInsets.all(5),
-                        child: Container(
-                          height: 2,
-                          width: MediaQuery.of(context).size.width / 2 - 20,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(5),
-                              border: Border.all(
-                                color: Color.fromRGBO(240, 240, 240, 1),
-                              )),
-                          child: Column(
-                            children: <Widget>[
-                              new InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                        builder: (context) => Details(
-                                            itemid:
-                                            homeitemsgrid[index]
-                                                .itemid,
-                                            image: homeitemsgrid[index]
-                                                .image,
-                                            name: homeitemsgrid[index]
-                                                .name,
-                                            sold: homeitemsgrid[index]
-                                                .sold,
-                                            source: 'homeitemsgrid')),
-                                  );
-                                },
-                                child: Stack(children: <Widget>[
-                                  Container(
-                                    height: 170,
-                                    width: MediaQuery.of(context).size.width,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(5),
-                                      child: Hero(
-                                        tag:
-                                        'homeitemsgrid${homeitemsgrid[index].itemid}',
-                                        child: CachedNetworkImage(
-                                          height: 200,
-                                          width: 300,
-                                          fadeInDuration:
-                                          Duration(microseconds: 5),
-                                          imageUrl: homeitemsgrid[
-                                          index]
-                                              .image
-                                              .isEmpty
-                                              ? SpinKitDoubleBounce(
-                                              color: Colors.deepOrange)
-                                              : homeitemsgrid[index]
-                                              .image,
-                                          fit: BoxFit.cover,
-                                          placeholder: (context, url) =>
-                                              SpinKitDoubleBounce(
-                                                  color: Colors.deepOrange),
-                                          errorWidget:
-                                              (context, url, error) =>
-                                              Icon(Icons.error),
-                                        ),
-                                      ),
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                CategoryDetail(
+                                                  categoryimage:
+                                                      'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2795.PNG',
+                                                  category: 'Beauty',
+                                                  subcategory: categoryList[2]
+                                                      .subcategories,
+                                                )),
+                                      );
+                                    },
+                                    enableFeedback: true,
+                                    child: Container(
+                                      padding: EdgeInsets.all(3),
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: Colors.deepOrange),
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                      child: Text('See All',
+                                          style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            color: Colors.deepOrange,
+                                            fontSize: 14.0,
+                                          )),
                                     ),
                                   ),
-                                  Positioned(
-                                    top: 5,
-                                    right: 5,
-                                    child: favourites != null
-                                        ? favourites.contains(
-                                        homeitemsgrid[index]
-                                            .itemid)
-                                        ? InkWell(
-                                        enableFeedback: true,
-                                        onTap: () async {
-                                          var userid = await storage
-                                              .read(key: 'userid');
-
-                                          if (userid != null) {
-                                            var url =
-                                                'https://api.sellship.co/api/favourite/' +
-                                                    userid;
-
-                                            Map<String, String> body =
-                                            {
-                                              'itemid':
-                                              homeitemsgrid[
-                                              index]
-                                                  .itemid,
-                                            };
-
-                                            favourites.remove(
-                                                homeitemsgrid[
-                                                index]
-                                                    .itemid);
-                                            setState(() {
-                                              favourites = favourites;
-                                              homeitemsgrid[
-                                              index]
-                                                  .likes =
-                                                  homeitemsgrid[
-                                                  index]
-                                                      .likes -
-                                                      1;
-                                            });
-                                            final response =
-                                            await http.post(
-                                                Uri.parse(url),
-                                                body: json.encode(
-                                                    body));
-                                            if (response.statusCode ==
-                                                200) {
-                                            } else {
-                                              print(response
-                                                  .statusCode);
-                                            }
-                                          } else {
-                                            showInSnackBar(
-                                                'Please Login to use Favourites');
-                                          }
-                                        },
-                                        child: CircleAvatar(
-                                          radius: 16,
-                                          backgroundColor:
-                                          Colors.deepOrange,
-                                          child: Icon(
-                                            FontAwesomeIcons.heart,
-                                            color: Colors.white,
-                                            size: 15,
-                                          ),
-                                        ))
-                                        : InkWell(
-                                        enableFeedback: true,
-                                        onTap: () async {
-                                          var userid = await storage
-                                              .read(key: 'userid');
-
-                                          if (userid != null) {
-                                            var url =
-                                                'https://api.sellship.co/api/favourite/' +
-                                                    userid;
-
-                                            Map<String, String> body =
-                                            {
-                                              'itemid':
-                                              homeitemsgrid[
-                                              index]
-                                                  .itemid,
-                                            };
-
-                                            favourites.add(
-                                                homeitemsgrid[
-                                                index]
-                                                    .itemid);
-                                            setState(() {
-                                              favourites = favourites;
-                                              homeitemsgrid[
-                                              index]
-                                                  .likes =
-                                                  homeitemsgrid[
-                                                  index]
-                                                      .likes +
-                                                      1;
-                                            });
-                                            final response =
-                                            await http.post(
-                                                Uri.parse(url),
-                                                body: json.encode(
-                                                    body));
-
-                                            if (response.statusCode ==
-                                                200) {
-                                            } else {
-                                              print(response
-                                                  .statusCode);
-                                            }
-                                          } else {
-                                            showInSnackBar(
-                                                'Please Login to use Favourites');
-                                          }
-                                        },
-                                        child: CircleAvatar(
-                                            radius: 16,
-                                            backgroundColor: Colors
-                                                .blueGrey.shade50,
-                                            child: CircleAvatar(
-                                              radius: 15,
-                                              backgroundColor:
-                                              Colors.white,
-                                              child: Icon(
-                                                FeatherIcons.heart,
-                                                color:
-                                                Colors.blueGrey,
-                                                size: 16,
-                                              ),
-                                            )))
-                                        : CircleAvatar(
-                                        radius: 16,
-                                        backgroundColor:
-                                        Colors.blueGrey.shade50,
-                                        child: CircleAvatar(
-                                          radius: 15,
-                                          backgroundColor: Colors.white,
-                                          child: Icon(
-                                            FeatherIcons.heart,
-                                            color: Colors.blueGrey,
-                                            size: 16,
-                                          ),
-                                        )),
-                                  )
-                                ]),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Padding(
+                                ],
+                              )),
+                        )
+                      : SliverToBoxAdapter(),
+                  beautyitemsgrid.isNotEmpty
+                      ? SliverToBoxAdapter(
+                          child: Container(
+                          height: 250,
+                          width: MediaQuery.of(context).size.width,
+                          child: ListView.builder(
+                            itemCount: beautyitemsgrid.length > 20
+                                ? 20
+                                : beautyitemsgrid.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (BuildContext context, int index) {
+                              return new Padding(
                                 padding: EdgeInsets.all(5),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              homeitemsgrid[index].name,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 2,
-                                            ),
-                                            homeitemsgrid[index]
-                                                .saleprice !=
-                                                null
-                                                ? Text.rich(
-                                              TextSpan(
-                                                children: <TextSpan>[
-                                                  new TextSpan(
-                                                    text: 'AED ' +
-                                                        homeitemsgrid[
-                                                        index]
-                                                            .saleprice,
-                                                    style: new TextStyle(
-                                                        color: Colors
-                                                            .redAccent,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .bold),
-                                                  ),
-                                                  new TextSpan(
-                                                    text: '\nAED ' +
-                                                        homeitemsgrid[
-                                                        index]
-                                                            .price
-                                                            .toString(),
-                                                    style: new TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 10,
-                                                      decoration:
-                                                      TextDecoration
-                                                          .lineThrough,
-                                                    ),
-                                                  ),
-                                                  new TextSpan(
-                                                    text: ' -' +
-                                                        (((double.parse(homeitemsgrid[index].price.toString()) -
-                                                            double.parse(homeitemsgrid[index]
-                                                                .saleprice
-                                                                .toString())) /
-                                                            double.parse(homeitemsgrid[index]
-                                                                .price
-                                                                .toString())) *
-                                                            100)
-                                                            .toStringAsFixed(
-                                                            0) +
-                                                        '%',
-                                                    style: new TextStyle(
-                                                      color: Colors.red,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                                : Text.rich(
-                                              TextSpan(
-                                                children: <TextSpan>[
-                                                  new TextSpan(
-                                                    text: 'AED ',
-                                                    style: new TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                  new TextSpan(
-                                                    text:
-                                                    homeitemsgrid[
-                                                    index]
-                                                        .price
-                                                        .toString(),
-                                                    style: new TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .bold),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        )),
-                                  ],
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                ),
-                              ),
-                            ],
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ))
-                : SliverToBoxAdapter(),
-            booksitemsgrid.isNotEmpty
-                ?  SliverToBoxAdapter(
-                child: InkWell(onTap:(){
-
-                },child: Container(
-                  height: 120,
-                  width: MediaQuery.of(context).size.width,
-                  child: Image.network('https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2783.PNG',fit:BoxFit.contain),
-                ))) : SliverToBoxAdapter(),
-            booksitemsgrid.isNotEmpty
-                ? SliverToBoxAdapter(
-              child: Padding(
-                  padding:
-                  EdgeInsets.only(left: 16, bottom: 10, right: 16,top: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        enableFeedback: true,
-                        onTap: () {
-                          // Navigator.push(
-                          //   context,
-                          //   CupertinoPageRoute(
-                          //       builder: (context) => CategoryDynamic(
-                          //             category: 'Electronics',
-                          //           )),
-                          // );
-                        },
-                        child: Text(
-                          'Top Picks in Books',
-                          style: TextStyle(
-                              fontFamily: 'Helvetica',
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          // Navigator.push(
-                          //   context,
-                          //   CupertinoPageRoute(
-                          //       builder: (context) => CategoryDynamic(
-                          //             category: 'Electronics',
-                          //           )),
-                          // );
-                        },
-                        enableFeedback: true,
-                        child: Container(
-                          padding: EdgeInsets.all(3),
-                          decoration: BoxDecoration(
-                              border:
-                              Border.all(color: Colors.deepOrange),
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Text('See All',
-                              style: TextStyle(
-                                fontFamily: 'Helvetica',
-                                color: Colors.deepOrange,
-                                fontSize: 14.0,
-                              )),
-                        ),
-                      ),
-                    ],
-                  )),
-            )
-                : SliverToBoxAdapter(),
-            booksitemsgrid.isNotEmpty
-                ? SliverToBoxAdapter(
-                child: Container(
-                  height: 250,
-                  width: MediaQuery.of(context).size.width,
-                  child: ListView.builder(
-                    itemCount: booksitemsgrid.length > 20
-                        ? 20
-                        : booksitemsgrid.length,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (BuildContext context, int index) {
-                      return new Padding(
-                        padding: EdgeInsets.all(5),
-                        child: Container(
-                          height: 2,
-                          width: MediaQuery.of(context).size.width / 2 - 20,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(5),
-                              border: Border.all(
-                                color: Color.fromRGBO(240, 240, 240, 1),
-                              )),
-                          child: Column(
-                            children: <Widget>[
-                              new InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                        builder: (context) => Details(
-                                            itemid:
-                                            booksitemsgrid[index]
-                                                .itemid,
-                                            image: booksitemsgrid[index]
-                                                .image,
-                                            name: booksitemsgrid[index]
-                                                .name,
-                                            sold: booksitemsgrid[index]
-                                                .sold,
-                                            source: 'booksitemsgrid')),
-                                  );
-                                },
-                                child: Stack(children: <Widget>[
-                                  Container(
-                                    height: 170,
-                                    width: MediaQuery.of(context).size.width,
-                                    decoration: BoxDecoration(
+                                child: Container(
+                                  height: 2,
+                                  width: MediaQuery.of(context).size.width / 2 -
+                                      20,
+                                  decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(5),
-                                      child: Hero(
-                                        tag:
-                                        'booksitemsgrid${booksitemsgrid[index].itemid}',
-                                        child: CachedNetworkImage(
-                                          height: 200,
-                                          width: 300,
-                                          fadeInDuration:
-                                          Duration(microseconds: 5),
-                                          imageUrl: booksitemsgrid[
-                                          index]
-                                              .image
-                                              .isEmpty
-                                              ? SpinKitDoubleBounce(
-                                              color: Colors.deepOrange)
-                                              : booksitemsgrid[index]
-                                              .image,
-                                          fit: BoxFit.cover,
-                                          placeholder: (context, url) =>
-                                              SpinKitDoubleBounce(
-                                                  color: Colors.deepOrange),
-                                          errorWidget:
-                                              (context, url, error) =>
-                                              Icon(Icons.error),
+                                      border: Border.all(
+                                        color: Color.fromRGBO(240, 240, 240, 1),
+                                      )),
+                                  child: Column(
+                                    children: <Widget>[
+                                      new InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            CupertinoPageRoute(
+                                                builder: (context) => Details(
+                                                    itemid:
+                                                        beautyitemsgrid[index]
+                                                            .itemid,
+                                                    image:
+                                                        beautyitemsgrid[index]
+                                                            .image,
+                                                    name: beautyitemsgrid[index]
+                                                        .name,
+                                                    sold: beautyitemsgrid[index]
+                                                        .sold,
+                                                    source: 'beautyitemsgrid')),
+                                          );
+                                        },
+                                        child: Stack(children: <Widget>[
+                                          Container(
+                                            height: 170,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              child: CachedNetworkImage(
+                                                height: 200,
+                                                width: 300,
+                                                fadeInDuration:
+                                                    Duration(microseconds: 5),
+                                                imageUrl: beautyitemsgrid[index]
+                                                        .image
+                                                        .isEmpty
+                                                    ? SpinKitDoubleBounce(
+                                                        color:
+                                                            Colors.deepOrange)
+                                                    : beautyitemsgrid[index]
+                                                        .image,
+                                                fit: BoxFit.cover,
+                                                placeholder: (context, url) =>
+                                                    SpinKitDoubleBounce(
+                                                        color:
+                                                            Colors.deepOrange),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Icon(Icons.error),
+                                              ),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            top: 5,
+                                            right: 5,
+                                            child: favourites != null
+                                                ? favourites.contains(
+                                                        beautyitemsgrid[index]
+                                                            .itemid)
+                                                    ? InkWell(
+                                                        enableFeedback: true,
+                                                        onTap: () async {
+                                                          var userid =
+                                                              await storage.read(
+                                                                  key:
+                                                                      'userid');
+
+                                                          if (userid != null) {
+                                                            var url =
+                                                                'https://api.sellship.co/api/favourite/' +
+                                                                    userid;
+
+                                                            Map<String, String>
+                                                                body = {
+                                                              'itemid':
+                                                                  beautyitemsgrid[
+                                                                          index]
+                                                                      .itemid,
+                                                            };
+
+                                                            favourites.remove(
+                                                                beautyitemsgrid[
+                                                                        index]
+                                                                    .itemid);
+                                                            setState(() {
+                                                              favourites =
+                                                                  favourites;
+                                                              beautyitemsgrid[
+                                                                          index]
+                                                                      .likes =
+                                                                  beautyitemsgrid[
+                                                                              index]
+                                                                          .likes -
+                                                                      1;
+                                                            });
+                                                            final response =
+                                                                await http.post(
+                                                                    Uri.parse(
+                                                                        url),
+                                                                    body: json
+                                                                        .encode(
+                                                                            body));
+                                                            if (response
+                                                                    .statusCode ==
+                                                                200) {
+                                                            } else {
+                                                              print(response
+                                                                  .statusCode);
+                                                            }
+                                                          } else {
+                                                            showInSnackBar(
+                                                                'Please Login to use Favourites');
+                                                          }
+                                                        },
+                                                        child: CircleAvatar(
+                                                          radius: 16,
+                                                          backgroundColor:
+                                                              Colors.deepOrange,
+                                                          child: Icon(
+                                                            FontAwesomeIcons
+                                                                .heart,
+                                                            color: Colors.white,
+                                                            size: 15,
+                                                          ),
+                                                        ))
+                                                    : InkWell(
+                                                        enableFeedback: true,
+                                                        onTap: () async {
+                                                          var userid =
+                                                              await storage.read(
+                                                                  key:
+                                                                      'userid');
+
+                                                          if (userid != null) {
+                                                            var url =
+                                                                'https://api.sellship.co/api/favourite/' +
+                                                                    userid;
+
+                                                            Map<String, String>
+                                                                body = {
+                                                              'itemid':
+                                                                  beautyitemsgrid[
+                                                                          index]
+                                                                      .itemid,
+                                                            };
+
+                                                            favourites.add(
+                                                                beautyitemsgrid[
+                                                                        index]
+                                                                    .itemid);
+                                                            setState(() {
+                                                              favourites =
+                                                                  favourites;
+                                                              beautyitemsgrid[
+                                                                          index]
+                                                                      .likes =
+                                                                  beautyitemsgrid[
+                                                                              index]
+                                                                          .likes +
+                                                                      1;
+                                                            });
+                                                            final response =
+                                                                await http.post(
+                                                                    Uri.parse(
+                                                                        url),
+                                                                    body: json
+                                                                        .encode(
+                                                                            body));
+
+                                                            if (response
+                                                                    .statusCode ==
+                                                                200) {
+                                                            } else {
+                                                              print(response
+                                                                  .statusCode);
+                                                            }
+                                                          } else {
+                                                            showInSnackBar(
+                                                                'Please Login to use Favourites');
+                                                          }
+                                                        },
+                                                        child: CircleAvatar(
+                                                            radius: 16,
+                                                            backgroundColor:
+                                                                Colors.blueGrey
+                                                                    .shade50,
+                                                            child: CircleAvatar(
+                                                              radius: 15,
+                                                              backgroundColor:
+                                                                  Colors.white,
+                                                              child: Icon(
+                                                                FeatherIcons
+                                                                    .heart,
+                                                                color: Colors
+                                                                    .blueGrey,
+                                                                size: 16,
+                                                              ),
+                                                            )))
+                                                : CircleAvatar(
+                                                    radius: 16,
+                                                    backgroundColor:
+                                                        Colors.blueGrey.shade50,
+                                                    child: CircleAvatar(
+                                                      radius: 15,
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      child: Icon(
+                                                        FeatherIcons.heart,
+                                                        color: Colors.blueGrey,
+                                                        size: 16,
+                                                      ),
+                                                    )),
+                                          )
+                                        ]),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.all(5),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                                child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  beautyitemsgrid[index].name,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 2,
+                                                ),
+                                                beautyitemsgrid[index]
+                                                            .saleprice !=
+                                                        null
+                                                    ? Text.rich(
+                                                        TextSpan(
+                                                          children: <TextSpan>[
+                                                            new TextSpan(
+                                                              text: 'AED ' +
+                                                                  beautyitemsgrid[
+                                                                          index]
+                                                                      .saleprice,
+                                                              style: new TextStyle(
+                                                                  color: Colors
+                                                                      .redAccent,
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                            new TextSpan(
+                                                              text: '\nAED ' +
+                                                                  beautyitemsgrid[
+                                                                          index]
+                                                                      .price
+                                                                      .toString(),
+                                                              style:
+                                                                  new TextStyle(
+                                                                color:
+                                                                    Colors.grey,
+                                                                fontSize: 10,
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .lineThrough,
+                                                              ),
+                                                            ),
+                                                            new TextSpan(
+                                                              text: ' -' +
+                                                                  (((double.parse(beautyitemsgrid[index].price.toString()) - double.parse(beautyitemsgrid[index].saleprice.toString())) / double.parse(beautyitemsgrid[index].price.toString())) *
+                                                                          100)
+                                                                      .toStringAsFixed(
+                                                                          0) +
+                                                                  '%',
+                                                              style:
+                                                                  new TextStyle(
+                                                                color:
+                                                                    Colors.red,
+                                                                fontSize: 12,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                                    : Text.rich(
+                                                        TextSpan(
+                                                          children: <TextSpan>[
+                                                            new TextSpan(
+                                                              text: 'AED ',
+                                                              style:
+                                                                  new TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 12,
+                                                              ),
+                                                            ),
+                                                            new TextSpan(
+                                                              text: beautyitemsgrid[
+                                                                      index]
+                                                                  .price
+                                                                  .toString(),
+                                                              style: new TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                              ],
+                                            )),
+                                          ],
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                         ),
                                       ),
+                                    ],
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ))
+                      : SliverToBoxAdapter(),
+                  electronicsitemsgrid.isNotEmpty
+                      ? SliverToBoxAdapter(
+                          child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CategoryDetail(
+                                            categoryimage:
+                                                'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2782.PNG',
+                                            category: 'Electronics',
+                                            subcategory:
+                                                categoryList[0].subcategories,
+                                          )),
+                                );
+                              },
+                              child: Container(
+                                height: 120,
+                                width: MediaQuery.of(context).size.width,
+                                child: Image.network(
+                                    'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2782.PNG',
+                                    fit: BoxFit.contain),
+                              )))
+                      : SliverToBoxAdapter(),
+                  electronicsitemsgrid.isNotEmpty
+                      ? SliverToBoxAdapter(
+                          child: Padding(
+                              padding: EdgeInsets.only(
+                                  left: 16, bottom: 10, right: 16, top: 5),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  InkWell(
+                                    enableFeedback: true,
+                                    onTap: () {
+                                      // Navigator.push(
+                                      //   context,
+                                      //   CupertinoPageRoute(
+                                      //       builder: (context) => CategoryDynamic(
+                                      //             category: 'Electronics',
+                                      //           )),
+                                      // );
+                                    },
+                                    child: Text(
+                                      'Top Picks in Electronics',
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
-                                  Positioned(
-                                    top: 5,
-                                    right: 5,
-                                    child: favourites != null
-                                        ? favourites.contains(
-                                        booksitemsgrid[index]
-                                            .itemid)
-                                        ? InkWell(
-                                        enableFeedback: true,
-                                        onTap: () async {
-                                          var userid = await storage
-                                              .read(key: 'userid');
-
-                                          if (userid != null) {
-                                            var url =
-                                                'https://api.sellship.co/api/favourite/' +
-                                                    userid;
-
-                                            Map<String, String> body =
-                                            {
-                                              'itemid':
-                                              booksitemsgrid[
-                                              index]
-                                                  .itemid,
-                                            };
-
-                                            favourites.remove(
-                                                booksitemsgrid[
-                                                index]
-                                                    .itemid);
-                                            setState(() {
-                                              favourites = favourites;
-                                              booksitemsgrid[
-                                              index]
-                                                  .likes =
-                                                  booksitemsgrid[
-                                                  index]
-                                                      .likes -
-                                                      1;
-                                            });
-                                            final response =
-                                            await http.post(
-                                                Uri.parse(url),
-                                                body: json.encode(
-                                                    body));
-                                            if (response.statusCode ==
-                                                200) {
-                                            } else {
-                                              print(response
-                                                  .statusCode);
-                                            }
-                                          } else {
-                                            showInSnackBar(
-                                                'Please Login to use Favourites');
-                                          }
-                                        },
-                                        child: CircleAvatar(
-                                          radius: 16,
-                                          backgroundColor:
-                                          Colors.deepOrange,
-                                          child: Icon(
-                                            FontAwesomeIcons.heart,
-                                            color: Colors.white,
-                                            size: 15,
-                                          ),
-                                        ))
-                                        : InkWell(
-                                        enableFeedback: true,
-                                        onTap: () async {
-                                          var userid = await storage
-                                              .read(key: 'userid');
-
-                                          if (userid != null) {
-                                            var url =
-                                                'https://api.sellship.co/api/favourite/' +
-                                                    userid;
-
-                                            Map<String, String> body =
-                                            {
-                                              'itemid':
-                                              booksitemsgrid[
-                                              index]
-                                                  .itemid,
-                                            };
-
-                                            favourites.add(
-                                                booksitemsgrid[
-                                                index]
-                                                    .itemid);
-                                            setState(() {
-                                              favourites = favourites;
-                                              booksitemsgrid[
-                                              index]
-                                                  .likes =
-                                                  booksitemsgrid[
-                                                  index]
-                                                      .likes +
-                                                      1;
-                                            });
-                                            final response =
-                                            await http.post(
-                                                Uri.parse(url),
-                                                body: json.encode(
-                                                    body));
-
-                                            if (response.statusCode ==
-                                                200) {
-                                            } else {
-                                              print(response
-                                                  .statusCode);
-                                            }
-                                          } else {
-                                            showInSnackBar(
-                                                'Please Login to use Favourites');
-                                          }
-                                        },
-                                        child: CircleAvatar(
-                                            radius: 16,
-                                            backgroundColor: Colors
-                                                .blueGrey.shade50,
-                                            child: CircleAvatar(
-                                              radius: 15,
-                                              backgroundColor:
-                                              Colors.white,
-                                              child: Icon(
-                                                FeatherIcons.heart,
-                                                color:
-                                                Colors.blueGrey,
-                                                size: 16,
-                                              ),
-                                            )))
-                                        : CircleAvatar(
-                                        radius: 16,
-                                        backgroundColor:
-                                        Colors.blueGrey.shade50,
-                                        child: CircleAvatar(
-                                          radius: 15,
-                                          backgroundColor: Colors.white,
-                                          child: Icon(
-                                            FeatherIcons.heart,
-                                            color: Colors.blueGrey,
-                                            size: 16,
-                                          ),
-                                        )),
-                                  )
-                                ]),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Padding(
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                CategoryDetail(
+                                                  categoryimage:
+                                                      'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2782.PNG',
+                                                  category: 'Electronics',
+                                                  subcategory: categoryList[0]
+                                                      .subcategories,
+                                                )),
+                                      );
+                                    },
+                                    enableFeedback: true,
+                                    child: Container(
+                                      padding: EdgeInsets.all(3),
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: Colors.deepOrange),
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                      child: Text('See All',
+                                          style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            color: Colors.deepOrange,
+                                            fontSize: 14.0,
+                                          )),
+                                    ),
+                                  ),
+                                ],
+                              )),
+                        )
+                      : SliverToBoxAdapter(),
+                  electronicsitemsgrid.isNotEmpty
+                      ? SliverToBoxAdapter(
+                          child: Container(
+                          height: 250,
+                          width: MediaQuery.of(context).size.width,
+                          child: ListView.builder(
+                            itemCount: electronicsitemsgrid.length > 20
+                                ? 20
+                                : electronicsitemsgrid.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (BuildContext context, int index) {
+                              return new Padding(
                                 padding: EdgeInsets.all(5),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              booksitemsgrid[index].name,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 2,
-                                            ),
-                                            booksitemsgrid[index]
-                                                .saleprice !=
-                                                null
-                                                ? Text.rich(
-                                              TextSpan(
-                                                children: <TextSpan>[
-                                                  new TextSpan(
-                                                    text: 'AED ' +
-                                                        booksitemsgrid[
-                                                        index]
-                                                            .saleprice,
-                                                    style: new TextStyle(
-                                                        color: Colors
-                                                            .redAccent,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .bold),
-                                                  ),
-                                                  new TextSpan(
-                                                    text: '\nAED ' +
-                                                        booksitemsgrid[
-                                                        index]
-                                                            .price
-                                                            .toString(),
-                                                    style: new TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 10,
-                                                      decoration:
-                                                      TextDecoration
-                                                          .lineThrough,
-                                                    ),
-                                                  ),
-                                                  new TextSpan(
-                                                    text: ' -' +
-                                                        (((double.parse(booksitemsgrid[index].price.toString()) -
-                                                            double.parse(booksitemsgrid[index]
-                                                                .saleprice
-                                                                .toString())) /
-                                                            double.parse(booksitemsgrid[index]
-                                                                .price
-                                                                .toString())) *
-                                                            100)
-                                                            .toStringAsFixed(
-                                                            0) +
-                                                        '%',
-                                                    style: new TextStyle(
-                                                      color: Colors.red,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                                : Text.rich(
-                                              TextSpan(
-                                                children: <TextSpan>[
-                                                  new TextSpan(
-                                                    text: 'AED ',
-                                                    style: new TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                  new TextSpan(
-                                                    text:
-                                                    booksitemsgrid[
-                                                    index]
-                                                        .price
-                                                        .toString(),
-                                                    style: new TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .bold),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        )),
-                                  ],
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                ),
-                              ),
-                            ],
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ))
-                : SliverToBoxAdapter(),
-            luxuryitemsgrid.isNotEmpty
-                ?  SliverToBoxAdapter(
-                child: InkWell(onTap:(){
-
-                },child: Container(
-                  height: 120,
-                  width: MediaQuery.of(context).size.width,
-                  child: Image.network('https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2790.PNG',fit:BoxFit.contain),
-                ))) : SliverToBoxAdapter(),
-            luxuryitemsgrid.isNotEmpty
-                ? SliverToBoxAdapter(
-              child: Padding(
-                  padding:
-                  EdgeInsets.only(left: 16, bottom: 10, right: 16,top: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        enableFeedback: true,
-                        onTap: () {
-                          // Navigator.push(
-                          //   context,
-                          //   CupertinoPageRoute(
-                          //       builder: (context) => CategoryDynamic(
-                          //             category: 'Electronics',
-                          //           )),
-                          // );
-                        },
-                        child: Text(
-                          'Top Picks in Luxury',
-                          style: TextStyle(
-                              fontFamily: 'Helvetica',
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          // Navigator.push(
-                          //   context,
-                          //   CupertinoPageRoute(
-                          //       builder: (context) => CategoryDynamic(
-                          //             category: 'Electronics',
-                          //           )),
-                          // );
-                        },
-                        enableFeedback: true,
-                        child: Container(
-                          padding: EdgeInsets.all(3),
-                          decoration: BoxDecoration(
-                              border:
-                              Border.all(color: Colors.deepOrange),
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Text('See All',
-                              style: TextStyle(
-                                fontFamily: 'Helvetica',
-                                color: Colors.deepOrange,
-                                fontSize: 14.0,
-                              )),
-                        ),
-                      ),
-                    ],
-                  )),
-            )
-                : SliverToBoxAdapter(),
-            luxuryitemsgrid.isNotEmpty
-                ? SliverToBoxAdapter(
-                child: Container(
-                  height: 250,
-                  width: MediaQuery.of(context).size.width,
-                  child: ListView.builder(
-                    itemCount: luxuryitemsgrid.length > 20
-                        ? 20
-                        : luxuryitemsgrid.length,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (BuildContext context, int index) {
-                      return new Padding(
-                        padding: EdgeInsets.all(5),
-                        child: Container(
-                          height: 2,
-                          width: MediaQuery.of(context).size.width / 2 - 20,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(5),
-                              border: Border.all(
-                                color: Color.fromRGBO(240, 240, 240, 1),
-                              )),
-                          child: Column(
-                            children: <Widget>[
-                              new InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                        builder: (context) => Details(
-                                            itemid:
-                                            luxuryitemsgrid[index]
-                                                .itemid,
-                                            image: luxuryitemsgrid[index]
-                                                .image,
-                                            name: luxuryitemsgrid[index]
-                                                .name,
-                                            sold: luxuryitemsgrid[index]
-                                                .sold,
-                                            source: 'booksitemsgrid')),
-                                  );
-                                },
-                                child: Stack(children: <Widget>[
-                                  Container(
-                                    height: 170,
-                                    width: MediaQuery.of(context).size.width,
-                                    decoration: BoxDecoration(
+                                child: Container(
+                                  height: 2,
+                                  width: MediaQuery.of(context).size.width / 2 -
+                                      20,
+                                  decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(5),
-                                      child: Hero(
-                                        tag:
-                                        'luxuryitemsgrid${luxuryitemsgrid[index].itemid}',
-                                        child: CachedNetworkImage(
-                                          height: 200,
-                                          width: 300,
-                                          fadeInDuration:
-                                          Duration(microseconds: 5),
-                                          imageUrl: luxuryitemsgrid[
-                                          index]
-                                              .image
-                                              .isEmpty
-                                              ? SpinKitDoubleBounce(
-                                              color: Colors.deepOrange)
-                                              : luxuryitemsgrid[index]
-                                              .image,
-                                          fit: BoxFit.cover,
-                                          placeholder: (context, url) =>
-                                              SpinKitDoubleBounce(
-                                                  color: Colors.deepOrange),
-                                          errorWidget:
-                                              (context, url, error) =>
-                                              Icon(Icons.error),
+                                      border: Border.all(
+                                        color: Color.fromRGBO(240, 240, 240, 1),
+                                      )),
+                                  child: Column(
+                                    children: <Widget>[
+                                      new InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            CupertinoPageRoute(
+                                                builder: (context) => Details(
+                                                    itemid:
+                                                        electronicsitemsgrid[
+                                                                index]
+                                                            .itemid,
+                                                    image: electronicsitemsgrid[
+                                                            index]
+                                                        .image,
+                                                    name: electronicsitemsgrid[
+                                                            index]
+                                                        .name,
+                                                    sold: electronicsitemsgrid[
+                                                            index]
+                                                        .sold,
+                                                    source:
+                                                        'electronicsitemsgrid')),
+                                          );
+                                        },
+                                        child: Stack(children: <Widget>[
+                                          Container(
+                                            height: 170,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              child: CachedNetworkImage(
+                                                height: 200,
+                                                width: 300,
+                                                fadeInDuration:
+                                                    Duration(microseconds: 5),
+                                                imageUrl:
+                                                    electronicsitemsgrid[index]
+                                                            .image
+                                                            .isEmpty
+                                                        ? SpinKitDoubleBounce(
+                                                            color: Colors
+                                                                .deepOrange)
+                                                        : electronicsitemsgrid[
+                                                                index]
+                                                            .image,
+                                                fit: BoxFit.cover,
+                                                placeholder: (context, url) =>
+                                                    SpinKitDoubleBounce(
+                                                        color:
+                                                            Colors.deepOrange),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Icon(Icons.error),
+                                              ),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            top: 5,
+                                            right: 5,
+                                            child: favourites != null
+                                                ? favourites.contains(
+                                                        electronicsitemsgrid[
+                                                                index]
+                                                            .itemid)
+                                                    ? InkWell(
+                                                        enableFeedback: true,
+                                                        onTap: () async {
+                                                          var userid =
+                                                              await storage.read(
+                                                                  key:
+                                                                      'userid');
+
+                                                          if (userid != null) {
+                                                            var url =
+                                                                'https://api.sellship.co/api/favourite/' +
+                                                                    userid;
+
+                                                            Map<String, String>
+                                                                body = {
+                                                              'itemid':
+                                                                  electronicsitemsgrid[
+                                                                          index]
+                                                                      .itemid,
+                                                            };
+
+                                                            favourites.remove(
+                                                                electronicsitemsgrid[
+                                                                        index]
+                                                                    .itemid);
+                                                            setState(() {
+                                                              favourites =
+                                                                  favourites;
+                                                              electronicsitemsgrid[
+                                                                          index]
+                                                                      .likes =
+                                                                  electronicsitemsgrid[
+                                                                              index]
+                                                                          .likes -
+                                                                      1;
+                                                            });
+                                                            final response =
+                                                                await http.post(
+                                                                    Uri.parse(
+                                                                        url),
+                                                                    body: json
+                                                                        .encode(
+                                                                            body));
+                                                            if (response
+                                                                    .statusCode ==
+                                                                200) {
+                                                            } else {
+                                                              print(response
+                                                                  .statusCode);
+                                                            }
+                                                          } else {
+                                                            showInSnackBar(
+                                                                'Please Login to use Favourites');
+                                                          }
+                                                        },
+                                                        child: CircleAvatar(
+                                                          radius: 16,
+                                                          backgroundColor:
+                                                              Colors.deepOrange,
+                                                          child: Icon(
+                                                            FontAwesomeIcons
+                                                                .heart,
+                                                            color: Colors.white,
+                                                            size: 15,
+                                                          ),
+                                                        ))
+                                                    : InkWell(
+                                                        enableFeedback: true,
+                                                        onTap: () async {
+                                                          var userid =
+                                                              await storage.read(
+                                                                  key:
+                                                                      'userid');
+
+                                                          if (userid != null) {
+                                                            var url =
+                                                                'https://api.sellship.co/api/favourite/' +
+                                                                    userid;
+
+                                                            Map<String, String>
+                                                                body = {
+                                                              'itemid':
+                                                                  electronicsitemsgrid[
+                                                                          index]
+                                                                      .itemid,
+                                                            };
+
+                                                            favourites.add(
+                                                                electronicsitemsgrid[
+                                                                        index]
+                                                                    .itemid);
+                                                            setState(() {
+                                                              favourites =
+                                                                  favourites;
+                                                              electronicsitemsgrid[
+                                                                          index]
+                                                                      .likes =
+                                                                  electronicsitemsgrid[
+                                                                              index]
+                                                                          .likes +
+                                                                      1;
+                                                            });
+                                                            final response =
+                                                                await http.post(
+                                                                    Uri.parse(
+                                                                        url),
+                                                                    body: json
+                                                                        .encode(
+                                                                            body));
+
+                                                            if (response
+                                                                    .statusCode ==
+                                                                200) {
+                                                            } else {
+                                                              print(response
+                                                                  .statusCode);
+                                                            }
+                                                          } else {
+                                                            showInSnackBar(
+                                                                'Please Login to use Favourites');
+                                                          }
+                                                        },
+                                                        child: CircleAvatar(
+                                                            radius: 16,
+                                                            backgroundColor:
+                                                                Colors.blueGrey
+                                                                    .shade50,
+                                                            child: CircleAvatar(
+                                                              radius: 15,
+                                                              backgroundColor:
+                                                                  Colors.white,
+                                                              child: Icon(
+                                                                FeatherIcons
+                                                                    .heart,
+                                                                color: Colors
+                                                                    .blueGrey,
+                                                                size: 16,
+                                                              ),
+                                                            )))
+                                                : CircleAvatar(
+                                                    radius: 16,
+                                                    backgroundColor:
+                                                        Colors.blueGrey.shade50,
+                                                    child: CircleAvatar(
+                                                      radius: 15,
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      child: Icon(
+                                                        FeatherIcons.heart,
+                                                        color: Colors.blueGrey,
+                                                        size: 16,
+                                                      ),
+                                                    )),
+                                          )
+                                        ]),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.all(5),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                                child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  electronicsitemsgrid[index]
+                                                      .name,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 2,
+                                                ),
+                                                electronicsitemsgrid[index]
+                                                            .saleprice !=
+                                                        null
+                                                    ? Text.rich(
+                                                        TextSpan(
+                                                          children: <TextSpan>[
+                                                            new TextSpan(
+                                                              text: 'AED ' +
+                                                                  electronicsitemsgrid[
+                                                                          index]
+                                                                      .saleprice,
+                                                              style: new TextStyle(
+                                                                  color: Colors
+                                                                      .redAccent,
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                            new TextSpan(
+                                                              text: '\nAED ' +
+                                                                  electronicsitemsgrid[
+                                                                          index]
+                                                                      .price
+                                                                      .toString(),
+                                                              style:
+                                                                  new TextStyle(
+                                                                color:
+                                                                    Colors.grey,
+                                                                fontSize: 10,
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .lineThrough,
+                                                              ),
+                                                            ),
+                                                            new TextSpan(
+                                                              text: ' -' +
+                                                                  (((double.parse(electronicsitemsgrid[index].price.toString()) - double.parse(electronicsitemsgrid[index].saleprice.toString())) / double.parse(electronicsitemsgrid[index].price.toString())) *
+                                                                          100)
+                                                                      .toStringAsFixed(
+                                                                          0) +
+                                                                  '%',
+                                                              style:
+                                                                  new TextStyle(
+                                                                color:
+                                                                    Colors.red,
+                                                                fontSize: 12,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                                    : Text.rich(
+                                                        TextSpan(
+                                                          children: <TextSpan>[
+                                                            new TextSpan(
+                                                              text: 'AED ',
+                                                              style:
+                                                                  new TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 12,
+                                                              ),
+                                                            ),
+                                                            new TextSpan(
+                                                              text: electronicsitemsgrid[
+                                                                      index]
+                                                                  .price
+                                                                  .toString(),
+                                                              style: new TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                              ],
+                                            )),
+                                          ],
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                         ),
                                       ),
+                                    ],
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ))
+                      : SliverToBoxAdapter(),
+                  womenitemsgrid.isNotEmpty
+                      ? SliverToBoxAdapter(
+                          child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CategoryDetail(
+                                            categoryimage:
+                                                'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2787.PNG',
+                                            category: 'Women',
+                                            subcategory:
+                                                categoryList[7].subcategories,
+                                          )),
+                                );
+                              },
+                              child: Container(
+                                height: 120,
+                                width: MediaQuery.of(context).size.width,
+                                child: Image.network(
+                                    'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2787.PNG',
+                                    fit: BoxFit.contain),
+                              )))
+                      : SliverToBoxAdapter(),
+                  womenitemsgrid.isNotEmpty
+                      ? SliverToBoxAdapter(
+                          child: Padding(
+                              padding: EdgeInsets.only(
+                                  left: 16, bottom: 10, right: 16, top: 5),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  InkWell(
+                                    enableFeedback: true,
+                                    onTap: () {
+                                      // Navigator.push(
+                                      //   context,
+                                      //   CupertinoPageRoute(
+                                      //       builder: (context) => CategoryDynamic(
+                                      //             category: 'Electronics',
+                                      //           )),
+                                      // );
+                                    },
+                                    child: Text(
+                                      'Top Picks in Women',
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
-                                  Positioned(
-                                    top: 5,
-                                    right: 5,
-                                    child: favourites != null
-                                        ? favourites.contains(
-                                        luxuryitemsgrid[index]
-                                            .itemid)
-                                        ? InkWell(
-                                        enableFeedback: true,
-                                        onTap: () async {
-                                          var userid = await storage
-                                              .read(key: 'userid');
-
-                                          if (userid != null) {
-                                            var url =
-                                                'https://api.sellship.co/api/favourite/' +
-                                                    userid;
-
-                                            Map<String, String> body =
-                                            {
-                                              'itemid':
-                                              luxuryitemsgrid[
-                                              index]
-                                                  .itemid,
-                                            };
-
-                                            favourites.remove(
-                                                luxuryitemsgrid[
-                                                index]
-                                                    .itemid);
-                                            setState(() {
-                                              favourites = favourites;
-                                              luxuryitemsgrid[
-                                              index]
-                                                  .likes =
-                                                  luxuryitemsgrid[
-                                                  index]
-                                                      .likes -
-                                                      1;
-                                            });
-                                            final response =
-                                            await http.post(
-                                                Uri.parse(url),
-                                                body: json.encode(
-                                                    body));
-                                            if (response.statusCode ==
-                                                200) {
-                                            } else {
-                                              print(response
-                                                  .statusCode);
-                                            }
-                                          } else {
-                                            showInSnackBar(
-                                                'Please Login to use Favourites');
-                                          }
-                                        },
-                                        child: CircleAvatar(
-                                          radius: 16,
-                                          backgroundColor:
-                                          Colors.deepOrange,
-                                          child: Icon(
-                                            FontAwesomeIcons.heart,
-                                            color: Colors.white,
-                                            size: 15,
-                                          ),
-                                        ))
-                                        : InkWell(
-                                        enableFeedback: true,
-                                        onTap: () async {
-                                          var userid = await storage
-                                              .read(key: 'userid');
-
-                                          if (userid != null) {
-                                            var url =
-                                                'https://api.sellship.co/api/favourite/' +
-                                                    userid;
-
-                                            Map<String, String> body =
-                                            {
-                                              'itemid':
-                                              luxuryitemsgrid[
-                                              index]
-                                                  .itemid,
-                                            };
-
-                                            favourites.add(
-                                                luxuryitemsgrid[
-                                                index]
-                                                    .itemid);
-                                            setState(() {
-                                              favourites = favourites;
-                                              luxuryitemsgrid[
-                                              index]
-                                                  .likes =
-                                                  luxuryitemsgrid[
-                                                  index]
-                                                      .likes +
-                                                      1;
-                                            });
-                                            final response =
-                                            await http.post(
-                                                Uri.parse(url),
-                                                body: json.encode(
-                                                    body));
-
-                                            if (response.statusCode ==
-                                                200) {
-                                            } else {
-                                              print(response
-                                                  .statusCode);
-                                            }
-                                          } else {
-                                            showInSnackBar(
-                                                'Please Login to use Favourites');
-                                          }
-                                        },
-                                        child: CircleAvatar(
-                                            radius: 16,
-                                            backgroundColor: Colors
-                                                .blueGrey.shade50,
-                                            child: CircleAvatar(
-                                              radius: 15,
-                                              backgroundColor:
-                                              Colors.white,
-                                              child: Icon(
-                                                FeatherIcons.heart,
-                                                color:
-                                                Colors.blueGrey,
-                                                size: 16,
-                                              ),
-                                            )))
-                                        : CircleAvatar(
-                                        radius: 16,
-                                        backgroundColor:
-                                        Colors.blueGrey.shade50,
-                                        child: CircleAvatar(
-                                          radius: 15,
-                                          backgroundColor: Colors.white,
-                                          child: Icon(
-                                            FeatherIcons.heart,
-                                            color: Colors.blueGrey,
-                                            size: 16,
-                                          ),
-                                        )),
-                                  )
-                                ]),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Padding(
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                CategoryDetail(
+                                                  categoryimage:
+                                                      'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2787.PNG',
+                                                  category: 'Women',
+                                                  subcategory: categoryList[7]
+                                                      .subcategories,
+                                                )),
+                                      );
+                                    },
+                                    enableFeedback: true,
+                                    child: Container(
+                                      padding: EdgeInsets.all(3),
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: Colors.deepOrange),
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                      child: Text('See All',
+                                          style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            color: Colors.deepOrange,
+                                            fontSize: 14.0,
+                                          )),
+                                    ),
+                                  ),
+                                ],
+                              )),
+                        )
+                      : SliverToBoxAdapter(),
+                  womenitemsgrid.isNotEmpty
+                      ? SliverToBoxAdapter(
+                          child: Container(
+                          height: 250,
+                          width: MediaQuery.of(context).size.width,
+                          child: ListView.builder(
+                            itemCount: womenitemsgrid.length > 20
+                                ? 20
+                                : womenitemsgrid.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (BuildContext context, int index) {
+                              return new Padding(
                                 padding: EdgeInsets.all(5),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              luxuryitemsgrid[index].name,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 2,
-                                            ),
-                                            luxuryitemsgrid[index]
-                                                .saleprice !=
-                                                null
-                                                ? Text.rich(
-                                              TextSpan(
-                                                children: <TextSpan>[
-                                                  new TextSpan(
-                                                    text: 'AED ' +
-                                                        luxuryitemsgrid[
-                                                        index]
-                                                            .saleprice,
-                                                    style: new TextStyle(
-                                                        color: Colors
-                                                            .redAccent,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .bold),
-                                                  ),
-                                                  new TextSpan(
-                                                    text: '\nAED ' +
-                                                        luxuryitemsgrid[
-                                                        index]
-                                                            .price
-                                                            .toString(),
-                                                    style: new TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 10,
-                                                      decoration:
-                                                      TextDecoration
-                                                          .lineThrough,
-                                                    ),
-                                                  ),
-                                                  new TextSpan(
-                                                    text: ' -' +
-                                                        (((double.parse(luxuryitemsgrid[index].price.toString()) -
-                                                            double.parse(luxuryitemsgrid[index]
-                                                                .saleprice
-                                                                .toString())) /
-                                                            double.parse(luxuryitemsgrid[index]
-                                                                .price
-                                                                .toString())) *
-                                                            100)
-                                                            .toStringAsFixed(
-                                                            0) +
-                                                        '%',
-                                                    style: new TextStyle(
-                                                      color: Colors.red,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                                : Text.rich(
-                                              TextSpan(
-                                                children: <TextSpan>[
-                                                  new TextSpan(
-                                                    text: 'AED ',
-                                                    style: new TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                  new TextSpan(
-                                                    text:
-                                                    luxuryitemsgrid[
-                                                    index]
-                                                        .price
-                                                        .toString(),
-                                                    style: new TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .bold),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        )),
-                                  ],
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                ),
-                              ),
-                            ],
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ))
-                : SliverToBoxAdapter(),
-            kidsitemsgrid.isNotEmpty
-                ?  SliverToBoxAdapter(
-                child: InkWell(onTap:(){
-
-                },child: Container(
-                  height: 120,
-                  width: MediaQuery.of(context).size.width,
-                  child: Image.network('https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2794.PNG',fit:BoxFit.contain),
-                ))) : SliverToBoxAdapter(),
-            kidsitemsgrid.isNotEmpty
-                ? SliverToBoxAdapter(
-              child: Padding(
-                  padding:
-                  EdgeInsets.only(left: 16, bottom: 10, right: 16,top: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        enableFeedback: true,
-                        onTap: () {
-                          // Navigator.push(
-                          //   context,
-                          //   CupertinoPageRoute(
-                          //       builder: (context) => CategoryDynamic(
-                          //             category: 'Electronics',
-                          //           )),
-                          // );
-                        },
-                        child: Text(
-                          'Top Picks in Kids',
-                          style: TextStyle(
-                              fontFamily: 'Helvetica',
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          // Navigator.push(
-                          //   context,
-                          //   CupertinoPageRoute(
-                          //       builder: (context) => CategoryDynamic(
-                          //             category: 'Electronics',
-                          //           )),
-                          // );
-                        },
-                        enableFeedback: true,
-                        child: Container(
-                          padding: EdgeInsets.all(3),
-                          decoration: BoxDecoration(
-                              border:
-                              Border.all(color: Colors.deepOrange),
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Text('See All',
-                              style: TextStyle(
-                                fontFamily: 'Helvetica',
-                                color: Colors.deepOrange,
-                                fontSize: 14.0,
-                              )),
-                        ),
-                      ),
-                    ],
-                  )),
-            )
-                : SliverToBoxAdapter(),
-            kidsitemsgrid.isNotEmpty
-                ? SliverToBoxAdapter(
-                child: Container(
-                  height: 250,
-                  width: MediaQuery.of(context).size.width,
-                  child: ListView.builder(
-                    itemCount: kidsitemsgrid.length > 20
-                        ? 20
-                        : kidsitemsgrid.length,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (BuildContext context, int index) {
-                      return new Padding(
-                        padding: EdgeInsets.all(5),
-                        child: Container(
-                          height: 2,
-                          width: MediaQuery.of(context).size.width / 2 - 20,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(5),
-                              border: Border.all(
-                                color: Color.fromRGBO(240, 240, 240, 1),
-                              )),
-                          child: Column(
-                            children: <Widget>[
-                              new InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                        builder: (context) => Details(
-                                            itemid:
-                                            kidsitemsgrid[index]
-                                                .itemid,
-                                            image: kidsitemsgrid[index]
-                                                .image,
-                                            name: kidsitemsgrid[index]
-                                                .name,
-                                            sold: kidsitemsgrid[index]
-                                                .sold,
-                                            source: 'kidsitemsgrid')),
-                                  );
-                                },
-                                child: Stack(children: <Widget>[
-                                  Container(
-                                    height: 170,
-                                    width: MediaQuery.of(context).size.width,
-                                    decoration: BoxDecoration(
+                                child: Container(
+                                  height: 2,
+                                  width: MediaQuery.of(context).size.width / 2 -
+                                      20,
+                                  decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(5),
-                                      child: Hero(
-                                        tag:
-                                        'kidsitemsgrid${kidsitemsgrid[index].itemid}',
-                                        child: CachedNetworkImage(
-                                          height: 200,
-                                          width: 300,
-                                          fadeInDuration:
-                                          Duration(microseconds: 5),
-                                          imageUrl: kidsitemsgrid[
-                                          index]
-                                              .image
-                                              .isEmpty
-                                              ? SpinKitDoubleBounce(
-                                              color: Colors.deepOrange)
-                                              : kidsitemsgrid[index]
-                                              .image,
-                                          fit: BoxFit.cover,
-                                          placeholder: (context, url) =>
-                                              SpinKitDoubleBounce(
-                                                  color: Colors.deepOrange),
-                                          errorWidget:
-                                              (context, url, error) =>
-                                              Icon(Icons.error),
+                                      border: Border.all(
+                                        color: Color.fromRGBO(240, 240, 240, 1),
+                                      )),
+                                  child: Column(
+                                    children: <Widget>[
+                                      new InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            CupertinoPageRoute(
+                                                builder: (context) => Details(
+                                                    itemid:
+                                                        womenitemsgrid[index]
+                                                            .itemid,
+                                                    image: womenitemsgrid[index]
+                                                        .image,
+                                                    name: womenitemsgrid[index]
+                                                        .name,
+                                                    sold: womenitemsgrid[index]
+                                                        .sold,
+                                                    source: 'womenitemgrid')),
+                                          );
+                                        },
+                                        child: Stack(children: <Widget>[
+                                          Container(
+                                            height: 170,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              child: CachedNetworkImage(
+                                                height: 200,
+                                                width: 300,
+                                                fadeInDuration:
+                                                    Duration(microseconds: 5),
+                                                imageUrl: womenitemsgrid[index]
+                                                        .image
+                                                        .isEmpty
+                                                    ? SpinKitDoubleBounce(
+                                                        color:
+                                                            Colors.deepOrange)
+                                                    : womenitemsgrid[index]
+                                                        .image,
+                                                fit: BoxFit.cover,
+                                                placeholder: (context, url) =>
+                                                    SpinKitDoubleBounce(
+                                                        color:
+                                                            Colors.deepOrange),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Icon(Icons.error),
+                                              ),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            top: 5,
+                                            right: 5,
+                                            child: favourites != null
+                                                ? favourites.contains(
+                                                        womenitemsgrid[index]
+                                                            .itemid)
+                                                    ? InkWell(
+                                                        enableFeedback: true,
+                                                        onTap: () async {
+                                                          var userid =
+                                                              await storage.read(
+                                                                  key:
+                                                                      'userid');
+
+                                                          if (userid != null) {
+                                                            var url =
+                                                                'https://api.sellship.co/api/favourite/' +
+                                                                    userid;
+
+                                                            Map<String, String>
+                                                                body = {
+                                                              'itemid':
+                                                                  womenitemsgrid[
+                                                                          index]
+                                                                      .itemid,
+                                                            };
+
+                                                            favourites.remove(
+                                                                womenitemsgrid[
+                                                                        index]
+                                                                    .itemid);
+                                                            setState(() {
+                                                              favourites =
+                                                                  favourites;
+                                                              womenitemsgrid[
+                                                                          index]
+                                                                      .likes =
+                                                                  womenitemsgrid[
+                                                                              index]
+                                                                          .likes -
+                                                                      1;
+                                                            });
+                                                            final response =
+                                                                await http.post(
+                                                                    Uri.parse(
+                                                                        url),
+                                                                    body: json
+                                                                        .encode(
+                                                                            body));
+                                                            if (response
+                                                                    .statusCode ==
+                                                                200) {
+                                                            } else {
+                                                              print(response
+                                                                  .statusCode);
+                                                            }
+                                                          } else {
+                                                            showInSnackBar(
+                                                                'Please Login to use Favourites');
+                                                          }
+                                                        },
+                                                        child: CircleAvatar(
+                                                          radius: 16,
+                                                          backgroundColor:
+                                                              Colors.deepOrange,
+                                                          child: Icon(
+                                                            FontAwesomeIcons
+                                                                .heart,
+                                                            color: Colors.white,
+                                                            size: 15,
+                                                          ),
+                                                        ))
+                                                    : InkWell(
+                                                        enableFeedback: true,
+                                                        onTap: () async {
+                                                          var userid =
+                                                              await storage.read(
+                                                                  key:
+                                                                      'userid');
+
+                                                          if (userid != null) {
+                                                            var url =
+                                                                'https://api.sellship.co/api/favourite/' +
+                                                                    userid;
+
+                                                            Map<String, String>
+                                                                body = {
+                                                              'itemid':
+                                                                  womenitemsgrid[
+                                                                          index]
+                                                                      .itemid,
+                                                            };
+
+                                                            favourites.add(
+                                                                womenitemsgrid[
+                                                                        index]
+                                                                    .itemid);
+                                                            setState(() {
+                                                              favourites =
+                                                                  favourites;
+                                                              womenitemsgrid[
+                                                                          index]
+                                                                      .likes =
+                                                                  womenitemsgrid[
+                                                                              index]
+                                                                          .likes +
+                                                                      1;
+                                                            });
+                                                            final response =
+                                                                await http.post(
+                                                                    Uri.parse(
+                                                                        url),
+                                                                    body: json
+                                                                        .encode(
+                                                                            body));
+
+                                                            if (response
+                                                                    .statusCode ==
+                                                                200) {
+                                                            } else {
+                                                              print(response
+                                                                  .statusCode);
+                                                            }
+                                                          } else {
+                                                            showInSnackBar(
+                                                                'Please Login to use Favourites');
+                                                          }
+                                                        },
+                                                        child: CircleAvatar(
+                                                            radius: 16,
+                                                            backgroundColor:
+                                                                Colors.blueGrey
+                                                                    .shade50,
+                                                            child: CircleAvatar(
+                                                              radius: 15,
+                                                              backgroundColor:
+                                                                  Colors.white,
+                                                              child: Icon(
+                                                                FeatherIcons
+                                                                    .heart,
+                                                                color: Colors
+                                                                    .blueGrey,
+                                                                size: 16,
+                                                              ),
+                                                            )))
+                                                : CircleAvatar(
+                                                    radius: 16,
+                                                    backgroundColor:
+                                                        Colors.blueGrey.shade50,
+                                                    child: CircleAvatar(
+                                                      radius: 15,
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      child: Icon(
+                                                        FeatherIcons.heart,
+                                                        color: Colors.blueGrey,
+                                                        size: 16,
+                                                      ),
+                                                    )),
+                                          )
+                                        ]),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.all(5),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                                child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  womenitemsgrid[index].name,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 2,
+                                                ),
+                                                womenitemsgrid[index]
+                                                            .saleprice !=
+                                                        null
+                                                    ? Text.rich(
+                                                        TextSpan(
+                                                          children: <TextSpan>[
+                                                            new TextSpan(
+                                                              text: 'AED ' +
+                                                                  womenitemsgrid[
+                                                                          index]
+                                                                      .saleprice,
+                                                              style: new TextStyle(
+                                                                  color: Colors
+                                                                      .redAccent,
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                            new TextSpan(
+                                                              text: '\nAED ' +
+                                                                  womenitemsgrid[
+                                                                          index]
+                                                                      .price
+                                                                      .toString(),
+                                                              style:
+                                                                  new TextStyle(
+                                                                color:
+                                                                    Colors.grey,
+                                                                fontSize: 10,
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .lineThrough,
+                                                              ),
+                                                            ),
+                                                            new TextSpan(
+                                                              text: ' -' +
+                                                                  (((double.parse(womenitemsgrid[index].price.toString()) - double.parse(womenitemsgrid[index].saleprice.toString())) / double.parse(womenitemsgrid[index].price.toString())) *
+                                                                          100)
+                                                                      .toStringAsFixed(
+                                                                          0) +
+                                                                  '%',
+                                                              style:
+                                                                  new TextStyle(
+                                                                color:
+                                                                    Colors.red,
+                                                                fontSize: 12,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                                    : Text.rich(
+                                                        TextSpan(
+                                                          children: <TextSpan>[
+                                                            new TextSpan(
+                                                              text: 'AED ',
+                                                              style:
+                                                                  new TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 12,
+                                                              ),
+                                                            ),
+                                                            new TextSpan(
+                                                              text: womenitemsgrid[
+                                                                      index]
+                                                                  .price
+                                                                  .toString(),
+                                                              style: new TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                              ],
+                                            )),
+                                          ],
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                         ),
                                       ),
+                                    ],
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ))
+                      : SliverToBoxAdapter(),
+                  homeitemsgrid.isNotEmpty
+                      ? SliverToBoxAdapter(
+                          child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CategoryDetail(
+                                            categoryimage:
+                                                'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2793.PNG',
+                                            category: 'Home',
+                                            subcategory:
+                                                categoryList[5].subcategories,
+                                          )),
+                                );
+                              },
+                              child: Container(
+                                height: 120,
+                                width: MediaQuery.of(context).size.width,
+                                child: Image.network(
+                                    'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2793.PNG',
+                                    fit: BoxFit.contain),
+                              )))
+                      : SliverToBoxAdapter(),
+                  homeitemsgrid.isNotEmpty
+                      ? SliverToBoxAdapter(
+                          child: Padding(
+                              padding: EdgeInsets.only(
+                                  left: 16, bottom: 10, right: 16, top: 5),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  InkWell(
+                                    enableFeedback: true,
+                                    onTap: () {
+                                      // Navigator.push(
+                                      //   context,
+                                      //   CupertinoPageRoute(
+                                      //       builder: (context) => CategoryDynamic(
+                                      //             category: 'Electronics',
+                                      //           )),
+                                      // );
+                                    },
+                                    child: Text(
+                                      'Top Picks in Home',
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
-                                  Positioned(
-                                    top: 5,
-                                    right: 5,
-                                    child: favourites != null
-                                        ? favourites.contains(
-                                        kidsitemsgrid[index]
-                                            .itemid)
-                                        ? InkWell(
-                                        enableFeedback: true,
-                                        onTap: () async {
-                                          var userid = await storage
-                                              .read(key: 'userid');
-
-                                          if (userid != null) {
-                                            var url =
-                                                'https://api.sellship.co/api/favourite/' +
-                                                    userid;
-
-                                            Map<String, String> body =
-                                            {
-                                              'itemid':
-                                              kidsitemsgrid[
-                                              index]
-                                                  .itemid,
-                                            };
-
-                                            favourites.remove(
-                                                kidsitemsgrid[
-                                                index]
-                                                    .itemid);
-                                            setState(() {
-                                              favourites = favourites;
-                                              kidsitemsgrid[
-                                              index]
-                                                  .likes =
-                                                  kidsitemsgrid[
-                                                  index]
-                                                      .likes -
-                                                      1;
-                                            });
-                                            final response =
-                                            await http.post(
-                                                Uri.parse(url),
-                                                body: json.encode(
-                                                    body));
-                                            if (response.statusCode ==
-                                                200) {
-                                            } else {
-                                              print(response
-                                                  .statusCode);
-                                            }
-                                          } else {
-                                            showInSnackBar(
-                                                'Please Login to use Favourites');
-                                          }
-                                        },
-                                        child: CircleAvatar(
-                                          radius: 16,
-                                          backgroundColor:
-                                          Colors.deepOrange,
-                                          child: Icon(
-                                            FontAwesomeIcons.heart,
-                                            color: Colors.white,
-                                            size: 15,
-                                          ),
-                                        ))
-                                        : InkWell(
-                                        enableFeedback: true,
-                                        onTap: () async {
-                                          var userid = await storage
-                                              .read(key: 'userid');
-
-                                          if (userid != null) {
-                                            var url =
-                                                'https://api.sellship.co/api/favourite/' +
-                                                    userid;
-
-                                            Map<String, String> body =
-                                            {
-                                              'itemid':
-                                              kidsitemsgrid[
-                                              index]
-                                                  .itemid,
-                                            };
-
-                                            favourites.add(
-                                                kidsitemsgrid[
-                                                index]
-                                                    .itemid);
-                                            setState(() {
-                                              favourites = favourites;
-                                              kidsitemsgrid[
-                                              index]
-                                                  .likes =
-                                                  kidsitemsgrid[
-                                                  index]
-                                                      .likes +
-                                                      1;
-                                            });
-                                            final response =
-                                            await http.post(
-                                                Uri.parse(url),
-                                                body: json.encode(
-                                                    body));
-
-                                            if (response.statusCode ==
-                                                200) {
-                                            } else {
-                                              print(response
-                                                  .statusCode);
-                                            }
-                                          } else {
-                                            showInSnackBar(
-                                                'Please Login to use Favourites');
-                                          }
-                                        },
-                                        child: CircleAvatar(
-                                            radius: 16,
-                                            backgroundColor: Colors
-                                                .blueGrey.shade50,
-                                            child: CircleAvatar(
-                                              radius: 15,
-                                              backgroundColor:
-                                              Colors.white,
-                                              child: Icon(
-                                                FeatherIcons.heart,
-                                                color:
-                                                Colors.blueGrey,
-                                                size: 16,
-                                              ),
-                                            )))
-                                        : CircleAvatar(
-                                        radius: 16,
-                                        backgroundColor:
-                                        Colors.blueGrey.shade50,
-                                        child: CircleAvatar(
-                                          radius: 15,
-                                          backgroundColor: Colors.white,
-                                          child: Icon(
-                                            FeatherIcons.heart,
-                                            color: Colors.blueGrey,
-                                            size: 16,
-                                          ),
-                                        )),
-                                  )
-                                ]),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Padding(
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                CategoryDetail(
+                                                  categoryimage:
+                                                      'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2793.PNG',
+                                                  category: 'Home',
+                                                  subcategory: categoryList[5]
+                                                      .subcategories,
+                                                )),
+                                      );
+                                    },
+                                    enableFeedback: true,
+                                    child: Container(
+                                      padding: EdgeInsets.all(3),
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: Colors.deepOrange),
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                      child: Text('See All',
+                                          style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            color: Colors.deepOrange,
+                                            fontSize: 14.0,
+                                          )),
+                                    ),
+                                  ),
+                                ],
+                              )),
+                        )
+                      : SliverToBoxAdapter(),
+                  homeitemsgrid.isNotEmpty
+                      ? SliverToBoxAdapter(
+                          child: Container(
+                          height: 250,
+                          width: MediaQuery.of(context).size.width,
+                          child: ListView.builder(
+                            itemCount: homeitemsgrid.length > 20
+                                ? 20
+                                : homeitemsgrid.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (BuildContext context, int index) {
+                              return new Padding(
                                 padding: EdgeInsets.all(5),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              kidsitemsgrid[index].name,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 2,
-                                            ),
-                                            kidsitemsgrid[index]
-                                                .saleprice !=
-                                                null
-                                                ? Text.rich(
-                                              TextSpan(
-                                                children: <TextSpan>[
-                                                  new TextSpan(
-                                                    text: 'AED ' +
-                                                        kidsitemsgrid[
-                                                        index]
-                                                            .saleprice,
-                                                    style: new TextStyle(
-                                                        color: Colors
-                                                            .redAccent,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .bold),
-                                                  ),
-                                                  new TextSpan(
-                                                    text: '\nAED ' +
-                                                        kidsitemsgrid[
-                                                        index]
-                                                            .price
-                                                            .toString(),
-                                                    style: new TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 10,
-                                                      decoration:
-                                                      TextDecoration
-                                                          .lineThrough,
-                                                    ),
-                                                  ),
-                                                  new TextSpan(
-                                                    text: ' -' +
-                                                        (((double.parse(kidsitemsgrid[index].price.toString()) -
-                                                            double.parse(kidsitemsgrid[index]
-                                                                .saleprice
-                                                                .toString())) /
-                                                            double.parse(kidsitemsgrid[index]
-                                                                .price
-                                                                .toString())) *
-                                                            100)
-                                                            .toStringAsFixed(
-                                                            0) +
-                                                        '%',
-                                                    style: new TextStyle(
-                                                      color: Colors.red,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                                : Text.rich(
-                                              TextSpan(
-                                                children: <TextSpan>[
-                                                  new TextSpan(
-                                                    text: 'AED ',
-                                                    style: new TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                  new TextSpan(
-                                                    text:
-                                                    kidsitemsgrid[
-                                                    index]
-                                                        .price
-                                                        .toString(),
-                                                    style: new TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .bold),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        )),
-                                  ],
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                ),
-                              ),
-                            ],
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ))
-                : SliverToBoxAdapter(),
-            toysitemsgrid.isNotEmpty
-                ?  SliverToBoxAdapter(
-                child: InkWell(onTap:(){
-
-                },child: Container(
-                  height: 120,
-                  width: MediaQuery.of(context).size.width,
-                  child: Image.network('https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2791.PNG',fit:BoxFit.contain),
-                ))) : SliverToBoxAdapter(),
-            toysitemsgrid.isNotEmpty
-                ? SliverToBoxAdapter(
-              child: Padding(
-                  padding:
-                  EdgeInsets.only(left: 16, bottom: 10, right: 16,top: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        enableFeedback: true,
-                        onTap: () {
-                          // Navigator.push(
-                          //   context,
-                          //   CupertinoPageRoute(
-                          //       builder: (context) => CategoryDynamic(
-                          //             category: 'Electronics',
-                          //           )),
-                          // );
-                        },
-                        child: Text(
-                          'Top Picks in Toys',
-                          style: TextStyle(
-                              fontFamily: 'Helvetica',
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          // Navigator.push(
-                          //   context,
-                          //   CupertinoPageRoute(
-                          //       builder: (context) => CategoryDynamic(
-                          //             category: 'Electronics',
-                          //           )),
-                          // );
-                        },
-                        enableFeedback: true,
-                        child: Container(
-                          padding: EdgeInsets.all(3),
-                          decoration: BoxDecoration(
-                              border:
-                              Border.all(color: Colors.deepOrange),
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Text('See All',
-                              style: TextStyle(
-                                fontFamily: 'Helvetica',
-                                color: Colors.deepOrange,
-                                fontSize: 14.0,
-                              )),
-                        ),
-                      ),
-                    ],
-                  )),
-            )
-                : SliverToBoxAdapter(),
-            toysitemsgrid.isNotEmpty
-                ? SliverToBoxAdapter(
-                child: Container(
-                  height: 250,
-                  width: MediaQuery.of(context).size.width,
-                  child: ListView.builder(
-                    itemCount: toysitemsgrid.length > 20
-                        ? 20
-                        : toysitemsgrid.length,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (BuildContext context, int index) {
-                      return new Padding(
-                        padding: EdgeInsets.all(5),
-                        child: Container(
-                          height: 2,
-                          width: MediaQuery.of(context).size.width / 2 - 20,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(5),
-                              border: Border.all(
-                                color: Color.fromRGBO(240, 240, 240, 1),
-                              )),
-                          child: Column(
-                            children: <Widget>[
-                              new InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                        builder: (context) => Details(
-                                            itemid:
-                                            toysitemsgrid[index]
-                                                .itemid,
-                                            image: toysitemsgrid[index]
-                                                .image,
-                                            name: toysitemsgrid[index]
-                                                .name,
-                                            sold: toysitemsgrid[index]
-                                                .sold,
-                                            source: 'toysitemsgrid')),
-                                  );
-                                },
-                                child: Stack(children: <Widget>[
-                                  Container(
-                                    height: 170,
-                                    width: MediaQuery.of(context).size.width,
-                                    decoration: BoxDecoration(
+                                child: Container(
+                                  height: 2,
+                                  width: MediaQuery.of(context).size.width / 2 -
+                                      20,
+                                  decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(5),
-                                      child: Hero(
-                                        tag:
-                                        'toysitemsgrid${toysitemsgrid[index].itemid}',
-                                        child: CachedNetworkImage(
-                                          height: 200,
-                                          width: 300,
-                                          fadeInDuration:
-                                          Duration(microseconds: 5),
-                                          imageUrl: toysitemsgrid[
-                                          index]
-                                              .image
-                                              .isEmpty
-                                              ? SpinKitDoubleBounce(
-                                              color: Colors.deepOrange)
-                                              : toysitemsgrid[index]
-                                              .image,
-                                          fit: BoxFit.cover,
-                                          placeholder: (context, url) =>
-                                              SpinKitDoubleBounce(
-                                                  color: Colors.deepOrange),
-                                          errorWidget:
-                                              (context, url, error) =>
-                                              Icon(Icons.error),
+                                      border: Border.all(
+                                        color: Color.fromRGBO(240, 240, 240, 1),
+                                      )),
+                                  child: Column(
+                                    children: <Widget>[
+                                      new InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            CupertinoPageRoute(
+                                                builder: (context) => Details(
+                                                    itemid: homeitemsgrid[index]
+                                                        .itemid,
+                                                    image: homeitemsgrid[index]
+                                                        .image,
+                                                    name: homeitemsgrid[index]
+                                                        .name,
+                                                    sold: homeitemsgrid[index]
+                                                        .sold,
+                                                    source: 'homeitemsgrid')),
+                                          );
+                                        },
+                                        child: Stack(children: <Widget>[
+                                          Container(
+                                            height: 170,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              child: CachedNetworkImage(
+                                                height: 200,
+                                                width: 300,
+                                                fadeInDuration:
+                                                    Duration(microseconds: 5),
+                                                imageUrl: homeitemsgrid[index]
+                                                        .image
+                                                        .isEmpty
+                                                    ? SpinKitDoubleBounce(
+                                                        color:
+                                                            Colors.deepOrange)
+                                                    : homeitemsgrid[index]
+                                                        .image,
+                                                fit: BoxFit.cover,
+                                                placeholder: (context, url) =>
+                                                    SpinKitDoubleBounce(
+                                                        color:
+                                                            Colors.deepOrange),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Icon(Icons.error),
+                                              ),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            top: 5,
+                                            right: 5,
+                                            child: favourites != null
+                                                ? favourites.contains(
+                                                        homeitemsgrid[index]
+                                                            .itemid)
+                                                    ? InkWell(
+                                                        enableFeedback: true,
+                                                        onTap: () async {
+                                                          var userid =
+                                                              await storage.read(
+                                                                  key:
+                                                                      'userid');
+
+                                                          if (userid != null) {
+                                                            var url =
+                                                                'https://api.sellship.co/api/favourite/' +
+                                                                    userid;
+
+                                                            Map<String, String>
+                                                                body = {
+                                                              'itemid':
+                                                                  homeitemsgrid[
+                                                                          index]
+                                                                      .itemid,
+                                                            };
+
+                                                            favourites.remove(
+                                                                homeitemsgrid[
+                                                                        index]
+                                                                    .itemid);
+                                                            setState(() {
+                                                              favourites =
+                                                                  favourites;
+                                                              homeitemsgrid[
+                                                                          index]
+                                                                      .likes =
+                                                                  homeitemsgrid[
+                                                                              index]
+                                                                          .likes -
+                                                                      1;
+                                                            });
+                                                            final response =
+                                                                await http.post(
+                                                                    Uri.parse(
+                                                                        url),
+                                                                    body: json
+                                                                        .encode(
+                                                                            body));
+                                                            if (response
+                                                                    .statusCode ==
+                                                                200) {
+                                                            } else {
+                                                              print(response
+                                                                  .statusCode);
+                                                            }
+                                                          } else {
+                                                            showInSnackBar(
+                                                                'Please Login to use Favourites');
+                                                          }
+                                                        },
+                                                        child: CircleAvatar(
+                                                          radius: 16,
+                                                          backgroundColor:
+                                                              Colors.deepOrange,
+                                                          child: Icon(
+                                                            FontAwesomeIcons
+                                                                .heart,
+                                                            color: Colors.white,
+                                                            size: 15,
+                                                          ),
+                                                        ))
+                                                    : InkWell(
+                                                        enableFeedback: true,
+                                                        onTap: () async {
+                                                          var userid =
+                                                              await storage.read(
+                                                                  key:
+                                                                      'userid');
+
+                                                          if (userid != null) {
+                                                            var url =
+                                                                'https://api.sellship.co/api/favourite/' +
+                                                                    userid;
+
+                                                            Map<String, String>
+                                                                body = {
+                                                              'itemid':
+                                                                  homeitemsgrid[
+                                                                          index]
+                                                                      .itemid,
+                                                            };
+
+                                                            favourites.add(
+                                                                homeitemsgrid[
+                                                                        index]
+                                                                    .itemid);
+                                                            setState(() {
+                                                              favourites =
+                                                                  favourites;
+                                                              homeitemsgrid[
+                                                                          index]
+                                                                      .likes =
+                                                                  homeitemsgrid[
+                                                                              index]
+                                                                          .likes +
+                                                                      1;
+                                                            });
+                                                            final response =
+                                                                await http.post(
+                                                                    Uri.parse(
+                                                                        url),
+                                                                    body: json
+                                                                        .encode(
+                                                                            body));
+
+                                                            if (response
+                                                                    .statusCode ==
+                                                                200) {
+                                                            } else {
+                                                              print(response
+                                                                  .statusCode);
+                                                            }
+                                                          } else {
+                                                            showInSnackBar(
+                                                                'Please Login to use Favourites');
+                                                          }
+                                                        },
+                                                        child: CircleAvatar(
+                                                            radius: 16,
+                                                            backgroundColor:
+                                                                Colors.blueGrey
+                                                                    .shade50,
+                                                            child: CircleAvatar(
+                                                              radius: 15,
+                                                              backgroundColor:
+                                                                  Colors.white,
+                                                              child: Icon(
+                                                                FeatherIcons
+                                                                    .heart,
+                                                                color: Colors
+                                                                    .blueGrey,
+                                                                size: 16,
+                                                              ),
+                                                            )))
+                                                : CircleAvatar(
+                                                    radius: 16,
+                                                    backgroundColor:
+                                                        Colors.blueGrey.shade50,
+                                                    child: CircleAvatar(
+                                                      radius: 15,
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      child: Icon(
+                                                        FeatherIcons.heart,
+                                                        color: Colors.blueGrey,
+                                                        size: 16,
+                                                      ),
+                                                    )),
+                                          )
+                                        ]),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.all(5),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                                child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  homeitemsgrid[index].name,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 2,
+                                                ),
+                                                homeitemsgrid[index]
+                                                            .saleprice !=
+                                                        null
+                                                    ? Text.rich(
+                                                        TextSpan(
+                                                          children: <TextSpan>[
+                                                            new TextSpan(
+                                                              text: 'AED ' +
+                                                                  homeitemsgrid[
+                                                                          index]
+                                                                      .saleprice,
+                                                              style: new TextStyle(
+                                                                  color: Colors
+                                                                      .redAccent,
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                            new TextSpan(
+                                                              text: '\nAED ' +
+                                                                  homeitemsgrid[
+                                                                          index]
+                                                                      .price
+                                                                      .toString(),
+                                                              style:
+                                                                  new TextStyle(
+                                                                color:
+                                                                    Colors.grey,
+                                                                fontSize: 10,
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .lineThrough,
+                                                              ),
+                                                            ),
+                                                            new TextSpan(
+                                                              text: ' -' +
+                                                                  (((double.parse(homeitemsgrid[index].price.toString()) - double.parse(homeitemsgrid[index].saleprice.toString())) / double.parse(homeitemsgrid[index].price.toString())) *
+                                                                          100)
+                                                                      .toStringAsFixed(
+                                                                          0) +
+                                                                  '%',
+                                                              style:
+                                                                  new TextStyle(
+                                                                color:
+                                                                    Colors.red,
+                                                                fontSize: 12,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                                    : Text.rich(
+                                                        TextSpan(
+                                                          children: <TextSpan>[
+                                                            new TextSpan(
+                                                              text: 'AED ',
+                                                              style:
+                                                                  new TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 12,
+                                                              ),
+                                                            ),
+                                                            new TextSpan(
+                                                              text: homeitemsgrid[
+                                                                      index]
+                                                                  .price
+                                                                  .toString(),
+                                                              style: new TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                              ],
+                                            )),
+                                          ],
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                         ),
                                       ),
+                                    ],
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ))
+                      : SliverToBoxAdapter(),
+                  booksitemsgrid.isNotEmpty
+                      ? SliverToBoxAdapter(
+                          child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CategoryDetail(
+                                            categoryimage:
+                                                'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2783.PNG',
+                                            category: 'Books',
+                                            subcategory:
+                                                categoryList[3].subcategories,
+                                          )),
+                                );
+                              },
+                              child: Container(
+                                height: 120,
+                                width: MediaQuery.of(context).size.width,
+                                child: Image.network(
+                                    'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2783.PNG',
+                                    fit: BoxFit.contain),
+                              )))
+                      : SliverToBoxAdapter(),
+                  booksitemsgrid.isNotEmpty
+                      ? SliverToBoxAdapter(
+                          child: Padding(
+                              padding: EdgeInsets.only(
+                                  left: 16, bottom: 10, right: 16, top: 5),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  InkWell(
+                                    enableFeedback: true,
+                                    onTap: () {
+                                      // Navigator.push(
+                                      //   context,
+                                      //   CupertinoPageRoute(
+                                      //       builder: (context) => CategoryDynamic(
+                                      //             category: 'Electronics',
+                                      //           )),
+                                      // );
+                                    },
+                                    child: Text(
+                                      'Top Picks in Books',
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
-                                  Positioned(
-                                    top: 5,
-                                    right: 5,
-                                    child: favourites != null
-                                        ? favourites.contains(
-                                        toysitemsgrid[index]
-                                            .itemid)
-                                        ? InkWell(
-                                        enableFeedback: true,
-                                        onTap: () async {
-                                          var userid = await storage
-                                              .read(key: 'userid');
-
-                                          if (userid != null) {
-                                            var url =
-                                                'https://api.sellship.co/api/favourite/' +
-                                                    userid;
-
-                                            Map<String, String> body =
-                                            {
-                                              'itemid':
-                                              toysitemsgrid[
-                                              index]
-                                                  .itemid,
-                                            };
-
-                                            favourites.remove(
-                                                toysitemsgrid[
-                                                index]
-                                                    .itemid);
-                                            setState(() {
-                                              favourites = favourites;
-                                              toysitemsgrid[
-                                              index]
-                                                  .likes =
-                                                  toysitemsgrid[
-                                                  index]
-                                                      .likes -
-                                                      1;
-                                            });
-                                            final response =
-                                            await http.post(
-                                                Uri.parse(url),
-                                                body: json.encode(
-                                                    body));
-                                            if (response.statusCode ==
-                                                200) {
-                                            } else {
-                                              print(response
-                                                  .statusCode);
-                                            }
-                                          } else {
-                                            showInSnackBar(
-                                                'Please Login to use Favourites');
-                                          }
-                                        },
-                                        child: CircleAvatar(
-                                          radius: 16,
-                                          backgroundColor:
-                                          Colors.deepOrange,
-                                          child: Icon(
-                                            FontAwesomeIcons.heart,
-                                            color: Colors.white,
-                                            size: 15,
-                                          ),
-                                        ))
-                                        : InkWell(
-                                        enableFeedback: true,
-                                        onTap: () async {
-                                          var userid = await storage
-                                              .read(key: 'userid');
-
-                                          if (userid != null) {
-                                            var url =
-                                                'https://api.sellship.co/api/favourite/' +
-                                                    userid;
-
-                                            Map<String, String> body =
-                                            {
-                                              'itemid':
-                                              toysitemsgrid[
-                                              index]
-                                                  .itemid,
-                                            };
-
-                                            favourites.add(
-                                                toysitemsgrid[
-                                                index]
-                                                    .itemid);
-                                            setState(() {
-                                              favourites = favourites;
-                                              toysitemsgrid[
-                                              index]
-                                                  .likes =
-                                                  toysitemsgrid[
-                                                  index]
-                                                      .likes +
-                                                      1;
-                                            });
-                                            final response =
-                                            await http.post(
-                                                Uri.parse(url),
-                                                body: json.encode(
-                                                    body));
-
-                                            if (response.statusCode ==
-                                                200) {
-                                            } else {
-                                              print(response
-                                                  .statusCode);
-                                            }
-                                          } else {
-                                            showInSnackBar(
-                                                'Please Login to use Favourites');
-                                          }
-                                        },
-                                        child: CircleAvatar(
-                                            radius: 16,
-                                            backgroundColor: Colors
-                                                .blueGrey.shade50,
-                                            child: CircleAvatar(
-                                              radius: 15,
-                                              backgroundColor:
-                                              Colors.white,
-                                              child: Icon(
-                                                FeatherIcons.heart,
-                                                color:
-                                                Colors.blueGrey,
-                                                size: 16,
-                                              ),
-                                            )))
-                                        : CircleAvatar(
-                                        radius: 16,
-                                        backgroundColor:
-                                        Colors.blueGrey.shade50,
-                                        child: CircleAvatar(
-                                          radius: 15,
-                                          backgroundColor: Colors.white,
-                                          child: Icon(
-                                            FeatherIcons.heart,
-                                            color: Colors.blueGrey,
-                                            size: 16,
-                                          ),
-                                        )),
-                                  )
-                                ]),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Padding(
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                CategoryDetail(
+                                                  categoryimage:
+                                                      'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2783.PNG',
+                                                  category: 'Books',
+                                                  subcategory: categoryList[3]
+                                                      .subcategories,
+                                                )),
+                                      );
+                                    },
+                                    enableFeedback: true,
+                                    child: Container(
+                                      padding: EdgeInsets.all(3),
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: Colors.deepOrange),
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                      child: Text('See All',
+                                          style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            color: Colors.deepOrange,
+                                            fontSize: 14.0,
+                                          )),
+                                    ),
+                                  ),
+                                ],
+                              )),
+                        )
+                      : SliverToBoxAdapter(),
+                  booksitemsgrid.isNotEmpty
+                      ? SliverToBoxAdapter(
+                          child: Container(
+                          height: 250,
+                          width: MediaQuery.of(context).size.width,
+                          child: ListView.builder(
+                            itemCount: booksitemsgrid.length > 20
+                                ? 20
+                                : booksitemsgrid.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (BuildContext context, int index) {
+                              return new Padding(
                                 padding: EdgeInsets.all(5),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              toysitemsgrid[index].name,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 2,
-                                            ),
-                                            toysitemsgrid[index]
-                                                .saleprice !=
-                                                null
-                                                ? Text.rich(
-                                              TextSpan(
-                                                children: <TextSpan>[
-                                                  new TextSpan(
-                                                    text: 'AED ' +
-                                                        toysitemsgrid[
-                                                        index]
-                                                            .saleprice,
-                                                    style: new TextStyle(
-                                                        color: Colors
-                                                            .redAccent,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .bold),
-                                                  ),
-                                                  new TextSpan(
-                                                    text: '\nAED ' +
-                                                        toysitemsgrid[
-                                                        index]
-                                                            .price
-                                                            .toString(),
-                                                    style: new TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 10,
-                                                      decoration:
-                                                      TextDecoration
-                                                          .lineThrough,
-                                                    ),
-                                                  ),
-                                                  new TextSpan(
-                                                    text: ' -' +
-                                                        (((double.parse(toysitemsgrid[index].price.toString()) -
-                                                            double.parse(toysitemsgrid[index]
-                                                                .saleprice
-                                                                .toString())) /
-                                                            double.parse(toysitemsgrid[index]
-                                                                .price
-                                                                .toString())) *
-                                                            100)
-                                                            .toStringAsFixed(
-                                                            0) +
-                                                        '%',
-                                                    style: new TextStyle(
-                                                      color: Colors.red,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                                : Text.rich(
-                                              TextSpan(
-                                                children: <TextSpan>[
-                                                  new TextSpan(
-                                                    text: 'AED ',
-                                                    style: new TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                  new TextSpan(
-                                                    text:
-                                                    toysitemsgrid[
-                                                    index]
-                                                        .price
-                                                        .toString(),
-                                                    style: new TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .bold),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        )),
-                                  ],
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                ),
-                              ),
-                            ],
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ))
-                : SliverToBoxAdapter(),
-            gardenitemsgrid.isNotEmpty
-                ?  SliverToBoxAdapter(
-                child: InkWell(onTap:(){
-
-                },child: Container(
-                  height: 120,
-                  width: MediaQuery.of(context).size.width,
-                  child: Image.network('https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2788.PNG',fit:BoxFit.contain),
-                ))) : SliverToBoxAdapter(),
-            gardenitemsgrid.isNotEmpty
-                ? SliverToBoxAdapter(
-              child: Padding(
-                  padding:
-                  EdgeInsets.only(left: 16, bottom: 10, right: 16,top: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        enableFeedback: true,
-                        onTap: () {
-                          // Navigator.push(
-                          //   context,
-                          //   CupertinoPageRoute(
-                          //       builder: (context) => CategoryDynamic(
-                          //             category: 'Electronics',
-                          //           )),
-                          // );
-                        },
-                        child: Text(
-                          'Top Picks in Garden',
-                          style: TextStyle(
-                              fontFamily: 'Helvetica',
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          // Navigator.push(
-                          //   context,
-                          //   CupertinoPageRoute(
-                          //       builder: (context) => CategoryDynamic(
-                          //             category: 'Electronics',
-                          //           )),
-                          // );
-                        },
-                        enableFeedback: true,
-                        child: Container(
-                          padding: EdgeInsets.all(3),
-                          decoration: BoxDecoration(
-                              border:
-                              Border.all(color: Colors.deepOrange),
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Text('See All',
-                              style: TextStyle(
-                                fontFamily: 'Helvetica',
-                                color: Colors.deepOrange,
-                                fontSize: 14.0,
-                              )),
-                        ),
-                      ),
-                    ],
-                  )),
-            )
-                : SliverToBoxAdapter(),
-            gardenitemsgrid.isNotEmpty
-                ? SliverToBoxAdapter(
-                child: Container(
-                  height: 250,
-                  width: MediaQuery.of(context).size.width,
-                  child: ListView.builder(
-                    itemCount: gardenitemsgrid.length > 20
-                        ? 20
-                        : gardenitemsgrid.length,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (BuildContext context, int index) {
-                      return new Padding(
-                        padding: EdgeInsets.all(5),
-                        child: Container(
-                          height: 2,
-                          width: MediaQuery.of(context).size.width / 2 - 20,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(5),
-                              border: Border.all(
-                                color: Color.fromRGBO(240, 240, 240, 1),
-                              )),
-                          child: Column(
-                            children: <Widget>[
-                              new InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                        builder: (context) => Details(
-                                            itemid:
-                                            gardenitemsgrid[index]
-                                                .itemid,
-                                            image: gardenitemsgrid[index]
-                                                .image,
-                                            name: gardenitemsgrid[index]
-                                                .name,
-                                            sold: gardenitemsgrid[index]
-                                                .sold,
-                                            source: 'gardenitemsgrid')),
-                                  );
-                                },
-                                child: Stack(children: <Widget>[
-                                  Container(
-                                    height: 170,
-                                    width: MediaQuery.of(context).size.width,
-                                    decoration: BoxDecoration(
+                                child: Container(
+                                  height: 2,
+                                  width: MediaQuery.of(context).size.width / 2 -
+                                      20,
+                                  decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(5),
-                                      child: Hero(
-                                        tag:
-                                        'gardenitemsgrid${gardenitemsgrid[index].itemid}',
-                                        child: CachedNetworkImage(
-                                          height: 200,
-                                          width: 300,
-                                          fadeInDuration:
-                                          Duration(microseconds: 5),
-                                          imageUrl: gardenitemsgrid[
-                                          index]
-                                              .image
-                                              .isEmpty
-                                              ? SpinKitDoubleBounce(
-                                              color: Colors.deepOrange)
-                                              : gardenitemsgrid[index]
-                                              .image,
-                                          fit: BoxFit.cover,
-                                          placeholder: (context, url) =>
-                                              SpinKitDoubleBounce(
-                                                  color: Colors.deepOrange),
-                                          errorWidget:
-                                              (context, url, error) =>
-                                              Icon(Icons.error),
+                                      border: Border.all(
+                                        color: Color.fromRGBO(240, 240, 240, 1),
+                                      )),
+                                  child: Column(
+                                    children: <Widget>[
+                                      new InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            CupertinoPageRoute(
+                                                builder: (context) => Details(
+                                                    itemid:
+                                                        booksitemsgrid[index]
+                                                            .itemid,
+                                                    image: booksitemsgrid[index]
+                                                        .image,
+                                                    name: booksitemsgrid[index]
+                                                        .name,
+                                                    sold: booksitemsgrid[index]
+                                                        .sold,
+                                                    source: 'booksitemsgrid')),
+                                          );
+                                        },
+                                        child: Stack(children: <Widget>[
+                                          Container(
+                                            height: 170,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              child: CachedNetworkImage(
+                                                height: 200,
+                                                width: 300,
+                                                fadeInDuration:
+                                                    Duration(microseconds: 5),
+                                                imageUrl: booksitemsgrid[index]
+                                                        .image
+                                                        .isEmpty
+                                                    ? SpinKitDoubleBounce(
+                                                        color:
+                                                            Colors.deepOrange)
+                                                    : booksitemsgrid[index]
+                                                        .image,
+                                                fit: BoxFit.cover,
+                                                placeholder: (context, url) =>
+                                                    SpinKitDoubleBounce(
+                                                        color:
+                                                            Colors.deepOrange),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Icon(Icons.error),
+                                              ),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            top: 5,
+                                            right: 5,
+                                            child: favourites != null
+                                                ? favourites.contains(
+                                                        booksitemsgrid[index]
+                                                            .itemid)
+                                                    ? InkWell(
+                                                        enableFeedback: true,
+                                                        onTap: () async {
+                                                          var userid =
+                                                              await storage.read(
+                                                                  key:
+                                                                      'userid');
+
+                                                          if (userid != null) {
+                                                            var url =
+                                                                'https://api.sellship.co/api/favourite/' +
+                                                                    userid;
+
+                                                            Map<String, String>
+                                                                body = {
+                                                              'itemid':
+                                                                  booksitemsgrid[
+                                                                          index]
+                                                                      .itemid,
+                                                            };
+
+                                                            favourites.remove(
+                                                                booksitemsgrid[
+                                                                        index]
+                                                                    .itemid);
+                                                            setState(() {
+                                                              favourites =
+                                                                  favourites;
+                                                              booksitemsgrid[
+                                                                          index]
+                                                                      .likes =
+                                                                  booksitemsgrid[
+                                                                              index]
+                                                                          .likes -
+                                                                      1;
+                                                            });
+                                                            final response =
+                                                                await http.post(
+                                                                    Uri.parse(
+                                                                        url),
+                                                                    body: json
+                                                                        .encode(
+                                                                            body));
+                                                            if (response
+                                                                    .statusCode ==
+                                                                200) {
+                                                            } else {
+                                                              print(response
+                                                                  .statusCode);
+                                                            }
+                                                          } else {
+                                                            showInSnackBar(
+                                                                'Please Login to use Favourites');
+                                                          }
+                                                        },
+                                                        child: CircleAvatar(
+                                                          radius: 16,
+                                                          backgroundColor:
+                                                              Colors.deepOrange,
+                                                          child: Icon(
+                                                            FontAwesomeIcons
+                                                                .heart,
+                                                            color: Colors.white,
+                                                            size: 15,
+                                                          ),
+                                                        ))
+                                                    : InkWell(
+                                                        enableFeedback: true,
+                                                        onTap: () async {
+                                                          var userid =
+                                                              await storage.read(
+                                                                  key:
+                                                                      'userid');
+
+                                                          if (userid != null) {
+                                                            var url =
+                                                                'https://api.sellship.co/api/favourite/' +
+                                                                    userid;
+
+                                                            Map<String, String>
+                                                                body = {
+                                                              'itemid':
+                                                                  booksitemsgrid[
+                                                                          index]
+                                                                      .itemid,
+                                                            };
+
+                                                            favourites.add(
+                                                                booksitemsgrid[
+                                                                        index]
+                                                                    .itemid);
+                                                            setState(() {
+                                                              favourites =
+                                                                  favourites;
+                                                              booksitemsgrid[
+                                                                          index]
+                                                                      .likes =
+                                                                  booksitemsgrid[
+                                                                              index]
+                                                                          .likes +
+                                                                      1;
+                                                            });
+                                                            final response =
+                                                                await http.post(
+                                                                    Uri.parse(
+                                                                        url),
+                                                                    body: json
+                                                                        .encode(
+                                                                            body));
+
+                                                            if (response
+                                                                    .statusCode ==
+                                                                200) {
+                                                            } else {
+                                                              print(response
+                                                                  .statusCode);
+                                                            }
+                                                          } else {
+                                                            showInSnackBar(
+                                                                'Please Login to use Favourites');
+                                                          }
+                                                        },
+                                                        child: CircleAvatar(
+                                                            radius: 16,
+                                                            backgroundColor:
+                                                                Colors.blueGrey
+                                                                    .shade50,
+                                                            child: CircleAvatar(
+                                                              radius: 15,
+                                                              backgroundColor:
+                                                                  Colors.white,
+                                                              child: Icon(
+                                                                FeatherIcons
+                                                                    .heart,
+                                                                color: Colors
+                                                                    .blueGrey,
+                                                                size: 16,
+                                                              ),
+                                                            )))
+                                                : CircleAvatar(
+                                                    radius: 16,
+                                                    backgroundColor:
+                                                        Colors.blueGrey.shade50,
+                                                    child: CircleAvatar(
+                                                      radius: 15,
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      child: Icon(
+                                                        FeatherIcons.heart,
+                                                        color: Colors.blueGrey,
+                                                        size: 16,
+                                                      ),
+                                                    )),
+                                          )
+                                        ]),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.all(5),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                                child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  booksitemsgrid[index].name,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 2,
+                                                ),
+                                                booksitemsgrid[index]
+                                                            .saleprice !=
+                                                        null
+                                                    ? Text.rich(
+                                                        TextSpan(
+                                                          children: <TextSpan>[
+                                                            new TextSpan(
+                                                              text: 'AED ' +
+                                                                  booksitemsgrid[
+                                                                          index]
+                                                                      .saleprice,
+                                                              style: new TextStyle(
+                                                                  color: Colors
+                                                                      .redAccent,
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                            new TextSpan(
+                                                              text: '\nAED ' +
+                                                                  booksitemsgrid[
+                                                                          index]
+                                                                      .price
+                                                                      .toString(),
+                                                              style:
+                                                                  new TextStyle(
+                                                                color:
+                                                                    Colors.grey,
+                                                                fontSize: 10,
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .lineThrough,
+                                                              ),
+                                                            ),
+                                                            new TextSpan(
+                                                              text: ' -' +
+                                                                  (((double.parse(booksitemsgrid[index].price.toString()) - double.parse(booksitemsgrid[index].saleprice.toString())) / double.parse(booksitemsgrid[index].price.toString())) *
+                                                                          100)
+                                                                      .toStringAsFixed(
+                                                                          0) +
+                                                                  '%',
+                                                              style:
+                                                                  new TextStyle(
+                                                                color:
+                                                                    Colors.red,
+                                                                fontSize: 12,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                                    : Text.rich(
+                                                        TextSpan(
+                                                          children: <TextSpan>[
+                                                            new TextSpan(
+                                                              text: 'AED ',
+                                                              style:
+                                                                  new TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 12,
+                                                              ),
+                                                            ),
+                                                            new TextSpan(
+                                                              text: booksitemsgrid[
+                                                                      index]
+                                                                  .price
+                                                                  .toString(),
+                                                              style: new TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                              ],
+                                            )),
+                                          ],
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                         ),
                                       ),
+                                    ],
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ))
+                      : SliverToBoxAdapter(),
+                  luxuryitemsgrid.isNotEmpty
+                      ? SliverToBoxAdapter(
+                          child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CategoryDetail(
+                                            categoryimage:
+                                                'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2790.PNG',
+                                            category: 'Luxury',
+                                            subcategory:
+                                                categoryList[11].subcategories,
+                                          )),
+                                );
+                              },
+                              child: Container(
+                                height: 120,
+                                width: MediaQuery.of(context).size.width,
+                                child: Image.network(
+                                    'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2790.PNG',
+                                    fit: BoxFit.contain),
+                              )))
+                      : SliverToBoxAdapter(),
+                  luxuryitemsgrid.isNotEmpty
+                      ? SliverToBoxAdapter(
+                          child: Padding(
+                              padding: EdgeInsets.only(
+                                  left: 16, bottom: 10, right: 16, top: 5),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  InkWell(
+                                    enableFeedback: true,
+                                    onTap: () {
+                                      // Navigator.push(
+                                      //   context,
+                                      //   CupertinoPageRoute(
+                                      //       builder: (context) => CategoryDynamic(
+                                      //             category: 'Electronics',
+                                      //           )),
+                                      // );
+                                    },
+                                    child: Text(
+                                      'Top Picks in Luxury',
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
-                                  Positioned(
-                                    top: 5,
-                                    right: 5,
-                                    child: favourites != null
-                                        ? favourites.contains(
-                                        gardenitemsgrid[index]
-                                            .itemid)
-                                        ? InkWell(
-                                        enableFeedback: true,
-                                        onTap: () async {
-                                          var userid = await storage
-                                              .read(key: 'userid');
-
-                                          if (userid != null) {
-                                            var url =
-                                                'https://api.sellship.co/api/favourite/' +
-                                                    userid;
-
-                                            Map<String, String> body =
-                                            {
-                                              'itemid':
-                                              gardenitemsgrid[
-                                              index]
-                                                  .itemid,
-                                            };
-
-                                            favourites.remove(
-                                                gardenitemsgrid[
-                                                index]
-                                                    .itemid);
-                                            setState(() {
-                                              favourites = favourites;
-                                              gardenitemsgrid[
-                                              index]
-                                                  .likes =
-                                                  gardenitemsgrid[
-                                                  index]
-                                                      .likes -
-                                                      1;
-                                            });
-                                            final response =
-                                            await http.post(
-                                                Uri.parse(url),
-                                                body: json.encode(
-                                                    body));
-                                            if (response.statusCode ==
-                                                200) {
-                                            } else {
-                                              print(response
-                                                  .statusCode);
-                                            }
-                                          } else {
-                                            showInSnackBar(
-                                                'Please Login to use Favourites');
-                                          }
-                                        },
-                                        child: CircleAvatar(
-                                          radius: 16,
-                                          backgroundColor:
-                                          Colors.deepOrange,
-                                          child: Icon(
-                                            FontAwesomeIcons.heart,
-                                            color: Colors.white,
-                                            size: 15,
-                                          ),
-                                        ))
-                                        : InkWell(
-                                        enableFeedback: true,
-                                        onTap: () async {
-                                          var userid = await storage
-                                              .read(key: 'userid');
-
-                                          if (userid != null) {
-                                            var url =
-                                                'https://api.sellship.co/api/favourite/' +
-                                                    userid;
-
-                                            Map<String, String> body =
-                                            {
-                                              'itemid':
-                                              gardenitemsgrid[
-                                              index]
-                                                  .itemid,
-                                            };
-
-                                            favourites.add(
-                                                gardenitemsgrid[
-                                                index]
-                                                    .itemid);
-                                            setState(() {
-                                              favourites = favourites;
-                                              gardenitemsgrid[
-                                              index]
-                                                  .likes =
-                                                  gardenitemsgrid[
-                                                  index]
-                                                      .likes +
-                                                      1;
-                                            });
-                                            final response =
-                                            await http.post(
-                                                Uri.parse(url),
-                                                body: json.encode(
-                                                    body));
-
-                                            if (response.statusCode ==
-                                                200) {
-                                            } else {
-                                              print(response
-                                                  .statusCode);
-                                            }
-                                          } else {
-                                            showInSnackBar(
-                                                'Please Login to use Favourites');
-                                          }
-                                        },
-                                        child: CircleAvatar(
-                                            radius: 16,
-                                            backgroundColor: Colors
-                                                .blueGrey.shade50,
-                                            child: CircleAvatar(
-                                              radius: 15,
-                                              backgroundColor:
-                                              Colors.white,
-                                              child: Icon(
-                                                FeatherIcons.heart,
-                                                color:
-                                                Colors.blueGrey,
-                                                size: 16,
-                                              ),
-                                            )))
-                                        : CircleAvatar(
-                                        radius: 16,
-                                        backgroundColor:
-                                        Colors.blueGrey.shade50,
-                                        child: CircleAvatar(
-                                          radius: 15,
-                                          backgroundColor: Colors.white,
-                                          child: Icon(
-                                            FeatherIcons.heart,
-                                            color: Colors.blueGrey,
-                                            size: 16,
-                                          ),
-                                        )),
-                                  )
-                                ]),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Padding(
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                CategoryDetail(
+                                                  categoryimage:
+                                                      'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2790.PNG',
+                                                  category: 'Luxury',
+                                                  subcategory: categoryList[11]
+                                                      .subcategories,
+                                                )),
+                                      );
+                                    },
+                                    enableFeedback: true,
+                                    child: Container(
+                                      padding: EdgeInsets.all(3),
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: Colors.deepOrange),
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                      child: Text('See All',
+                                          style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            color: Colors.deepOrange,
+                                            fontSize: 14.0,
+                                          )),
+                                    ),
+                                  ),
+                                ],
+                              )),
+                        )
+                      : SliverToBoxAdapter(),
+                  luxuryitemsgrid.isNotEmpty
+                      ? SliverToBoxAdapter(
+                          child: Container(
+                          height: 250,
+                          width: MediaQuery.of(context).size.width,
+                          child: ListView.builder(
+                            itemCount: luxuryitemsgrid.length > 20
+                                ? 20
+                                : luxuryitemsgrid.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (BuildContext context, int index) {
+                              return new Padding(
                                 padding: EdgeInsets.all(5),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                child: Container(
+                                  height: 2,
+                                  width: MediaQuery.of(context).size.width / 2 -
+                                      20,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(5),
+                                      border: Border.all(
+                                        color: Color.fromRGBO(240, 240, 240, 1),
+                                      )),
+                                  child: Column(
+                                    children: <Widget>[
+                                      new InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            CupertinoPageRoute(
+                                                builder: (context) => Details(
+                                                    itemid:
+                                                        luxuryitemsgrid[index]
+                                                            .itemid,
+                                                    image:
+                                                        luxuryitemsgrid[index]
+                                                            .image,
+                                                    name: luxuryitemsgrid[index]
+                                                        .name,
+                                                    sold: luxuryitemsgrid[index]
+                                                        .sold,
+                                                    source: 'booksitemsgrid')),
+                                          );
+                                        },
+                                        child: Stack(children: <Widget>[
+                                          Container(
+                                            height: 170,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              child: CachedNetworkImage(
+                                                height: 200,
+                                                width: 300,
+                                                fadeInDuration:
+                                                    Duration(microseconds: 5),
+                                                imageUrl: luxuryitemsgrid[index]
+                                                        .image
+                                                        .isEmpty
+                                                    ? SpinKitDoubleBounce(
+                                                        color:
+                                                            Colors.deepOrange)
+                                                    : luxuryitemsgrid[index]
+                                                        .image,
+                                                fit: BoxFit.cover,
+                                                placeholder: (context, url) =>
+                                                    SpinKitDoubleBounce(
+                                                        color:
+                                                            Colors.deepOrange),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Icon(Icons.error),
+                                              ),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            top: 5,
+                                            right: 5,
+                                            child: favourites != null
+                                                ? favourites.contains(
+                                                        luxuryitemsgrid[index]
+                                                            .itemid)
+                                                    ? InkWell(
+                                                        enableFeedback: true,
+                                                        onTap: () async {
+                                                          var userid =
+                                                              await storage.read(
+                                                                  key:
+                                                                      'userid');
+
+                                                          if (userid != null) {
+                                                            var url =
+                                                                'https://api.sellship.co/api/favourite/' +
+                                                                    userid;
+
+                                                            Map<String, String>
+                                                                body = {
+                                                              'itemid':
+                                                                  luxuryitemsgrid[
+                                                                          index]
+                                                                      .itemid,
+                                                            };
+
+                                                            favourites.remove(
+                                                                luxuryitemsgrid[
+                                                                        index]
+                                                                    .itemid);
+                                                            setState(() {
+                                                              favourites =
+                                                                  favourites;
+                                                              luxuryitemsgrid[
+                                                                          index]
+                                                                      .likes =
+                                                                  luxuryitemsgrid[
+                                                                              index]
+                                                                          .likes -
+                                                                      1;
+                                                            });
+                                                            final response =
+                                                                await http.post(
+                                                                    Uri.parse(
+                                                                        url),
+                                                                    body: json
+                                                                        .encode(
+                                                                            body));
+                                                            if (response
+                                                                    .statusCode ==
+                                                                200) {
+                                                            } else {
+                                                              print(response
+                                                                  .statusCode);
+                                                            }
+                                                          } else {
+                                                            showInSnackBar(
+                                                                'Please Login to use Favourites');
+                                                          }
+                                                        },
+                                                        child: CircleAvatar(
+                                                          radius: 16,
+                                                          backgroundColor:
+                                                              Colors.deepOrange,
+                                                          child: Icon(
+                                                            FontAwesomeIcons
+                                                                .heart,
+                                                            color: Colors.white,
+                                                            size: 15,
+                                                          ),
+                                                        ))
+                                                    : InkWell(
+                                                        enableFeedback: true,
+                                                        onTap: () async {
+                                                          var userid =
+                                                              await storage.read(
+                                                                  key:
+                                                                      'userid');
+
+                                                          if (userid != null) {
+                                                            var url =
+                                                                'https://api.sellship.co/api/favourite/' +
+                                                                    userid;
+
+                                                            Map<String, String>
+                                                                body = {
+                                                              'itemid':
+                                                                  luxuryitemsgrid[
+                                                                          index]
+                                                                      .itemid,
+                                                            };
+
+                                                            favourites.add(
+                                                                luxuryitemsgrid[
+                                                                        index]
+                                                                    .itemid);
+                                                            setState(() {
+                                                              favourites =
+                                                                  favourites;
+                                                              luxuryitemsgrid[
+                                                                          index]
+                                                                      .likes =
+                                                                  luxuryitemsgrid[
+                                                                              index]
+                                                                          .likes +
+                                                                      1;
+                                                            });
+                                                            final response =
+                                                                await http.post(
+                                                                    Uri.parse(
+                                                                        url),
+                                                                    body: json
+                                                                        .encode(
+                                                                            body));
+
+                                                            if (response
+                                                                    .statusCode ==
+                                                                200) {
+                                                            } else {
+                                                              print(response
+                                                                  .statusCode);
+                                                            }
+                                                          } else {
+                                                            showInSnackBar(
+                                                                'Please Login to use Favourites');
+                                                          }
+                                                        },
+                                                        child: CircleAvatar(
+                                                            radius: 16,
+                                                            backgroundColor:
+                                                                Colors.blueGrey
+                                                                    .shade50,
+                                                            child: CircleAvatar(
+                                                              radius: 15,
+                                                              backgroundColor:
+                                                                  Colors.white,
+                                                              child: Icon(
+                                                                FeatherIcons
+                                                                    .heart,
+                                                                color: Colors
+                                                                    .blueGrey,
+                                                                size: 16,
+                                                              ),
+                                                            )))
+                                                : CircleAvatar(
+                                                    radius: 16,
+                                                    backgroundColor:
+                                                        Colors.blueGrey.shade50,
+                                                    child: CircleAvatar(
+                                                      radius: 15,
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      child: Icon(
+                                                        FeatherIcons.heart,
+                                                        color: Colors.blueGrey,
+                                                        size: 16,
+                                                      ),
+                                                    )),
+                                          )
+                                        ]),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.all(5),
+                                        child: Row(
                                           children: [
-                                            Text(
-                                              gardenitemsgrid[index].name,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 2,
-                                            ),
-                                            gardenitemsgrid[index]
-                                                .saleprice !=
-                                                null
-                                                ? Text.rich(
-                                              TextSpan(
-                                                children: <TextSpan>[
-                                                  new TextSpan(
-                                                    text: 'AED ' +
-                                                        gardenitemsgrid[
-                                                        index]
-                                                            .saleprice,
-                                                    style: new TextStyle(
-                                                        color: Colors
-                                                            .redAccent,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .bold),
+                                            Expanded(
+                                                child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  luxuryitemsgrid[index].name,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 14,
                                                   ),
-                                                  new TextSpan(
-                                                    text: '\nAED ' +
-                                                        gardenitemsgrid[
-                                                        index]
-                                                            .price
-                                                            .toString(),
-                                                    style: new TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 10,
-                                                      decoration:
-                                                      TextDecoration
-                                                          .lineThrough,
-                                                    ),
-                                                  ),
-                                                  new TextSpan(
-                                                    text: ' -' +
-                                                        (((double.parse(gardenitemsgrid[index].price.toString()) -
-                                                            double.parse(gardenitemsgrid[index]
-                                                                .saleprice
-                                                                .toString())) /
-                                                            double.parse(gardenitemsgrid[index]
-                                                                .price
-                                                                .toString())) *
-                                                            100)
-                                                            .toStringAsFixed(
-                                                            0) +
-                                                        '%',
-                                                    style: new TextStyle(
-                                                      color: Colors.red,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                                : Text.rich(
-                                              TextSpan(
-                                                children: <TextSpan>[
-                                                  new TextSpan(
-                                                    text: 'AED ',
-                                                    style: new TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                  new TextSpan(
-                                                    text:
-                                                    gardenitemsgrid[
-                                                    index]
-                                                        .price
-                                                        .toString(),
-                                                    style: new TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .bold),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
+                                                ),
+                                                SizedBox(
+                                                  height: 2,
+                                                ),
+                                                luxuryitemsgrid[index]
+                                                            .saleprice !=
+                                                        null
+                                                    ? Text.rich(
+                                                        TextSpan(
+                                                          children: <TextSpan>[
+                                                            new TextSpan(
+                                                              text: 'AED ' +
+                                                                  luxuryitemsgrid[
+                                                                          index]
+                                                                      .saleprice,
+                                                              style: new TextStyle(
+                                                                  color: Colors
+                                                                      .redAccent,
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                            new TextSpan(
+                                                              text: '\nAED ' +
+                                                                  luxuryitemsgrid[
+                                                                          index]
+                                                                      .price
+                                                                      .toString(),
+                                                              style:
+                                                                  new TextStyle(
+                                                                color:
+                                                                    Colors.grey,
+                                                                fontSize: 10,
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .lineThrough,
+                                                              ),
+                                                            ),
+                                                            new TextSpan(
+                                                              text: ' -' +
+                                                                  (((double.parse(luxuryitemsgrid[index].price.toString()) - double.parse(luxuryitemsgrid[index].saleprice.toString())) / double.parse(luxuryitemsgrid[index].price.toString())) *
+                                                                          100)
+                                                                      .toStringAsFixed(
+                                                                          0) +
+                                                                  '%',
+                                                              style:
+                                                                  new TextStyle(
+                                                                color:
+                                                                    Colors.red,
+                                                                fontSize: 12,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                                    : Text.rich(
+                                                        TextSpan(
+                                                          children: <TextSpan>[
+                                                            new TextSpan(
+                                                              text: 'AED ',
+                                                              style:
+                                                                  new TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 12,
+                                                              ),
+                                                            ),
+                                                            new TextSpan(
+                                                              text: luxuryitemsgrid[
+                                                                      index]
+                                                                  .price
+                                                                  .toString(),
+                                                              style: new TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                              ],
+                                            )),
                                           ],
-                                        )),
-                                  ],
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                        ),
+                                      ),
+                                    ],
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                  ),
                                 ),
-                              ),
-                            ],
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                              );
+                            },
                           ),
-                        ),
-                      );
-                    },
-                  ),
-                ))
-                : SliverToBoxAdapter(),
-          ],
-        ));
+                        ))
+                      : SliverToBoxAdapter(),
+                  kidsitemsgrid.isNotEmpty
+                      ? SliverToBoxAdapter(
+                          child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CategoryDetail(
+                                            categoryimage:
+                                                'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2794.PNG',
+                                            category: 'Kids',
+                                            subcategory:
+                                                categoryList[12].subcategories,
+                                          )),
+                                );
+                              },
+                              child: Container(
+                                height: 120,
+                                width: MediaQuery.of(context).size.width,
+                                child: Image.network(
+                                    'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2794.PNG',
+                                    fit: BoxFit.contain),
+                              )))
+                      : SliverToBoxAdapter(),
+                  kidsitemsgrid.isNotEmpty
+                      ? SliverToBoxAdapter(
+                          child: Padding(
+                              padding: EdgeInsets.only(
+                                  left: 16, bottom: 10, right: 16, top: 5),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  InkWell(
+                                    enableFeedback: true,
+                                    onTap: () {
+                                      // Navigator.push(
+                                      //   context,
+                                      //   CupertinoPageRoute(
+                                      //       builder: (context) => CategoryDynamic(
+                                      //             category: 'Electronics',
+                                      //           )),
+                                      // );
+                                    },
+                                    child: Text(
+                                      'Top Picks in Kids',
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                CategoryDetail(
+                                                  categoryimage:
+                                                      'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2794.PNG',
+                                                  category: 'Kids',
+                                                  subcategory: categoryList[12]
+                                                      .subcategories,
+                                                )),
+                                      );
+                                    },
+                                    enableFeedback: true,
+                                    child: Container(
+                                      padding: EdgeInsets.all(3),
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: Colors.deepOrange),
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                      child: Text('See All',
+                                          style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            color: Colors.deepOrange,
+                                            fontSize: 14.0,
+                                          )),
+                                    ),
+                                  ),
+                                ],
+                              )),
+                        )
+                      : SliverToBoxAdapter(),
+                  kidsitemsgrid.isNotEmpty
+                      ? SliverToBoxAdapter(
+                          child: Container(
+                          height: 250,
+                          width: MediaQuery.of(context).size.width,
+                          child: ListView.builder(
+                            itemCount: kidsitemsgrid.length > 20
+                                ? 20
+                                : kidsitemsgrid.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (BuildContext context, int index) {
+                              return new Padding(
+                                padding: EdgeInsets.all(5),
+                                child: Container(
+                                  height: 2,
+                                  width: MediaQuery.of(context).size.width / 2 -
+                                      20,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(5),
+                                      border: Border.all(
+                                        color: Color.fromRGBO(240, 240, 240, 1),
+                                      )),
+                                  child: Column(
+                                    children: <Widget>[
+                                      new InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            CupertinoPageRoute(
+                                                builder: (context) => Details(
+                                                    itemid: kidsitemsgrid[index]
+                                                        .itemid,
+                                                    image: kidsitemsgrid[index]
+                                                        .image,
+                                                    name: kidsitemsgrid[index]
+                                                        .name,
+                                                    sold: kidsitemsgrid[index]
+                                                        .sold,
+                                                    source: 'kidsitemsgrid')),
+                                          );
+                                        },
+                                        child: Stack(children: <Widget>[
+                                          Container(
+                                            height: 170,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              child: CachedNetworkImage(
+                                                height: 200,
+                                                width: 300,
+                                                fadeInDuration:
+                                                    Duration(microseconds: 5),
+                                                imageUrl: kidsitemsgrid[index]
+                                                        .image
+                                                        .isEmpty
+                                                    ? SpinKitDoubleBounce(
+                                                        color:
+                                                            Colors.deepOrange)
+                                                    : kidsitemsgrid[index]
+                                                        .image,
+                                                fit: BoxFit.cover,
+                                                placeholder: (context, url) =>
+                                                    SpinKitDoubleBounce(
+                                                        color:
+                                                            Colors.deepOrange),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Icon(Icons.error),
+                                              ),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            top: 5,
+                                            right: 5,
+                                            child: favourites != null
+                                                ? favourites.contains(
+                                                        kidsitemsgrid[index]
+                                                            .itemid)
+                                                    ? InkWell(
+                                                        enableFeedback: true,
+                                                        onTap: () async {
+                                                          var userid =
+                                                              await storage.read(
+                                                                  key:
+                                                                      'userid');
+
+                                                          if (userid != null) {
+                                                            var url =
+                                                                'https://api.sellship.co/api/favourite/' +
+                                                                    userid;
+
+                                                            Map<String, String>
+                                                                body = {
+                                                              'itemid':
+                                                                  kidsitemsgrid[
+                                                                          index]
+                                                                      .itemid,
+                                                            };
+
+                                                            favourites.remove(
+                                                                kidsitemsgrid[
+                                                                        index]
+                                                                    .itemid);
+                                                            setState(() {
+                                                              favourites =
+                                                                  favourites;
+                                                              kidsitemsgrid[
+                                                                          index]
+                                                                      .likes =
+                                                                  kidsitemsgrid[
+                                                                              index]
+                                                                          .likes -
+                                                                      1;
+                                                            });
+                                                            final response =
+                                                                await http.post(
+                                                                    Uri.parse(
+                                                                        url),
+                                                                    body: json
+                                                                        .encode(
+                                                                            body));
+                                                            if (response
+                                                                    .statusCode ==
+                                                                200) {
+                                                            } else {
+                                                              print(response
+                                                                  .statusCode);
+                                                            }
+                                                          } else {
+                                                            showInSnackBar(
+                                                                'Please Login to use Favourites');
+                                                          }
+                                                        },
+                                                        child: CircleAvatar(
+                                                          radius: 16,
+                                                          backgroundColor:
+                                                              Colors.deepOrange,
+                                                          child: Icon(
+                                                            FontAwesomeIcons
+                                                                .heart,
+                                                            color: Colors.white,
+                                                            size: 15,
+                                                          ),
+                                                        ))
+                                                    : InkWell(
+                                                        enableFeedback: true,
+                                                        onTap: () async {
+                                                          var userid =
+                                                              await storage.read(
+                                                                  key:
+                                                                      'userid');
+
+                                                          if (userid != null) {
+                                                            var url =
+                                                                'https://api.sellship.co/api/favourite/' +
+                                                                    userid;
+
+                                                            Map<String, String>
+                                                                body = {
+                                                              'itemid':
+                                                                  kidsitemsgrid[
+                                                                          index]
+                                                                      .itemid,
+                                                            };
+
+                                                            favourites.add(
+                                                                kidsitemsgrid[
+                                                                        index]
+                                                                    .itemid);
+                                                            setState(() {
+                                                              favourites =
+                                                                  favourites;
+                                                              kidsitemsgrid[
+                                                                          index]
+                                                                      .likes =
+                                                                  kidsitemsgrid[
+                                                                              index]
+                                                                          .likes +
+                                                                      1;
+                                                            });
+                                                            final response =
+                                                                await http.post(
+                                                                    Uri.parse(
+                                                                        url),
+                                                                    body: json
+                                                                        .encode(
+                                                                            body));
+
+                                                            if (response
+                                                                    .statusCode ==
+                                                                200) {
+                                                            } else {
+                                                              print(response
+                                                                  .statusCode);
+                                                            }
+                                                          } else {
+                                                            showInSnackBar(
+                                                                'Please Login to use Favourites');
+                                                          }
+                                                        },
+                                                        child: CircleAvatar(
+                                                            radius: 16,
+                                                            backgroundColor:
+                                                                Colors.blueGrey
+                                                                    .shade50,
+                                                            child: CircleAvatar(
+                                                              radius: 15,
+                                                              backgroundColor:
+                                                                  Colors.white,
+                                                              child: Icon(
+                                                                FeatherIcons
+                                                                    .heart,
+                                                                color: Colors
+                                                                    .blueGrey,
+                                                                size: 16,
+                                                              ),
+                                                            )))
+                                                : CircleAvatar(
+                                                    radius: 16,
+                                                    backgroundColor:
+                                                        Colors.blueGrey.shade50,
+                                                    child: CircleAvatar(
+                                                      radius: 15,
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      child: Icon(
+                                                        FeatherIcons.heart,
+                                                        color: Colors.blueGrey,
+                                                        size: 16,
+                                                      ),
+                                                    )),
+                                          )
+                                        ]),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.all(5),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                                child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  kidsitemsgrid[index].name,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 2,
+                                                ),
+                                                kidsitemsgrid[index]
+                                                            .saleprice !=
+                                                        null
+                                                    ? Text.rich(
+                                                        TextSpan(
+                                                          children: <TextSpan>[
+                                                            new TextSpan(
+                                                              text: 'AED ' +
+                                                                  kidsitemsgrid[
+                                                                          index]
+                                                                      .saleprice,
+                                                              style: new TextStyle(
+                                                                  color: Colors
+                                                                      .redAccent,
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                            new TextSpan(
+                                                              text: '\nAED ' +
+                                                                  kidsitemsgrid[
+                                                                          index]
+                                                                      .price
+                                                                      .toString(),
+                                                              style:
+                                                                  new TextStyle(
+                                                                color:
+                                                                    Colors.grey,
+                                                                fontSize: 10,
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .lineThrough,
+                                                              ),
+                                                            ),
+                                                            new TextSpan(
+                                                              text: ' -' +
+                                                                  (((double.parse(kidsitemsgrid[index].price.toString()) - double.parse(kidsitemsgrid[index].saleprice.toString())) / double.parse(kidsitemsgrid[index].price.toString())) *
+                                                                          100)
+                                                                      .toStringAsFixed(
+                                                                          0) +
+                                                                  '%',
+                                                              style:
+                                                                  new TextStyle(
+                                                                color:
+                                                                    Colors.red,
+                                                                fontSize: 12,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                                    : Text.rich(
+                                                        TextSpan(
+                                                          children: <TextSpan>[
+                                                            new TextSpan(
+                                                              text: 'AED ',
+                                                              style:
+                                                                  new TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 12,
+                                                              ),
+                                                            ),
+                                                            new TextSpan(
+                                                              text: kidsitemsgrid[
+                                                                      index]
+                                                                  .price
+                                                                  .toString(),
+                                                              style: new TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                              ],
+                                            )),
+                                          ],
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                        ),
+                                      ),
+                                    ],
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ))
+                      : SliverToBoxAdapter(),
+                  toysitemsgrid.isNotEmpty
+                      ? SliverToBoxAdapter(
+                          child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CategoryDetail(
+                                            categoryimage:
+                                                'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2791.PNG',
+                                            category: 'Toys',
+                                            subcategory:
+                                                categoryList[9].subcategories,
+                                          )),
+                                );
+                              },
+                              child: Container(
+                                height: 120,
+                                width: MediaQuery.of(context).size.width,
+                                child: Image.network(
+                                    'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2791.PNG',
+                                    fit: BoxFit.contain),
+                              )))
+                      : SliverToBoxAdapter(),
+                  toysitemsgrid.isNotEmpty
+                      ? SliverToBoxAdapter(
+                          child: Padding(
+                              padding: EdgeInsets.only(
+                                  left: 16, bottom: 10, right: 16, top: 5),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  InkWell(
+                                    enableFeedback: true,
+                                    onTap: () {
+                                      // Navigator.push(
+                                      //   context,
+                                      //   CupertinoPageRoute(
+                                      //       builder: (context) => CategoryDynamic(
+                                      //             category: 'Electronics',
+                                      //           )),
+                                      // );
+                                    },
+                                    child: Text(
+                                      'Top Picks in Toys',
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                CategoryDetail(
+                                                  categoryimage:
+                                                      'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2791.PNG',
+                                                  category: 'Toys',
+                                                  subcategory: categoryList[12]
+                                                      .subcategories,
+                                                )),
+                                      );
+                                    },
+                                    enableFeedback: true,
+                                    child: Container(
+                                      padding: EdgeInsets.all(3),
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: Colors.deepOrange),
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                      child: Text('See All',
+                                          style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            color: Colors.deepOrange,
+                                            fontSize: 14.0,
+                                          )),
+                                    ),
+                                  ),
+                                ],
+                              )),
+                        )
+                      : SliverToBoxAdapter(),
+                  toysitemsgrid.isNotEmpty
+                      ? SliverToBoxAdapter(
+                          child: Container(
+                          height: 250,
+                          width: MediaQuery.of(context).size.width,
+                          child: ListView.builder(
+                            itemCount: toysitemsgrid.length > 20
+                                ? 20
+                                : toysitemsgrid.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (BuildContext context, int index) {
+                              return new Padding(
+                                padding: EdgeInsets.all(5),
+                                child: Container(
+                                  height: 2,
+                                  width: MediaQuery.of(context).size.width / 2 -
+                                      20,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(5),
+                                      border: Border.all(
+                                        color: Color.fromRGBO(240, 240, 240, 1),
+                                      )),
+                                  child: Column(
+                                    children: <Widget>[
+                                      new InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            CupertinoPageRoute(
+                                                builder: (context) => Details(
+                                                    itemid: toysitemsgrid[index]
+                                                        .itemid,
+                                                    image: toysitemsgrid[index]
+                                                        .image,
+                                                    name: toysitemsgrid[index]
+                                                        .name,
+                                                    sold: toysitemsgrid[index]
+                                                        .sold,
+                                                    source: 'toysitemsgrid')),
+                                          );
+                                        },
+                                        child: Stack(children: <Widget>[
+                                          Container(
+                                            height: 170,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              child: CachedNetworkImage(
+                                                height: 200,
+                                                width: 300,
+                                                fadeInDuration:
+                                                    Duration(microseconds: 5),
+                                                imageUrl: toysitemsgrid[index]
+                                                        .image
+                                                        .isEmpty
+                                                    ? SpinKitDoubleBounce(
+                                                        color:
+                                                            Colors.deepOrange)
+                                                    : toysitemsgrid[index]
+                                                        .image,
+                                                fit: BoxFit.cover,
+                                                placeholder: (context, url) =>
+                                                    SpinKitDoubleBounce(
+                                                        color:
+                                                            Colors.deepOrange),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Icon(Icons.error),
+                                              ),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            top: 5,
+                                            right: 5,
+                                            child: favourites != null
+                                                ? favourites.contains(
+                                                        toysitemsgrid[index]
+                                                            .itemid)
+                                                    ? InkWell(
+                                                        enableFeedback: true,
+                                                        onTap: () async {
+                                                          var userid =
+                                                              await storage.read(
+                                                                  key:
+                                                                      'userid');
+
+                                                          if (userid != null) {
+                                                            var url =
+                                                                'https://api.sellship.co/api/favourite/' +
+                                                                    userid;
+
+                                                            Map<String, String>
+                                                                body = {
+                                                              'itemid':
+                                                                  toysitemsgrid[
+                                                                          index]
+                                                                      .itemid,
+                                                            };
+
+                                                            favourites.remove(
+                                                                toysitemsgrid[
+                                                                        index]
+                                                                    .itemid);
+                                                            setState(() {
+                                                              favourites =
+                                                                  favourites;
+                                                              toysitemsgrid[
+                                                                          index]
+                                                                      .likes =
+                                                                  toysitemsgrid[
+                                                                              index]
+                                                                          .likes -
+                                                                      1;
+                                                            });
+                                                            final response =
+                                                                await http.post(
+                                                                    Uri.parse(
+                                                                        url),
+                                                                    body: json
+                                                                        .encode(
+                                                                            body));
+                                                            if (response
+                                                                    .statusCode ==
+                                                                200) {
+                                                            } else {
+                                                              print(response
+                                                                  .statusCode);
+                                                            }
+                                                          } else {
+                                                            showInSnackBar(
+                                                                'Please Login to use Favourites');
+                                                          }
+                                                        },
+                                                        child: CircleAvatar(
+                                                          radius: 16,
+                                                          backgroundColor:
+                                                              Colors.deepOrange,
+                                                          child: Icon(
+                                                            FontAwesomeIcons
+                                                                .heart,
+                                                            color: Colors.white,
+                                                            size: 15,
+                                                          ),
+                                                        ))
+                                                    : InkWell(
+                                                        enableFeedback: true,
+                                                        onTap: () async {
+                                                          var userid =
+                                                              await storage.read(
+                                                                  key:
+                                                                      'userid');
+
+                                                          if (userid != null) {
+                                                            var url =
+                                                                'https://api.sellship.co/api/favourite/' +
+                                                                    userid;
+
+                                                            Map<String, String>
+                                                                body = {
+                                                              'itemid':
+                                                                  toysitemsgrid[
+                                                                          index]
+                                                                      .itemid,
+                                                            };
+
+                                                            favourites.add(
+                                                                toysitemsgrid[
+                                                                        index]
+                                                                    .itemid);
+                                                            setState(() {
+                                                              favourites =
+                                                                  favourites;
+                                                              toysitemsgrid[
+                                                                          index]
+                                                                      .likes =
+                                                                  toysitemsgrid[
+                                                                              index]
+                                                                          .likes +
+                                                                      1;
+                                                            });
+                                                            final response =
+                                                                await http.post(
+                                                                    Uri.parse(
+                                                                        url),
+                                                                    body: json
+                                                                        .encode(
+                                                                            body));
+
+                                                            if (response
+                                                                    .statusCode ==
+                                                                200) {
+                                                            } else {
+                                                              print(response
+                                                                  .statusCode);
+                                                            }
+                                                          } else {
+                                                            showInSnackBar(
+                                                                'Please Login to use Favourites');
+                                                          }
+                                                        },
+                                                        child: CircleAvatar(
+                                                            radius: 16,
+                                                            backgroundColor:
+                                                                Colors.blueGrey
+                                                                    .shade50,
+                                                            child: CircleAvatar(
+                                                              radius: 15,
+                                                              backgroundColor:
+                                                                  Colors.white,
+                                                              child: Icon(
+                                                                FeatherIcons
+                                                                    .heart,
+                                                                color: Colors
+                                                                    .blueGrey,
+                                                                size: 16,
+                                                              ),
+                                                            )))
+                                                : CircleAvatar(
+                                                    radius: 16,
+                                                    backgroundColor:
+                                                        Colors.blueGrey.shade50,
+                                                    child: CircleAvatar(
+                                                      radius: 15,
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      child: Icon(
+                                                        FeatherIcons.heart,
+                                                        color: Colors.blueGrey,
+                                                        size: 16,
+                                                      ),
+                                                    )),
+                                          )
+                                        ]),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.all(5),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                                child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  toysitemsgrid[index].name,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 2,
+                                                ),
+                                                toysitemsgrid[index]
+                                                            .saleprice !=
+                                                        null
+                                                    ? Text.rich(
+                                                        TextSpan(
+                                                          children: <TextSpan>[
+                                                            new TextSpan(
+                                                              text: 'AED ' +
+                                                                  toysitemsgrid[
+                                                                          index]
+                                                                      .saleprice,
+                                                              style: new TextStyle(
+                                                                  color: Colors
+                                                                      .redAccent,
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                            new TextSpan(
+                                                              text: '\nAED ' +
+                                                                  toysitemsgrid[
+                                                                          index]
+                                                                      .price
+                                                                      .toString(),
+                                                              style:
+                                                                  new TextStyle(
+                                                                color:
+                                                                    Colors.grey,
+                                                                fontSize: 10,
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .lineThrough,
+                                                              ),
+                                                            ),
+                                                            new TextSpan(
+                                                              text: ' -' +
+                                                                  (((double.parse(toysitemsgrid[index].price.toString()) - double.parse(toysitemsgrid[index].saleprice.toString())) / double.parse(toysitemsgrid[index].price.toString())) *
+                                                                          100)
+                                                                      .toStringAsFixed(
+                                                                          0) +
+                                                                  '%',
+                                                              style:
+                                                                  new TextStyle(
+                                                                color:
+                                                                    Colors.red,
+                                                                fontSize: 12,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                                    : Text.rich(
+                                                        TextSpan(
+                                                          children: <TextSpan>[
+                                                            new TextSpan(
+                                                              text: 'AED ',
+                                                              style:
+                                                                  new TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 12,
+                                                              ),
+                                                            ),
+                                                            new TextSpan(
+                                                              text: toysitemsgrid[
+                                                                      index]
+                                                                  .price
+                                                                  .toString(),
+                                                              style: new TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                              ],
+                                            )),
+                                          ],
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                        ),
+                                      ),
+                                    ],
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ))
+                      : SliverToBoxAdapter(),
+                  gardenitemsgrid.isNotEmpty
+                      ? SliverToBoxAdapter(
+                          child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CategoryDetail(
+                                            categoryimage:
+                                                'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2788.PNG',
+                                            category: 'Garden',
+                                            subcategory:
+                                                categoryList[6].subcategories,
+                                          )),
+                                );
+                              },
+                              child: Container(
+                                height: 120,
+                                width: MediaQuery.of(context).size.width,
+                                child: Image.network(
+                                    'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2788.PNG',
+                                    fit: BoxFit.contain),
+                              )))
+                      : SliverToBoxAdapter(),
+                  gardenitemsgrid.isNotEmpty
+                      ? SliverToBoxAdapter(
+                          child: Padding(
+                              padding: EdgeInsets.only(
+                                  left: 16, bottom: 10, right: 16, top: 5),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  InkWell(
+                                    enableFeedback: true,
+                                    onTap: () {
+                                      // Navigator.push(
+                                      //   context,
+                                      //   CupertinoPageRoute(
+                                      //       builder: (context) => CategoryDynamic(
+                                      //             category: 'Electronics',
+                                      //           )),
+                                      // );
+                                    },
+                                    child: Text(
+                                      'Top Picks in Garden',
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                CategoryDetail(
+                                                  categoryimage:
+                                                      'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/banners/IMG_2788.PNG',
+                                                  category: 'Garden',
+                                                  subcategory: categoryList[6]
+                                                      .subcategories,
+                                                )),
+                                      );
+                                    },
+                                    enableFeedback: true,
+                                    child: Container(
+                                      padding: EdgeInsets.all(3),
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: Colors.deepOrange),
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                      child: Text('See All',
+                                          style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            color: Colors.deepOrange,
+                                            fontSize: 14.0,
+                                          )),
+                                    ),
+                                  ),
+                                ],
+                              )),
+                        )
+                      : SliverToBoxAdapter(),
+                  gardenitemsgrid.isNotEmpty
+                      ? SliverToBoxAdapter(
+                          child: Container(
+                          height: 250,
+                          width: MediaQuery.of(context).size.width,
+                          child: ListView.builder(
+                            itemCount: gardenitemsgrid.length > 20
+                                ? 20
+                                : gardenitemsgrid.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (BuildContext context, int index) {
+                              return new Padding(
+                                padding: EdgeInsets.all(5),
+                                child: Container(
+                                  height: 90,
+                                  width: MediaQuery.of(context).size.width / 2 -
+                                      20,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(5),
+                                      border: Border.all(
+                                        color: Color.fromRGBO(240, 240, 240, 1),
+                                      )),
+                                  child: Column(
+                                    children: <Widget>[
+                                      new InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            CupertinoPageRoute(
+                                                builder: (context) => Details(
+                                                    itemid:
+                                                        gardenitemsgrid[index]
+                                                            .itemid,
+                                                    image:
+                                                        gardenitemsgrid[index]
+                                                            .image,
+                                                    name: gardenitemsgrid[index]
+                                                        .name,
+                                                    sold: gardenitemsgrid[index]
+                                                        .sold,
+                                                    source: 'gardenitemsgrid')),
+                                          );
+                                        },
+                                        child: Stack(children: <Widget>[
+                                          Container(
+                                            height: 170,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              child: CachedNetworkImage(
+                                                height: 200,
+                                                width: 300,
+                                                fadeInDuration:
+                                                    Duration(microseconds: 5),
+                                                imageUrl: gardenitemsgrid[index]
+                                                        .image
+                                                        .isEmpty
+                                                    ? SpinKitDoubleBounce(
+                                                        color:
+                                                            Colors.deepOrange)
+                                                    : gardenitemsgrid[index]
+                                                        .image,
+                                                fit: BoxFit.cover,
+                                                placeholder: (context, url) =>
+                                                    SpinKitDoubleBounce(
+                                                        color:
+                                                            Colors.deepOrange),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Icon(Icons.error),
+                                              ),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            top: 5,
+                                            right: 5,
+                                            child: favourites != null
+                                                ? favourites.contains(
+                                                        gardenitemsgrid[index]
+                                                            .itemid)
+                                                    ? InkWell(
+                                                        enableFeedback: true,
+                                                        onTap: () async {
+                                                          var userid =
+                                                              await storage.read(
+                                                                  key:
+                                                                      'userid');
+
+                                                          if (userid != null) {
+                                                            var url =
+                                                                'https://api.sellship.co/api/favourite/' +
+                                                                    userid;
+
+                                                            Map<String, String>
+                                                                body = {
+                                                              'itemid':
+                                                                  gardenitemsgrid[
+                                                                          index]
+                                                                      .itemid,
+                                                            };
+
+                                                            favourites.remove(
+                                                                gardenitemsgrid[
+                                                                        index]
+                                                                    .itemid);
+                                                            setState(() {
+                                                              favourites =
+                                                                  favourites;
+                                                              gardenitemsgrid[
+                                                                          index]
+                                                                      .likes =
+                                                                  gardenitemsgrid[
+                                                                              index]
+                                                                          .likes -
+                                                                      1;
+                                                            });
+                                                            final response =
+                                                                await http.post(
+                                                                    Uri.parse(
+                                                                        url),
+                                                                    body: json
+                                                                        .encode(
+                                                                            body));
+                                                            if (response
+                                                                    .statusCode ==
+                                                                200) {
+                                                            } else {
+                                                              print(response
+                                                                  .statusCode);
+                                                            }
+                                                          } else {
+                                                            showInSnackBar(
+                                                                'Please Login to use Favourites');
+                                                          }
+                                                        },
+                                                        child: CircleAvatar(
+                                                          radius: 16,
+                                                          backgroundColor:
+                                                              Colors.deepOrange,
+                                                          child: Icon(
+                                                            FontAwesomeIcons
+                                                                .heart,
+                                                            color: Colors.white,
+                                                            size: 15,
+                                                          ),
+                                                        ))
+                                                    : InkWell(
+                                                        enableFeedback: true,
+                                                        onTap: () async {
+                                                          var userid =
+                                                              await storage.read(
+                                                                  key:
+                                                                      'userid');
+
+                                                          if (userid != null) {
+                                                            var url =
+                                                                'https://api.sellship.co/api/favourite/' +
+                                                                    userid;
+
+                                                            Map<String, String>
+                                                                body = {
+                                                              'itemid':
+                                                                  gardenitemsgrid[
+                                                                          index]
+                                                                      .itemid,
+                                                            };
+
+                                                            favourites.add(
+                                                                gardenitemsgrid[
+                                                                        index]
+                                                                    .itemid);
+                                                            setState(() {
+                                                              favourites =
+                                                                  favourites;
+                                                              gardenitemsgrid[
+                                                                          index]
+                                                                      .likes =
+                                                                  gardenitemsgrid[
+                                                                              index]
+                                                                          .likes +
+                                                                      1;
+                                                            });
+                                                            final response =
+                                                                await http.post(
+                                                                    Uri.parse(
+                                                                        url),
+                                                                    body: json
+                                                                        .encode(
+                                                                            body));
+
+                                                            if (response
+                                                                    .statusCode ==
+                                                                200) {
+                                                            } else {
+                                                              print(response
+                                                                  .statusCode);
+                                                            }
+                                                          } else {
+                                                            showInSnackBar(
+                                                                'Please Login to use Favourites');
+                                                          }
+                                                        },
+                                                        child: CircleAvatar(
+                                                            radius: 16,
+                                                            backgroundColor:
+                                                                Colors.blueGrey
+                                                                    .shade50,
+                                                            child: CircleAvatar(
+                                                              radius: 15,
+                                                              backgroundColor:
+                                                                  Colors.white,
+                                                              child: Icon(
+                                                                FeatherIcons
+                                                                    .heart,
+                                                                color: Colors
+                                                                    .blueGrey,
+                                                                size: 16,
+                                                              ),
+                                                            )))
+                                                : CircleAvatar(
+                                                    radius: 16,
+                                                    backgroundColor:
+                                                        Colors.blueGrey.shade50,
+                                                    child: CircleAvatar(
+                                                      radius: 15,
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      child: Icon(
+                                                        FeatherIcons.heart,
+                                                        color: Colors.blueGrey,
+                                                        size: 16,
+                                                      ),
+                                                    )),
+                                          )
+                                        ]),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.all(5),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                                child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  gardenitemsgrid[index].name,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 2,
+                                                ),
+                                                gardenitemsgrid[index]
+                                                            .saleprice !=
+                                                        null
+                                                    ? Text.rich(
+                                                        TextSpan(
+                                                          children: <TextSpan>[
+                                                            new TextSpan(
+                                                              text: 'AED ' +
+                                                                  gardenitemsgrid[
+                                                                          index]
+                                                                      .saleprice,
+                                                              style: new TextStyle(
+                                                                  color: Colors
+                                                                      .redAccent,
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                            new TextSpan(
+                                                              text: '\nAED ' +
+                                                                  gardenitemsgrid[
+                                                                          index]
+                                                                      .price
+                                                                      .toString(),
+                                                              style:
+                                                                  new TextStyle(
+                                                                color:
+                                                                    Colors.grey,
+                                                                fontSize: 10,
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .lineThrough,
+                                                              ),
+                                                            ),
+                                                            new TextSpan(
+                                                              text: ' -' +
+                                                                  (((double.parse(gardenitemsgrid[index].price.toString()) - double.parse(gardenitemsgrid[index].saleprice.toString())) / double.parse(gardenitemsgrid[index].price.toString())) *
+                                                                          100)
+                                                                      .toStringAsFixed(
+                                                                          0) +
+                                                                  '%',
+                                                              style:
+                                                                  new TextStyle(
+                                                                color:
+                                                                    Colors.red,
+                                                                fontSize: 12,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                                    : Text.rich(
+                                                        TextSpan(
+                                                          children: <TextSpan>[
+                                                            new TextSpan(
+                                                              text: 'AED ',
+                                                              style:
+                                                                  new TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 12,
+                                                              ),
+                                                            ),
+                                                            new TextSpan(
+                                                              text: gardenitemsgrid[
+                                                                      index]
+                                                                  .price
+                                                                  .toString(),
+                                                              style: new TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                              ],
+                                            )),
+                                          ],
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                        ),
+                                      ),
+                                    ],
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ))
+                      : SliverToBoxAdapter(),
+                ],
+              )
+            : Center(
+                child: SpinKitDoubleBounce(
+                  color: Colors.deepOrange,
+                ),
+              ));
   }
 
   String view = 'home';
