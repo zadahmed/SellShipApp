@@ -10,9 +10,11 @@ import 'package:SellShip/models/category.dart';
 import 'package:SellShip/models/stores.dart';
 import 'package:SellShip/models/user.dart';
 import 'package:SellShip/screens/blogPage.dart';
+import 'package:SellShip/screens/blogs.dart';
 import 'package:SellShip/screens/comments.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/filter.dart';
+import 'package:SellShip/screens/helpcentre.dart';
 import 'package:SellShip/screens/home/below100.dart';
 import 'package:SellShip/screens/home/foryou.dart';
 import 'package:SellShip/screens/home/nearme.dart';
@@ -638,7 +640,13 @@ class _DiscoverState extends State<Discover>
                         Builder(
                           builder: (BuildContext context) {
                             return InkWell(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                      builder: (context) => TopPicks()),
+                                );
+                              },
                               enableFeedback: true,
                               child: Container(
                                   height: 120,
@@ -667,7 +675,13 @@ class _DiscoverState extends State<Discover>
                         Builder(
                           builder: (BuildContext context) {
                             return InkWell(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                      builder: (context) => HelpCentre()),
+                                );
+                              },
                               enableFeedback: true,
                               child: Container(
                                   height: 120,
@@ -696,36 +710,13 @@ class _DiscoverState extends State<Discover>
                         Builder(
                           builder: (BuildContext context) {
                             return InkWell(
-                              onTap: () {},
-                              enableFeedback: true,
-                              child: Container(
-                                  height: 120,
-                                  width: MediaQuery.of(context).size.width,
-                                  margin: EdgeInsets.symmetric(horizontal: 5.0),
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(5)),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(5),
-                                    child: CachedNetworkImage(
-                                      imageUrl:
-                                          'https://sellshipcdn.ams3.cdn.digitaloceanspaces.com/homebanners/IMG_2986.PNG',
-                                      fit: BoxFit.contain,
-                                      fadeInDuration: Duration(microseconds: 5),
-                                      placeholder: (context, url) =>
-                                          SpinKitDoubleBounce(
-                                              color: Colors.deepOrange),
-                                      errorWidget: (context, url, error) =>
-                                          Icon(Icons.error),
-                                    ),
-                                  )),
-                            );
-                          },
-                        ),
-                        Builder(
-                          builder: (BuildContext context) {
-                            return InkWell(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                      builder: (context) => Blogs()),
+                                );
+                              },
                               enableFeedback: true,
                               child: Container(
                                   height: 120,
@@ -784,7 +775,7 @@ class _DiscoverState extends State<Discover>
                   ),
                   SliverToBoxAdapter(
                       child: Container(
-                          height: 150,
+                          height: 130,
                           width: MediaQuery.of(context).size.width,
                           child: ListView.builder(
                               itemCount: categoryList.length,
@@ -811,8 +802,8 @@ class _DiscoverState extends State<Discover>
                                     child: Column(
                                       children: [
                                         Container(
-                                          height: 120,
-                                          width: 120,
+                                          height: 100,
+                                          width: 100,
                                           decoration: BoxDecoration(
                                             color: Colors.white,
                                           ),

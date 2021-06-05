@@ -2160,7 +2160,29 @@ class _DetailsState extends State<Details> {
                                             Radius.circular(20)),
                                       ),
                                       child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
+                                          SizedBox(
+                                            height: 2,
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                left: 15, bottom: 5),
+                                            child: Text(
+                                              'Seller',
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 16,
+                                                  color: Colors.grey,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
                                           ListTile(
                                             onTap: () {
                                               Navigator.push(
@@ -2320,99 +2342,6 @@ class _DetailsState extends State<Details> {
                                                     vertical: 0.0,
                                                     horizontal: 16.0),
                                           ),
-                                          reviewrating != null
-                                              ? Padding(
-                                                  padding: EdgeInsets.only(
-                                                      left: 15,
-                                                      top: 10,
-                                                      right: 15),
-                                                  child: Row(
-                                                    children: [
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        children: <Widget>[
-                                                          RatingBar.builder(
-                                                            initialRating:
-                                                                reviewrating,
-                                                            minRating: 1,
-                                                            direction:
-                                                                Axis.horizontal,
-                                                            allowHalfRating:
-                                                                true,
-                                                            itemCount: 5,
-                                                            itemPadding: EdgeInsets
-                                                                .symmetric(
-                                                                    horizontal:
-                                                                        4.0),
-                                                            itemBuilder:
-                                                                (context, _) =>
-                                                                    Icon(
-                                                              Icons.star,
-                                                              color: Colors
-                                                                  .deepOrange,
-                                                            ),
-                                                            itemSize: 20,
-                                                            ignoreGestures:
-                                                                true,
-                                                            onRatingUpdate:
-                                                                (rating) {
-                                                              print(rating);
-                                                            },
-                                                          )
-
-                                                          // SizedBox(
-                                                          //   width: 5,
-                                                          // ),
-                                                          // Text(
-                                                          //   reviewrating
-                                                          //       .toStringAsFixed(
-                                                          //           1),
-                                                          //   style: TextStyle(
-                                                          //       fontFamily:
-                                                          //           'Helvetica',
-                                                          //       fontSize: 16,
-                                                          //       fontWeight:
-                                                          //           FontWeight
-                                                          //               .bold,
-                                                          //       color: Color
-                                                          //           .fromRGBO(
-                                                          //               27,
-                                                          //               44,
-                                                          //               64,
-                                                          //               1)),
-                                                          // ),
-                                                        ],
-                                                      ),
-                                                      Text(
-                                                        review != null
-                                                            ? '${review} Reviews'
-                                                            : '0 Reviews',
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                'Helvetica',
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color:
-                                                                Color.fromRGBO(
-                                                                    27,
-                                                                    44,
-                                                                    64,
-                                                                    1)),
-                                                      )
-                                                    ],
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                  ),
-                                                )
-                                              : SpinKitDoubleBounce(
-                                                  color: Colors.deepOrange),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
                                         ],
                                       ))),
                               Padding(
@@ -2436,12 +2365,17 @@ class _DetailsState extends State<Details> {
                                           SizedBox(
                                             height: 2,
                                           ),
-                                          Text(
-                                            'Tags',
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w700),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                left: 15, bottom: 5),
+                                            child: Text(
+                                              'Tags',
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 16,
+                                                  color: Colors.grey,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
                                           ),
                                           Expanded(
                                             child: ListView.builder(
@@ -2498,11 +2432,11 @@ class _DetailsState extends State<Details> {
                                             fontWeight: FontWeight.bold,
                                             fontFamily: 'Helvetica'),
                                         tabs: <Widget>[
+                                          Tab(text: 'Description'),
                                           Tab(
                                               text:
                                                   newItem.comments.toString() +
                                                       ' Comments'),
-                                          Tab(text: 'Description'),
                                         ],
                                       ),
                                       body: Container(
@@ -2517,8 +2451,6 @@ class _DetailsState extends State<Details> {
                                                       Radius.circular(20))),
                                           child: TabBarView(
                                             children: [
-                                              CommentsDetail(
-                                                  itemid: newItem.itemid),
                                               Container(
                                                 height: 300,
                                                 width: MediaQuery.of(context)
@@ -2558,6 +2490,8 @@ class _DetailsState extends State<Details> {
                                                   ],
                                                 ),
                                               ),
+                                              CommentsDetail(
+                                                  itemid: newItem.itemid),
                                             ],
                                           )),
                                     )),

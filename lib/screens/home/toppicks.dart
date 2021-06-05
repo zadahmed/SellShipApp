@@ -130,10 +130,8 @@ class TopPicksState extends State<TopPicks> {
 
   Future<List<Item>> fetchbelowhundred(int skip, int limit) async {
     var userid = await storage.read(key: 'userid');
-    var url = 'https://api.sellship.co/api/top/' +
+    var url = 'https://api.sellship.co/api/all/products/' +
         country +
-        '/' +
-        userid +
         '/' +
         skip.toString() +
         '/' +
